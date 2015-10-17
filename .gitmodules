@@ -1,0 +1,6 @@
+[submodule "packages/peerlibrary:blaze-components"]
+	path = packages/peerlibrary:blaze-components
+	url = https://github.com/peerlibrary/meteor-blaze-components.git
+[submodule "packages/kadira:blaze-layout"]
+	path = packages/kadira:blaze-layout
+	url = https://github.com/peerlibrary/blaze-layout.git
