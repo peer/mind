@@ -49,4 +49,7 @@ class Comment extends share.BaseDocument
     discussion: 1
     body: 1
     upvotesCount: 1
-
+    upvotes:
+      # We publish only an entry associated with the current user.
+      $elemMatch:
+        'author._id': Meteor.userId()

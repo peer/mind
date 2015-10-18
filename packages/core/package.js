@@ -9,7 +9,8 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'accounts-base'
+    'accounts-base',
+    'ddp-client'
   ]);
 
   // 3rd party dependencies.
@@ -25,6 +26,10 @@ Package.onUse(function (api) {
   api.export('Discussion');
   api.export('Meeting');
   api.export('Comment');
+
+  api.addFiles([
+    'publish.coffee'
+  ], 'server');
 
   api.addFiles([
     'documents/base.coffee',

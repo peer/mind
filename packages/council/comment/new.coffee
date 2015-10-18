@@ -18,6 +18,6 @@ class Comment.NewComponent extends UIComponent
     ,
       (error, documentId) =>
         if error
-          console.error "Form error", error
-          alert "Form error: #{error.reason or error}"
+          console.error "New comment error", error
+          alert "New comment error: #{error.reason or error}"
           return

@@ -41,8 +41,8 @@ Meteor.methods
     Comment.documents.update
       _id: commentId
       # User has not upvoted already.
-      $not:
-        'upvotes.author._id': userId
+      'upvotes.author._id':
+        $ne: userId
       # User cannot upvote their comments.
       'author._id':
         $ne: userId
@@ -52,9 +52,10 @@ Meteor.methods
           createdAt: createdAt
           author:
             _id: userId
-      lastActivity: createdAt
-      upvotesCount:
-        $inc: 1
+      $set:
+        lastActivity: createdAt
+      $inc:
+        upvotesCount: 1
 
   'Comment.removeUpvote': (commentId) ->
     check commentId, Match.DocumentId
@@ -70,6 +71,7 @@ Meteor.methods
       $pull:
         upvotes:
           'author._id': userId
-      lastActivity: lastActivity
-      upvotesCount:
-        $inc: -1
+      $set:
+        lastActivity: lastActivity
+      $inc:
+        upvotesCount: -1

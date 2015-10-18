@@ -7,4 +7,11 @@
 
 <template name="Comment.ListItemComponent">
   <p>{{body}}</p>
+  <p>Upvotes: {{upvotesCount}}</p>
+  {{#if canUpvote}}
+    <button class="comment-upvote" type="button">Upvote</button>
+  {{/if}}
+  {{#if canRemoveUpvote}}
+    <button class="comment-remove-upvote" type="button">Remove upvote</button>
+  {{/if}}
 </template>
