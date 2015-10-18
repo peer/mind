@@ -10,7 +10,8 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'accounts-base',
-    'ddp-client'
+    'ddp-client',
+    'underscore'
   ]);
 
   // 3rd party dependencies.
@@ -33,6 +34,7 @@ Package.onUse(function (api) {
   ], 'server');
 
   api.addFiles([
+    'underscore.coffee',
     'base.coffee',
     'upvotable.coffee',
     'triggers.coffee',
