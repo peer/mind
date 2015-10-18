@@ -1,14 +1,8 @@
 class Comment.NewComponent extends UIComponent
   @register 'Comment.NewComponent'
 
-  parentDiscussionDisplayComponent: ->
-    component = @
-    while component and component not instanceof Discussion.DisplayComponent
-      component = component.parentComponent()
-    component
-
   currentDiscussionId: ->
-    @parentDiscussionDisplayComponent()?.currentDiscussionId()
+    @ancestorComponent(Discussion.DisplayComponent)?.currentDiscussionId()
 
   events: ->
     super.concat

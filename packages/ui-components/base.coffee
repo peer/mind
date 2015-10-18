@@ -22,3 +22,9 @@ class UIComponent extends BlazeComponent
     queryParams = kwargs?.hash?.query or {}
 
     FlowRouter.path pathName, params, queryParams
+
+  ancestorComponent: (componentClass) ->
+    component = @
+    while component and component not instanceof componentClass
+      component = component.parentComponent()
+    component

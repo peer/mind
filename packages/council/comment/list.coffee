@@ -1,14 +1,8 @@
 class Comment.ListComponent extends UIComponent
   @register 'Comment.ListComponent'
 
-  parentDiscussionDisplayComponent: ->
-    component = @
-    while component and component not instanceof Discussion.DisplayComponent
-      component = component.parentComponent()
-    component
-
   currentDiscussionId: ->
-    @parentDiscussionDisplayComponent()?.currentDiscussionId()
+    @ancestorComponent(Discussion.DisplayComponent)?.currentDiscussionId()
 
   onCreated: ->
     @autorun (computation) =>
