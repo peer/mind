@@ -14,7 +14,8 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:middleware@0.1.1',
-    'peerlibrary:reactive-publish@0.1.1'
+    'peerlibrary:reactive-publish@0.1.1',
+    'peerlibrary:check-extension@0.2.0'
   ]);
 
   // Internal dependencies.
@@ -23,6 +24,9 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'publish-endpoints/discussion.coffee'
+    'meeting/publish.coffee',
+    'meeting/methods.coffee',
+    'discussion/publish.coffee',
+    'discussion/methods.coffee'
   ], 'server');
 });

@@ -1,0 +1,22 @@
+class Discussion.NewComponent extends UIComponent
+  @register 'Discussion.NewComponent'
+
+  events: ->
+    super.concat
+      'submit .discussion-new': @onSubmit
+
+  onSubmit: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Discussion.new',
+      title: @$('[name="title"]').val()
+      description: @$('[name="description"]').val()
+    ,
+      (error) =>
+        console.log "result", error
+
+FlowRouter.route '/discussion/new',
+  name: 'Discussion.new'
+  action: (params, queryParams) ->
+    BlazeLayout.render 'LayoutComponent',
+      main: 'Discussion.NewComponent'

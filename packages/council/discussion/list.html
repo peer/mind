@@ -1,0 +1,16 @@
+<template name="Discussion.ListComponent">
+  <a href="{{pathFor 'Discussion.new'}}">Open a new discussion</a>
+
+  {{#if discussionsWithoutMeeting.exists}}
+    <h2>Discussions without a meeting</h2>
+    {{#each discussionsWithoutMeeting}}
+      {{> Discussion.ListItemComponent}}
+    {{/each}}
+  {{/if}}
+
+  <h2></h2>
+</template>
+
+<template name="Discussion.ListItemComponent">
+  <h3>{{title}}</h3>
+</template>

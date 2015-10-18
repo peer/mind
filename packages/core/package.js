@@ -21,14 +21,16 @@ Package.onUse(function (api) {
   api.use([
   ]);
 
+  api.export('User');
   api.export('Discussion');
   api.export('Meeting');
-  api.export('User');
 
   api.addFiles([
     'documents/base.coffee',
+    'triggers.coffee',
+    'documents/user.coffee',
     'documents/discussion.coffee',
     'documents/meeting.coffee',
-    'documents/user.coffee'
+    'finalize-documents.coffee'
   ]);
 });

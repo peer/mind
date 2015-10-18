@@ -8,12 +8,14 @@ Package.onUse(function (api) {
 
   // Core dependencies.
   api.use([
-    'coffeescript'
+    'coffeescript',
+    'underscore'
   ]);
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:blaze-components@0.13.0'
+    'peerlibrary:blaze-components@0.13.0',
+    'kadira:flow-router@2.7.0'
   ]);
 
   // Internal dependencies.
