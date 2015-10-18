@@ -2,7 +2,6 @@ class LayoutComponent extends BlazeComponent
   @register 'LayoutComponent'
 
   @REGIONS:
-    HEADER: 'header'
     MAIN: 'main'
     SIDEBAR: 'sidebar'
 
@@ -28,15 +27,16 @@ class LayoutComponent extends BlazeComponent
 
     return null unless componentName
 
+    component = BlazeComponent.getComponent componentName
+
+    throw new Error "Unknown component: #{componentName}" unless component
+
     parentComponent ?= @currentComponent()
 
     # To force no data context in rendered region component.
     new Blaze.Template =>
       Blaze.With null, =>
-        BlazeComponent.getComponent(componentName).renderComponent parentComponent
-
-  renderHeader: (parentComponent) ->
-    @_renderRegion @constructor.REGIONS.HEADER, parentComponent
+        component.renderComponent parentComponent
 
   renderMain: (parentComponent) ->
     @_renderRegion @constructor.REGIONS.MAIN, parentComponent

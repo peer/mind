@@ -31,6 +31,8 @@ Package.onUse(function (api) {
     'flow-router/root.coffee',
     'flow-router/layout.html',
     'flow-router/layout.coffee',
+    'flow-router/not-found.html',
+    'flow-router/not-found.coffee',
     'meetings/base.coffee',
     'meetings/list.html',
     'meetings/list.coffee'
