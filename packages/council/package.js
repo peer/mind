@@ -16,14 +16,15 @@ Package.onUse(function (api) {
   api.use([
     'kadira:flow-router@2.7.0',
     'kadira:blaze-layout@2.1.0',
-    'peerlibrary:blaze-components@0.13.0',
     'peerlibrary:computed-field@0.3.0',
     'peerlibrary:assert@0.2.5'
   ]);
 
   // Internal dependencies.
   api.use([
-    'core'
+    'core',
+    'api',
+    'ui-components'
   ]);
 
   api.addFiles([
@@ -33,8 +34,7 @@ Package.onUse(function (api) {
     'flow-router/layout.coffee',
     'flow-router/not-found.html',
     'flow-router/not-found.coffee',
-    'meetings/base.coffee',
-    'meetings/list.html',
-    'meetings/list.coffee'
+    'meeting/list.html',
+    'meeting/list.coffee'
   ], 'client');
 });

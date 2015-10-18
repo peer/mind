@@ -1,0 +1,1 @@
+class UIComponent extends BlazeComponent

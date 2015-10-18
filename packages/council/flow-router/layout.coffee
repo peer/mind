@@ -1,4 +1,4 @@
-class LayoutComponent extends BlazeComponent
+class LayoutComponent extends UIComponent
   @register 'LayoutComponent'
 
   @REGIONS:
@@ -27,7 +27,7 @@ class LayoutComponent extends BlazeComponent
 
     return null unless componentName
 
-    component = BlazeComponent.getComponent componentName
+    component = UIComponent.getComponent componentName
 
     throw new Error "Unknown component: #{componentName}" unless component
 

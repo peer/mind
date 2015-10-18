@@ -1,4 +1,4 @@
-class NotFoundComponent extends BlazeComponent
+class NotFoundComponent extends UIComponent
   @register 'NotFoundComponent'
 
 FlowRouter.notFound =
