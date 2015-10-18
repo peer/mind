@@ -17,10 +17,10 @@ class Comment.ListItemComponent extends UIComponent
 
   onCreated: ->
     @canUpvote = new ComputedField =>
-      Meteor.userId() and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
+      Meteor.userId() and @data() and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
 
     @canRemoveUpvote = new ComputedField =>
-      Meteor.userId() and Meteor.userId() isnt @data().author._id and Meteor.userId() in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
+      Meteor.userId() and @data() and Meteor.userId() isnt @data().author._id and Meteor.userId() in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
 
   events: ->
     super.concat
