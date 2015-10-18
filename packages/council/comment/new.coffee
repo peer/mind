@@ -1,6 +1,10 @@
 class Comment.NewComponent extends UIComponent
   @register 'Comment.NewComponent'
 
+  onCreated: ->
+    @canNew = new ComputedField =>
+      !!Meteor.userId()
+
   currentDiscussionId: ->
     @ancestorComponent(Discussion.DisplayComponent)?.currentDiscussionId()
 

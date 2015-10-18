@@ -2,6 +2,9 @@ class Discussion.ListComponent extends UIComponent
   @register 'Discussion.ListComponent'
 
   onCreated: ->
+    @canNew = new ComputedField =>
+      !!Meteor.userId()
+
     @subscribe 'Meeting.list'
     @subscribe 'Discussion.list'
 
