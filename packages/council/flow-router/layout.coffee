@@ -1,17 +1,11 @@
-class LayoutComponent extends UIComponent
-  @register 'LayoutComponent'
-
-  @REGIONS:
-    MAIN: 'main'
-    SIDEBAR: 'sidebar'
-
+class BaseLayoutComponent extends UIComponent
   onCreated: ->
     # To make it easier to use region values in methods and minimize reactivity.
     @regions = {}
     for region, name of @constructor.REGIONS
       do (name) =>
         @regions[name] = new ComputedField =>
-          @data()[name]?() or null
+          @data()?[name]?() or null
 
     @autorun (computation) =>
       unknownRegions = _.difference _.keys(@data()), _.values(@constructor.REGIONS)
@@ -38,8 +32,28 @@ class LayoutComponent extends UIComponent
       Blaze.With null, =>
         component.renderComponent parentComponent
 
+class MainLayoutComponent extends BaseLayoutComponent
+  @register 'MainLayoutComponent'
+
+  @REGIONS:
+    MAIN: 'main'
+
   renderMain: (parentComponent) ->
     @_renderRegion @constructor.REGIONS.MAIN, parentComponent
 
-  renderSidebar: (parentComponent) ->
-    @_renderRegion @constructor.REGIONS.SIDEBAR, parentComponent
+class ColumnsLayoutComponent extends BaseLayoutComponent
+  @register 'ColumnsLayoutComponent'
+
+  @REGIONS:
+    FIRST: 'first'
+    SECOND: 'second'
+    THIRD: 'third'
+
+  renderFirst: (parentComponent) ->
+    @_renderRegion @constructor.REGIONS.FIRST, parentComponent
+
+  renderSecond: (parentComponent) ->
+    @_renderRegion @constructor.REGIONS.SECOND, parentComponent
+
+  renderThird: (parentComponent) ->
+    @_renderRegion @constructor.REGIONS.THIRD, parentComponent

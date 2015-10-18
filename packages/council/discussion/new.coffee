@@ -28,5 +28,5 @@ class Discussion.NewComponent extends UIComponent
 FlowRouter.route '/discussion/new',
   name: 'Discussion.new'
   action: (params, queryParams) ->
-    BlazeLayout.render 'LayoutComponent',
+    BlazeLayout.render 'MainLayoutComponent',
       main: 'Discussion.NewComponent'

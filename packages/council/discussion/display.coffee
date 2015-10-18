@@ -17,5 +17,5 @@ class Discussion.DisplayComponent extends UIComponent
 FlowRouter.route '/discussion/:_id',
   name: 'Discussion.display'
   action: (params, queryParams) ->
-    BlazeLayout.render 'LayoutComponent',
-      main: 'Discussion.DisplayComponent'
+    BlazeLayout.render 'ColumnsLayoutComponent',
+      first: 'Discussion.DisplayComponent'

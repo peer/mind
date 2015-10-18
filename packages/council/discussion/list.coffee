@@ -20,5 +20,5 @@ class Discussion.ListItemComponent extends UIComponent
 FlowRouter.route '/',
   name: 'Discussion.list'
   action: (params, queryParams) ->
-    BlazeLayout.render 'LayoutComponent',
+    BlazeLayout.render 'MainLayoutComponent',
       main: 'Discussion.ListComponent'

@@ -1,11 +1,23 @@
-<template name="LayoutComponent">
+<template name="MainLayoutComponent">
   <div classs="header">
     {{> HeaderComponent}}
   </div>
   <div class="main">
     {{> renderMain}}
   </div>
-  <div class="sidebar">
-    {{> renderSidebar}}
+</template>
+
+<template name="ColumnsLayoutComponent">
+  <div classs="header">
+    {{> HeaderComponent}}
+  </div>
+  <div class="first">
+    {{> renderFirst}}
+  </div>
+  <div class="second">
+    {{> renderSecond}}
+  </div>
+  <div class="third">
+    {{> renderThird}}
   </div>
 </template>
