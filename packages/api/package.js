@@ -27,6 +27,8 @@ Package.onUse(function (api) {
     'meeting/publish.coffee',
     'meeting/methods.coffee',
     'discussion/publish.coffee',
-    'discussion/methods.coffee'
+    'discussion/methods.coffee',
+    'comment/publish.coffee',
+    'comment/methods.coffee'
   ], 'server');
 });

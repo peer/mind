@@ -44,6 +44,10 @@ Package.onUse(function (api) {
     'discussion/new.html',
     'discussion/new.coffee',
     'discussion/display.html',
-    'discussion/display.coffee'
+    'discussion/display.coffee',
+    'comment/list.html',
+    'comment/list.coffee',
+    'comment/new.html',
+    'comment/new.coffee'
   ], 'client');
 });

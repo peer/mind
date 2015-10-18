@@ -1,0 +1,10 @@
+<template name="Comment.ListComponent">
+  {{#each comments}}
+    {{> Comment.ListItemComponent}}
+  {{/each}}
+  {{> Comment.NewComponent}}
+</template>
+
+<template name="Comment.ListItemComponent">
+  <p>{{body}}</p>
+</template>

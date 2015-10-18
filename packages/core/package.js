@@ -24,6 +24,7 @@ Package.onUse(function (api) {
   api.export('User');
   api.export('Discussion');
   api.export('Meeting');
+  api.export('Comment');
 
   api.addFiles([
     'documents/base.coffee',
@@ -31,6 +32,7 @@ Package.onUse(function (api) {
     'documents/user.coffee',
     'documents/discussion.coffee',
     'documents/meeting.coffee',
+    'documents/comment.coffee',
     'finalize-documents.coffee'
   ]);
 });
