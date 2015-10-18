@@ -24,14 +24,17 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
+    'upvotable.coffee',
     'meeting/methods.coffee',
     'discussion/methods.coffee',
-    'comment/methods.coffee'
+    'comment/methods.coffee',
+    'point/methods.coffee'
   ]);
 
   api.addFiles([
     'meeting/publish.coffee',
     'discussion/publish.coffee',
-    'comment/publish.coffee'
+    'comment/publish.coffee',
+    'point/publish.coffee'
   ], 'server');
 });

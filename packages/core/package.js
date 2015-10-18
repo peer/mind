@@ -26,18 +26,21 @@ Package.onUse(function (api) {
   api.export('Discussion');
   api.export('Meeting');
   api.export('Comment');
+  api.export('Point');
 
   api.addFiles([
     'publish.coffee'
   ], 'server');
 
   api.addFiles([
-    'documents/base.coffee',
+    'base.coffee',
+    'upvotable.coffee',
     'triggers.coffee',
     'documents/user.coffee',
     'documents/discussion.coffee',
     'documents/meeting.coffee',
     'documents/comment.coffee',
+    'documents/point.coffee',
     'finalize-documents.coffee'
   ]);
 });

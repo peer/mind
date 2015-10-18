@@ -1,0 +1,26 @@
+<template name="Point.ListComponent">
+  <h2>Pro</h2>
+  {{#each proPoints}}
+    {{> Point.ListItemComponent}}
+  {{/each}}
+  <h2>Contra</h2>
+  {{#each contraPoints}}
+    {{> Point.ListItemComponent}}
+  {{/each}}
+  <h2>Note</h2>
+  {{#each notePoints}}
+    {{> Point.ListItemComponent}}
+  {{/each}}
+  {{> Point.NewComponent}}
+</template>
+
+<template name="Point.ListItemComponent">
+  <p>{{body}}</p>
+  <p>Upvotes: {{upvotesCount}}</p>
+  {{#if canUpvote}}
+    <button class="upvote" type="button">Upvote</button>
+  {{/if}}
+  {{#if canRemoveUpvote}}
+    <button class="remove-upvote" type="button">Remove upvote</button>
+  {{/if}}
+</template>

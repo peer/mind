@@ -30,6 +30,7 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
+    'upvotable.coffee',
     'accounts/config.coffee',
     'flow-router/root.html',
     'flow-router/root.coffee',
@@ -48,6 +49,10 @@ Package.onUse(function (api) {
     'comment/list.html',
     'comment/list.coffee',
     'comment/new.html',
-    'comment/new.coffee'
+    'comment/new.coffee',
+    'point/list.html',
+    'point/list.coffee',
+    'point/new.html',
+    'point/new.coffee'
   ], 'client');
 });

@@ -2,6 +2,8 @@ class Discussion.NewComponent extends UIComponent
   @register 'Discussion.NewComponent'
 
   onCreated: ->
+    super
+
     @canNew = new ComputedField =>
       !!Meteor.userId()
 

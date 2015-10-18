@@ -1,0 +1,12 @@
+<template name="Point.NewComponent">
+  {{#if canNew}}
+    <form class="point-new">
+      <p>Body: <textarea name="body"></textarea></p>
+      <p>Category: {{#each categories}}
+        <input type="radio" name="category" value="{{category}}" id="point-category-{{category}}" />
+        <label for="point-category-{{category}}">{{label}}</label>
+      {{/each}}</p>
+      <button type="submit" name="new">Make a point</button>
+    </form>
+  {{/if}}
+</template>

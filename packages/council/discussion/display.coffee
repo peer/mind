@@ -5,6 +5,8 @@ class Discussion.DisplayComponent extends UIComponent
     FlowRouter.getParam '_id'
 
   onCreated: ->
+    super
+
     @autorun (computation) =>
       @subscribe 'Discussion.one', @currentDiscussionId()
 
@@ -18,4 +20,6 @@ FlowRouter.route '/discussion/:_id',
   name: 'Discussion.display'
   action: (params, queryParams) ->
     BlazeLayout.render 'ColumnsLayoutComponent',
-      first: 'Discussion.DisplayComponent'
+      main: 'Discussion.DisplayComponent'
+      first: 'Comment.ListComponent'
+      second: 'Point.ListComponent'

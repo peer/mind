@@ -1,5 +1,7 @@
 class BaseLayoutComponent extends UIComponent
   onCreated: ->
+    super
+
     # To make it easier to use region values in methods and minimize reactivity.
     @regions = {}
     for region, name of @constructor.REGIONS
@@ -45,9 +47,13 @@ class ColumnsLayoutComponent extends BaseLayoutComponent
   @register 'ColumnsLayoutComponent'
 
   @REGIONS:
+    MAIN: 'main'
     FIRST: 'first'
     SECOND: 'second'
     THIRD: 'third'
+
+  renderMain: (parentComponent) ->
+    @_renderRegion @constructor.REGIONS.MAIN, parentComponent
 
   renderFirst: (parentComponent) ->
     @_renderRegion @constructor.REGIONS.FIRST, parentComponent
