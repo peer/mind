@@ -17,8 +17,6 @@ class Point.NewComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
-    console.log @$('[name="category"]').val()
-
     Meteor.call 'Point.new',
       body: @$('[name="body"]').val()
       category: @$('[name="category"]:checked').val()
@@ -30,6 +28,9 @@ class Point.NewComponent extends UIComponent
           console.error "New point error", error
           alert "New point error: #{error.reason or error}"
           return
+
+        @$('[name="body"]').val('')
+        @$('[name="category"]').prop('checked', false)
 
   categories: ->
     for category, value of Point.CATEGORY

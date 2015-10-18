@@ -27,3 +27,5 @@ class Comment.NewComponent extends UIComponent
           console.error "New comment error", error
           alert "New comment error: #{error.reason or error}"
           return
+
+        @$('[name="body"]').val('')
