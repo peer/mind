@@ -12,8 +12,14 @@ class Discussion.NewComponent extends UIComponent
       title: @$('[name="title"]').val()
       description: @$('[name="description"]').val()
     ,
-      (error) =>
-        console.log "result", error
+      (error, documentId) =>
+        if error
+          console.error "Form error", error
+          alert "Form error: #{error.reason or error}"
+          return
+
+        FlowRouter.go 'Discussion.display',
+          _id: documentId
 
 FlowRouter.route '/discussion/new',
   name: 'Discussion.new'
