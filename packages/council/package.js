@@ -19,7 +19,11 @@ Package.onUse(function (api) {
     'kadira:flow-router@2.7.0',
     'kadira:blaze-layout@2.2.0',
     'peerlibrary:computed-field@0.3.0',
-    'peerlibrary:assert@0.2.5'
+    'peerlibrary:reactive-field@0.1.0',
+    'peerlibrary:assert@0.2.5',
+    'materialize:materialize@0.97.1',
+    'useraccounts:materialize@1.12.4',
+    'useraccounts:flow-routing@1.12.4'
   ]);
 
   // Internal dependencies.
@@ -31,15 +35,20 @@ Package.onUse(function (api) {
 
   api.addFiles([
     'upvotable.coffee',
-    'accounts/config.coffee',
+    'account/config.coffee',
+    'account/form.coffee',
     'flow-router/root.html',
     'flow-router/root.coffee',
     'flow-router/layout.html',
     'flow-router/layout.coffee',
+    'flow-router/layout.css',
     'flow-router/header.html',
     'flow-router/header.coffee',
+    'flow-router/footer.html',
+    'flow-router/footer.coffee',
     'flow-router/not-found.html',
     'flow-router/not-found.coffee',
+    'flow-router/icons.html',
     'discussion/list.html',
     'discussion/list.coffee',
     'discussion/new.html',

@@ -1,3 +1,6 @@
 [submodule "packages/peerlibrary:blaze-components"]
 	path = packages/peerlibrary:blaze-components
 	url = https://github.com/peerlibrary/meteor-blaze-components.git
+[submodule "packages/materialize:materialize"]
+	path = packages/materialize:materialize
+	url = https://github.com/Dogfalo/materialize.git

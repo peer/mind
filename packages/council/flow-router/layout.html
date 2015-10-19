@@ -1,26 +1,36 @@
 <template name="MainLayoutComponent">
-  <div classs="header">
-    {{> HeaderComponent}}
-  </div>
-  <div class="main">
-    {{> renderMain}}
-  </div>
+  {{> HeaderComponent}}
+  <main>
+    <div class="container">
+      <div class="row">
+        <div class="main col s12">
+          {{> renderMain}}
+        </div>
+      </div>
+    </div>
+  </main>
+  {{> FooterComponent}}
 </template>
 
 <template name="ColumnsLayoutComponent">
-  <div classs="header">
-    {{> HeaderComponent}}
-  </div>
-  <div class="main">
-    {{> renderMain}}
-  </div>
-  <div class="first">
-    {{> renderFirst}}
-  </div>
-  <div class="second">
-    {{> renderSecond}}
-  </div>
-  <div class="third">
-    {{> renderThird}}
-  </div>
+  {{> HeaderComponent}}
+  <main>
+    <div class="row">
+      <div class="main col s12">
+        {{> renderMain}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="first col s4">
+        {{> renderFirst}}
+      </div>
+      <div class="second col s4">
+        {{> renderSecond}}
+      </div>
+      <div class="third col s4">
+        {{> renderThird}}
+      </div>
+    </div>
+  </main>
+  {{> FooterComponent}}
 </template>

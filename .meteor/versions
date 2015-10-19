@@ -47,6 +47,7 @@ less@2.5.0_3
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+materialize:materialize@0.97.2
 meteor@1.1.9
 meteor-base@1.0.1
 minifiers@1.1.7
@@ -85,6 +86,7 @@ routepolicy@1.0.6
 service-configuration@1.0.5
 session@1.1.1
 sha@1.0.4
+softwarerero:accounts-t9n@1.1.4
 spacebars@1.0.7
 spacebars-compiler@1.0.7
 srp@1.0.4
@@ -96,5 +98,8 @@ ui@1.0.8
 ui-components@0.1.0
 underscore@1.0.4
 url@1.0.5
+useraccounts:core@1.12.4
+useraccounts:flow-routing@1.12.4
+useraccounts:materialize@1.12.4
 webapp@1.2.2
 webapp-hashing@1.0.5

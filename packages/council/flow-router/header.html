@@ -1,4 +1,18 @@
 <template name="HeaderComponent">
-  <a href="{{pathFor 'Discussion.list'}}">List discussions</a>
-  {{> loginButtons}}
+  <header>
+    <nav>
+      <div class="nav-wrapper">
+        <span class="brand-logo">{{title}}</span>
+        <a href="" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="{{pathFor 'Discussion.list'}}">Discussions</a></li>
+          <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-menu">
+          <li><a href="{{pathFor 'Discussion.list'}}">Discussions</a></li>
+          <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
 </template>
