@@ -14,7 +14,7 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:blaze-components@0.13.0',
+    'peerlibrary:blaze-components@0.14.0',
     'kadira:flow-router@2.7.0'
   ]);
 
