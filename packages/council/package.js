@@ -62,6 +62,10 @@ Package.onUse(function (api) {
     'point/list.html',
     'point/list.coffee',
     'point/new.html',
-    'point/new.coffee'
+    'point/new.coffee',
+    'motion/list.html',
+    'motion/list.coffee',
+    'motion/new.html',
+    'motion/new.coffee'
   ], 'client');
 });

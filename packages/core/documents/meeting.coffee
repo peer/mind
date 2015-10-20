@@ -18,10 +18,10 @@ class Meeting extends share.BaseDocument
   @Meta
     name: 'Meeting'
     fields: =>
+      author: @ReferenceField User, User.REFERENCE_FIELDS()
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       description: @GeneratedField 'self', ['descriptionChanges'], (fields) ->
         [fields._id, fields.descriptionChanges?[fields.descriptionChanges?.length - 1]?.description or '']
-      author: @ReferenceField User, User.REFERENCE_FIELDS()
       descriptionChanges: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]

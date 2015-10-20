@@ -23,3 +23,4 @@ FlowRouter.route '/discussion/:_id',
       main: 'Discussion.DisplayComponent'
       first: 'Comment.ListComponent'
       second: 'Point.ListComponent'
+      third: 'Motion.ListComponent'

@@ -1,0 +1,10 @@
+<template name="Motion.ListComponent">
+  {{#each motions}}
+    {{> Motion.ListItemComponent}}
+  {{/each}}
+  {{> Motion.NewComponent}}
+</template>
+
+<template name="Motion.ListItemComponent">
+  <p>{{body}}</p>
+</template>

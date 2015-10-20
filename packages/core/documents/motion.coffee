@@ -1,7 +1,7 @@
-class share.UpvotableDocument extends share.BaseDocument
+class Motion extends share.BaseDocument
   # createdAt: time of document creation
   # updatedAt: time of the last change
-  # lastActivity: time of the last activity on the comment
+  # lastActivity: time of the last activity on the motion
   # author:
   #   _id
   #   username
@@ -14,14 +14,11 @@ class share.UpvotableDocument extends share.BaseDocument
   #     _id
   #     username
   #   body
-  # upvotes: list of
-  #   createdAt: timestamp of the upvote
-  #   author: author of the upvote
-  #     _id
-  # upvotesCount
+  # votingOpened: time when voting started
+  # votingClosed: time when voting ended
 
   @Meta
-    abstract: true
+    name: 'Motion'
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
       discussion: @ReferenceField Discussion
@@ -31,14 +28,8 @@ class share.UpvotableDocument extends share.BaseDocument
       bodyChanges: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
-      upvotes: [
-        author: @ReferenceField User
-      ]
-      upvotesCount: @GeneratedField 'self', ['upvotes'], (fields) ->
-        [fields._id, fields.upvotes?.length or 0]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['bodyChanges']
-      lastActivity: share.LastActivityTrigger ['upvotes']
 
   @PUBLISH_FIELDS: ->
     _id: 1
@@ -48,8 +39,3 @@ class share.UpvotableDocument extends share.BaseDocument
     author: 1
     discussion: 1
     body: 1
-    upvotesCount: 1
-    upvotes:
-      # We publish only an entry associated with the current user.
-      $elemMatch:
-        'author._id': Meteor.userId()

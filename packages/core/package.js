@@ -28,6 +28,8 @@ Package.onUse(function (api) {
   api.export('Meeting');
   api.export('Comment');
   api.export('Point');
+  api.export('Motion');
+  api.export('Vote');
 
   api.addFiles([
     'publish.coffee'
@@ -43,6 +45,8 @@ Package.onUse(function (api) {
     'documents/meeting.coffee',
     'documents/comment.coffee',
     'documents/point.coffee',
+    'documents/motion.coffee',
+    'documents/vote.coffee',
     'finalize-documents.coffee'
   ]);
 });

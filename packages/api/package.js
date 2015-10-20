@@ -28,13 +28,15 @@ Package.onUse(function (api) {
     'meeting/methods.coffee',
     'discussion/methods.coffee',
     'comment/methods.coffee',
-    'point/methods.coffee'
+    'point/methods.coffee',
+    'motion/methods.coffee'
   ]);
 
   api.addFiles([
     'meeting/publish.coffee',
     'discussion/publish.coffee',
     'comment/publish.coffee',
-    'point/publish.coffee'
+    'point/publish.coffee',
+    'motion/publish.coffee'
   ], 'server');
 });
