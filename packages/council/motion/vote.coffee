@@ -28,8 +28,6 @@ class Motion.VoteComponent extends UIComponent
             _id: @currentMotionId()
         ,
           (error, result) =>
-            console.log "result", result
-
             if error
               console.error "Vote error", error
               alert "Vote error: #{error.reason or error}"
