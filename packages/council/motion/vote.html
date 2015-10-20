@@ -1,16 +1,16 @@
 <template name="Motion.VoteComponent">
   <form>
-    <div class="range-field">
-      <input type="range" name="vote" min="-1" max="1" step="0.1" id="motion-vote-range-{{currentMotionId}}" class="{{rangeDeselected}}" />
+    <div class="range-field row">
+      <input type="range" name="vote" min="-1" max="1" step="0.1" id="motion-vote-range-{{currentMotionId}}" class="{{rangeDeselected}}" {{voteValue}} />
       <label for="motion-vote-range-{{currentMotionId}}"><span class="oppose-vote">Oppose</span><span class="right support-vote">Support</span></label>
     </div>
-    <div class="row">
+    <div class="row-top">
       <div class="col s6 center-align">
-        <input name="other-vote" type="radio" id="motion-vote-abstain-{{currentMotionId}}" value="abstain" />
+        <input name="other-vote" type="radio" id="motion-vote-abstain-{{currentMotionId}}" value="abstain" {{abstainChecked}} />
         <label for="motion-vote-abstain-{{currentMotionId}}">Abstain</label>
       </div>
       <div class="col s6 center-align">
-        <input name="other-vote" type="radio" id="motion-vote-default-{{currentMotionId}}" value="default" />
+        <input name="other-vote" type="radio" id="motion-vote-default-{{currentMotionId}}" value="default" {{defaultChecked}} />
         <label for="motion-vote-default-{{currentMotionId}}">Nothing</label>
       </div>
     </div>

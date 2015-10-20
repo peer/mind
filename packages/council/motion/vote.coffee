@@ -13,11 +13,11 @@ class Motion.VoteComponent extends UIComponent
       @subscribe 'Motion.vote', @currentMotionId()
 
     # We store current vote value into a reactive field so that we deduplicate events for the same change.
-    @voteValue = new ReactiveField null
+    @voteValueChange = new ReactiveField null
 
     @autorun (computation) =>
       # Register a dependency.
-      voteValue = @voteValue()
+      voteValue = @voteValueChange()
 
       return if computation.firstRun
 
@@ -53,12 +53,12 @@ class Motion.VoteComponent extends UIComponent
 
     @$('[name="other-vote"]').prop('checked', false)
 
-    @voteValue @$('[name="vote"]').val()
+    @voteValueChange @$('[name="vote"]').val()
 
   onRadioInteraction: (event) ->
     @deselectRange()
 
-    @voteValue @$('[name="other-vote"]:checked').val()
+    @voteValueChange @$('[name="other-vote"]:checked').val()
 
   onOpposeVote: (event) ->
     @$('[name="vote"]').val(-1)
@@ -66,6 +66,43 @@ class Motion.VoteComponent extends UIComponent
   onSupportVote: (event) ->
     @$('[name="vote"]').val(1)
 
-  vote: ->
-    Vote.documents.findOne
+  abstainChecked: ->
+    return unless @subscriptionsReady()
+
+    vote = Vote.documents.findOne
       'motion._id': @currentMotionId()
+    ,
+      fields:
+        value: 1
+
+    'checked' if vote?.value is 'abstain'
+
+  defaultChecked: ->
+    return unless @subscriptionsReady()
+
+    vote = Vote.documents.findOne
+      'motion._id': @currentMotionId()
+    ,
+      fields:
+        value: 1
+
+    # This is default.
+    return 'checked' unless vote?.value?
+
+    'checked' if vote.value is 'default'
+
+  voteValue: ->
+    return unless @subscriptionsReady()
+
+    vote = Vote.documents.findOne
+      'motion._id': @currentMotionId()
+    ,
+      fields:
+        value: 1
+
+    if _.isFinite vote?.value
+      @rangeDeselected null
+      value: vote.value
+    else
+      @rangeDeselected 'deselected'
+      value: @$('[name="vote"]').val() if @isRendered()

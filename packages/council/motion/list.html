@@ -10,11 +10,13 @@
     <div class="card-content">
       <p>{{body}}</p>
     </div>
-    {{#if $or ($and isOpen canVote) canOpen canClose canWithdraw canEdit}}
+    {{#if $and isOpen canVote}}
       <div class="card-action">
-        {{#if $and isOpen canVote}}
-          {{> Motion.VoteComponent}}
-        {{/if}}
+        {{> Motion.VoteComponent}}
+      </div>
+    {{/if}}
+    {{#if $or canOpen canClose canWithdraw canEdit}}
+      <div class="card-action">
         <div class="center-align">
           {{#if canOpen}}
             <button class="open-voting waves-effect waves-light btn-flat" type="button"><i class="material-icons left">play_arrow</i>Open voting</button>
