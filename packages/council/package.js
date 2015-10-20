@@ -4,13 +4,14 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.0.3.1');
+  api.versionsFrom('1.2.0.2');
 
   // Core dependencies.
   api.use([
     'coffeescript',
     'underscore',
-    'accounts-password'
+    'accounts-password',
+    'stylus'
   ]);
 
   // 3rd party dependencies.
@@ -40,7 +41,7 @@ Package.onUse(function (api) {
     'flow-router/root.coffee',
     'flow-router/layout.html',
     'flow-router/layout.coffee',
-    'flow-router/layout.css',
+    'flow-router/layout.styl',
     'flow-router/header.html',
     'flow-router/header.coffee',
     'flow-router/footer.html',
@@ -65,6 +66,9 @@ Package.onUse(function (api) {
     'motion/list.html',
     'motion/list.coffee',
     'motion/new.html',
-    'motion/new.coffee'
+    'motion/new.coffee',
+    'motion/vote.html',
+    'motion/vote.coffee',
+    'motion/vote.styl'
   ], 'client');
 });

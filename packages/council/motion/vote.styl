@@ -1,0 +1,87 @@
+/*
+Making the range thumb look and behave the same as the radio button.
+When user votes for some other option (abstain, default) we deselect the range.
+*/
+
+// TODO: Make selection/deselection animation work also in Firefox and IE.
+//       In Firefox it seems :after does not work and does not create anything.
+
+input[type=range]::-webkit-slider-thumb
+  width 16px
+  height 16px
+  margin-top -6px
+  box-sizing border-box
+  transition .28s ease
+  z-index 0
+  border-radius 50%
+  border 2px solid transparent
+  background-color transparent
+
+input[type=range]::-webkit-slider-thumb:after
+  content ''
+  position absolute
+  box-sizing border-box
+  width 16px
+  height 16px
+  padding 0
+  margin-left -2px
+  margin-top -2px
+  z-index 0
+  transition .28s ease
+  border-radius 50%
+
+input[type=range]::-moz-range-thumb
+  width 16px
+  height 16px
+  margin-top -6px
+  box-sizing border-box
+  transition .28s ease
+  z-index 0
+  border-radius 50%
+  // TODO: Use $radio-fill-color here.
+  border 2px solid #26a69a
+  background-color #26a69a
+
+input[type=range]::-ms-thumb
+  width 16px
+  height 16px
+  box-sizing border-box
+  transition .28s ease
+  z-index 0
+  border-radius 50%
+  // TODO: Use $radio-fill-color here.
+  border 2px solid #26a69a
+  background-color #26a69a
+
+input[type=range].deselected::-webkit-slider-thumb
+  background-color white
+  // TODO: Use $radio-empty-color here.
+  border 2px solid #5a5a5a
+
+input[type=range]:not(.deselected)::-webkit-slider-thumb
+  background-color transparent
+  border 2px solid transparent
+
+input[type=range].deselected::-webkit-slider-thumb:after
+  border-radius 50%
+  // TODO: Use $radio-empty-color here.
+  border 2px solid #5a5a5a
+  z-index -1
+  transform scale(0)
+
+input[type=range]:not(.deselected)::-webkit-slider-thumb:after
+  // TODO: Use $radio-fill-color here.
+  border 2px solid #26a69a
+  background-color #26a69a
+  z-index 0
+  transform scale(1.02)
+
+input[type=range].deselected::-moz-range-thumb
+  background-color white
+  // TODO: Use $radio-empty-color here.
+  border 2px solid #5a5a5a
+
+input[type=range].deselected::-ms-thumb
+  background white
+  // TODO: Use $radio-empty-color here.
+  border 2px solid #5a5a5a

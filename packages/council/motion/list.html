@@ -13,4 +13,7 @@
   {{#if canClose}}
     <button class="voting-close" type="button">Close voting</button>
   {{/if}}
+  {{#if canVote}}
+    {{> Motion.VoteComponent}}
+  {{/if}}
 </template>

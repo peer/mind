@@ -28,6 +28,9 @@ class Motion.ListItemComponent extends UIComponent
       # TODO: We should also allow moderators to close motions.
       Meteor.userId() and @data() and Meteor.userId() is @data().author._id and @data().votingOpenedAt and @data().votingOpenedBy and not @data().votingClosedAt and not @data().votingClosedBy
 
+    @canVote = new ComputedField =>
+      !!Meteor.userId()
+
   events: ->
     super.concat
       'click .voting-open': @onOpenVoting
