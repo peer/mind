@@ -14,8 +14,14 @@ class Motion extends share.BaseDocument
   #     _id
   #     username
   #   body
-  # votingOpened: time when voting started
-  # votingClosed: time when voting ended
+  # votingOpenedBy:
+  #   _id
+  #   username
+  # votingOpenedAt: time when voting started
+  # votingClosedBy:
+  #   _id
+  #   username
+  # votingClosedAt: time when voting ended
 
   @Meta
     name: 'Motion'
@@ -28,6 +34,8 @@ class Motion extends share.BaseDocument
       bodyChanges: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
+      votingOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), [], false
+      votingClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), [], false
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['bodyChanges']
 
@@ -39,3 +47,7 @@ class Motion extends share.BaseDocument
     author: 1
     discussion: 1
     body: 1
+    votingOpenedBy: 1
+    votingOpenedAt: 1
+    votingClosedBy: 1
+    votingClosedAt: 1

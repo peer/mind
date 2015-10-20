@@ -1,5 +1,7 @@
 Meteor.methods
   'Point.new': (document) ->
+    # TODO: Only moderators should be able to make points.
+
     share.newUpvotable Point, document,
       body: Match.NonEmptyString
       discussion:

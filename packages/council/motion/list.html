@@ -7,4 +7,10 @@
 
 <template name="Motion.ListItemComponent">
   <p>{{body}}</p>
+  {{#if canOpen}}
+    <button class="voting-open" type="button">Open voting</button>
+  {{/if}}
+  {{#if canClose}}
+    <button class="voting-close" type="button">Close voting</button>
+  {{/if}}
 </template>
