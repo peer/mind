@@ -117,8 +117,16 @@ Meteor.methods
       fields:
         _id: 1
         discussion: 1
+        votingOpenedBy: 1
+        votingOpenedAt: 1
+        votingClosedBy: 1
+        votingClosedAt: 1
+        withdrawnBy: 1
+        withdrawnAt: 1
 
     throw new Meteor.Error 400, "Invalid motion." unless motion
+
+    throw new Meteor.Error 400, "Invalid motion." unless motion.votingOpenedBy and motion.votingOpenedAt and not motion.votingClosedBy and not motion.votingClosedAt and not motion.withdrawnBy and not motion.withdrawnAt
 
     createdAt = new Date()
     Vote.documents.update
