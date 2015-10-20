@@ -27,15 +27,15 @@ share.newUpvotable = (documentClass, document, match) ->
     upvotes: []
     upvotesCount: 0
 
-share.upvoteUpvotable = (documentClass, docuemntId) ->
-  check docuemntId, Match.DocumentId
+share.upvoteUpvotable = (documentClass, documentId) ->
+  check documentId, Match.DocumentId
 
   userId = Meteor.userId()
   throw new Meteor.Error 401, "User not signed in." unless userId
 
   createdAt = new Date()
   documentClass.documents.update
-    _id: docuemntId
+    _id: documentId
     # User has not upvoted already.
     'upvotes.author._id':
       $ne: userId
