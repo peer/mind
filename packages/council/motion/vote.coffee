@@ -12,6 +12,29 @@ class Motion.VoteComponent extends UIComponent
     @autorun (computation) =>
       @subscribe 'Motion.vote', @currentMotionId()
 
+    # We store current vote value into a reactive field so that we deduplicate events for the same change.
+    @voteValue = new ReactiveField null
+
+    @autorun (computation) =>
+      # Register a dependency.
+      voteValue = @voteValue()
+
+      return if computation.firstRun
+
+      Tracker.nonreactive =>
+        Meteor.call 'Motion.vote',
+          value: voteValue
+          motion:
+            _id: @currentMotionId()
+        ,
+          (error, result) =>
+            console.log "result", result
+
+            if error
+              console.error "Vote error", error
+              alert "Vote error: #{error.reason or error}"
+              return
+
   deselectRange: ->
     @rangeDeselected 'deselected'
 
@@ -32,30 +55,12 @@ class Motion.VoteComponent extends UIComponent
 
     @$('[name="other-vote"]').prop('checked', false)
 
-    Meteor.call 'Motion.vote',
-      vote: @$('[name="vote"]').val()
-      motion:
-        _id: @currentMotionId()
-    ,
-      (error, result) =>
-        if error
-          console.error "Vote error", error
-          alert "Vote error: #{error.reason or error}"
-          return
+    @voteValue @$('[name="vote"]').val()
 
   onRadioInteraction: (event) ->
     @deselectRange()
 
-    Meteor.call 'Motion.vote',
-      vote: @$('[name="other-vote"]').val()
-      motion:
-        _id: @currentMotionId()
-    ,
-      (error, result) =>
-        if error
-          console.error "Vote error", error
-          alert "Vote error: #{error.reason or error}"
-          return
+    @voteValue @$('[name="other-vote"]:checked').val()
 
   onOpposeVote: (event) ->
     @$('[name="vote"]').val(-1)

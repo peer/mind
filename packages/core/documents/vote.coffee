@@ -6,6 +6,7 @@ class Vote extends share.BaseDocument
   #   username
   # motion:
   #   _id
+  #   discussion
   # value: the latest version of the value (can be of arbitrary type)
   # valueChanges: list (the last list item is the most recent one) of
   #   updatedAt: timestamp of the change
@@ -18,9 +19,9 @@ class Vote extends share.BaseDocument
       motion: @ReferenceField Motion, ['discussion']
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       value: @GeneratedField 'self', ['valueChanges'], (fields) ->
-        [fields._id, fields.valueChanges?[fields.valueChanges?.length - 1]?.vote or '']
+        [fields._id, fields.valueChanges?[fields.valueChanges?.length - 1]?.value or '']
     triggers: =>
-      updatedAt: share.UpdatedAtTrigger ['valueChanges']
+      updatedAt: share.UpdatedAtTrigger ['valueChanges'], true
 
   # Vote should be published only to its author.
   @PUBLISH_FIELDS: ->
