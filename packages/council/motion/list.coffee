@@ -20,13 +20,21 @@ class Motion.ListItemComponent extends UIComponent
   onCreated: ->
     super
 
+    @isOpen = new ComputedField =>
+      data = @data()
+      data and data.votingOpenedAt and data.votingOpenedBy and not data.votingClosedAt and not data.votingClosedBy
+
+    @isClosed = new ComputedField =>
+      data = @data()
+      data and data.votingOpenedAt and data.votingOpenedBy and data.votingClosedAt and data.votingClosedBy
+
     @canOpen = new ComputedField =>
       # TODO: We should also allow moderators to open motions.
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and not @data().votingOpenedAt and not @data().votingOpenedBy and not @data().votingClosedAt and not @data().votingClosedBy
+      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and not (@isOpen() or @isClosed())
 
     @canClose = new ComputedField =>
       # TODO: We should also allow moderators to close motions.
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and @data().votingOpenedAt and @data().votingOpenedBy and not @data().votingClosedAt and not @data().votingClosedBy
+      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and @isOpen()
 
     @canVote = new ComputedField =>
       !!Meteor.userId()

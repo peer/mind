@@ -6,14 +6,24 @@
 </template>
 
 <template name="Motion.ListItemComponent">
-  <p>{{body}}</p>
-  {{#if canOpen}}
-    <button class="voting-open" type="button">Open voting</button>
-  {{/if}}
-  {{#if canClose}}
-    <button class="voting-close" type="button">Close voting</button>
-  {{/if}}
-  {{#if canVote}}
-    {{> Motion.VoteComponent}}
-  {{/if}}
+  <div class="card">
+    <div class="card-content">
+      <p>{{body}}</p>
+    </div>
+    {{#if $or canOpen canClose}}
+      <div class="card-action">
+        {{#if canOpen}}
+          <button class="voting-open waves-effect waves-light btn-flat" type="button"><i class="material-icons left">play_arrow</i>Open voting</button>
+        {{/if}}
+        {{#if canClose}}
+          <button class="voting-close waves-effect waves-light btn-flat" type="button"><i class="material-icons left">stop</i>Close voting</button>
+        {{/if}}
+      </div>
+    {{/if}}
+    {{#if $and isOpen canVote}}
+      <div class="card-action">
+        {{> Motion.VoteComponent}}
+      </div>
+    {{/if}}
+  </div>
 </template>

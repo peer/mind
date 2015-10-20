@@ -28,3 +28,13 @@ class UIComponent extends BlazeComponent
     while component and component not instanceof componentClass
       component = component.parentComponent()
     component
+
+  $or: (args...) ->
+    # Removing kwargs.
+    args.pop()
+    _.some args
+
+  $and: (args...) ->
+    # Removing kwargs.
+    args.pop()
+    _.every args
