@@ -85,3 +85,10 @@ input[type=range].deselected::-ms-thumb
   background white
   // TODO: Use $radio-empty-color here.
   border 2px solid #5a5a5a
+
+/*
+We want to allow users to click on range labels and move the value.
+*/
+
+input[type=range] + label
+  cursor pointer
