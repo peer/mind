@@ -31,10 +31,14 @@ class UIComponent extends BlazeComponent
 
   $or: (args...) ->
     # Removing kwargs.
+    assert args[args.length - 1] instanceof Spacebars.kw
     args.pop()
+
     _.some args
 
   $and: (args...) ->
     # Removing kwargs.
+    assert args[args.length - 1] instanceof Spacebars.kw
     args.pop()
+
     _.every args

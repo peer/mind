@@ -10,19 +10,36 @@
     <div class="card-content">
       <p>{{body}}</p>
     </div>
-    {{#if $or canOpen canClose}}
+    {{#if $or ($and isOpen canVote) canOpen canClose canWithdraw canEdit}}
       <div class="card-action">
-        {{#if canOpen}}
-          <button class="voting-open waves-effect waves-light btn-flat" type="button"><i class="material-icons left">play_arrow</i>Open voting</button>
+        {{#if $and isOpen canVote}}
+          {{> Motion.VoteComponent}}
         {{/if}}
-        {{#if canClose}}
-          <button class="voting-close waves-effect waves-light btn-flat" type="button"><i class="material-icons left">stop</i>Close voting</button>
-        {{/if}}
+        <div class="center-align">
+          {{#if canOpen}}
+            <button class="open-voting waves-effect waves-light btn-flat" type="button"><i class="material-icons left">play_arrow</i>Open voting</button>
+          {{/if}}
+          {{#if canClose}}
+            <button class="close-voting waves-effect waves-light btn-flat" type="button"><i class="material-icons left">stop</i>Close voting</button>
+          {{/if}}
+          {{#if canWithdraw}}
+            <button class="motion-withdraw waves-effect waves-light btn-flat" type="button"><i class="material-icons left">delete</i>Withdraw</button>
+          {{/if}}
+          {{#if canEdit}}
+            <button class="motion-edit waves-effect waves-light btn-flat" type="button"><i class="material-icons left">edit</i>Edit</button>
+          {{/if}}
+        </div>
       </div>
     {{/if}}
-    {{#if $and isOpen canVote}}
-      <div class="card-action">
-        {{> Motion.VoteComponent}}
+    {{#if isClosed}}
+      <div class="card-action center-align grey-text">
+        {{! TODO: Display results. }}
+        Voting is closed.
+      </div>
+    {{/if}}
+    {{#if isWithdrawn}}
+      <div class="card-action center-align grey-text">
+        Motion has been withdrawn.
       </div>
     {{/if}}
   </div>

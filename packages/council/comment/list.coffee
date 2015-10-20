@@ -1,11 +1,11 @@
 class Comment.ListComponent extends UIComponent
   @register 'Comment.ListComponent'
 
-  currentDiscussionId: ->
-    FlowRouter.getParam '_id'
-
   onCreated: ->
     super
+
+    @currentDiscussionId = new ComputedField =>
+      FlowRouter.getParam '_id'
 
     @autorun (computation) =>
       @subscribe 'Comment.list', @currentDiscussionId()

@@ -28,8 +28,12 @@ Meteor.methods
         author: user.getReference()
         body: document.body
       ]
-      votingOpened: null
-      votingClosed: null
+      votingOpenedBy: null
+      votingOpenedAt: null
+      votingClosedBy: null
+      votingClosedAt: null
+      withdrawnBy: null
+      withdrawnAt: null
 
   'Motion.openVoting': (motionId) ->
     check motionId, Match.DocumentId
@@ -42,14 +46,16 @@ Meteor.methods
     Motion.documents.update
       _id: motionId
       'author._id': user._id
-      votingOpenedAt: null
       votingOpenedBy: null
-      votingClosedAt: null
+      votingOpenedAt: null
       votingClosedBy: null
+      votingClosedAt: null
+      withdrawnBy: null
+      withdrawnAt: null
     ,
       $set:
-        votingOpenedAt: openedAt
         votingOpenedBy: user.getReference()
+        votingOpenedAt: openedAt
 
   'Motion.closeVoting': (motionId) ->
     check motionId, Match.DocumentId
@@ -62,13 +68,37 @@ Meteor.methods
     Motion.documents.update
       _id: motionId
       'author._id': user._id
-      votingOpenedAt:
-        $ne: null
       votingOpenedBy:
         $ne: null
-      votingClosedAt: null
+      votingOpenedAt:
+        $ne: null
       votingClosedBy: null
+      votingClosedAt: null
+      withdrawnBy: null
+      withdrawnAt: null
     ,
       $set:
-        votingClosedAt: closedAt
         votingClosedBy: user.getReference()
+        votingClosedAt: closedAt
+
+  'Motion.withdrawVoting': (motionId) ->
+    check motionId, Match.DocumentId
+
+    user = Meteor.user User.REFERENCE_FIELDS()
+    throw new Meteor.Error 401, "User not signed in." unless user
+
+    # TODO: We should also allow moderators to withdraw motions.
+    withdrawnAt = new Date()
+    Motion.documents.update
+      _id: motionId
+      'author._id': user._id
+      votingOpenedBy: null
+      votingOpenedAt: null
+      votingClosedBy: null
+      votingClosedAt: null
+      withdrawnBy: null
+      withdrawnAt: null
+    ,
+      $set:
+        withdrawnBy: user.getReference()
+        withdrawnAt: withdrawnAt

@@ -6,6 +6,12 @@ class Motion.VoteComponent extends UIComponent
 
     @rangeDeselected = new ReactiveField 'deselected'
 
+    @currentMotionId = new ComputedField =>
+      @data()?._id
+
+    @autorun (computation) =>
+      @subscribe 'Motion.vote', @currentMotionId()
+
   deselectRange: ->
     @rangeDeselected 'deselected'
 
@@ -26,11 +32,37 @@ class Motion.VoteComponent extends UIComponent
 
     @$('[name="other-vote"]').prop('checked', false)
 
+    Meteor.call 'Motion.vote',
+      vote: @$('[name="vote"]').val()
+      motion:
+        _id: @currentMotionId()
+    ,
+      (error, result) =>
+        if error
+          console.error "Vote error", error
+          alert "Vote error: #{error.reason or error}"
+          return
+
   onRadioInteraction: (event) ->
     @deselectRange()
+
+    Meteor.call 'Motion.vote',
+      vote: @$('[name="other-vote"]').val()
+      motion:
+        _id: @currentMotionId()
+    ,
+      (error, result) =>
+        if error
+          console.error "Vote error", error
+          alert "Vote error: #{error.reason or error}"
+          return
 
   onOpposeVote: (event) ->
     @$('[name="vote"]').val(-1)
 
   onSupportVote: (event) ->
     @$('[name="vote"]').val(1)
+
+  vote: ->
+    Vote.documents.findOne
+      'motion._id': @currentMotionId()

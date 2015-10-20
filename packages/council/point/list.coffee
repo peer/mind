@@ -1,11 +1,11 @@
 class Point.ListComponent extends UIComponent
   @register 'Point.ListComponent'
 
-  currentDiscussionId: ->
-    FlowRouter.getParam '_id'
-
   onCreated: ->
     super
+
+    @currentDiscussionId = new ComputedField =>
+      FlowRouter.getParam '_id'
 
     @autorun (computation) =>
       @subscribe 'Point.list', @currentDiscussionId()

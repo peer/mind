@@ -20,10 +20,16 @@ class share.UpvotableItemComponent extends UIComponent
     event.preventDefault()
 
     Meteor.call "#{@methodPrefix()}.upvote", @data()._id, (error, result) =>
-      console.error "Upvote error", error if error
+      if error
+        console.error "Upvote error", error
+        alert "Upvote error: #{error.reason or error}"
+        return
 
   onRemoveUpvote: (event) ->
     event.preventDefault()
 
     Meteor.call "#{@methodPrefix()}.removeUpvote", @data()._id, (error, result) =>
-      return console.error "Remove upvote error", error if error
+      if error
+        console.error "Remove upvote error", error
+        alert "Remove upvote error: #{error.reason or error}"
+        return
