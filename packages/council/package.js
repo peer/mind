@@ -10,8 +10,7 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'underscore',
-    'accounts-password',
-    'accounts-ui'
+    'accounts-password'
   ]);
 
   // 3rd party dependencies.
