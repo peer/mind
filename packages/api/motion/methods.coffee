@@ -134,7 +134,7 @@ Meteor.methods
   'Motion.vote': (document) ->
     check document,
       value: Match.OneOf 'abstain', 'default', Match.Where (value) ->
-        _.isFinite(value) and -1 <= value <= 1
+        _.isNumber(value) and -1 <= value <= 1
       motion:
         _id: Match.DocumentId
 

@@ -55,7 +55,7 @@ class Motion.VoteComponent extends UIComponent
 
     @$('[name="other-vote"]').prop('checked', false)
 
-    @voteValueChange @$('[name="vote"]').val()
+    @voteValueChange parseFloat(@$('[name="vote"]').val())
 
   onRadioInteraction: (event) ->
     @deselectRange()
@@ -102,7 +102,7 @@ class Motion.VoteComponent extends UIComponent
       fields:
         value: 1
 
-    if _.isFinite vote?.value
+    if _.isNumber(vote?.value) and -1 <= vote.value <= 1
       @rangeDeselected null
       value: vote.value
     else
