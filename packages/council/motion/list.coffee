@@ -18,6 +18,9 @@ class Motion.ListComponent extends UIComponent
     Motion.documents.find
       'discussion._id': @currentDiscussionId()
 
+  discussionExists: ->
+    Discussion.documents.exists @currentDiscussionId()
+
 class Motion.ListItemComponent extends UIComponent
   @register 'Motion.ListItemComponent'
 

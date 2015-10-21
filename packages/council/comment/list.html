@@ -1,20 +1,22 @@
 <template name="Comment.ListComponent">
-  <div class="section">
-    {{#if comments.exists}}
-      <ul class="collection z-depth-1">
-        {{#each comments}}
-          {{> Comment.ListItemComponent}}
-        {{/each}}
-      </ul>
-    {{else}}
-      <div class="row">
-        <div class="col s12 center-align grey-text">
-          No comment has been made yet.
+  {{#if discussionExists}}
+    <div class="section">
+      {{#if comments.exists}}
+        <ul class="collection z-depth-1">
+          {{#each comments}}
+            {{> Comment.ListItemComponent}}
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="row">
+          <div class="col s12 center-align grey-text">
+            No comment has been made yet.
+          </div>
         </div>
-      </div>
-    {{/if}}
-  </div>
-  {{> Comment.NewComponent}}
+      {{/if}}
+    </div>
+    {{> Comment.NewComponent}}
+  {{/if}}
 </template>
 
 <template name="Comment.ListItemComponent">

@@ -1,16 +1,18 @@
 <template name="Motion.ListComponent">
-  <div class="section">
-    {{#each motions}}
-      {{> Motion.ListItemComponent}}
-    {{else}}
-      <div class="row">
-        <div class="col s12 center-align grey-text">
-          No motion has been proposed yet.
+  {{#if discussionExists}}
+    <div class="section">
+      {{#each motions}}
+        {{> Motion.ListItemComponent}}
+      {{else}}
+        <div class="row">
+          <div class="col s12 center-align grey-text">
+            No motion has been proposed yet.
+          </div>
         </div>
-      </div>
-    {{/each}}
-  </div>
-  {{> Motion.NewComponent}}
+      {{/each}}
+    </div>
+    {{> Motion.NewComponent}}
+  {{/if}}
 </template>
 
 <template name="Motion.ListItemComponent">

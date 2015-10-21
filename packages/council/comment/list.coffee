@@ -16,6 +16,9 @@ class Comment.ListComponent extends UIComponent
     Comment.documents.find
       'discussion._id': @currentDiscussionId()
 
+  discussionExists: ->
+    Discussion.documents.exists @currentDiscussionId()
+
 class Comment.ListItemComponent extends share.UpvotableItemComponent
   @register 'Comment.ListItemComponent'
 

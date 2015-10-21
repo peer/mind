@@ -33,6 +33,9 @@ class Point.ListComponent extends UIComponent
       category:
         $in: _.values Point.CATEGORY
 
+  discussionExists: ->
+    Discussion.documents.exists @currentDiscussionId()
+
 class Point.ListItemComponent extends share.UpvotableItemComponent
   @register 'Point.ListItemComponent'
 
