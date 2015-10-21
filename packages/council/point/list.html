@@ -1,26 +1,29 @@
 <template name="Point.ListComponent">
-  <h2>In favor</h2>
-  {{#each inFavorPoints}}
-    {{> Point.ListItemComponent}}
-  {{/each}}
-  <h2>Against</h2>
-  {{#each againstPoints}}
-    {{> Point.ListItemComponent}}
-  {{/each}}
-  <h2>Other</h2>
-  {{#each otherPoints}}
-    {{> Point.ListItemComponent}}
-  {{/each}}
+  <div class="section">
+    <ul class="collection with-header z-depth-1">
+      <li class="collection-header"><h4>In favor</h4></li>
+      {{#each inFavorPoints}}
+        {{> Point.ListItemComponent}}
+      {{/each}}
+    </ul>
+    <ul class="collection with-header z-depth-1">
+      <li class="collection-header"><h4>Against</h4></li>
+      {{#each againstPoints}}
+        {{> Point.ListItemComponent}}
+      {{/each}}
+    </ul>
+    <ul class="collection with-header z-depth-1">
+      <li class="collection-header"><h4>Other</h4></li>
+      {{#each otherPoints}}
+        {{> Point.ListItemComponent}}
+      {{/each}}
+    </ul>
+  </div>
   {{> Point.NewComponent}}
 </template>
 
 <template name="Point.ListItemComponent">
-  <p>{{body}}</p>
-  <p>Upvotes: {{upvotesCount}}</p>
-  {{#if canUpvote}}
-    <button class="upvote" type="button">Upvote</button>
-  {{/if}}
-  {{#if canRemoveUpvote}}
-    <button class="remove-upvote" type="button">Remove upvote</button>
-  {{/if}}
+  <li class="collection-item">
+    <a class="secondary-content point-upvote {{canUpvote}} {{canRemoveUpvote}}"><i class="material-icons tiny">thumb_up</i>{{upvotesCount}}</a>{{body}}
+  </li>
 </template>

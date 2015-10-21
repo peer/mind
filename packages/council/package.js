@@ -61,6 +61,7 @@ Package.onUse(function (api) {
     'comment/new.coffee',
     'point/list.html',
     'point/list.coffee',
+    'point/list.styl',
     'point/new.html',
     'point/new.coffee',
     'motion/list.html',
