@@ -10,20 +10,20 @@ class Point.ListComponent extends UIComponent
     @autorun (computation) =>
       @subscribe 'Point.list', @currentDiscussionId()
 
-  proPoints: ->
+  inFavorPoints: ->
     Point.documents.find
       'discussion._id': @currentDiscussionId()
-      category: Point.CATEGORY.PRO
+      category: Point.CATEGORY.IN_FAVOR
 
-  contraPoints: ->
+  againstPoints: ->
     Point.documents.find
       'discussion._id': @currentDiscussionId()
-      category: Point.CATEGORY.CONTRA
+      category: Point.CATEGORY.AGAINST
 
-  notePoints: ->
+  otherPoints: ->
     Point.documents.find
       'discussion._id': @currentDiscussionId()
-      category: Point.CATEGORY.NOTE
+      category: Point.CATEGORY.OTHER
 
 class Point.ListItemComponent extends share.UpvotableItemComponent
   @register 'Point.ListItemComponent'

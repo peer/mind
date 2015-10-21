@@ -1,14 +1,14 @@
 <template name="Point.ListComponent">
-  <h2>Pro</h2>
-  {{#each proPoints}}
+  <h2>In favor</h2>
+  {{#each inFavorPoints}}
     {{> Point.ListItemComponent}}
   {{/each}}
-  <h2>Contra</h2>
-  {{#each contraPoints}}
+  <h2>Against</h2>
+  {{#each againstPoints}}
     {{> Point.ListItemComponent}}
   {{/each}}
-  <h2>Note</h2>
-  {{#each notePoints}}
+  <h2>Other</h2>
+  {{#each otherPoints}}
     {{> Point.ListItemComponent}}
   {{/each}}
   {{> Point.NewComponent}}

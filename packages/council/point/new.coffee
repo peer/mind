@@ -36,4 +36,4 @@ class Point.NewComponent extends UIComponent
     for category, value of Point.CATEGORY
       category: value
       # TODO: Make translatable.
-      label: _.capitalize value
+      label: _.capitalize category.replace('_', ' ')

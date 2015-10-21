@@ -19,15 +19,15 @@ class Point extends share.UpvotableDocument
   #   author: author of the upvote
   #     _id
   # upvotesCount
-  # category: one of "pro", "contra", and "note"
+  # category: one of "infavor", "against", and "other"
 
   @Meta
     name: 'Point'
 
   @CATEGORY:
-    PRO: 'pro'
-    CONTRA: 'contra'
-    NOTE: 'note'
+    IN_FAVOR: 'infavor'
+    AGAINST: 'against'
+    OTHER: 'other'
 
   @PUBLISH_FIELDS: ->
     _.extend super,
