@@ -133,7 +133,7 @@ Meteor.methods
 
   'Motion.vote': (document) ->
     check document,
-      value: Match.OneOf 'abstain', 'default', Match.Where (value) ->
+      value: Match.OneOf Match.Enumeration(String, Vote.VALUE), Match.Where (value) ->
         _.isNumber(value) and -1 <= value <= 1
       motion:
         _id: Match.DocumentId

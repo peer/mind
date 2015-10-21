@@ -77,7 +77,7 @@ class Motion.VoteComponent extends UIComponent
       fields:
         value: 1
 
-    'checked' if vote?.value is 'abstain'
+    'checked' if vote?.value is Vote.VALUE.ABSTAIN
 
   defaultChecked: ->
     return unless @subscriptionsReady()
@@ -91,7 +91,7 @@ class Motion.VoteComponent extends UIComponent
     # This is default.
     return 'checked' unless vote?.value?
 
-    'checked' if vote.value is 'default'
+    'checked' if vote.value is Vote.VALUE.DEFAULT
 
   voteValue: ->
     return unless @subscriptionsReady()
@@ -109,3 +109,5 @@ class Motion.VoteComponent extends UIComponent
       @rangeDeselected 'deselected'
       # We have to return the current value back, otherwise value is reset.
       value: @$('[name="vote"]').val() if @isRendered()
+
+  VALUE: Vote.VALUE

@@ -23,6 +23,10 @@ class Vote extends share.BaseDocument
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['valueChanges'], true
 
+  @VALUE:
+    DEFAULT: 'default'
+    ABSTAIN: 'abstain'
+
   # Vote should be published only to its author.
   @PUBLISH_FIELDS: ->
     _id: 1
