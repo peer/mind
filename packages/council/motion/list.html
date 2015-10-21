@@ -1,7 +1,11 @@
 <template name="Motion.ListComponent">
-  {{#each motions}}
-    {{> Motion.ListItemComponent}}
-  {{/each}}
+  {{#if motions.exists}}
+    <div class="section">
+      {{#each motions}}
+        {{> Motion.ListItemComponent}}
+      {{/each}}
+    </div>
+  {{/if}}
   {{> Motion.NewComponent}}
 </template>
 

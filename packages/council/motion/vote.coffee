@@ -105,4 +105,5 @@ class Motion.VoteComponent extends UIComponent
       value: vote.value
     else
       @rangeDeselected 'deselected'
+      # We have to return the current value back, otherwise value is reset.
       value: @$('[name="vote"]').val() if @isRendered()

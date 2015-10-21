@@ -1,8 +1,21 @@
 <template name="Motion.NewComponent">
   {{#if canNew}}
-    <form class="motion-new">
-      <p>Body: <textarea name="body"></textarea></p>
-      <button type="submit" name="new">Make a motion</button>
-    </form>
+    <div class="section">
+      <div class="row">
+        <form class="col s12 motion-new">
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea name="body" id="new-motion-body" class="materialize-textarea"></textarea>
+              <label for="new-motion-body">Motion</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 center-align">
+              <button type="submit" name="new" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Propose a motion</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   {{/if}}
 </template>
