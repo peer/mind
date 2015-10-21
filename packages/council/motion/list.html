@@ -1,11 +1,15 @@
 <template name="Motion.ListComponent">
-  {{#if motions.exists}}
-    <div class="section">
-      {{#each motions}}
-        {{> Motion.ListItemComponent}}
-      {{/each}}
-    </div>
-  {{/if}}
+  <div class="section">
+    {{#each motions}}
+      {{> Motion.ListItemComponent}}
+    {{else}}
+      <div class="row">
+        <div class="col s12 center-align grey-text">
+          No motion has been proposed yet.
+        </div>
+      </div>
+    {{/each}}
+  </div>
   {{> Motion.NewComponent}}
 </template>
 
@@ -15,7 +19,7 @@
       <form class="motion-edit">
         <div class="card-content">
           <div class="input-field">
-            <textarea name="body" id="edit-motion-body" class="materialize-textarea">{{body}}</textarea>
+            <textarea name="body" id="edit-motion-body" class="materialize-textarea" required>{{body}}</textarea>
             <label for="edit-motion-body">Motion</label>
           </div>
         </div>

@@ -5,14 +5,15 @@
         <form class="col s12 point-new">
           <div class="row">
             <div class="input-field col s12">
-              <textarea name="body" id="new-point-body" class="materialize-textarea"></textarea>
+              <textarea name="body" id="new-point-body" class="materialize-textarea" required></textarea>
               <label for="new-point-body">Point</label>
             </div>
           </div>
           <div class="row">
             {{#each categories}}
-                <input type="radio" name="category" value="{{category}}" id="point-category-{{category}}" />
               <div class="input-field col {{categoryColumns}} center-align">
+                {{! TODO: We cannot use required here with Materialize. See https://github.com/Dogfalo/materialize/issues/2187 }}
+                <input type="radio" name="category" value="{{category}}" id="point-category-{{category}}" />
                 <label for="point-category-{{category}}">{{label}}</label>
               </div>
             {{/each}}

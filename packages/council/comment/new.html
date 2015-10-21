@@ -1,7 +1,7 @@
 <template name="Comment.NewComponent">
   {{#if canNew}}
     <form class="comment-new">
-      <p>Body: <textarea name="body"></textarea></p>
+      <p>Body: <textarea name="body" required></textarea></p>
       <button type="submit" name="new">Make a comment</button>
     </form>
   {{/if}}

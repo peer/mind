@@ -1,17 +1,24 @@
 <template name="Comment.ListComponent">
-  {{#each comments}}
-    {{> Comment.ListItemComponent}}
-  {{/each}}
+  <div class="section">
+    {{#if comments.exists}}
+      <ul class="collection z-depth-1">
+        {{#each comments}}
+          {{> Comment.ListItemComponent}}
+        {{/each}}
+      </ul>
+    {{else}}
+      <div class="row">
+        <div class="col s12 center-align grey-text">
+          No comment has been made yet.
+        </div>
+      </div>
+    {{/if}}
+  </div>
   {{> Comment.NewComponent}}
 </template>
 
 <template name="Comment.ListItemComponent">
-  <p>{{body}}</p>
-  <p>Upvotes: {{upvotesCount}}</p>
-  {{#if canUpvote}}
-    <button class="upvote" type="button">Upvote</button>
-  {{/if}}
-  {{#if canRemoveUpvote}}
-    <button class="remove-upvote" type="button">Remove upvote</button>
-  {{/if}}
+  <li class="collection-item avatar">
+    <i class="material-icons circle">folder</i><a class="secondary-content upvoteable {{canUpvote}} {{canRemoveUpvote}}"><i class="material-icons tiny">thumb_up</i>{{upvotesCount}}</a>{{body}}
+  </li>
 </template>
