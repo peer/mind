@@ -8,7 +8,9 @@ class Comment.ListComponent extends UIComponent
       FlowRouter.getParam '_id'
 
     @autorun (computation) =>
-      @subscribe 'Comment.list', @currentDiscussionId()
+      discussionId = @currentDiscussionId()
+      return unless discussionId
+      @subscribe 'Comment.list', discussionId
 
   comments: ->
     Comment.documents.find

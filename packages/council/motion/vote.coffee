@@ -10,7 +10,9 @@ class Motion.VoteComponent extends UIComponent
       @data()?._id
 
     @autorun (computation) =>
-      @subscribe 'Motion.vote', @currentMotionId()
+      motionId = @currentMotionId()
+      return unless motionId
+      @subscribe 'Motion.vote', motionId
 
     # We store current vote value into a reactive field so that we deduplicate events for the same change.
     @voteValueChange = new ReactiveField null

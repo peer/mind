@@ -8,7 +8,9 @@ class Point.ListComponent extends UIComponent
       FlowRouter.getParam '_id'
 
     @autorun (computation) =>
-      @subscribe 'Point.list', @currentDiscussionId()
+      discussionId = @currentDiscussionId()
+      return unless discussionId
+      @subscribe 'Point.list', discussionId
 
   inFavorPoints: ->
     Point.documents.find

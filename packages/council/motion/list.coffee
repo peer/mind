@@ -10,7 +10,9 @@ class Motion.ListComponent extends UIComponent
     @autorun (computation) =>
 
     @autorun (computation) =>
-      @subscribe 'Motion.list', @currentDiscussionId()
+      discussionId = @currentDiscussionId()
+      return unless discussionId
+      @subscribe 'Motion.list', discussionId
 
   motions: ->
     Motion.documents.find

@@ -8,7 +8,9 @@ class Discussion.DisplayComponent extends UIComponent
       FlowRouter.getParam '_id'
 
     @autorun (computation) =>
-      @subscribe 'Discussion.one', @currentDiscussionId()
+      discussionId = @currentDiscussionId()
+      return unless discussionId
+      @subscribe 'Discussion.one', discussionId
 
   discussion: ->
     Discussion.documents.findOne @currentDiscussionId()
