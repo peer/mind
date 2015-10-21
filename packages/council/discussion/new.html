@@ -1,10 +1,29 @@
 <template name="Discussion.NewComponent">
   {{#if canNew}}
-    <form class="discussion-new">
-      <p>Title: <input type="text" name="title" /></p>
-      <p>Description: <textarea name="description"></textarea></p>
-      <button type="submit" name="new">Open a new discussion</button>
-    </form>
+    <div class="section">
+      <div class="row">
+        <form class="col s12 discussion-new">
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="text" name="title" id="new-discussion-title" required />
+              <label for="new-discussion-title">Title</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              {{! TODO: Make this a reach-text textarea. }}
+              <textarea name="description" id="new-point-description" class="materialize-textarea" required></textarea>
+              <label for="new-point-description">Description</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 center-align">
+              <button type="submit" name="new" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Open new discussion</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   {{else}}
     {{> NotFoundComponent}}
   {{/if}}
