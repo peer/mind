@@ -11,8 +11,8 @@
           </div>
           <div class="row">
             {{#each categories}}
-              <div class="input-field col s4 center-align">
                 <input type="radio" name="category" value="{{category}}" id="point-category-{{category}}" />
+              <div class="input-field col {{categoryColumns}} center-align">
                 <label for="point-category-{{category}}">{{label}}</label>
               </div>
             {{/each}}

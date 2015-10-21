@@ -37,3 +37,6 @@ class Point.NewComponent extends UIComponent
       category: value
       # TODO: Make translatable.
       label: _.capitalize category.replace('_', ' ')
+
+  categoryColumns: ->
+    "s#{Math.floor(12 / _.size(Point.CATEGORY))}"
