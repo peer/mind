@@ -1,19 +1,23 @@
 <template name="Discussion.ListComponent">
   {{#if canNew}}
-    <a href="{{pathFor 'Discussion.new'}}">Open a new discussion</a>
+    <div class="fixed-action-btn">
+      <a href="{{pathFor 'Discussion.new'}}" class="btn-floating btn-large waves-effect waves-light red">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
   {{/if}}
-
-  {{#if discussionsWithoutMeeting.exists}}
-    <h2>Discussions without a meeting</h2>
-    {{#each discussionsWithoutMeeting}}
-      {{> Discussion.ListItemComponent}}
-    {{/each}}
-  {{/if}}
-
-  <h2></h2>
+  <div class="section">
+    {{#if discussionsWithoutMeeting.exists}}
+      <div class="collection z-depth-1">
+        {{#each discussionsWithoutMeeting}}
+          {{> Discussion.ListItemComponent}}
+        {{/each}}
+      </div>
+    {{/if}}
+    {{! TODO: Add lists for each meeting, collections with header. }}
+  </div>
 </template>
 
 <template name="Discussion.ListItemComponent">
-  <h3>{{title}}</h3>
-  <a href="{{pathFor 'Discussion.display' params=data}}">Open</a>
+  <a href="{{pathFor 'Discussion.display' params=data}}" class="collection-item">{{title}}</a>
 </template>
