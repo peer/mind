@@ -53,12 +53,25 @@ class Motion.ListItemComponent extends UIComponent
       # TODO: We should also allow moderators to withdraw motions.
       @canEdit()
 
+    @isBeingEdited = new ReactiveField false
+
+    @autorun (computation) =>
+      return unless @isBeingEdited()
+
+      Tracker.afterFlush =>
+        # A bit of mangling to get cursor to focus at the end of the text.
+        $textarea = @$('[name="body"]')
+        body = $textarea.val()
+        $textarea.focus().val('').val(body).trigger('autoresize')
+
   events: ->
     super.concat
       'click .open-voting': @onOpenVoting
       'click .close-voting': @onCloseVoting
-      'click .motion-withdraw': @onMotionWithdraw
-      'click .motion-edit': @onMotionEdit
+      'click .withdraw-motion': @onWithdrawMotion
+      'click .edit-motion': @onEditMotion
+      'submit .motion-edit': @onMotionEditSave
+      'click .motion-edit-cancel': @onMotionEditCancel
 
   onOpenVoting: (event) ->
     event.preventDefault()
@@ -78,7 +91,7 @@ class Motion.ListItemComponent extends UIComponent
         alert "Close voting error: #{error.reason or error}"
         return
 
-  onMotionWithdraw: (event) ->
+  onWithdrawMotion: (event) ->
     event.preventDefault()
 
     Meteor.call 'Motion.withdrawVoting', @data()._id, (error, result) =>
@@ -87,7 +100,27 @@ class Motion.ListItemComponent extends UIComponent
         alert "Motion withdraw error: #{error.reason or error}"
         return
 
-  onMotionEdit: (event) ->
+  onEditMotion: (event) ->
     event.preventDefault()
 
-    # TODO: Implement.
+    @isBeingEdited true
+
+  onMotionEditSave: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Motion.update',
+      _id: @data()._id
+      body: @$('[name="body"]').val()
+    ,
+      (error, documentId) =>
+        if error
+          console.error "Update motion error", error
+          alert "Update motion error: #{error.reason or error}"
+          return
+
+        @isBeingEdited false
+
+  onMotionEditCancel: (event) ->
+    event.preventDefault()
+
+    @isBeingEdited false

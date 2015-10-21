@@ -35,6 +35,34 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
 
+  'Motion.update': (document) ->
+    check document,
+      _id: Match.DocumentId
+      body: Match.NonEmptyString
+
+    user = Meteor.user User.REFERENCE_FIELDS()
+    throw new Meteor.Error 401, "User not signed in." unless user
+
+    # TODO: We should also allow moderators to update motions.
+    updatedAt = new Date()
+    Motion.documents.update
+      _id: document._id
+      'author._id': user._id
+      votingOpenedBy: null
+      votingOpenedAt: null
+      votingClosedBy: null
+      votingClosedAt: null
+      withdrawnBy: null
+      withdrawnAt: null
+    ,
+      $set:
+        body: document.body
+      $push:
+        bodyChanges:
+          updatedAt: updatedAt
+          author: user.getReference()
+          body: document.body
+
   'Motion.openVoting': (motionId) ->
     check motionId, Match.DocumentId
 
