@@ -42,3 +42,10 @@ class UIComponent extends BlazeComponent
     args.pop()
 
     _.every args
+
+  $not: (args...) ->
+    # Removing kwargs.
+    assert args[args.length - 1] instanceof Spacebars.kw
+    args.pop()
+
+    not args[0]

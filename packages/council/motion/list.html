@@ -52,6 +52,18 @@
             {{/if}}
           </div>
         </div>
+      {{else}}
+        {{#unless $or isOpen isClosed isWithdrawn}}
+          <div class="card-action center-align grey-text">
+            Voting is not yet open.
+          </div>
+        {{/unless}}
+        {{#if $and isOpen ($not canVote)}}
+          <div class="card-action center-align grey-text sign-in-action">
+            {{! TODO: Here we are assuming that if you cannot vote, you have to sign in. This might not be the case with custom roles. }}
+            Voting is open. <a href="{{pathFor 'Account.signIn'}}">Sign in</a> to vote.
+          </div>
+        {{/if}}
       {{/if}}
       {{#if isClosed}}
         <div class="card-action center-align grey-text">

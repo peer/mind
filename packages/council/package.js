@@ -65,6 +65,7 @@ Package.onUse(function (api) {
     'point/new.coffee',
     'motion/list.html',
     'motion/list.coffee',
+    'motion/list.styl',
     'motion/new.html',
     'motion/new.coffee',
     'motion/vote.html',
