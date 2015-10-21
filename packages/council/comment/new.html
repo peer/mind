@@ -1,8 +1,21 @@
 <template name="Comment.NewComponent">
   {{#if canNew}}
-    <form class="comment-new">
-      <p>Body: <textarea name="body" required></textarea></p>
-      <button type="submit" name="new">Make a comment</button>
-    </form>
+    <div class="section">
+      <div class="row">
+        <form class="col s12 comment-new">
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea name="body" id="new-comment-body" class="materialize-textarea" required></textarea>
+              <label for="new-comment-body">Comment</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 center-align">
+              <button type="submit" name="new" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Make a comment</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   {{/if}}
 </template>
