@@ -24,3 +24,5 @@ FlowRouter.route '/',
   action: (params, queryParams) ->
     BlazeLayout.render 'MainLayoutComponent',
       main: 'Discussion.ListComponent'
+
+    share.PageTitle "Discussions"

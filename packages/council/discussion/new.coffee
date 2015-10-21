@@ -32,3 +32,5 @@ FlowRouter.route '/discussion/new',
   action: (params, queryParams) ->
     BlazeLayout.render 'MainLayoutComponent',
       main: 'Discussion.NewComponent'
+
+    share.PageTitle "New Discussion"

@@ -38,6 +38,7 @@ Package.onUse(function (api) {
     'upvoteable.styl',
     'account/config.coffee',
     'account/form.coffee',
+    'flow-router/title.coffee',
     'flow-router/root.html',
     'flow-router/root.coffee',
     'flow-router/layout.html',
