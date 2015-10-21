@@ -3,5 +3,5 @@ class NotFoundComponent extends UIComponent
 
 FlowRouter.notFound =
   action: ->
-    BlazeLayout.render 'LayoutComponent',
+    BlazeLayout.render 'MainLayoutComponent',
       main: 'NotFoundComponent'

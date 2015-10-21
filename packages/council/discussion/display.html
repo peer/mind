@@ -2,8 +2,17 @@
   {{#if notFound}}
     {{> NotFoundComponent}}
   {{else}}
-    <div class="container">
-      {{discussion.title}}
+    <div class="section">
+      <div class="row">
+        <h4 class="col s12">
+          {{discussion.title}}
+        </h4>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <p>{{discussion.description}}</p>
+        </div>
+      </div>
     </div>
   {{/if}}
 </template>
