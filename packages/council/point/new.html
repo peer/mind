@@ -1,12 +1,29 @@
 <template name="Point.NewComponent">
   {{#if canNew}}
-    <form class="point-new">
-      <p>Body: <textarea name="body"></textarea></p>
-      <p>Category: {{#each categories}}
-        <input type="radio" name="category" value="{{category}}" id="point-category-{{category}}" />
-        <label for="point-category-{{category}}">{{label}}</label>
-      {{/each}}</p>
-      <button type="submit" name="new">Make a point</button>
-    </form>
+    <div class="section">
+      <div class="row">
+        <form class="col s12 point-new">
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea name="body" id="new-point-body" class="materialize-textarea"></textarea>
+              <label for="new-point-body">Point</label>
+            </div>
+          </div>
+          <div class="row">
+            {{#each categories}}
+              <div class="input-field col s4 center-align">
+                <input type="radio" name="category" value="{{category}}" id="point-category-{{category}}" />
+                <label for="point-category-{{category}}">{{label}}</label>
+              </div>
+            {{/each}}
+          </div>
+          <div class="row">
+            <div class="input-field col s12 center-align">
+              <button type="submit" name="new" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Make a point</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   {{/if}}
 </template>
