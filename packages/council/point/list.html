@@ -39,7 +39,7 @@
 
 <template name="Point.ListItemComponent">
   <li class="collection-item">
-    <a class="expand-button grey-text"><i class="material-icons">more_vert</i></a><a class="secondary-content upvoteable {{canUpvote}} {{canRemoveUpvote}}"><i class="material-icons tiny">thumb_up</i>{{upvotesCount}}</a>{{body}}
+    <a class="expand-button grey-text"><i class="material-icons">{{#if itemExpanded}}expand_less{{else}}more_vert{{/if}}</i></a><a class="secondary-content upvoteable {{canUpvote}} {{canRemoveUpvote}}"><i class="material-icons tiny">thumb_up</i>{{upvotesCount}}</a>{{body}}
     {{#if itemExpanded}}
       <div class="expansion">
         <div class="divider"></div>
