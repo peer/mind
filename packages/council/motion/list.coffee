@@ -117,7 +117,7 @@ class Motion.ListItemComponent extends UIComponent
       _id: @data()._id
       body: @$('[name="body"]').val()
     ,
-      (error, documentId) =>
+      (error, result) =>
         if error
           console.error "Update motion error", error
           alert "Update motion error: #{error.reason or error}"

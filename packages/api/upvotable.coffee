@@ -1,5 +1,7 @@
-share.newUpvotable = (documentClass, document, match) ->
+share.newUpvotable = (documentClass, document, match, extend) ->
   check document, match
+
+  extend ?= (user, doc) -> doc
 
   user = Meteor.user User.REFERENCE_FIELDS()
   throw new Meteor.Error 401, "User not signed in." unless user
@@ -11,7 +13,7 @@ share.newUpvotable = (documentClass, document, match) ->
   throw new Meteor.Error 400, "Invalid discussion." unless discussion
 
   createdAt = new Date()
-  documentClass.documents.insert _.extend document,
+  documentClass.documents.insert extend user,
     createdAt: createdAt
     updatedAt: createdAt
     lastActivity: createdAt

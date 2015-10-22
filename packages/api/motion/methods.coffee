@@ -56,6 +56,7 @@ Meteor.methods
       withdrawnAt: null
     ,
       $set:
+        updatedAt: updatedAt
         body: document.body
       $push:
         bodyChanges:
