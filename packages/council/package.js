@@ -23,7 +23,8 @@ Package.onUse(function (api) {
     'peerlibrary:assert@0.2.5',
     'materialize:materialize@0.97.1',
     'useraccounts:materialize@1.12.4',
-    'useraccounts:flow-routing@1.12.4'
+    'useraccounts:flow-routing@1.12.4',
+    'percolate:velocityjs@1.2.1_1'
   ]);
 
   // Internal dependencies.

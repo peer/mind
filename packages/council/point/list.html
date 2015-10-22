@@ -41,8 +41,8 @@
   <li class="collection-item">
     <a class="expand-button grey-text"><i class="material-icons">more_vert</i></a><a class="secondary-content upvoteable {{canUpvote}} {{canRemoveUpvote}}"><i class="material-icons tiny">thumb_up</i>{{upvotesCount}}</a>{{body}}
     {{#if itemExpanded}}
-      <div class="divider"></div>
-      <div>
+      <div class="expansion">
+        <div class="divider"></div>
         <div class="chip">
           <img src="https://avatars1.githubusercontent.com/u/585279?v=3&s=460" alt="{{author.username}}" class="circle" />
           {{author.username}}
