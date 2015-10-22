@@ -39,5 +39,19 @@ class Point.ListComponent extends UIComponent
 class Point.ListItemComponent extends share.UpvotableItemComponent
   @register 'Point.ListItemComponent'
 
+  onCreated: ->
+    super
+
+    @itemExpanded = new ReactiveField false
+
   methodPrefix: ->
     'Point'
+
+  events: ->
+    super.concat
+      'click .expand-button': @onExpandButton
+
+  onExpandButton: (event) ->
+    event.preventDefault()
+
+    @itemExpanded not @itemExpanded()

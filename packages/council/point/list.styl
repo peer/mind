@@ -5,9 +5,20 @@
   margin-top -2px
   margin-right -18px
   margin-left 5px
+  cursor pointer
 
 .collection
+  // We are using z-depth-1 with collections, so we do not need a border as well.
   border none
 
-  .collection-item.expanded
-    background-color transparent
+  &.with-header
+    .collection-item
+      // We do not want extra left padding for collection items inside collection with a header.
+      padding-left 20px
+
+  // We want to make divider a bit wider.
+  .divider
+    margin-top 0.5rem
+    margin-bottom 0.5rem
+    width calc(100% + 10px)
+    margin-left -5px
