@@ -60,6 +60,7 @@ Package.onUse(function (api) {
     'discussion/display.coffee',
     'comment/list.html',
     'comment/list.coffee',
+    'comment/list.styl',
     'comment/new.html',
     'comment/new.coffee',
     'point/list.html',
