@@ -9,13 +9,9 @@ Meteor.methods
       category: Match.Enumeration String, Point.CATEGORY
     ,
       (user, doc) ->
-        _.extend doc,
-          category: document.category
-          categoryChanges: [
-            updatedAt: doc.createdAt
-            author: user.getReference()
-            category: document.category
-          ]
+        doc.category = document.category
+        doc.changes[0].category = document.category
+        doc
 
   'Point.upvote': (pointId) ->
     share.upvoteUpvotable Point, pointId
@@ -43,11 +39,8 @@ Meteor.methods
         body: document.body
         category: document.category
       $push:
-        bodyChanges:
+        changes:
           updatedAt: updatedAt
           author: user.getReference()
           body: document.body
-        categoryChanges:
-          updatedAt: updatedAt
-          author: user.getReference()
           category: document.category

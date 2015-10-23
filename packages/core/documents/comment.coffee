@@ -8,7 +8,7 @@ class Comment extends share.UpvotableDocument
   # discussion:
   #   _id
   # body: the latest version of the body
-  # bodyChanges: list (the last list item is the most recent one) of
+  # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
   #     _id

@@ -8,7 +8,7 @@ class Meeting extends share.BaseDocument
   # startAt: time when the meeting started (or will start)
   # endAt: time when the meeting ended (or will end)
   # description: the latest version of the description
-  # descriptionChanges: list (the last list item is the most recent one) of
+  # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
   #     _id
@@ -20,13 +20,13 @@ class Meeting extends share.BaseDocument
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
-      description: @GeneratedField 'self', ['descriptionChanges'], (fields) ->
-        [fields._id, fields.descriptionChanges?[fields.descriptionChanges?.length - 1]?.description or '']
-      descriptionChanges: [
+      description: @GeneratedField 'self', ['changes'], (fields) ->
+        [fields._id, fields.changes?[fields.changes?.length - 1]?.description or '']
+      changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
     triggers: =>
-      updatedAt: share.UpdatedAtTrigger ['descriptionChanges', 'startAt', 'endAt']
+      updatedAt: share.UpdatedAtTrigger ['changes', 'startAt', 'endAt']
 
   @PUBLISH_FIELDS: ->
     _id: 1

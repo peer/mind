@@ -6,18 +6,13 @@ class Discussion extends share.BaseDocument
   #   _id
   #   username
   # title: the latest version of the title
-  # titleChanges: list (the last list item is the most recent one) of
+  # description: the latest version of the description
+  # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
   #     _id
   #     username
   #   title
-  # description: the latest version of the description
-  # descriptionChanges: list (the last list item is the most recent one) of
-  #   updatedAt: timestamp of the change
-  #   author: author of the change
-  #     _id
-  #     username
   #   description
   # meetings: list, if a discussion is associated with a meeting (or meetings)
   #   _id
@@ -25,21 +20,18 @@ class Discussion extends share.BaseDocument
   @Meta
     name: 'Discussion'
     fields: =>
-      # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
-      title: @GeneratedField 'self', ['titleChanges'], (fields) ->
-        [fields._id, fields.titleChanges?[fields.titleChanges?.length - 1]?.title or '']
-      description: @GeneratedField 'self', ['descriptionChanges'], (fields) ->
-        [fields._id, fields.descriptionChanges?[fields.descriptionChanges?.length - 1]?.description or '']
       author: @ReferenceField User, User.REFERENCE_FIELDS()
-      titleChanges: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS()
-      ]
-      descriptionChanges: [
+      # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
+      title: @GeneratedField 'self', ['changes'], (fields) ->
+        [fields._id, fields.changes?[fields.changes?.length - 1]?.title or '']
+      description: @GeneratedField 'self', ['changes'], (fields) ->
+        [fields._id, fields.changes?[fields.changes?.length - 1]?.description or '']
+      changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
       meetings: [@ReferenceField Meeting]
     triggers: =>
-      updatedAt: share.UpdatedAtTrigger ['titleChanges', 'descriptionChanges', 'meetings']
+      updatedAt: share.UpdatedAtTrigger ['changes', 'meetings']
 
   @PUBLISH_FIELDS: ->
     _id: 1

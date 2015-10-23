@@ -8,34 +8,26 @@ class Point extends share.UpvotableDocument
   # discussion:
   #   _id
   # body: the latest version of the body
-  # bodyChanges: list (the last list item is the most recent one) of
+  # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
   #     _id
   #     username
   #   body
+  #   category
   # upvotes: list of
   #   createdAt: timestamp of the upvote
   #   author: author of the upvote
   #     _id
   # upvotesCount
   # category: one of "infavor", "against", and "other"
-  # categoryChanges: list (the last list item is the most recent one) of
-  #   updatedAt: timestamp of the change
-  #   author: author of the change
-  #     _id
-  #     username
-  #   category
 
   @Meta
     name: 'Point'
     fields: (fields) =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
-      fields.category = @GeneratedField 'self', ['categoryChanges'], (fields) ->
-        [fields._id, fields.categoryChanges?[fields.categoryChanges?.length - 1]?.category or '']
-      fields.categoryChanges = [
-        author: @ReferenceField User, User.REFERENCE_FIELDS()
-      ]
+      fields.category = @GeneratedField 'self', ['changes'], (fields) ->
+        [fields._id, fields.changes?[fields.changes?.length - 1]?.category or '']
       fields
 
   @CATEGORY:

@@ -8,7 +8,7 @@ class Motion extends share.BaseDocument
   # discussion:
   #   _id
   # body: the latest version of the body
-  # bodyChanges: list (the last list item is the most recent one) of
+  # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
   #     _id
@@ -31,16 +31,16 @@ class Motion extends share.BaseDocument
       author: @ReferenceField User, User.REFERENCE_FIELDS()
       discussion: @ReferenceField Discussion
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
-      body: @GeneratedField 'self', ['bodyChanges'], (fields) ->
-        [fields._id, fields.bodyChanges?[fields.bodyChanges?.length - 1]?.body or '']
-      bodyChanges: [
+      body: @GeneratedField 'self', ['changes'], (fields) ->
+        [fields._id, fields.changes?[fields.changes?.length - 1]?.body or '']
+      changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
       votingOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
       votingClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
       withdrawnBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
     triggers: =>
-      updatedAt: share.UpdatedAtTrigger ['bodyChanges']
+      updatedAt: share.UpdatedAtTrigger ['changes']
 
   @PUBLISH_FIELDS: ->
     _id: 1

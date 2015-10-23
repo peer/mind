@@ -14,15 +14,11 @@ Meteor.methods
       lastActivity: createdAt
       author: user.getReference()
       title: document.title
-      titleChanges: [
+      description: document.description
+      changes: [
         updatedAt: createdAt
         author: user.getReference()
         title: document.title
-      ]
-      description: document.description
-      descriptionChanges: [
-        updatedAt: createdAt
-        author: user.getReference()
         description: document.description
       ]
       meetings: []

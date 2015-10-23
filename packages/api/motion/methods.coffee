@@ -23,7 +23,7 @@ Meteor.methods
       discussion:
         _id: discussion._id
       body: document.body
-      bodyChanges: [
+      changes: [
         updatedAt: createdAt
         author: user.getReference()
         body: document.body
@@ -59,7 +59,7 @@ Meteor.methods
         updatedAt: updatedAt
         body: document.body
       $push:
-        bodyChanges:
+        changes:
           updatedAt: updatedAt
           author: user.getReference()
           body: document.body
@@ -178,7 +178,7 @@ Meteor.methods
         updatedAt: createdAt
         value: document.value
       $push:
-        valueChanges:
+        changes:
           updatedAt: createdAt
           value: document.value
     ,

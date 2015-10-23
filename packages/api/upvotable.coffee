@@ -21,7 +21,7 @@ share.newUpvotable = (documentClass, document, match, extend) ->
     discussion:
       _id: discussion._id
     body: document.body
-    bodyChanges: [
+    changes: [
       updatedAt: createdAt
       author: user.getReference()
       body: document.body
