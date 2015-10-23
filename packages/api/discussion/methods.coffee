@@ -5,7 +5,7 @@ Meteor.methods
       description: Match.NonEmptyString
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     createdAt = new Date()
     Discussion.documents.insert

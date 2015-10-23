@@ -6,13 +6,13 @@ Meteor.methods
         _id: Match.DocumentId
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     discussion = Discussion.documents.findOne document.discussion._id,
       fields:
         _id: 1
 
-    throw new Meteor.Error 400, "Invalid discussion." unless discussion
+    throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
     createdAt = new Date()
     Motion.documents.insert
@@ -41,7 +41,7 @@ Meteor.methods
       body: Match.NonEmptyString
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     # TODO: We should also allow moderators to update motions.
     updatedAt = new Date()
@@ -68,7 +68,7 @@ Meteor.methods
     check motionId, Match.DocumentId
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     # TODO: We should also allow moderators to open motions.
     openedAt = new Date()
@@ -90,7 +90,7 @@ Meteor.methods
     check motionId, Match.DocumentId
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     # TODO: We should also allow moderators to close motions.
     closedAt = new Date()
@@ -114,7 +114,7 @@ Meteor.methods
     check motionId, Match.DocumentId
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     # TODO: We should also allow moderators to withdraw motions.
     withdrawnAt = new Date()
@@ -140,7 +140,7 @@ Meteor.methods
         _id: Match.DocumentId
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     motion = Motion.documents.findOne document.motion._id,
       fields:
@@ -153,9 +153,9 @@ Meteor.methods
         withdrawnBy: 1
         withdrawnAt: 1
 
-    throw new Meteor.Error 400, "Invalid motion." unless motion
+    throw new Meteor.Error 'not-found', "Motion '#{document.motion._id}' cannot be found." unless motion
 
-    throw new Meteor.Error 400, "Invalid motion." unless motion.votingOpenedBy and motion.votingOpenedAt and not motion.votingClosedBy and not motion.votingClosedAt and not motion.withdrawnBy and not motion.withdrawnAt
+    throw new Meteor.Error 'bad-request', "Motion '#{document.motion._id}' is not open." unless motion.votingOpenedBy and motion.votingOpenedAt and not motion.votingClosedBy and not motion.votingClosedAt and not motion.withdrawnBy and not motion.withdrawnAt
 
     createdAt = new Date()
     Vote.documents.update

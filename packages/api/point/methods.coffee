@@ -30,7 +30,7 @@ Meteor.methods
       category: Match.Enumeration String, Point.CATEGORY
 
     user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 401, "User not signed in." unless user
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     # TODO: We should also allow moderators to update points.
     updatedAt = new Date()

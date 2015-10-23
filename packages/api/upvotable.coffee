@@ -4,13 +4,13 @@ share.newUpvotable = (documentClass, document, match, extend) ->
   extend ?= (user, doc) -> doc
 
   user = Meteor.user User.REFERENCE_FIELDS()
-  throw new Meteor.Error 401, "User not signed in." unless user
+  throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
   discussion = Discussion.documents.findOne document.discussion._id,
     fields:
       _id: 1
 
-  throw new Meteor.Error 400, "Invalid discussion." unless discussion
+  throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
   createdAt = new Date()
   documentClass.documents.insert extend user,
@@ -33,7 +33,7 @@ share.upvoteUpvotable = (documentClass, documentId) ->
   check documentId, Match.DocumentId
 
   userId = Meteor.userId()
-  throw new Meteor.Error 401, "User not signed in." unless userId
+  throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
 
   createdAt = new Date()
   documentClass.documents.update
@@ -59,7 +59,7 @@ share.removeUpvoteUpvotable = (documentClass, documentId) ->
   check documentId, Match.DocumentId
 
   userId = Meteor.userId()
-  throw new Meteor.Error 401, "User not signed in." unless userId
+  throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
 
   lastActivity = new Date()
   documentClass.documents.update
