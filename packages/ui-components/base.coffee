@@ -50,6 +50,36 @@ class UIComponent extends BlazeComponent
 
     not args[0]
 
+  insertDOMElement: (parent, node, before, next) ->
+    next ?= =>
+      super parent, node, before
+
+    return next() unless @callFirstWith @, 'insertDOMElement', parent, node, before, next
+
+    # It has been handled.
+    true
+
+  moveDOMElement: (parent, node, before, next) ->
+    next ?= =>
+      super parent, node, before
+
+    return next() unless @callFirstWith @, 'moveDOMElement', parent, node, before, next
+
+    # It has been handled.
+    true
+
+  removeDOMElement: (parent, node, next) ->
+    next ?= =>
+      super parent, node
+
+    return next() unless @callFirstWith @, 'removeDOMElement', parent, node, next
+
+    # It has been handled.
+    true
+
 class UIMixin extends UIComponent
   data: ->
     @mixinParent().data()
+
+  callFirstWith: (args...) ->
+    @mixinParent().callFirstWith args...

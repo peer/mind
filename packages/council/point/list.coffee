@@ -40,7 +40,7 @@ class Point.ListItemComponent extends UIComponent
   @register 'Point.ListItemComponent'
 
   mixins: ->
-    super.concat share.UpvotableMixin
+    super.concat share.UpvotableMixin, share.ExpandableMixin
 
   onCreated: ->
     super
@@ -49,7 +49,6 @@ class Point.ListItemComponent extends UIComponent
       # TODO: We should also allow moderators to edit points.
       Meteor.userId() and @data() and Meteor.userId() is @data().author._id
 
-    @itemExpanded = new ReactiveField false
     @isBeingEdited = new ReactiveField false
 
     @autorun (computation) =>
@@ -66,42 +65,14 @@ class Point.ListItemComponent extends UIComponent
 
   events: ->
     super.concat
-      'click .expand-button': @onExpandButton
       'click .edit-point': @onEditPoint
       'submit .point-edit': @onPointEditSave
       'click .point-edit-cancel': @onPointEditCancel
-
-  onExpandButton: (event) ->
-    event.preventDefault()
-
-    @itemExpanded not @itemExpanded()
 
   onEditPoint: (event) ->
     event.preventDefault()
 
     @isBeingEdited true
-    @itemExpanded false
-
-  insertDOMElement: (parent, node, before) ->
-    $node = $(node)
-    if $node.hasClass('expansion') and not @isBeingEdited()
-      super parent, node, before
-      $(node).velocity 'slideDown',
-        duration: 'fast'
-        queue: false
-    else
-      super parent, node, before
-
-  removeDOMElement: (parent, node, before) ->
-    $node = $(node)
-    if $node.hasClass('expansion') and not @isBeingEdited()
-      $(node).velocity 'slideUp',
-        duration: 'fast'
-        queue: false
-        complete: (element) =>
-          super parent, node, before
-    else
-      super parent, node, before
 
   categories: ->
     for category, value of Point.CATEGORY
