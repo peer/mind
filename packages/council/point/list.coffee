@@ -40,7 +40,7 @@ class Point.ListItemComponent extends UIComponent
   @register 'Point.ListItemComponent'
 
   mixins: ->
-    super.concat share.UpvoteableMixin, share.ExpandableMixin
+    super.concat share.UpvoteableMixin, share.ExpandableMixin, share.EditableMixin
 
   onCreated: ->
     super
@@ -49,46 +49,17 @@ class Point.ListItemComponent extends UIComponent
       # TODO: We should also allow moderators to edit points.
       Meteor.userId() and @data() and Meteor.userId() is @data().author._id
 
-    @isBeingEdited = new ReactiveField false
-
-    @autorun (computation) =>
-      return unless @isBeingEdited()
-
-      Tracker.afterFlush =>
-        # A bit of mangling to get cursor to focus at the end of the text.
-        $textarea = @$('[name="body"]')
-        body = $textarea.val()
-        $textarea.focus().val('').val(body).trigger('autoresize')
-
   methodPrefix: ->
     'Point'
 
-  events: ->
-    super.concat
-      'click .edit-point': @onEditPoint
-      'submit .point-edit': @onPointEditSave
-      'click .point-edit-cancel': @onPointEditCancel
+  onBeingEdited: ->
+    Tracker.afterFlush =>
+      # A bit of mangling to get cursor to focus at the end of the text.
+      $textarea = @$('[name="body"]')
+      body = $textarea.val()
+      $textarea.focus().val('').val(body).trigger('autoresize')
 
-  onEditPoint: (event) ->
-    event.preventDefault()
-
-    @isBeingEdited true
-
-  categories: ->
-    for category, value of Point.CATEGORY
-      category: value
-      # TODO: Make translatable.
-      label: _.capitalize category.replace('_', ' ')
-
-  categoryColumns: ->
-    "s#{Math.floor(12 / _.size(Point.CATEGORY))}"
-
-  categoryChecked: ->
-    'checked' if @currentData().category is @data().category
-
-  onPointEditSave: (event) ->
-    event.preventDefault()
-
+  onSaveEdit: (event, onSuccess) ->
     # TODO: We cannot use required for category input with Materialize.
     #       See https://github.com/Dogfalo/materialize/issues/2187
     # TODO: Make a warning or something?
@@ -105,9 +76,16 @@ class Point.ListItemComponent extends UIComponent
           alert "Update point error: #{error.reason or error}"
           return
 
-        @isBeingEdited false
+        onSuccess()
 
-  onPointEditCancel: (event) ->
-    event.preventDefault()
+  categories: ->
+    for category, value of Point.CATEGORY
+      category: value
+      # TODO: Make translatable.
+      label: _.capitalize category.replace('_', ' ')
 
-    @isBeingEdited false
+  categoryColumns: ->
+    "s#{Math.floor(12 / _.size(Point.CATEGORY))}"
+
+  categoryChecked: ->
+    'checked' if @currentData().category is @data().category

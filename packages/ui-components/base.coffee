@@ -86,3 +86,6 @@ class UIMixin extends UIComponent
 
   callFirstWith: (args...) ->
     @mixinParent().callFirstWith args...
+
+  autorun: (args...) ->
+    @mixinParent().autorun args...

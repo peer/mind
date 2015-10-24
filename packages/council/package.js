@@ -41,6 +41,8 @@ Package.onUse(function (api) {
     'expandable.html',
     'expandable.coffee',
     'expandable.styl',
+    'editable.html',
+    'editable.coffee',
     'account/config.coffee',
     'account/form.coffee',
     'flow-router/title.coffee',
