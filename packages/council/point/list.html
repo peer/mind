@@ -61,7 +61,7 @@
         </div>
       </form>
     {{else}}
-      {{> ExpandableButton}}<a class="secondary-content upvoteable {{canUpvote}} {{canRemoveUpvote}}"><i class="material-icons tiny">thumb_up</i>{{upvotesCount}}</a>{{body}}
+      {{> ExpandableButton}}{{> UpvoteableButton}}{{body}}
       {{#if itemExpanded}}
         <div class="expansion">
           <div class="divider"></div>

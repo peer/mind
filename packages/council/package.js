@@ -35,7 +35,8 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'upvotable.coffee',
+    'upvoteable.html',
+    'upvoteable.coffee',
     'upvoteable.styl',
     'expandable.html',
     'expandable.coffee',

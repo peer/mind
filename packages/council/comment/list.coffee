@@ -23,7 +23,7 @@ class Comment.ListItemComponent extends UIComponent
   @register 'Comment.ListItemComponent'
 
   mixins: ->
-    super.concat share.UpvotableMixin
+    super.concat share.UpvoteableMixin
 
   methodPrefix: ->
     'Comment'

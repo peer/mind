@@ -1,4 +1,8 @@
-class share.UpvotableMixin extends UIMixin
+# TODO: Make a component once the animations hook bug is fixed.
+#class UpvoteableButton extends UIComponent
+#  @register 'UpvoteableButton'
+
+class share.UpvoteableMixin extends UIMixin
   onCreated: ->
     super
 

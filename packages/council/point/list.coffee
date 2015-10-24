@@ -40,7 +40,7 @@ class Point.ListItemComponent extends UIComponent
   @register 'Point.ListItemComponent'
 
   mixins: ->
-    super.concat share.UpvotableMixin, share.ExpandableMixin
+    super.concat share.UpvoteableMixin, share.ExpandableMixin
 
   onCreated: ->
     super
