@@ -6,32 +6,25 @@ class share.ExpandableMixin extends UIMixin
   onCreated: ->
     super
 
-    @_itemExpanded = new ReactiveField false
-    @_itemExpandedSet = false
+    @itemExpanded = new ReactiveField false
+    @_expandWithAnimation = false
 
   events: ->
     super.concat
       'click .expand-button': @onExpandButton
 
-  itemExpanded: (value) ->
-    if arguments.length > 0
-      @_itemExpanded value
-
-      # To be able to know if DOM node is being removed because of itemExpanded change or
-      # because of some other reason (like whole component being removed), we set a flag.
-      @_itemExpandedSet = true
-      Tracker.afterFlush =>
-        @_itemExpandedSet = false
-
-      return Tracker.nonreactive =>
-        @_itemExpanded()
-
-    @_itemExpanded()
-
   onExpandButton: (event) ->
     event.preventDefault()
 
-    @itemExpanded not @itemExpanded()
+    # Toggle.
+    @expandWithAnimation not @itemExpanded()
+
+  expandWithAnimation: (value) ->
+    @itemExpanded value
+
+    @_expandWithAnimation = true
+    Tracker.afterFlush =>
+      @_expandWithAnimation = false
 
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>
@@ -39,7 +32,7 @@ class share.ExpandableMixin extends UIMixin
       true
 
     $node = $(node)
-    if $node.hasClass('expansion') and @_itemExpandedSet
+    if $node.hasClass('expansion') and @_expandWithAnimation
       next() unless @callFirstWith @, 'insertDOMElement', parent, node, before, next
       $node.velocity 'slideDown',
         duration: 'fast'
@@ -57,7 +50,7 @@ class share.ExpandableMixin extends UIMixin
       true
 
     $node = $(node)
-    if $node.hasClass('expansion') and @_itemExpandedSet
+    if $node.hasClass('expansion') and @_expandWithAnimation
       $node.velocity 'slideUp',
         duration: 'fast'
         queue: false
