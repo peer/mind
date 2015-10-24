@@ -19,8 +19,11 @@ class Comment.ListComponent extends UIComponent
   discussionExists: ->
     Discussion.documents.exists @currentDiscussionId()
 
-class Comment.ListItemComponent extends share.UpvotableItemComponent
+class Comment.ListItemComponent extends UIComponent
   @register 'Comment.ListItemComponent'
+
+  mixins: ->
+    super.concat share.UpvotableMixin
 
   methodPrefix: ->
     'Comment'

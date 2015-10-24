@@ -36,8 +36,11 @@ class Point.ListComponent extends UIComponent
   discussionExists: ->
     Discussion.documents.exists @currentDiscussionId()
 
-class Point.ListItemComponent extends share.UpvotableItemComponent
+class Point.ListItemComponent extends UIComponent
   @register 'Point.ListItemComponent'
+
+  mixins: ->
+    super.concat share.UpvotableMixin
 
   onCreated: ->
     super

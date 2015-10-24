@@ -28,6 +28,7 @@ Package.onUse(function (api) {
   ]);
 
   api.export('UIComponent');
+  api.export('UIMixin');
 
   api.addFiles([
     'base.coffee'

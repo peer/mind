@@ -1,4 +1,4 @@
-class share.UpvotableItemComponent extends UIComponent
+class share.UpvotableMixin extends UIMixin
   onCreated: ->
     super
 
@@ -13,13 +13,13 @@ class share.UpvotableItemComponent extends UIComponent
       'click .upvote': @onUpvote
       'click .remove-upvote': @onRemoveUpvote
 
-  methodPrefix: ->
-    throw new Error "Not implemented"
+  _methodPrefix: ->
+    @mixinParent().callFirstWith(null, 'methodPrefix') or throw new Error "Missing method prefix."
 
   onUpvote: (event) ->
     event.preventDefault()
 
-    Meteor.call "#{@methodPrefix()}.upvote", @data()._id, (error, result) =>
+    Meteor.call "#{@_methodPrefix()}.upvote", @data()._id, (error, result) =>
       if error
         console.error "Upvote error", error
         alert "Upvote error: #{error.reason or error}"
@@ -28,7 +28,7 @@ class share.UpvotableItemComponent extends UIComponent
   onRemoveUpvote: (event) ->
     event.preventDefault()
 
-    Meteor.call "#{@methodPrefix()}.removeUpvote", @data()._id, (error, result) =>
+    Meteor.call "#{@_methodPrefix()}.removeUpvote", @data()._id, (error, result) =>
       if error
         console.error "Remove upvote error", error
         alert "Remove upvote error: #{error.reason or error}"

@@ -49,3 +49,7 @@ class UIComponent extends BlazeComponent
     args.pop()
 
     not args[0]
+
+class UIMixin extends UIComponent
+  data: ->
+    @mixinParent().data()
