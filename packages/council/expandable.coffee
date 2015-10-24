@@ -1,3 +1,7 @@
+# TODO: Make a component once the animations hook bug is fixed.
+#class ExpandableButton extends UIComponent
+#  @register 'ExpandableButton'
+
 class share.ExpandableMixin extends UIMixin
   onCreated: ->
     super

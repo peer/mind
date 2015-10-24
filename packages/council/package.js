@@ -37,7 +37,9 @@ Package.onUse(function (api) {
   api.addFiles([
     'upvotable.coffee',
     'upvoteable.styl',
+    'expandable.html',
     'expandable.coffee',
+    'expandable.styl',
     'account/config.coffee',
     'account/form.coffee',
     'flow-router/title.coffee',
