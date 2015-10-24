@@ -18,7 +18,7 @@ class share.UpvoteableMixin extends UIMixin
       'click .remove-upvote': @onRemoveUpvote
 
   _methodPrefix: ->
-    @mixinParent().callFirstWith(null, 'methodPrefix') or throw new Error "Missing method prefix."
+    @callFirstWith null, 'methodPrefix' or throw new Error "Missing method prefix."
 
   onUpvote: (event) ->
     event.preventDefault()
