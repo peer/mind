@@ -6,7 +6,7 @@ class share.ExpandableMixin extends UIMixin
   onCreated: ->
     super
 
-    @itemExpanded = new ReactiveField false
+    @isExpanded = new ReactiveField false
     @_expandWithAnimation = false
 
   events: ->
@@ -17,10 +17,10 @@ class share.ExpandableMixin extends UIMixin
     event.preventDefault()
 
     # Toggle.
-    @expandWithAnimation not @itemExpanded()
+    @expandWithAnimation not @isExpanded()
 
   expandWithAnimation: (value) ->
-    @itemExpanded value
+    @isExpanded value
 
     @_expandWithAnimation = true
     Tracker.afterFlush =>

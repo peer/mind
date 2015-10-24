@@ -53,7 +53,7 @@ class Point.ListItemComponent extends UIComponent
     'Point'
 
   onBeingEdited: ->
-    @callFirstWith @, 'itemExpanded', false
+    @callFirstWith @, 'isExpanded', false
 
     Tracker.afterFlush =>
       # A bit of mangling to get cursor to focus at the end of the text.
