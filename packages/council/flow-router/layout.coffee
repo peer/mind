@@ -12,7 +12,7 @@ class BaseLayoutComponent extends UIComponent
     @autorun (computation) =>
       unknownRegions = _.difference _.keys(@data()), _.values(@constructor.REGIONS)
 
-      throw new Error "Unknown layout region(s) requested: #{unknownRegions.join ', '}" if unknownRegions.length
+      throw new Error "Unknown layout region(s) requested: #{unknownRegions.join ', '}." if unknownRegions.length
 
   _renderRegion: (regionName, parentComponent) ->
     return null unless regionName
@@ -25,7 +25,7 @@ class BaseLayoutComponent extends UIComponent
 
     component = UIComponent.getComponent componentName
 
-    throw new Error "Unknown component: #{componentName}" unless component
+    throw new Error "Unknown component '#{componentName}'." unless component
 
     parentComponent ?= @currentComponent()
 
