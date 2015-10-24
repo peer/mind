@@ -32,6 +32,7 @@ class share.ExpandableMixin extends UIMixin
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>
       super parent, node, before
+      true
 
     $node = $(node)
     if $node.hasClass('expansion') and @_itemExpandedSet
@@ -49,6 +50,7 @@ class share.ExpandableMixin extends UIMixin
   removeDOMElement: (parent, node, next) ->
     next ?= =>
       super parent, node
+      true
 
     $node = $(node)
     if $node.hasClass('expansion') and @_itemExpandedSet

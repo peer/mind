@@ -53,6 +53,7 @@ class UIComponent extends BlazeComponent
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>
       super parent, node, before
+      true
 
     return next() unless @callFirstWith @, 'insertDOMElement', parent, node, before, next
 
@@ -62,6 +63,7 @@ class UIComponent extends BlazeComponent
   moveDOMElement: (parent, node, before, next) ->
     next ?= =>
       super parent, node, before
+      true
 
     return next() unless @callFirstWith @, 'moveDOMElement', parent, node, before, next
 
@@ -71,6 +73,7 @@ class UIComponent extends BlazeComponent
   removeDOMElement: (parent, node, next) ->
     next ?= =>
       super parent, node
+      true
 
     return next() unless @callFirstWith @, 'removeDOMElement', parent, node, next
 
