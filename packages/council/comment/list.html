@@ -21,6 +21,32 @@
 
 <template name="Comment.ListItemComponent">
   <li class="collection-item avatar">
-    <img src="https://avatars1.githubusercontent.com/u/585279?v=3&s=460" alt="{{author.username}}" class="circle" />{{> UpvoteableButton}}{{body}}
+    <img src="https://avatars1.githubusercontent.com/u/585279?v=3&s=460" alt="{{author.username}}" class="circle" />
+    {{#if isBeingEdited}}
+      <form class="editable-form">
+        <div class="input-field">
+          <textarea name="body" id="edit-comment-body" class="materialize-textarea" required>{{body}}</textarea>
+          <label for="edit-comment-body">Comment</label>
+        </div>
+        <div class="divider"></div>
+        <div class="center-align">
+          <button class="save-edit-button waves-effect waves-light btn-flat" type="submit"><i class="material-icons left">done</i>Save</button>
+          <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+        </div>
+      </form>
+    {{else}}
+      {{> ExpandableButton}}{{> UpvoteableButton}}{{body}}
+      {{#if isExpanded}}
+        <div class="expansion">
+          <div class="divider"></div>
+          <div class="chip">
+            {{author.username}}
+          </div>
+          {{#if canEdit}}
+            {{> EditButton}}
+          {{/if}}
+        </div>
+      {{/if}}
+    {{/if}}
   </li>
 </template>
