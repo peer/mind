@@ -21,6 +21,7 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
+    'voting'
   ]);
 
   api.export('User');
@@ -30,6 +31,7 @@ Package.onUse(function (api) {
   api.export('Point');
   api.export('Motion');
   api.export('Vote');
+  api.export('Tally');
 
   api.addFiles([
     'publish.coffee'
@@ -47,6 +49,7 @@ Package.onUse(function (api) {
     'documents/point.coffee',
     'documents/motion.coffee',
     'documents/vote.coffee',
+    'documents/tally.coffee',
     'finalize-documents.coffee'
   ]);
 });
