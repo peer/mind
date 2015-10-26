@@ -21,7 +21,8 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
-    'voting'
+    'voting',
+    'classy-job'
   ]);
 
   api.export('User');
@@ -32,9 +33,11 @@ Package.onUse(function (api) {
   api.export('Motion');
   api.export('Vote');
   api.export('Tally');
+  api.export('JobQueue');
 
   api.addFiles([
-    'publish.coffee'
+    'publish.coffee',
+    'worker.coffee'
   ], 'server');
 
   api.addFiles([
@@ -50,6 +53,7 @@ Package.onUse(function (api) {
     'documents/motion.coffee',
     'documents/vote.coffee',
     'documents/tally.coffee',
+    'documents/jobqueue.coffee',
     'finalize-documents.coffee'
   ]);
 });
