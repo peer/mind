@@ -70,7 +70,7 @@ class JobsWorker extends JobsWorker
             jobClass = Job.types[jobQueueItem.type]
             return if new Date().valueOf() < jobQueueItem.updated.valueOf() + jobClass.timeout
 
-            job = @makeJob jobQueueItem
+            job = @_makeJob jobQueueItem
             job.fail "No progress for more than #{jobClass.timeout / 1000} seconds."
           catch error
             Log.error "Error while canceling a stalled job #{jobQueueItem.type}/#{jobQueueItem._id}: #{error.stack or error}"

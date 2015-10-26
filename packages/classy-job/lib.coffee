@@ -6,8 +6,8 @@ class JobsWorker
   @initialize: ->
     @collection = new (share.JobCollection or JobCollection)('JobQueue', noCollectionSuffix: true)
 
-  @makeJob: (document) ->
+  @_makeJob: (document) ->
     new jobCollectionJob @collection, document
 
-  @createJob: (type, data) ->
+  @_createJob: (type, data) ->
     new jobCollectionJob @collection, type, data

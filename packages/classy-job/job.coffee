@@ -36,7 +36,7 @@ class Job
     # some duplicate work done. Jobs ought to be idempotent anyway.
     return if options?.skipIfExisting and @constructor.exists @data, options?.skipIncludingCompleted
 
-    job = JobsWorker.createJob @type(), @data
+    job = JobsWorker._createJob @type(), @data
 
     options = @enqueueOptions options
 
@@ -51,7 +51,7 @@ class Job
 
   # You should use .refresh() if you want the recent document from the database.
   getQueueJob: ->
-    JobsWorker.makeJob
+    JobsWorker._makeJob
       _id: @_id
       runId: @runId
       type: @type()
