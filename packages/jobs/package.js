@@ -18,9 +18,16 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
-    'voting',
     'classy-job'
   ]);
+
+  // Dependencies for jobs themselves, can be unordered.
+  api.use([
+    'voting',
+    'core'
+  ], {unordered: true});
+
+  api.export('ComputeTallyJob');
 
   api.addFiles([
     'tally.coffee'

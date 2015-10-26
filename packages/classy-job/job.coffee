@@ -6,6 +6,15 @@ FatalJobError = Meteor.makeErrorType 'FatalJobError',
   (message) ->
     @message = message or ''
 
+isPlainObject = (obj) ->
+  if not _.isObject(obj) or _.isArray(obj) or _.isFunction(obj)
+    return false
+
+  if obj.constructor isnt Object
+    return false
+
+  return true
+
 class Job
   @types: {}
   @timeout: DEFAULT_JOB_TIMEOUT
@@ -27,7 +36,7 @@ class Job
     # some duplicate work done. Jobs ought to be idempotent anyway.
     return if options?.skipIfExisting and @constructor.exists @data, options?.skipIncludingCompleted
 
-    job = JobsWorker.collection.createJob @type(), @data
+    job = JobsWorker.createJob @type(), @data
 
     options = @enqueueOptions options
 
@@ -42,7 +51,7 @@ class Job
 
   # You should use .refresh() if you want the recent document from the database.
   getQueueJob: ->
-    JobsWorker.collection.makeJob
+    JobsWorker.makeJob
       _id: @_id
       runId: @runId
       type: @type()
@@ -105,7 +114,7 @@ class Job
       res = {}
       for field, value of doc
         newPath = if path then "#{path}.#{field}" else field
-        if _.isPlainObject value
+        if isPlainObject value
           _.extend res, values newPath, value
         else
           res[newPath] = value
@@ -116,4 +125,7 @@ class Job
     query.status =
       $in: statuses
 
-    !!JobsWorker.collection.findOne(query, fields: _id: 1, transform: null)
+    !!JobsWorker.collection.findOne query,
+      fields:
+        _id: 1
+      transform: null

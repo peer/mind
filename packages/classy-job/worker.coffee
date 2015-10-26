@@ -70,7 +70,7 @@ class JobsWorker extends JobsWorker
             jobClass = Job.types[jobQueueItem.type]
             return if new Date().valueOf() < jobQueueItem.updated.valueOf() + jobClass.timeout
 
-            job = @collection.makeJob jobQueueItem
+            job = @makeJob jobQueueItem
             job.fail "No progress for more than #{jobClass.timeout / 1000} seconds."
           catch error
             Log.error "Error while canceling a stalled job #{jobQueueItem.type}/#{jobQueueItem._id}: #{error.stack or error}"
@@ -113,26 +113,27 @@ class JobsWorker extends JobsWorker
     Meteor.defer =>
       try
         loop
-          job = @collection.getWork _.keys Job.types
-          break unless job
+          jobs = @collection.getWork _.keys Job.types
+          break unless jobs?.length
 
-          try
+          for job in jobs
             try
-              jobClass = Job.types[job.type]
-              jobInstance = new jobClass job.data
-              jobInstance._id = job._doc._id
-              jobInstance.runId = job._doc.runId
-              result = jobInstance.run()
+              try
+                jobClass = Job.types[job.type]
+                jobInstance = new jobClass job.data
+                jobInstance._id = job._doc._id
+                jobInstance.runId = job._doc.runId
+                result = jobInstance.run()
+              catch error
+                if error instanceof Error
+                  stack = StackTrace.printStackTrace e: error
+                  job.fail EJSON.toJSONValue(value: error.message, stack: stack),
+                    fatal: error instanceof Job.FatalJobError
+                else
+                  job.fail EJSON.toJSONValue(value: "#{error}")
+                continue
+              job.done EJSON.toJSONValue result
             catch error
-              if error instanceof Error
-                stack = StackTrace.printStackTrace e: error
-                job.fail EJSON.toJSONValue(value: error.message, stack: stack),
-                  fatal: error instanceof Job.FatalJobError
-              else
-                job.fail EJSON.toJSONValue(value: "#{error}")
-              continue
-            job.done EJSON.toJSONValue result
-          catch error
-            Log.error "Error running a job queue: #{error.stack or error}"
+              Log.error "Error running a job queue: #{error.stack or error}"
       finally
         @_jobQueueRunning = false
