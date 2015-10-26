@@ -22,7 +22,8 @@ Package.onUse(function (api) {
   // Internal dependencies.
   api.use([
     'voting',
-    'classy-job'
+    'classy-job',
+    'jobs'
   ]);
 
   api.export('User');

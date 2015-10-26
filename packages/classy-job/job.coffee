@@ -86,6 +86,9 @@ class Job
     @name
 
   @register: (jobClass) ->
+    # To allow calling @register() from inside a class body.
+    jobClass ?= @
+
     throw new Error "Job class '#{jobClass.name}' is not a subclass of Job class." unless jobClass.prototype instanceof Job
     throw new Error "Job class '#{jobClass.type()}' already exists" if jobClass.type() of @types
 

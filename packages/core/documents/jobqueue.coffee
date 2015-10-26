@@ -12,6 +12,7 @@ class JobQueue extends share.BaseDocument
   # data: arbitrary object with data for the job
   #   motion: optional reference to the motion this job is associated with
   # result: arbitrary object with result
+  #   tally: optional reference to the tally this job computed
   # failures: information about job failures
   #   value
   #   stack
@@ -52,3 +53,5 @@ class JobQueue extends share.BaseDocument
       # we can use if job is referencing a motion.
       data:
         motion: @ReferenceField Motion, [], false
+      result:
+        tally: @ReferenceField Tally, [], false

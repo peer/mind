@@ -157,11 +157,6 @@ Meteor.methods
 
     throw new Meteor.Error 'bad-request', "Motion '#{document.motion._id}' is not open." unless motion.votingOpenedBy and motion.votingOpenedAt and not motion.votingClosedBy and not motion.votingClosedAt and not motion.withdrawnBy and not motion.withdrawnAt
 
-    # TODO: Use a trigger and a task queue.
-    Meteor.setTimeout ->
-      computeTally document.motion._id
-    , 10 # ms
-
     createdAt = new Date()
     Vote.documents.update
       # We cannot directly specify the conditions because in upsert the conditions are appended
@@ -188,26 +183,3 @@ Meteor.methods
           value: document.value
     ,
       upsert: true
-
-computeTally = (motionId) ->
-  votes = Vote.documents.find('motion._id': motionId).map (vote, index, cursor) ->
-    vote.value
-
-  computedAt = new Date()
-
-  # TODO: Get all users with voting role?
-  populationSize = 10 # User.documents.count()
-
-  result = VotingEngine.computeTally votes, populationSize
-
-  Tally.documents.insert
-    createdAt: computedAt
-    motion:
-      _id: motionId
-    populationSize: populationSize
-    votesCount: result.votesCount
-    abstainsCount: result.abstainsCount
-    inFavorVotesCount: result.inFavorVotesCount
-    againstVotesCount: result.againstVotesCount
-    confidenceLevel: result.confidenceLevel
-    result: result.result
