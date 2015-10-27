@@ -40,7 +40,10 @@ class VotingEngine extends VotingEngine
 
     majorityVotesCount = Math.max(inFavorVotesCount, againstVotesCount)
 
-    result = (inFavorVotesCount / votesCount) * 2 - 1
+    if votesCount > 0
+      result = (inFavorVotesCount / votesCount) * 2 - 1
+    else
+      result = 0
 
     effectivePopulationSize = populationSize - abstainsCount
 
