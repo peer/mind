@@ -8,8 +8,6 @@ class Motion.ListComponent extends UIComponent
       FlowRouter.getParam '_id'
 
     @autorun (computation) =>
-
-    @autorun (computation) =>
       discussionId = @currentDiscussionId()
       return unless discussionId
       @subscribe 'Motion.list', discussionId
