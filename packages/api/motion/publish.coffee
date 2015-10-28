@@ -17,3 +17,10 @@ new PublishEndpoint 'Motion.vote', (motionId) ->
   ,
     Vote.PUBLISH_FIELDS()
 
+new PublishEndpoint 'Motion.tally', (motionId) ->
+  check motionId, Match.DocumentId
+
+  Tally.documents.find
+    'motion._id': motionId
+  ,
+    fields: Tally.PUBLISH_FIELDS()

@@ -72,9 +72,9 @@
         {{/if}}
       {{/if}}
       {{#if isClosed}}
-        <div class="card-action center-align grey-text">
-          {{! TODO: Display results. }}
-          Voting is closed.
+        <div class="card-action">
+          <div class="center-align grey-text">Voting is closed.</div>
+          {{> Motion.TallyComponent}}
         </div>
       {{/if}}
       {{#if isWithdrawn}}
@@ -83,5 +83,17 @@
         </div>
       {{/if}}
     {{/if}}
+  </div>
+</template>
+
+<template name="Motion.TallyComponent">
+  <div class="tally-chart ct-major-twelfth"></div>
+  <div class="row">
+    <div class="col s6">Votes: {{tally.votesCount}}</div>
+    <div class="col s6">Confidence: {{round tally.confidenceLevel}}</div>
+  </div>
+  <div class="row">
+    <div class="col s6">Abstains: {{tally.abstainsCount}}</div>
+    <div class="col s6">Result: {{round tally.result}}</div>
   </div>
 </template>

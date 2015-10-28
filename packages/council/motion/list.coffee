@@ -127,3 +127,129 @@ class Motion.ListItemComponent extends UIComponent
     event.preventDefault()
 
     @isBeingEdited false
+
+class Motion.TallyComponent extends UIComponent
+  @register 'Motion.TallyComponent'
+
+  onCreated: ->
+    super
+
+    @autorun (computation) =>
+      @subscribe 'Motion.tally', @data()._id
+
+    @currentPointId = new ReactiveField null
+
+    @autorun (computation) =>
+      unless @isRendered() and @subscriptionsReady()
+        @chart = null
+      else
+        data =
+          series: [
+            Tally.documents.find(
+              'motion._id': @data()._id
+            ,
+              sort:
+                createdAt: 1
+            ).map (tally, index, cursor) =>
+              x: tally.createdAt.valueOf()
+              y: tally.result
+              meta: tally._id
+          ]
+
+        if @chart
+          @chart.update data
+
+        else
+          options =
+            fullWidth: true
+            chartPadding:
+              top: 10
+              right: 5
+              bottom: 10
+              left: 0
+            axisX:
+              type: Chartist.AutoScaleAxis
+              onlyInteger: true
+              showLabel: false
+              showGrid: false
+              offset: 0
+            axisY:
+              type: Chartist.FixedScaleAxis
+              high: 1
+              low: -1
+              ticks: [-1, 0, 1]
+              offset: 15
+              labelOffset:
+                x: 5
+                y: 5
+
+          @chart = new Chartist.Line @$('.tally-chart').get(0), data, options
+
+  events: ->
+    super.concat
+      'mousemove .tally-chart': @onMousemove
+      'mouseleave .tally-chart': @onMouseleave
+
+  # We want to find the closest point (tally) to mouse location and set the reactive variable
+  # to display its details and display or move crosshair to match the closest point.
+  onMousemove: (event) ->
+    mouseX = event.pageX
+
+    $points = @$('.tally-chart .ct-point')
+
+    unless $points.length
+      @currentPointId null
+      return
+
+    pointsX = for point in $points
+      $(point).offset().left
+
+    closestPointIndex = 0
+    for point, i in pointsX when Math.abs(mouseX - point) < Math.abs(mouseX - pointsX[closestPointIndex])
+      closestPointIndex = i
+
+    $closestPoint = $points.eq(closestPointIndex)
+
+    closestPointId = $closestPoint.attr('ct:meta')
+
+    return if @currentPointId() is closestPointId
+
+    @currentPointId closestPointId
+
+    closestPointX = $closestPoint.attr('x1')
+
+    @removeCrosshair()
+    @drawCrosshair closestPointX
+
+  removeCrosshair: ->
+    @chart?.svg.querySelector('.ct-crosshair')?.remove()
+
+  drawCrosshair: (x) ->
+    linesY = for line in @$('.tally-chart .ct-grid.ct-vertical')
+      $(line).attr('y1')
+    linesY.sort()
+
+    @chart?.svg.querySelector('.ct-grids').elem('line',
+      x1: x
+      x2: x
+      y1: linesY[0]
+      y2: linesY[linesY.length - 1]
+    , 'ct-crosshair')
+
+  onMouseleave: (event) ->
+    @currentPointId null
+    @removeCrosshair()
+
+  tally: ->
+    if currentPointId = @currentPointId()
+      Tally.documents.findOne currentPointId
+    else
+      Tally.documents.findOne
+        'motion._id': @data()._id
+      ,
+        sort:
+          # The newest tally document is returned.
+          createdAt: -1
+
+  round: (value) ->
+    value?.toFixed 2

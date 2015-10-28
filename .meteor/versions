@@ -33,6 +33,7 @@ ejson@1.0.7
 email@1.0.7
 es5-shim@4.1.13
 fastclick@1.0.7
+fourseven:scss@3.4.1
 geojson-utils@1.0.4
 hot-code-push@1.0.0
 html-tools@1.0.5
@@ -50,6 +51,7 @@ logging@1.0.8
 materialize:materialize@0.97.2
 meteor@1.1.9
 meteor-base@1.0.1
+mfpierre:chartist-js@1.6.0
 minifiers@1.1.7
 minimongo@1.0.10
 mobile-experience@1.0.1

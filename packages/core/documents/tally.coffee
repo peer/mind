@@ -18,3 +18,12 @@ class Tally extends share.BaseDocument
     fields: =>
       motion: @ReferenceField Motion
       job: @ReferenceField JobQueue
+
+  @PUBLISH_FIELDS: ->
+    createdAt: 1
+    motion: 1
+    populationSize: 1
+    votesCount: 1
+    abstainsCount: 1
+    confidenceLevel: 1
+    result: 1

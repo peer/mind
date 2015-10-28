@@ -24,7 +24,8 @@ Package.onUse(function (api) {
     'materialize:materialize@0.97.1',
     'useraccounts:materialize@1.12.4',
     'useraccounts:flow-routing@1.12.4',
-    'velocityjs:velocityjs@1.2.1'
+    'velocityjs:velocityjs@1.2.1',
+    'mfpierre:chartist-js@1.6.0'
   ]);
 
   // Internal dependencies.
