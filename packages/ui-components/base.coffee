@@ -9,11 +9,11 @@ expirationMsFromDuration = (duration) ->
   minutes = Math.round(duration.as 'm')
   hours = Math.round(duration.as 'h')
 
-  if seconds <= thresholds.s
+  if seconds < thresholds.s
     (thresholds.s - seconds) * 1000 + 500
-  else if minutes <= thresholds.m
+  else if minutes < thresholds.m
     (60 - seconds % 60) * 1000 + 500
-  else if hours <= thresholds.h
+  else if hours < thresholds.h
     ((60 * 60) - seconds % (60 * 60)) * 1000 + 500
   else
     ((24 * 60 * 60) - seconds % (24 * 60 * 60)) * 1000 + 500
