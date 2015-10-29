@@ -9,8 +9,7 @@ class Comment.ListComponent extends UIComponent
 
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
-      return unless discussionId
-      @subscribe 'Comment.list', discussionId
+      @subscribe 'Comment.list', discussionId if discussionId
 
   comments: ->
     Comment.documents.find

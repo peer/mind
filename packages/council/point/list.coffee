@@ -9,8 +9,7 @@ class Point.ListComponent extends UIComponent
 
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
-      return unless discussionId
-      @subscribe 'Point.list', discussionId
+      @subscribe 'Point.list', discussionId if discussionId
 
   inFavorPoints: ->
     Point.documents.find

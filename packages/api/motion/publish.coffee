@@ -24,3 +24,15 @@ new PublishEndpoint 'Motion.tally', (motionId) ->
     'motion._id': motionId
   ,
     fields: Tally.PUBLISH_FIELDS()
+
+new PublishEndpoint 'Motion.latestTally', (motionId) ->
+  check motionId, Match.DocumentId
+
+  Tally.documents.find
+    'motion._id': motionId
+  ,
+    fields: Tally.PUBLISH_FIELDS()
+    limit: 1
+    sort:
+      # The latest tally document.
+      createdAt: -1

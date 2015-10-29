@@ -9,8 +9,7 @@ class Discussion.DisplayComponent extends UIComponent
 
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
-      return unless discussionId
-      @subscribe 'Discussion.one', discussionId
+      @subscribe 'Discussion.one', discussionId if discussionId
 
     @autorun (computation) =>
       return unless @subscriptionsReady()

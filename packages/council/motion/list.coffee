@@ -9,8 +9,7 @@ class Motion.ListComponent extends UIComponent
 
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
-      return unless discussionId
-      @subscribe 'Motion.list', discussionId
+      @subscribe 'Motion.list', discussionId if discussionId
 
   motions: ->
     Motion.documents.find
@@ -27,6 +26,9 @@ class Motion.ListItemComponent extends UIComponent
 
   onCreated: ->
     super
+
+    @autorun (computation) =>
+      @subscribe 'Motion.latestTally', @data()._id if @data()?._id
 
     @isWithdrawn = new ComputedField =>
       data = @data()
@@ -122,7 +124,7 @@ class Motion.ListItemComponent extends UIComponent
       'motion._id': @data()._id
     ,
       sort:
-        # The newest tally document is returned.
+        # The latest tally document.
         createdAt: -1
       fields:
         result: 1
@@ -137,12 +139,26 @@ class Motion.TallyComponent extends UIComponent
     super
 
     @autorun (computation) =>
-      @subscribe 'Motion.tally', @data()._id
+      @subscribe 'Motion.latestTally', @data()._id if @data()?._id
+
+  tallyExists: ->
+    Tally.documents.exists
+      'motion._id': @data()._id
+
+class Motion.TallyChartComponent extends UIComponent
+  @register 'Motion.TallyChartComponent'
+
+  onCreated: ->
+    super
+
+    @autorun (computation) =>
+      @subscribe 'Motion.tally', @data()._id if @data()?._id
 
     @currentPointId = new ReactiveField null
 
     @autorun (computation) =>
       unless @isRendered() and @subscriptionsReady()
+        @chart?.detach()
         @chart = null
       else
         data =
@@ -186,6 +202,10 @@ class Motion.TallyComponent extends UIComponent
                 y: 5
 
           @chart = new Chartist.Line @$('.tally-chart').get(0), data, options
+
+  onDestroyed: ->
+    @chart?.detach()
+    @chart = null
 
   events: ->
     super.concat
@@ -250,7 +270,7 @@ class Motion.TallyComponent extends UIComponent
         'motion._id': @data()._id
       ,
         sort:
-          # The newest tally document is returned.
+          # The latest tally document.
           createdAt: -1
 
   round: (value) ->
