@@ -1,3 +1,23 @@
+expirationMsFromDuration = (duration) ->
+  # Default values from  moment/src/lib/duration/humanize.js.
+  thresholds =
+    s: 45 # seconds to minute
+    m: 45 # minutes to hour
+    h: 22 # hours to day
+
+  seconds = Math.round(duration.as 's')
+  minutes = Math.round(duration.as 'm')
+  hours = Math.round(duration.as 'h')
+
+  if seconds <= thresholds.s
+    (thresholds.s - seconds) * 1000 + 500
+  else if minutes <= thresholds.m
+    (60 - seconds % 60) * 1000 + 500
+  else if hours <= thresholds.h
+    ((60 * 60) - seconds % (60 * 60)) * 1000 + 500
+  else
+    ((24 * 60 * 60) - seconds % (24 * 60 * 60)) * 1000 + 500
+
 class UIComponent extends BlazeComponent
   # A version of BlazeComponent.subscribe which logs errors to the console if no error callback is specified.
   subscribe: (args...) ->
@@ -85,6 +105,39 @@ class UIComponent extends BlazeComponent
 
     # It has been handled.
     true
+
+  fromNow: (date, withoutSuffix, options) ->
+    if withoutSuffix instanceof Spacebars.kw
+      options = withoutSuffix
+      withoutSuffix = false
+
+    momentDate = moment(date)
+
+    if Tracker.active
+      absoluteDuration = moment.duration(to: momentDate, from: moment()).abs()
+      expirationMs = expirationMsFromDuration absoluteDuration
+      computation = Tracker.currentComputation
+      handle = Meteor.setTimeout =>
+        computation.invalidate()
+      ,
+        expirationMs
+      computation.onInvalidate =>
+        Meteor.clearTimeout handle if handle
+        handle = null
+
+    momentDate.fromNow withoutSuffix
+
+  DEFAULT_DATETIME_FORMAT:
+    'llll'
+
+  DEFAULT_DATE_FORMAT:
+    'll'
+
+  DEFAULT_TIME_FORMAT:
+    'LT'
+
+  formatDate: (date, format) ->
+    moment(date).format format
 
 class UIMixin extends UIComponent
   data: ->

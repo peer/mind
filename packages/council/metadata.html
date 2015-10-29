@@ -1,11 +1,12 @@
 <template name="MetadataComponent">
   <div class="metadata">
-    <div class="chip">
+    <div class="chip author">
       {{#unless noAvatar}}
         <img src="https://avatars1.githubusercontent.com/u/585279?v=3&s=460" alt="{{author.username}}" class="circle" />
       {{/unless}}
-      {{author.username}}
+      {{author.username}}a
     </div>
+    <span class="timestamp" title="{{formatDate createdAt DEFAULT_DATETIME_FORMAT}}">{{fromNow createdAt}}</span>
     {{#if canEdit}}
       {{> EditButton}}
     {{/if}}

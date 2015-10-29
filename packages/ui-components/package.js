@@ -10,13 +10,15 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'underscore',
-    'spacebars'
+    'spacebars',
+    'tracker'
   ]);
 
   // 3rd party dependencies.
   api.use([
     'peerlibrary:blaze-components@0.15.0',
-    'kadira:flow-router@2.7.0'
+    'kadira:flow-router@2.7.0',
+    'momentjs:moment@2.10.6'
   ]);
 
   // Internal dependencies.
