@@ -128,6 +128,19 @@ class Motion.ListItemComponent extends UIComponent
 
     @isBeingEdited false
 
+  motionPassed: ->
+    tally = Tally.documents.findOne
+      'motion._id': @data()._id
+    ,
+      sort:
+        # The newest tally document is returned.
+        createdAt: -1
+      fields:
+        result: 1
+        confidenceLevel: 1
+
+    tally?.result > 0 && tally?.confidenceLevel >= 0.90
+
 class Motion.TallyComponent extends UIComponent
   @register 'Motion.TallyComponent'
 

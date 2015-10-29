@@ -15,13 +15,13 @@ class VotingEngine extends VotingEngine
 
   @computeTally: (votes, populationSize) ->
     votesCount = 0
-    abstainsCount = 0
+    abstentionsCount = 0
     inFavorVotesCount = 0
     againstVotesCount = 0
 
     for vote in votes
       if vote is @VALUE.ABSTAIN
-        abstainsCount++
+        abstentionsCount++
       else if vote is @VALUE.DEFAULT
         # We do not do anything. It is the same as vote not cast.
       else if _.isNumber(vote) and -1 <= vote <= 1
@@ -45,7 +45,7 @@ class VotingEngine extends VotingEngine
     else
       result = 0
 
-    effectivePopulationSize = populationSize - abstainsCount
+    effectivePopulationSize = populationSize - abstentionsCount
 
     # TODO: Support super-majority vote as well.
     threshold = Math.floor(effectivePopulationSize / 2)
@@ -61,7 +61,7 @@ class VotingEngine extends VotingEngine
     {
       populationSize
       votesCount
-      abstainsCount
+      abstentionsCount
       inFavorVotesCount
       againstVotesCount
       confidenceLevel

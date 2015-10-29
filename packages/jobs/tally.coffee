@@ -30,7 +30,7 @@ class ComputeTallyJob extends Job
         _id: @_id
       populationSize: populationSize
       votesCount: result.votesCount
-      abstainsCount: result.abstainsCount
+      abstentionsCount: result.abstentionsCount
       inFavorVotesCount: result.inFavorVotesCount
       againstVotesCount: result.againstVotesCount
       confidenceLevel: result.confidenceLevel

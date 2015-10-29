@@ -6,7 +6,7 @@ class Tally extends share.BaseDocument
   #   _id:
   # populationSize
   # votesCount
-  # abstainsCount
+  # abstentionsCount
   # inFavorVotesCount
   # againstVotesCount
   # confidenceLevel
@@ -24,6 +24,6 @@ class Tally extends share.BaseDocument
     motion: 1
     populationSize: 1
     votesCount: 1
-    abstainsCount: 1
+    abstentionsCount: 1
     confidenceLevel: 1
     result: 1
