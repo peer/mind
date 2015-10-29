@@ -18,7 +18,7 @@
 <template name="Motion.ListItemComponent">
   <div class="card">
     {{#if $and canEdit isBeingEdited}}
-      <form class="motion-edit">
+      <form class="editable-form">
         <div class="card-content">
           <div class="input-field">
             <textarea name="body" id="edit-motion-body" class="materialize-textarea" required>{{body}}</textarea>
@@ -26,15 +26,28 @@
           </div>
         </div>
         <div class="card-action">
-          <div class="center-align">
-            <button class="motion-edit-save waves-effect waves-light btn-flat" type="submit"><i class="material-icons left">done</i>Save</button>
-            <button class="motion-edit-cancel waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+          <div class="buttons">
+            <button class="save-edit-button waves-effect waves-light btn-flat" type="submit"><i class="material-icons left">done</i>Save</button>
+            <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
           </div>
         </div>
       </form>
     {{else}}
       <div class="card-content">
-        <p>{{body}}</p>
+        {{> ExpandableButton}}<p>{{body}}</p>
+        {{#if isExpanded}}
+          <div class="expansion">
+            <div class="divider"></div>
+            <div class="metadata">
+              <div class="chip">
+                {{author.username}}
+              </div>
+              {{#if canEdit}}
+                {{> EditButton}}
+              {{/if}}
+            </div>
+          </div>
+        {{/if}}
       </div>
       {{#if $and isOpen canVote}}
         <div class="card-action">
@@ -43,7 +56,7 @@
       {{/if}}
       {{#if $or canOpen canClose canWithdraw canEdit}}
         <div class="card-action">
-          <div class="center-align">
+          <div class="buttons">
             {{#if canOpen}}
               <button class="open-voting waves-effect waves-light btn-flat" type="button"><i class="material-icons left">play_arrow</i>Open voting</button>
             {{/if}}
@@ -52,9 +65,6 @@
             {{/if}}
             {{#if canWithdraw}}
               <button class="withdraw-motion waves-effect waves-light btn-flat" type="button"><i class="material-icons left">delete</i>Withdraw</button>
-            {{/if}}
-            {{#if canEdit}}
-              <button class="edit-motion waves-effect waves-light btn-flat" type="button"><i class="material-icons left">edit</i>Edit</button>
             {{/if}}
           </div>
         </div>

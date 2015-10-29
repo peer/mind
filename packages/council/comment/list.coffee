@@ -51,8 +51,8 @@ class Comment.ListItemComponent extends UIComponent
     ,
       (error, result) =>
         if error
-          console.error "Comment point error", error
-          alert "Comment point error: #{error.reason or error}"
+          console.error "Update comment error", error
+          alert "Update comment error: #{error.reason or error}"
           return
 
         onSuccess()

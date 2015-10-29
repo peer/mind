@@ -1,6 +1,7 @@
 @import 'nib'
 
 .collection
+.card
   // We are using z-depth-1 with collections, so we do not need a border as well.
   border none
 
@@ -16,6 +17,19 @@
     width calc(100% + 10px)
     margin-left -5px
 
-  // Less padding for buttons.
-  .btn-flat.small
-    padding 0 0.5rem
+  .metadata
+    margin-bottom -5px
+
+  .buttons
+    display flex
+    flex-direction row
+    flex-wrap wrap
+    justify-content space-around
+
+    .btn-flat
+      padding 0 0.5rem
+
+.card
+  .divider
+    margin-top 1rem
+    margin-bottom 1rem

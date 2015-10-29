@@ -22,6 +22,9 @@ class Motion.ListComponent extends UIComponent
 class Motion.ListItemComponent extends UIComponent
   @register 'Motion.ListItemComponent'
 
+  mixins: ->
+    super.concat share.ExpandableMixin, share.EditableMixin
+
   onCreated: ->
     super
 
@@ -56,25 +59,23 @@ class Motion.ListItemComponent extends UIComponent
       # TODO: We should also allow moderators to withdraw motions.
       @canEdit()
 
-    @isBeingEdited = new ReactiveField false
+  methodPrefix: ->
+    'Motion'
 
-    @autorun (computation) =>
-      return unless @isBeingEdited()
+  onBeingEdited: ->
+    @callFirstWith @, 'isExpanded', false
 
-      Tracker.afterFlush =>
-        # A bit of mangling to get cursor to focus at the end of the text.
-        $textarea = @$('[name="body"]')
-        body = $textarea.val()
-        $textarea.focus().val('').val(body).trigger('autoresize')
+    Tracker.afterFlush =>
+      # A bit of mangling to get cursor to focus at the end of the text.
+      $textarea = @$('[name="body"]')
+      body = $textarea.val()
+      $textarea.focus().val('').val(body).trigger('autoresize')
 
   events: ->
     super.concat
       'click .open-voting': @onOpenVoting
       'click .close-voting': @onCloseVoting
       'click .withdraw-motion': @onWithdrawMotion
-      'click .edit-motion': @onEditMotion
-      'submit .motion-edit': @onMotionEditSave
-      'click .motion-edit-cancel': @onMotionEditCancel
 
   onOpenVoting: (event) ->
     event.preventDefault()
@@ -103,14 +104,7 @@ class Motion.ListItemComponent extends UIComponent
         alert "Motion withdraw error: #{error.reason or error}"
         return
 
-  onEditMotion: (event) ->
-    event.preventDefault()
-
-    @isBeingEdited true
-
-  onMotionEditSave: (event) ->
-    event.preventDefault()
-
+  onSaveEdit: (event, onSuccess) ->
     Meteor.call 'Motion.update',
       _id: @data()._id
       body: @$('[name="body"]').val()
@@ -121,12 +115,7 @@ class Motion.ListItemComponent extends UIComponent
           alert "Update motion error: #{error.reason or error}"
           return
 
-        @isBeingEdited false
-
-  onMotionEditCancel: (event) ->
-    event.preventDefault()
-
-    @isBeingEdited false
+        onSuccess()
 
   motionPassed: ->
     tally = Tally.documents.findOne

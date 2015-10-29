@@ -29,7 +29,7 @@
           <label for="edit-comment-body">Comment</label>
         </div>
         <div class="divider"></div>
-        <div class="center-align">
+        <div class="buttons">
           <button class="save-edit-button waves-effect waves-light btn-flat" type="submit"><i class="material-icons left">done</i>Save</button>
           <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
         </div>
@@ -39,12 +39,14 @@
       {{#if isExpanded}}
         <div class="expansion">
           <div class="divider"></div>
-          <div class="chip">
-            {{author.username}}
+          <div class="metadata">
+            <div class="chip">
+              {{author.username}}
+            </div>
+            {{#if canEdit}}
+              {{> EditButton}}
+            {{/if}}
           </div>
-          {{#if canEdit}}
-            {{> EditButton}}
-          {{/if}}
         </div>
       {{/if}}
     {{/if}}
