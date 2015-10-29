@@ -24,10 +24,16 @@ class UIComponent extends BlazeComponent
     FlowRouter.path pathName, params, queryParams
 
   ancestorComponent: (componentClass) ->
-    component = @
+    component = @parentComponent()
     while component and component not instanceof componentClass
       component = component.parentComponent()
     component
+
+  callAncestorWith: (propertyName, args...) ->
+    component = @parentComponent()
+    while component and not component.getFirstWith null, propertyName
+      component = component.parentComponent()
+    component?.callFirstWith null, propertyName, args...
 
   $or: (args...) ->
     # Removing kwargs.

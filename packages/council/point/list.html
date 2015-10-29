@@ -65,15 +65,7 @@
       {{#if isExpanded}}
         <div class="expansion">
           <div class="divider"></div>
-          <div class="metadata">
-            <div class="chip">
-              <img src="https://avatars1.githubusercontent.com/u/585279?v=3&s=460" alt="{{author.username}}" class="circle" />
-              {{author.username}}
-            </div>
-            {{#if canEdit}}
-              {{> EditButton}}
-            {{/if}}
-          </div>
+          {{> MetadataComponent}}
         </div>
       {{/if}}
     {{/if}}

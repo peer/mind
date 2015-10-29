@@ -45,6 +45,8 @@ Package.onUse(function (api) {
     'editable.html',
     'editable.coffee',
     'editable.styl',
+    'metadata.html',
+    'metadata.coffee',
     'account/config.coffee',
     'account/form.coffee',
     'flow-router/title.coffee',

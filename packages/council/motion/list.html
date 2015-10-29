@@ -38,14 +38,7 @@
         {{#if isExpanded}}
           <div class="expansion">
             <div class="divider"></div>
-            <div class="metadata">
-              <div class="chip">
-                {{author.username}}
-              </div>
-              {{#if canEdit}}
-                {{> EditButton}}
-              {{/if}}
-            </div>
+            {{> MetadataComponent}}
           </div>
         {{/if}}
       </div>
