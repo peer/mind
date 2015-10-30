@@ -37,3 +37,10 @@ class share.UpvoteableMixin extends UIMixin
         console.error "Remove upvote error", error
         alert "Remove upvote error: #{error.reason or error}"
         return
+
+  upvoteTitle: ->
+    return if @canUpvote() or @canRemoveUpvote()
+
+    return title: "Sign in to upvote." unless Meteor.userId()
+
+    title: "You cannot upvote your content."

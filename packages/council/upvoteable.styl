@@ -2,12 +2,22 @@
 
 .upvoteable
   user-select none
+  // TODO: Use $button-color-disabled here.
+  color #9f9f9f
 
   .material-icons
     position relative
     top 2px
     margin-left 10px
     margin-right 5px
+
+  &.upvote
+  &.remove-upvote
+    cursor pointer
+    // TODO: Use $secondary-color here.
+    color #26a69a
+
+  &.upvote .material-icons
     // TODO: Use $teal.lighten-4 here.
     color #b2dfdb
 
@@ -18,10 +28,6 @@
   &.remove-upvote .material-icons
     // TODO: Use $secondary-color here.
     color #26a69a
-
-  &.upvote
-  &.remove-upvote
-    cursor pointer
 
 .collection .collection-item.avatar .secondary-content.upvoteable
   position initial
