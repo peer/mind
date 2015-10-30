@@ -42,15 +42,15 @@
     {{#if isBeingEdited}}
       <form class="editable-form">
         <div class="input-field">
-          <textarea name="body" id="edit-point-body" class="materialize-textarea" required>{{body}}</textarea>
-          <label for="edit-point-body">Point</label>
+          <textarea name="body" id="edit-point-body-{{_id}}" class="materialize-textarea" required>{{body}}</textarea>
+          <label for="edit-point-body-{{_id}}">Point</label>
         </div>
         <div class="row">
           {{#each categories}}
             <div class="input-field col {{categoryColumns}} center-align">
               {{! TODO: We cannot use required here with Materialize. See https://github.com/Dogfalo/materialize/issues/2187 }}
-              <input type="radio" name="category" value="{{category}}" id="point-category-{{category}}" {{categoryChecked}} />
-              <label for="point-category-{{category}}" class="point-category">{{label}}</label>
+              <input type="radio" name="category" value="{{category}}" id="edit-point-category-{{_id}}-{{category}}" {{categoryChecked}} />
+              <label for="edit-point-category-{{_id}}-{{category}}" class="point-category">{{label}}</label>
             </div>
           {{/each}}
         </div>

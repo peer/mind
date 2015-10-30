@@ -25,8 +25,8 @@
     {{#if isBeingEdited}}
       <form class="editable-form">
         <div class="input-field">
-          <textarea name="body" id="edit-comment-body" class="materialize-textarea" required>{{body}}</textarea>
-          <label for="edit-comment-body">Comment</label>
+          <textarea name="body" id="edit-comment-body-{{_id}}" class="materialize-textarea" required>{{body}}</textarea>
+          <label for="edit-comment-body-{{_id}}">Comment</label>
         </div>
         <div class="divider"></div>
         <div class="buttons">
