@@ -22,3 +22,16 @@ class Comment extends share.UpvotableDocument
 
   @Meta
     name: 'Comment'
+
+if Meteor.isServer
+  Comment.Meta.collection._ensureIndex
+    createdAt: 1
+
+  Comment.Meta.collection._ensureIndex
+    updatedAt: 1
+
+  Comment.Meta.collection._ensureIndex
+    lastActivity: 1
+
+  Comment.Meta.collection._ensureIndex
+    upvotesCount: 1

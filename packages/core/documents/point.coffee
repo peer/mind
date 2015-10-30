@@ -38,3 +38,16 @@ class Point extends share.UpvotableDocument
   @PUBLISH_FIELDS: ->
     _.extend super,
       category: 1
+
+if Meteor.isServer
+  Point.Meta.collection._ensureIndex
+    createdAt: 1
+
+  Point.Meta.collection._ensureIndex
+    updatedAt: 1
+
+  Point.Meta.collection._ensureIndex
+    lastActivity: 1
+
+  Point.Meta.collection._ensureIndex
+    upvotesCount: 1

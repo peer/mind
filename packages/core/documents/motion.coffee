@@ -65,3 +65,19 @@ class Motion extends share.BaseDocument
 
   isClosed: ->
     !!(@votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and not @isWithdrawn())
+
+if Meteor.isServer
+  Motion.Meta.collection._ensureIndex
+    createdAt: 1
+
+  Motion.Meta.collection._ensureIndex
+    updatedAt: 1
+
+  Motion.Meta.collection._ensureIndex
+    lastActivity: 1
+
+  Motion.Meta.collection._ensureIndex
+    votingOpenedAt: 1
+
+  Motion.Meta.collection._ensureIndex
+    votingClosedAt: 1

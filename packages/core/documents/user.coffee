@@ -42,3 +42,13 @@ Meteor.user = (userId, fields) ->
 User.Meta.collection.deny
   update: ->
     true
+
+if Meteor.isServer
+  User.Meta.collection._ensureIndex
+    createdAt: 1
+
+  User.Meta.collection._ensureIndex
+    updatedAt: 1
+
+  User.Meta.collection._ensureIndex
+    lastActivity: 1

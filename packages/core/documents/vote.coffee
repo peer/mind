@@ -37,3 +37,18 @@ class Vote extends share.BaseDocument
     author: 1
     motion: 1
     value: 1
+
+if Meteor.isServer
+  Vote.Meta.collection._ensureIndex
+    createdAt: 1
+
+  Vote.Meta.collection._ensureIndex
+    updatedAt: 1
+
+  # Much of our code assumes that there will be at most one document for each author per motion.
+  Vote.Meta.collection._ensureIndex
+    'author._id': 1
+    'motion._id': 1
+  ,
+    unique: true
+

@@ -42,3 +42,13 @@ class Discussion extends share.BaseDocument
     title: 1
     description: 1
     meetings: 1
+
+if Meteor.isServer
+  Discussion.Meta.collection._ensureIndex
+    createdAt: 1
+
+  Discussion.Meta.collection._ensureIndex
+    updatedAt: 1
+
+  Discussion.Meta.collection._ensureIndex
+    lastActivity: 1

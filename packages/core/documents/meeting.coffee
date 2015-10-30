@@ -37,3 +37,19 @@ class Meeting extends share.BaseDocument
     startAt: 1
     endAt: 1
     description: 1
+
+if Meteor.isServer
+  Meeting.Meta.collection._ensureIndex
+    createdAt: 1
+
+  Meeting.Meta.collection._ensureIndex
+    updatedAt: 1
+
+  Meeting.Meta.collection._ensureIndex
+    lastActivity: 1
+
+  Meeting.Meta.collection._ensureIndex
+    startAt: 1
+
+  Meeting.Meta.collection._ensureIndex
+    endAt: 1
