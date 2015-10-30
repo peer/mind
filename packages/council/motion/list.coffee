@@ -156,6 +156,9 @@ class Motion.TallyChartComponent extends UIComponent
             ,
               sort:
                 createdAt: 1
+              fields:
+                createdAt: 1
+                result: 1
             ).map (tally, index, cursor) =>
               x: tally.createdAt.valueOf()
               y: tally.result
