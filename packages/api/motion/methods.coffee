@@ -54,6 +54,8 @@ Meteor.methods
       votingClosedAt: null
       withdrawnBy: null
       withdrawnAt: null
+      body:
+        $ne: document.body
     ,
       $set:
         updatedAt: updatedAt
@@ -165,6 +167,9 @@ Meteor.methods
         'author._id': user._id
       ,
         'motion._id': motion._id
+      ,
+        value:
+          $ne: document.value
       ]
     ,
       $setOnInsert:

@@ -24,6 +24,8 @@ Meteor.methods
     Comment.documents.update
       _id: document._id
       'author._id': user._id
+      body:
+        $ne: document.body
     ,
       $set:
         updatedAt: updatedAt

@@ -33,6 +33,13 @@ Meteor.methods
     Point.documents.update
       _id: document._id
       'author._id': user._id
+      $or: [
+        body:
+          $ne: document.body
+      ,
+        category:
+          $ne: document.category
+      ]
     ,
       $set:
         updatedAt: updatedAt
