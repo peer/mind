@@ -179,6 +179,7 @@ class Motion.TallyChartComponent extends UIComponent
 
         else
           options =
+            lineSmooth: Chartist.Interpolation.none()
             fullWidth: true
             chartPadding:
               top: 10
