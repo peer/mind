@@ -16,7 +16,8 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:middleware@0.1.1',
     'peerlibrary:reactive-publish@0.1.1',
-    'peerlibrary:check-extension@0.2.0'
+    'peerlibrary:check-extension@0.2.0',
+    'peerlibrary:assert@0.2.5'
   ]);
 
   // Internal dependencies.

@@ -160,25 +160,28 @@ Meteor.methods
     throw new Meteor.Error 'bad-request', "Motion '#{document.motion._id}' is not open." unless motion.votingOpenedBy and motion.votingOpenedAt and not motion.votingClosedBy and not motion.votingClosedAt and not motion.withdrawnBy and not motion.withdrawnAt
 
     createdAt = new Date()
-    Vote.documents.update
-      # We cannot directly specify the conditions because in upsert the conditions are appended
-      # to the document when inserted. But if we use an operator, this does not happen.
-      $and: [
-        'author._id': user._id
-      ,
-        'motion._id': motion._id
-      ,
-        value:
-          $ne: document.value
-      ]
-    ,
-      $setOnInsert:
+    try
+      voteId = Vote.documents.insert
         createdAt: createdAt
+        updatedAt: createdAt
         author: user.getReference()
         motion:
           _id: motion._id
           discussion:
             _id: motion.discussion._id
+        value: document.value
+      assert voteId
+      return 1
+    catch error
+      # If there is already a document (we have an index) then we have to update it instead.
+      throw error unless /E11000 duplicate key error index:.*Votes\.\$author\._id_1_motion\._id_1/.test error.err
+
+    Vote.documents.update
+      'author._id': user._id
+      'motion._id': motion._id
+      value:
+        $ne: document.value
+    ,
       $set:
         updatedAt: createdAt
         value: document.value
@@ -186,5 +189,3 @@ Meteor.methods
         changes:
           updatedAt: createdAt
           value: document.value
-    ,
-      upsert: true
