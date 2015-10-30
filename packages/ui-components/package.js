@@ -18,7 +18,8 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:blaze-components@0.15.0',
     'kadira:flow-router@2.7.0',
-    'momentjs:moment@2.10.6'
+    'momentjs:moment@2.10.6',
+    'peerlibrary:assert@0.2.5'
   ]);
 
   // Internal dependencies.

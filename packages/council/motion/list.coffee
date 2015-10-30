@@ -30,25 +30,13 @@ class Motion.ListItemComponent extends UIComponent
     @autorun (computation) =>
       @subscribe 'Motion.latestTally', @data()._id if @data()?._id
 
-    @isWithdrawn = new ComputedField =>
-      data = @data()
-      data and data.withdrawnAt and data.withdrawnBy
-
-    @isOpen = new ComputedField =>
-      data = @data()
-      data and data.votingOpenedAt and data.votingOpenedBy and not data.votingClosedAt and not data.votingClosedBy and not @isWithdrawn()
-
-    @isClosed = new ComputedField =>
-      data = @data()
-      data and data.votingOpenedAt and data.votingOpenedBy and data.votingClosedAt and data.votingClosedBy and not @isWithdrawn()
-
     @canOpen = new ComputedField =>
       # TODO: We should also allow moderators to open motions.
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and not (@isOpen() or @isClosed() or @isWithdrawn())
+      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
     @canClose = new ComputedField =>
       # TODO: We should also allow moderators to close motions.
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and @isOpen() and not @isWithdrawn()
+      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and @data().isOpen() and not @data().isWithdrawn()
 
     @canVote = new ComputedField =>
       !!Meteor.userId()

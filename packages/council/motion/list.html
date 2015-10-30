@@ -112,4 +112,14 @@
     <small class="stats-item">Confidence: {{round tally.confidenceLevel}}</small>
     <small class="stats-item">Tally: {{round tally.result}}</small>
   </div>
+  {{#if $or votingOpenedAt votingClosedAt}}
+    <div class="tally-dates grey-text">
+      {{#if votingClosedAt}}
+        <small class="dates-item">Closed: <span title="{{formatDate votingClosedAt DEFAULT_DATETIME_FORMAT}}">{{fromNow votingClosedAt}}</span></small>
+        <small class="dates-item">Duration: <span title="{{formatDuration votingOpenedAt votingClosedAt}}">{{formatDuration votingOpenedAt votingClosedAt 2}}</span></small>
+      {{else}}
+        <small class="dates-item">Duration: <span title="{{formatDuration votingOpenedAt null}}">{{formatDuration votingOpenedAt null 3}}</span></small>
+      {{/if}}
+    </div>
+  {{/if}}
 </template>

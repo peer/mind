@@ -56,3 +56,12 @@ class Motion extends share.BaseDocument
     votingClosedAt: 1
     withdrawnBy: 1
     withdrawnAt: 1
+
+  isWithdrawn: ->
+    !!(@withdrawnAt and @withdrawnBy)
+
+  isOpen: ->
+    !!(@votingOpenedAt and @votingOpenedBy and not @votingClosedAt and not @votingClosedBy and not @isWithdrawn())
+
+  isClosed: ->
+    !!(@votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and not @isWithdrawn())

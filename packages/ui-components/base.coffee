@@ -18,6 +18,16 @@ expirationMsFromDuration = (duration) ->
   else
     ((24 * 60 * 60) - seconds % (24 * 60 * 60)) * 1000 + 500
 
+invalidateAfter = (expirationMs) ->
+  computation = Tracker.currentComputation
+  handle = Meteor.setTimeout =>
+    computation.invalidate()
+  ,
+    expirationMs
+  computation.onInvalidate =>
+    Meteor.clearTimeout handle if handle
+    handle = null
+
 class UIComponent extends BlazeComponent
   # A version of BlazeComponent.subscribe which logs errors to the console if no error callback is specified.
   subscribe: (args...) ->
@@ -116,14 +126,7 @@ class UIComponent extends BlazeComponent
     if Tracker.active
       absoluteDuration = moment.duration(to: momentDate, from: moment()).abs()
       expirationMs = expirationMsFromDuration absoluteDuration
-      computation = Tracker.currentComputation
-      handle = Meteor.setTimeout =>
-        computation.invalidate()
-      ,
-        expirationMs
-      computation.onInvalidate =>
-        Meteor.clearTimeout handle if handle
-        handle = null
+      invalidateAfter expirationMs
 
     momentDate.fromNow withoutSuffix
 
@@ -137,7 +140,68 @@ class UIComponent extends BlazeComponent
     'LT'
 
   formatDate: (date, format) ->
+    format = null if format instanceof Spacebars.kw
+
     moment(date).format format
+
+  # TODO: Support internationalization.
+  formatDuration: (from, to, size) ->
+    size = null if size instanceof Spacebars.kw
+
+    reactive = not (from and to)
+
+    from ?= new Date()
+    to ?= new Date()
+
+    duration = moment.duration({from, to}).abs()
+
+    minutes = Math.round(duration.as 'm') % 60
+    hours = Math.round(duration.as 'h') % 24
+    days = Math.round(duration.as 'd') % 7
+    weeks = Math.floor(Math.round(duration.as 'd') / 7)
+
+    partials = [
+      key: 'week'
+      value: weeks
+    ,
+      key: 'day'
+      value: days
+    ,
+      key: 'hour'
+      value: hours
+    ,
+      key: 'minute'
+      value: minutes
+    ]
+
+    # Trim zero values from the left.
+    while partials.length and partials[0].value is 0
+      partials.shift()
+
+    # Cut the length to provided size.
+    partials = partials[0...size] if size
+
+    if reactive and Tracker.active and partials.length
+      seconds = Math.round(duration.as 's')
+      lastPartial = partials[partials.length - 1].key
+      if lastPartial is 'minute'
+        expirationMs = (60 - seconds % 60) * 1000 + 500
+      else if lastPartial is 'hour'
+        expirationMs = ((60 * 60) - seconds % (60 * 60)) * 1000 + 500
+      else
+        expirationMs = ((24 * 60 * 60) - seconds % (24 * 60 * 60)) * 1000 + 500
+
+      invalidateAfter expirationMs
+
+    partials = for {key, value} in partials
+      # Maybe there are some zero values in-between, skip them.
+      continue if value is 0
+
+      key = "#{key}s" if value isnt 1
+
+      "#{value} #{key}"
+
+    partials.join ' '
 
 class UIMixin extends UIComponent
   data: ->
