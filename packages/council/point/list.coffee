@@ -15,16 +15,28 @@ class Point.ListComponent extends UIComponent
     Point.documents.find
       'discussion._id': @currentDiscussionId()
       category: Point.CATEGORY.IN_FAVOR
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
 
   againstPoints: ->
     Point.documents.find
       'discussion._id': @currentDiscussionId()
       category: Point.CATEGORY.AGAINST
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
 
   otherPoints: ->
     Point.documents.find
       'discussion._id': @currentDiscussionId()
       category: Point.CATEGORY.OTHER
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
 
   pointsExists: ->
     Point.documents.exists

@@ -15,6 +15,10 @@ class Discussion.ListComponent extends UIComponent
       # Discussions which do not have even the first meeting list item.
       'meetings.0':
         $exists: false
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
 
 class Discussion.ListItemComponent extends UIComponent
   @register 'Discussion.ListItemComponent'

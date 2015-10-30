@@ -14,6 +14,10 @@ class Comment.ListComponent extends UIComponent
   comments: ->
     Comment.documents.find
       'discussion._id': @currentDiscussionId()
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
 
   discussionExists: ->
     Discussion.documents.exists @currentDiscussionId()

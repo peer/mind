@@ -14,6 +14,10 @@ class Motion.ListComponent extends UIComponent
   motions: ->
     Motion.documents.find
       'discussion._id': @currentDiscussionId()
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
 
   discussionExists: ->
     Discussion.documents.exists @currentDiscussionId()
