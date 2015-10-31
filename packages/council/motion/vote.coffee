@@ -1,10 +1,10 @@
 class Motion.VoteComponent extends UIComponent
   @register 'Motion.VoteComponent'
 
+  VALUE: Vote.VALUE
+
   onCreated: ->
     super
-
-    @rangeDeselected = new ReactiveField 'deselected'
 
     @currentMotionId = new ComputedField =>
       @data()?._id
@@ -13,37 +13,48 @@ class Motion.VoteComponent extends UIComponent
       motionId = @currentMotionId()
       @subscribe 'Motion.vote', motionId if motionId
 
-    @autorun (computation) =>
-      return unless @currentMotionId() and @subscriptionsReady()
-      computation.stop()
+    @rangeDeselected = new ReactiveField 'deselected'
+    @voteValueChange = new ReactiveField null
 
+    @autorun (computation) =>
       vote = Vote.documents.findOne
         'motion._id': @currentMotionId()
       ,
         fields:
           value: 1
 
-      # We store current vote value into a reactive field so that we deduplicate events for the same change.
-      @voteValueChange = new ReactiveField vote?.value ? null
+      if _.isNumber(vote?.value) and -1 <= vote.value <= 1
+        @selectRange()
+        @voteValueChange vote.value
+      else
+        @deselectRange()
+        @voteValueChange vote?.value or null
+
+    @autorun (computation) =>
+      return unless @currentMotionId() and @subscriptionsReady()
+      computation.stop()
 
       Tracker.nonreactive =>
-        @autorun (computation) =>
-          # Register a dependency.
-          voteValue = @voteValueChange()
+        @observeVoteValueChange()
 
-          return if computation.firstRun
+  observeVoteValueChange: ->
+    @autorun (computation) =>
+      # Register a dependency.
+      voteValue = @voteValueChange()
 
-          Tracker.nonreactive =>
-            Meteor.call 'Motion.vote',
-              value: voteValue
-              motion:
-                _id: @currentMotionId()
-            ,
-              (error, result) =>
-                if error
-                  console.error "Vote error", error
-                  alert "Vote error: #{error.reason or error}"
-                  return
+      return if computation.firstRun
+
+      Tracker.nonreactive =>
+        Meteor.call 'Motion.vote',
+          value: voteValue
+          motion:
+            _id: @currentMotionId()
+        ,
+          (error, result) =>
+            if error
+              console.error "Vote error", error
+              alert "Vote error: #{error.reason or error}"
+              return
 
   deselectRange: ->
     @rangeDeselected 'deselected'
@@ -113,11 +124,7 @@ class Motion.VoteComponent extends UIComponent
         value: 1
 
     if _.isNumber(vote?.value) and -1 <= vote.value <= 1
-      @rangeDeselected null
       value: vote.value
     else
-      @rangeDeselected 'deselected'
       # We have to return the current value back, otherwise value is reset.
       value: @$('[name="vote"]').val() if @isRendered()
-
-  VALUE: Vote.VALUE
