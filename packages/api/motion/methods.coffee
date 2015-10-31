@@ -170,6 +170,10 @@ Meteor.methods
           discussion:
             _id: motion.discussion._id
         value: document.value
+        changes: [
+          updatedAt: createdAt
+          value: document.value
+        ]
       assert voteId
       return 1
     catch error
