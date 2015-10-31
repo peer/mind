@@ -1,16 +1,21 @@
 WritableStream = Npm.require('stream').Writable
 
-WORKER_INSTANCES = parseInt(process.env.WORKER_INSTANCES || '1')
-WORKER_INSTANCES = 1 unless _.isFinite WORKER_INSTANCES
-
-STALLED_JOB_CHECK_INTERVAL = 60 * 1000 # ms
-PROMOTE_INTERVAL = 15 * 1000 # ms
-
 class JobsWorker extends JobsWorker
+  @WORKER_INSTANCES: parseInt(process.env.WORKER_INSTANCES || '1')
+  @WORKER_INSTANCES: 1 unless _.isFinite @WORKER_INSTANCES
+
+  @STALLED_JOB_CHECK_INTERVAL: 60 * 1000 # ms
+  @PROMOTE_INTERVAL: 15 * 1000 # ms
+
   @_jobQueueRunning: false
 
-  @initialize: ->
+  @initialize: (@options={}) ->
     super
+
+    @options = _.defaults {}, @options,
+      workerInstances: @WORKER_INSTANCES
+      stalledJobCheckInterval: @STALLED_JOB_CHECK_INTERVAL
+      promoteInterval: @PROMOTE_INTERVAL
 
     # To prevent logging of all calls while keeping logging of errors.
     # TODO: Replace with a better solution which overrides an event handler method.
@@ -43,7 +48,7 @@ class JobsWorker extends JobsWorker
 
   @start: ->
     # Worker is disabled.
-    return Log.info "Worker disabled" unless WORKER_INSTANCES
+    return Log.info "Worker disabled" unless @options.workerInstances
 
     # We randomly delay start so that not all instances are promoting
     # at the same time, but dispersed over the whole interval.
@@ -53,11 +58,11 @@ class JobsWorker extends JobsWorker
       # queries are not reactive. time < NOW, NOW does not change as times go
       # on, once you make a query. More instances we have, less frequently
       # each particular instance should check.
-      @collection.promote WORKER_INSTANCES * PROMOTE_INTERVAL
+      @collection.promote @options.workerInstances * @options.promoteInterval
 
       @_startProcessingJobs()
     ,
-      Random.fraction() * WORKER_INSTANCES * PROMOTE_INTERVAL
+      Random.fraction() * @options.workerInstances * @options.promoteInterval
 
     # Same deal with delaying and spreading the interval based on
     # the number of worker instances that we have for job promotion.
@@ -75,9 +80,9 @@ class JobsWorker extends JobsWorker
           catch error
             Log.error "Error while canceling a stalled job #{jobQueueItem.type}/#{jobQueueItem._id}: #{error.stack or error}"
       ,
-        WORKER_INSTANCES * STALLED_JOB_CHECK_INTERVAL
+        @options.workerInstances * @options.stalledJobCheckInterval
     ,
-      Random.fraction() * WORKER_INSTANCES * STALLED_JOB_CHECK_INTERVAL
+      Random.fraction() * @options.workerInstances * @options.stalledJobCheckInterval
 
   @_startProcessingJobs: ->
     @collection.startJobServer()
