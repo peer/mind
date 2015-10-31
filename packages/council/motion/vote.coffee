@@ -13,26 +13,37 @@ class Motion.VoteComponent extends UIComponent
       motionId = @currentMotionId()
       @subscribe 'Motion.vote', motionId if motionId
 
-    # We store current vote value into a reactive field so that we deduplicate events for the same change.
-    @voteValueChange = new ReactiveField null
-
     @autorun (computation) =>
-      # Register a dependency.
-      voteValue = @voteValueChange()
+      return unless @currentMotionId() and @subscriptionsReady()
+      computation.stop()
 
-      return if computation.firstRun
+      vote = Vote.documents.findOne
+        'motion._id': @currentMotionId()
+      ,
+        fields:
+          value: 1
+
+      # We store current vote value into a reactive field so that we deduplicate events for the same change.
+      @voteValueChange = new ReactiveField vote?.value ? null
 
       Tracker.nonreactive =>
-        Meteor.call 'Motion.vote',
-          value: voteValue
-          motion:
-            _id: @currentMotionId()
-        ,
-          (error, result) =>
-            if error
-              console.error "Vote error", error
-              alert "Vote error: #{error.reason or error}"
-              return
+        @autorun (computation) =>
+          # Register a dependency.
+          voteValue = @voteValueChange()
+
+          return if computation.firstRun
+
+          Tracker.nonreactive =>
+            Meteor.call 'Motion.vote',
+              value: voteValue
+              motion:
+                _id: @currentMotionId()
+            ,
+              (error, result) =>
+                if error
+                  console.error "Vote error", error
+                  alert "Vote error: #{error.reason or error}"
+                  return
 
   deselectRange: ->
     @rangeDeselected 'deselected'
