@@ -17,7 +17,7 @@ Intervals are in milliseconds.
 You can use `WORKER_INSTANCES` environment variable or `workerInstances` option to control how many workers are enabled
 across all Meteor instances for your app. If set to `0` the current Meteor instance will not run a worker.
 
-Call `JobsWorker.start` to start the worker:
+Call `JobsWorker.start` on the server to start the worker:
 
 ```javascript
 Meteor.startup(function () {
