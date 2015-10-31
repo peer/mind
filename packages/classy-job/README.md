@@ -7,12 +7,10 @@ Possible options for `JobsWorker.initialize` with defaults:
 JobsWorker.initialize({
   collectionName: 'JobQueue',
   workerInstances: parseInt(process.env.WORKER_INSTANCES || '1'),
-  stalledJobCheckInterval: 60 * 1000,
-  promoteInterval: 15 * 1000
+  stalledJobCheckInterval: 60 * 1000, // ms
+  promoteInterval: 15 * 1000 // ms
 });
 ```
-
-Intervals are in milliseconds.
 
 You can use `WORKER_INSTANCES` environment variable or `workerInstances` option to control how many workers are enabled
 across all Meteor instances for your app. If set to `0` the current Meteor instance will not run a worker.
