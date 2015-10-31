@@ -17,11 +17,7 @@ class Motion.VoteComponent extends UIComponent
     @voteValueChange = new ReactiveField null
 
     @autorun (computation) =>
-      vote = Vote.documents.findOne
-        'motion._id': @currentMotionId()
-      ,
-        fields:
-          value: 1
+      vote = @currentVote()
 
       if _.isNumber(vote?.value) and -1 <= vote.value <= 1
         @selectRange()
@@ -89,25 +85,24 @@ class Motion.VoteComponent extends UIComponent
   onSupportVote: (event) ->
     @$('[name="vote"]').val(1)
 
-  abstainChecked: ->
-    return unless @subscriptionsReady()
-
-    vote = Vote.documents.findOne
+  currentVote: ->
+    Vote.documents.findOne
       'motion._id': @currentMotionId()
     ,
       fields:
         value: 1
+
+  abstainChecked: ->
+    return unless @subscriptionsReady()
+
+    vote = @currentVote()
 
     'checked' if vote?.value is Vote.VALUE.ABSTAIN
 
   defaultChecked: ->
     return unless @subscriptionsReady()
 
-    vote = Vote.documents.findOne
-      'motion._id': @currentMotionId()
-    ,
-      fields:
-        value: 1
+    vote = @currentVote()
 
     # This is default.
     return 'checked' unless vote?.value?
@@ -117,11 +112,7 @@ class Motion.VoteComponent extends UIComponent
   voteValue: ->
     return unless @subscriptionsReady()
 
-    vote = Vote.documents.findOne
-      'motion._id': @currentMotionId()
-    ,
-      fields:
-        value: 1
+    vote = @currentVote()
 
     if _.isNumber(vote?.value) and -1 <= vote.value <= 1
       value: vote.value
