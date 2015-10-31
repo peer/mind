@@ -15,6 +15,7 @@ class Motion.VoteComponent extends UIComponent
 
     @rangeDeselected = new ReactiveField 'deselected'
     @voteValueChange = new ReactiveField null
+    @_voteValueChangeByUser = false
 
     @autorun (computation) =>
       vote = @currentVote()
@@ -40,6 +41,8 @@ class Motion.VoteComponent extends UIComponent
 
       return if computation.firstRun
 
+      return unless @_voteValueChangeByUser
+
       Tracker.nonreactive =>
         Meteor.call 'Motion.vote',
           value: voteValue
@@ -51,6 +54,13 @@ class Motion.VoteComponent extends UIComponent
               console.error "Vote error", error
               alert "Vote error: #{error.reason or error}"
               return
+
+  voteValueChangeByUser: (value) ->
+    @voteValueChange value
+
+    @_voteValueChangeByUser = true
+    Tracker.afterFlush =>
+      @_voteValueChangeByUser = false
 
   deselectRange: ->
     @rangeDeselected 'deselected'
@@ -72,12 +82,12 @@ class Motion.VoteComponent extends UIComponent
 
     @$('[name="other-vote"]').prop('checked', false)
 
-    @voteValueChange parseFloat(@$('[name="vote"]').val())
+    @voteValueChangeByUser parseFloat(@$('[name="vote"]').val())
 
   onRadioInteraction: (event) ->
     @deselectRange()
 
-    @voteValueChange @$('[name="other-vote"]:checked').val()
+    @voteValueChangeByUser @$('[name="other-vote"]:checked').val()
 
   onOpposeVote: (event) ->
     @$('[name="vote"]').val(-1)
