@@ -19,7 +19,7 @@ class Vote extends share.BaseDocument
       motion: @ReferenceField Motion, ['discussion']
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       value: @GeneratedField 'self', ['changes'], (fields) ->
-        [fields._id, fields.changes?[fields.changes?.length - 1]?.value ? '']
+        [fields._id, fields.changes?[fields.changes?.length - 1]?.value ? Vote.VALUE.DEFAULT]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes'], true
       computeTally: @Trigger ['motion', 'changes'], (document, oldDocument) ->
