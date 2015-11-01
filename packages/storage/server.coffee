@@ -45,22 +45,22 @@ class Storage extends Storage
     # TODO: Add CORS headers.
     # TODO: We have redirect == false because directory redirects do not take prefix into the account.
     WebApp.connectHandlers.use @options.storagePath, connect.static(@options.storageDirectory, {maxAge: @options.maxAge, redirect: false})
-    WebApp.connectHandlers.use @options.storagePath, (req, res, next) ->
+    WebApp.connectHandlers.use @options.storagePath, (req, res, next) =>
       res.statusCode = 404
       # TODO: Use our own 404 content, matching the 404 shown by nginx/reverse proxy.
       res.end '404 Not Found', 'utf8'
 
   @_assurePath: (path) ->
     path = path.split @_path.sep
-    for segment, i in path[1...path.length-1]
-      p = path[0..i+1].join @_path.sep
+    for segment, i in path[1...path.length - 1]
+      p = path[0..i + 1].join @_path.sep
       if !fs.existsSync p
         fs.mkdirSync p
 
   @_assurePathAsync: (path, callback) ->
     path = path.split @_path.sep
     i = 0
-    async.eachSeries path[1...path.length-1], (segment, callback) =>
+    async.eachSeries path[1...path.length - 1], (segment, callback) =>
       i++
       p = path[0..i].join @_path.sep
       fs.exists p, (exists) =>
@@ -71,32 +71,34 @@ class Storage extends Storage
 
   @_fullPath: (filename) ->
     assert filename
-    @options.storageDirectory + @_path.sep + filename
+    "#{@options.storageDirectory}#{@_path.sep}#{filename}"
 
   @save: (filename, data) ->
     path = @_fullPath filename
     @_assurePath path
     fs.writeFileSync path, data
 
+    return
+
   @saveStreamAsync: (filename, stream, callback) ->
     stream.pause()
 
     path = @_fullPath filename
-    @_assurePathAsync path, (error) ->
+    @_assurePathAsync path, (error) =>
       return callback error if error
 
       finished = false
-      stream.on('error', (error) ->
+      stream.on('error', (error) =>
         return if finished
         finished = true
         callback error
       ).pipe(
         fs.createWriteStream path
-      ).on('finish', ->
+      ).on('finish', =>
         return if finished
         finished = true
         callback null
-      ).on('error', (error) ->
+      ).on('error', (error) =>
         return if finished
         finished = true
         callback error
@@ -113,6 +115,8 @@ class Storage extends Storage
     @_assurePath path
     meteorFile.save directory, {}
 
+    return
+
   @exists: (filename) ->
     fs.existsSync @_fullPath filename
 
@@ -124,14 +128,20 @@ class Storage extends Storage
     @_assurePath newPath
     fs.renameSync @_fullPath(oldFilename), newPath
 
+    return
+
   @link: (existingFilename, newFilename) ->
     newPath = @_fullPath newFilename
     @_assurePath newPath
     existingPath = @_fullPath existingFilename
     fs.symlinkSync @_path.relative(@_path.dirname(newPath), existingPath), newPath
 
+    return
+
   @remove: (filename) ->
     fs.unlinkSync @_fullPath filename
+
+    return
 
   @lastModificationTime: (filename) ->
     stats = fs.statSync @_fullPath filename
