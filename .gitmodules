@@ -4,3 +4,6 @@
 [submodule "packages/mfpierre:chartist-js"]
 	path = packages/mfpierre:chartist-js
 	url = https://github.com/mitar/meteor-chartist-js.git
+[submodule "packages/trix/vendor"]
+	path = packages/trix/vendor
+	url = https://github.com/basecamp/trix.git

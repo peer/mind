@@ -33,6 +33,7 @@ ejson@1.0.7
 email@1.0.7
 es5-shim@4.1.13
 fastclick@1.0.7
+fermuch:cheerio@0.19.0
 fourseven:scss@3.4.1
 geojson-utils@1.0.4
 hot-code-push@1.0.0
@@ -67,10 +68,13 @@ observe-sequence@1.0.7
 ordered-dict@1.0.4
 peerlibrary:assert@0.2.5
 peerlibrary:base-component@0.14.0
-peerlibrary:blaze-components@0.15.0
+peerlibrary:blaze-components@0.15.1
+peerlibrary:blocking@0.5.2
 peerlibrary:check-extension@0.2.0
 peerlibrary:computed-field@0.3.0
+peerlibrary:connect@2.28.1_1
 peerlibrary:fiber-utils@0.5.1
+peerlibrary:meteor-file@0.2.1
 peerlibrary:middleware@0.1.1
 peerlibrary:peerdb@0.19.1
 peerlibrary:reactive-field@0.1.0
@@ -78,6 +82,7 @@ peerlibrary:reactive-mongo@0.1.1
 peerlibrary:reactive-publish@0.1.1
 peerlibrary:server-autorun@0.5.1
 peerlibrary:stacktrace@0.2.0
+peerlibrary:url-utils@0.4.0_2
 peerlibrary:util@0.2.3
 promise@0.5.0
 random@1.0.4
@@ -87,6 +92,7 @@ reactive-var@1.0.6
 reload@1.1.4
 retry@1.0.4
 routepolicy@1.0.6
+sanitize@0.1.0
 service-configuration@1.0.5
 session@1.1.1
 sha@1.0.4
@@ -95,10 +101,12 @@ spacebars@1.0.7
 spacebars-compiler@1.0.7
 srp@1.0.4
 standard-minifiers@1.0.1
+storage@0.1.0
 stylus@2.511.0_2
 templating@1.1.4
 templating-tools@1.0.0
 tracker@1.0.9
+trix@0.1.0
 ui@1.0.8
 ui-components@0.1.0
 underscore@1.0.4

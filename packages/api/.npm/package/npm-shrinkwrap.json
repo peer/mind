@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mime-types": {
+      "version": "2.1.6",
+      "dependencies": {
+        "mime-db": {
+          "version": "1.18.0"
+        }
+      }
+    }
+  }
+}

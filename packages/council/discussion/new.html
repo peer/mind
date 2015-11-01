@@ -11,9 +11,7 @@
           </div>
           <div class="row">
             <div class="input-field col s12">
-              {{! TODO: Make this a reach-text textarea. }}
-              <textarea name="description" id="new-point-description" class="materialize-textarea" required></textarea>
-              <label for="new-point-description">Description</label>
+              {{> EditorComponent args name='description' id='new-point-description'}}
             </div>
           </div>
           <div class="row">

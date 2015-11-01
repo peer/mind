@@ -14,6 +14,10 @@ class Discussion.NewComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
+    # TODO: We cannot use required for description input with trix.
+    # TODO: Make a warning or something?
+    return unless @hasDescription()
+
     Meteor.call 'Discussion.new',
       title: @$('[name="title"]').val()
       description: @$('[name="description"]').val()
@@ -26,6 +30,10 @@ class Discussion.NewComponent extends UIComponent
 
         FlowRouter.go 'Discussion.display',
           _id: documentId
+
+  hasDescription: ->
+    # We require description to have at least some text content.
+    $(@$('[name="description"]').val()).text()
 
 FlowRouter.route '/discussion/new',
   name: 'Discussion.new'

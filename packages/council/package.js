@@ -32,7 +32,9 @@ Package.onUse(function (api) {
   api.use([
     'core',
     'api',
-    'ui-components'
+    'ui-components',
+    'trix',
+    'storage'
   ]);
 
   api.addFiles([
@@ -48,6 +50,8 @@ Package.onUse(function (api) {
     'metadata.html',
     'metadata.coffee',
     'metadata.styl',
+    'editor.html',
+    'editor.coffee',
     'account/config.coffee',
     'account/form.coffee',
     'flow-router/title.coffee',

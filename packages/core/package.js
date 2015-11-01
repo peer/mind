@@ -10,20 +10,24 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'accounts-base',
-    'ddp-client',
+    'ddp',
     'underscore'
   ]);
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:peerdb@0.19.1'
+    'peerlibrary:peerdb@0.19.1',
+    'peerlibrary:meteor-file@0.2.1',
+    'peerlibrary:reactive-field@0.1.0',
+    'peerlibrary:assert@0.2.5'
   ]);
 
   // Internal dependencies.
   api.use([
     'voting',
     'classy-job',
-    'jobs'
+    'jobs',
+    'storage'
   ]);
 
   api.export('User');
@@ -35,6 +39,7 @@ Package.onUse(function (api) {
   api.export('Vote');
   api.export('Tally');
   api.export('JobQueue');
+  api.export('StorageFile');
 
   api.addFiles([
     'publish.coffee',
@@ -46,6 +51,7 @@ Package.onUse(function (api) {
     'base.coffee',
     'upvotable.coffee',
     'triggers.coffee',
+    'storage.coffee',
     'documents/user.coffee',
     'documents/discussion.coffee',
     'documents/meeting.coffee',
@@ -55,6 +61,7 @@ Package.onUse(function (api) {
     'documents/vote.coffee',
     'documents/tally.coffee',
     'documents/jobqueue.coffee',
+    'documents/storagefile.coffee',
     'finalize-documents.coffee'
   ]);
 });

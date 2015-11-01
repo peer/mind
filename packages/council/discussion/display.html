@@ -9,8 +9,9 @@
         </h4>
       </div>
       <div class="row">
-        <div class="col s12">
-          <p>{{discussion.description}}</p>
+        <div class="col s12 trix-content">
+          {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+          {{{discussion.description}}}
         </div>
       </div>
     </div>
