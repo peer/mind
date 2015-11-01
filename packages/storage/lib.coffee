@@ -7,7 +7,7 @@ class Storage
       storagePath: @DEFAULT_STORAGE_PATH
 
   @url: (filename) ->
-    "#{@options.storagePath}/" + filename
+    "#{@options.storagePath}/#{filename}"
 
   # Client version, on server it is overridden with system's.
   @_path:
