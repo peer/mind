@@ -2,7 +2,7 @@ WritableStream = Npm.require('stream').Writable
 
 class JobsWorker extends JobsWorker
   @WORKER_INSTANCES: parseInt(process.env.WORKER_INSTANCES || '1')
-  @WORKER_INSTANCES: 1 unless _.isFinite @WORKER_INSTANCES
+  @WORKER_INSTANCES: if _.isFinite(@WORKER_INSTANCES) then @WORKER_INSTANCES else 1
 
   @STALLED_JOB_CHECK_INTERVAL: 60 * 1000 # ms
   @PROMOTE_INTERVAL: 15 * 1000 # ms
