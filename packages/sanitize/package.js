@@ -18,6 +18,11 @@ Package.onUse(function (api) {
     'peerlibrary:url-utils@0.4.0_2'
   ]);
 
+  // Internal dependencies.
+  api.use([
+    'core'
+  ]);
+
   api.export('Sanitize');
 
   api.addFiles([
