@@ -1,7 +1,8 @@
+# Should sanitize the tag and return its sanitized contents.
 sanitizeAttachment = ($, $element, sanitize) ->
   # If it is not attachment, allow only a with href attribute.
   unless $element.attr('data-trix-attachment')
-    return sanitize.sanitizeTagContents $, $element,
+    return sanitize.sanitizeTagAndContents $, $element,
       href: true
 
   @sanitizeAttributes $, $element,

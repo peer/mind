@@ -58,8 +58,8 @@ class Sanitize
 
     return
 
-  # Returns sanitized contents of a tag element.
-  sanitizeTagContents: ($, $element, allowedAttributes) ->
+  # Sanitized the tag element and returns its sanitized contents.
+  sanitizeTagAndContents: ($, $element, allowedAttributes) ->
     @sanitizeAttributes $, $element, allowedAttributes
 
     # Special case for links.
@@ -81,10 +81,10 @@ class Sanitize
     allowedAttributes = @allowedTags[$element[0].name]
 
     if _.isFunction allowedAttributes
-      # Should return sanitized contents.
+      # Should sanitize the tag and return its sanitized contents.
       $cleanedContents = allowedAttributes.call @, $, $element, @
     else
-      $cleanedContents = @sanitizeTagContents $, $element, allowedAttributes
+      $cleanedContents = @sanitizeTagAndContents $, $element, allowedAttributes
 
     $element.empty().append $cleanedContents
 
@@ -106,7 +106,7 @@ class Sanitize
 
       if $el[0].type is 'text'
         # "$text" is a special tag name which specifies text.
-        return unless '$text' of expectedElement
+        return unless expectedElement.$text
 
         return @sanitizeText $, $el
 
@@ -115,13 +115,23 @@ class Sanitize
 
         expectedElementDescription = expectedElement[$el[0].name]
 
-        @sanitizeAttributes $, $el, expectedElementDescription.attributes
-
-        if expectedElementDescription.children
-          $children = @sanitizeTree $, $el, expectedElementDescription.children
-          $el.empty().append $children
+        if _.isFunction expectedElementDescription
+          # Should sanitize the tag and return its sanitized contents.
+          $children = expectedElementDescription.call @, $, $el, @
         else
-          $el.empty()
+          @sanitizeAttributes $, $el, (expectedElementDescription.attributes or {})
+
+          # Special case for links.
+          if $el[0].name is 'a' and 'href' of $el[0].attribs
+            href = @sanitizeHref $, $el.attr('href')
+            $el.attr 'href', href
+
+          if expectedElementDescription.children
+            $children = @sanitizeTree $, $el, expectedElementDescription.children
+          else
+            $children = $()
+
+        $el.empty().append $children
 
         $el[0]
 
