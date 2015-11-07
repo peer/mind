@@ -6,12 +6,16 @@ Meteor.methods
 
     attachments = []
 
+    document.description = share.sanitize.sanitizeHTML document.description
+
     if Meteor.isServer
-      document.description = share.sanitize.sanitizeHTML document.description
+      descriptionText = cheerio.load(document.description).root().text()
+    else
+      descriptionText = $('<div/>').append($.parseHTML(document.description)).text()
 
-      check cheerio.load(document.description).root().text(), Match.NonEmptyString
+    check descriptionText, Match.NonEmptyString
 
-      attachments = share.extractAttachments document.description
+    attachments = share.extractAttachments document.description
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
@@ -35,14 +39,13 @@ Meteor.methods
 
     assert documentId
 
-    if Meteor.isServer
-      StorageFile.documents.update
-        _id:
-          $in: attachments
-      ,
-        $set:
-          active: true
-      ,
-        multi: true
+    StorageFile.documents.update
+      _id:
+        $in: attachments
+    ,
+      $set:
+        active: true
+    ,
+      multi: true
 
     documentId

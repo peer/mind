@@ -17,7 +17,7 @@ Package.onUse(function (api) {
   api.use([
     'fermuch:cheerio@0.19.0',
     'peerlibrary:assert@0.2.5',
-    'peerlibrary:url-utils@0.4.0_2'
+    'peerlibrary:url-utils@0.4.0_3'
   ]);
 
   // Internal dependencies.

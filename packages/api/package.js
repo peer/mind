@@ -14,7 +14,8 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'underscore',
-    'random'
+    'random',
+    'jquery'
   ]);
 
   // 3rd party dependencies.
@@ -37,6 +38,8 @@ Package.onUse(function (api) {
 
   api.addFiles([
     'upvotable.coffee',
+    'sanitize.coffee',
+    'attachments.coffee',
     'meeting/methods.coffee',
     'discussion/methods.coffee',
     'comment/methods.coffee',
@@ -45,8 +48,6 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'sanitize.coffee',
-    'attachments.coffee',
     'meeting/publish.coffee',
     'discussion/publish.coffee',
     'comment/publish.coffee',
