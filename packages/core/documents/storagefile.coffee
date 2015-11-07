@@ -26,7 +26,7 @@ class StorageFile extends share.BaseDocument
   # mimeType: user's provided MIME type
   # size: user's provided size
   # done: true or false, has the file been successfully uploaded
-  # removed: true or false
+  # active: true or false
 
   @Meta
     name: 'StorageFile'

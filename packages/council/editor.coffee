@@ -9,18 +9,11 @@ class EditorComponent extends UIComponent
   events: ->
     super.concat
       'trix-attachment-add': @onAttachmentAdd
-      'trix-attachment-remove': @onAttachmentRemove
 
   onAttachmentAdd: (event) ->
     attachment = event.originalEvent.attachment
 
     if attachment.getAttribute 'documentId'
-      Meteor.call 'StorageFile.restore', attachment.getAttribute('documentId'), (error) =>
-        if error
-          console.error "Restore attachment error", error
-          alert "Restore attachment error: #{error.reason or error}"
-          return
-
       return
 
     else if attachment.file
@@ -57,16 +50,6 @@ class EditorComponent extends UIComponent
     else
       console.error "Attachment without documentId error", attachment
       alert "Attachment without documentId error."
-
-  onAttachmentRemove: (event) ->
-    attachment = event.originalEvent.attachment
-
-    if attachment.getAttribute 'documentId'
-      Meteor.call 'StorageFile.remove', attachment.getAttribute('documentId'), (error) =>
-        if error
-          console.error "Remove attachment error", error
-          alert "Remove attachment error: #{error.reason or error}"
-          return
 
 class EditorComponent.Toolbar extends UIComponent
   @register 'EditorComponent.Toolbar'

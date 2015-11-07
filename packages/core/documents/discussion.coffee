@@ -16,6 +16,8 @@ class Discussion extends share.BaseDocument
   #   description
   # meetings: list, if a discussion is associated with a meeting (or meetings)
   #   _id
+  # attachments: list of
+  #   _id
 
   @Meta
     name: 'Discussion'
@@ -30,6 +32,7 @@ class Discussion extends share.BaseDocument
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
       meetings: [@ReferenceField Meeting]
+      attachments: [@ReferenceField StorageFile]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes', 'meetings']
 

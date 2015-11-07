@@ -46,6 +46,7 @@ Package.onUse(function (api) {
 
   api.addFiles([
     'sanitize.coffee',
+    'attachments.coffee',
     'meeting/publish.coffee',
     'discussion/publish.coffee',
     'comment/publish.coffee',

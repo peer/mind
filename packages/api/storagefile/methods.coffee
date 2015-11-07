@@ -38,7 +38,7 @@ Meteor.methods
       mimeType: mimeType
       size: file.size
       done: false
-      removed: false
+      active: false
 
     assert documentId
 
@@ -88,31 +88,3 @@ Meteor.methods
           updatedAt: updatedAt
 
     return
-
-  'StorageFile.remove': (documentId) ->
-    check documentId, Match.DocumentId
-
-    userId = Meteor.userId()
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
-
-    # TODO: Allow removing files to anyone who can access the content to which the file is attached.
-    StorageFile.documents.update
-      _id: documentId
-      'author._id': userId
-    ,
-      $set:
-        removed: true
-
-  'StorageFile.restore': (documentId) ->
-    check documentId, Match.DocumentId
-
-    userId = Meteor.userId()
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
-
-    # TODO: Allow restoring files to anyone who can access the content to which the file is attached.
-    StorageFile.documents.update
-      _id: documentId
-      'author._id': userId
-    ,
-      $set:
-        removed: false
