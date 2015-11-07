@@ -10,7 +10,7 @@ class SanitizeTestCase extends ClassyTestCase
         # Allow all content.
         $element.contents()
 
-    @assertEqual sanitize.sanitizeHTML("""<html><div>test</div></html>"""),
+    @assertEqual sanitize.sanitizeHTML("""<content><div>test</div></content>"""),
       """"""
     @assertEqual sanitize.sanitizeHTML("""<div>test<img src="" />test2</div><b>foo</b>"""),
       """<div>testtest2</div>"""
@@ -21,55 +21,55 @@ class SanitizeTestCase extends ClassyTestCase
 
   testTree: ->
     sanitize = new Sanitize
-      body: ($, $element, sanitize) =>
+      content: ($, $element, sanitize) =>
         sanitize.sanitizeTree $, $element, [
           div: {}
         ,
           span: {}
         ]
 
-    @assertEqual sanitize.sanitizeHTML("""<body></body>"""),
-      """<body></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><div><div></div></div><span></span></body>"""),
-      """<body><div></div><span></span></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><div></div><b></b><span><div></div></span></body>"""),
-      """<body><div></div></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><span></span><div></div></body>"""),
-      """<body></body>"""
+    @assertEqual sanitize.sanitizeHTML("""<content></content>"""),
+      """<content></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div><div></div></div><span></span></content>"""),
+      """<content><div></div><span></span></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div></div><b></b><span><div></div></span></content>"""),
+      """<content><div></div></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><span></span><div></div></content>"""),
+      """<content></content>"""
 
     sanitize = new Sanitize
-      body: ($, $element, sanitize) =>
+      content: ($, $element, sanitize) =>
         sanitize.sanitizeTree $, $element, [
           div: {}
           span: {}
         ]
 
-    @assertEqual sanitize.sanitizeHTML("""<body></body>"""),
-      """<body></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><div><div></div></div><span></span></body>"""),
-      """<body><div></div></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><div></div><b></b><span><div></div></span></body>"""),
-      """<body><div></div></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><span></span><div></div></body>"""),
-      """<body><span></span></body>"""
+    @assertEqual sanitize.sanitizeHTML("""<content></content>"""),
+      """<content></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div><div></div></div><span></span></content>"""),
+      """<content><div></div></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div></div><b></b><span><div></div></span></content>"""),
+      """<content><div></div></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><span></span><div></div></content>"""),
+      """<content><span></span></content>"""
 
     sanitize = new Sanitize
-      body: ($, $element, sanitize) =>
+      content: ($, $element, sanitize) =>
         sanitize.sanitizeTree $, $element,
           div: {}
           span: {}
 
-    @assertEqual sanitize.sanitizeHTML("""<body></body>"""),
-      """<body></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><div><div></div></div><span></span></body>"""),
-      """<body><div></div><span></span></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><div></div><b></b><span><div></div></span></body>"""),
-      """<body><div></div><span></span></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><span></span><div></div></body>"""),
-      """<body><span></span><div></div></body>"""
+    @assertEqual sanitize.sanitizeHTML("""<content></content>"""),
+      """<content></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div><div></div></div><span></span></content>"""),
+      """<content><div></div><span></span></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div></div><b></b><span><div></div></span></content>"""),
+      """<content><div></div><span></span></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><span></span><div></div></content>"""),
+      """<content><span></span><div></div></content>"""
 
     sanitize = new Sanitize
-      body: ($, $element, sanitize) =>
+      content: ($, $element, sanitize) =>
         sanitize.sanitizeTree $, $element,
           div:
             attributes:
@@ -80,9 +80,9 @@ class SanitizeTestCase extends ClassyTestCase
                 # Allow all content.
                 $element.contents()
 
-    @assertEqual sanitize.sanitizeHTML("""<body><div class="foo"><a href=""><b></b></a><span></span></div></body>"""),
-      """<body><div class="foo"><a href=""><b></b></a><span></span></div></body>"""
-    @assertEqual sanitize.sanitizeHTML("""<body><div class="foo" ref="1"><a href=""><b></b></a><span ref="2"></span></div></body>"""),
-      """<body><div class="foo"><a href=""><b></b></a><span></span></div></body>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div class="foo"><a href=""><b></b></a><span></span></div></content>"""),
+      """<content><div class="foo"><a href=""><b></b></a><span></span></div></content>"""
+    @assertEqual sanitize.sanitizeHTML("""<content><div class="foo" ref="1"><a href=""><b></b></a><span ref="2"></span></div></content>"""),
+      """<content><div class="foo"><a href=""><b></b></a><span></span></div></content>"""
 
 ClassyTestCase.addTest new SanitizeTestCase()

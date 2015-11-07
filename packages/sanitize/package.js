@@ -9,7 +9,8 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore'
+    'underscore',
+    'jquery'
   ]);
 
   // 3rd party dependencies.
@@ -28,7 +29,7 @@ Package.onUse(function (api) {
 
   api.addFiles([
     'sanitize.coffee'
-  ], 'server');
+  ]);
 });
 
 Package.onTest(function (api) {
@@ -49,5 +50,5 @@ Package.onTest(function (api) {
 
   api.addFiles([
     'tests.coffee'
-   ], 'server');
+   ]);
 });

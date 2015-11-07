@@ -2,24 +2,69 @@ class Sanitize
   constructor: (@allowedTags) ->
 
   sanitizeHTML: (body) ->
+    if Meteor.isServer
+      @_sanitizeHTMLServer body
+    else
+      @_sanitizeHTMLClient body
+
+  _sanitizeHTMLServer: (body) ->
     $ = cheerio.load body,
       normalizeWhitespace: false
       xmlMode: false
       decodeEntities: true
 
-    $cleanedContents = $.root().contents().map (i, element) =>
+    @_sanitizeHTMLRoot $, $.root()
+
+  _sanitizeHTMLClient: (body) ->
+    $ = jQuery
+
+    $root = $('<div/>')
+
+    $root.append $.parseHTML body
+
+    @_sanitizeHTMLRoot $, $root
+
+  _sanitizeHTMLRoot: ($, $root) ->
+    $cleanedContents = $root.contents().map (i, element) =>
       @sanitizeElement $, $(element)
 
-    $.root().empty().append($cleanedContents).html()
+    $root.empty().append($cleanedContents).html()
+
+  isTag: (element) ->
+    if Meteor.isServer
+      element.type is 'tag'
+    else
+      element.nodeType is 1
+
+  isText: (element) ->
+    if Meteor.isServer
+      element.type is 'text'
+    else
+      element.nodeType is 3
+
+  nodeName: (element) ->
+    if Meteor.isServer
+      element.name
+    else
+      element.nodeName.toLowerCase()
+
+  attributes: (element) ->
+    if Meteor.isServer
+      element.attribs
+    else
+      attribs = {}
+      for attribute in element.attributes
+        attribs[attribute.nodeName] = attribute.nodeValue
+      attribs
 
   # Returns sanitized element.
   sanitizeElement: ($, $element) ->
     assert.equal $element.length, 1
 
-    if $element[0].type is 'tag'
+    if @isTag $element[0]
       return @sanitizeTag $, $element
 
-    else if $element[0].type is 'text'
+    else if @isText $element[0]
       return @sanitizeText $, $element
 
     else
@@ -27,7 +72,7 @@ class Sanitize
 
   # Returns sanitized text element.
   sanitizeText: ($, $element) ->
-    assert.equal $element[0].type, 'text'
+    assert @isText $element[0]
 
     $element[0]
 
@@ -53,7 +98,7 @@ class Sanitize
 
   # Modifies $element's attributes in-place.
   sanitizeAttributes: ($, $element, allowedAttributes) ->
-    for attribute, value of $element[0].attribs when not allowedAttributes[attribute]
+    for attribute, value of @attributes($element[0]) when not allowedAttributes[attribute]
       $element.removeAttr attribute
 
     return
@@ -63,7 +108,7 @@ class Sanitize
     @sanitizeAttributes $, $element, allowedAttributes
 
     # Special case for links.
-    if $element[0].name is 'a' and 'href' of $element[0].attribs
+    if @nodeName($element[0]) is 'a' and 'href' of @attributes($element[0])
       href = @sanitizeHref $, $element.attr('href')
       $element.attr 'href', href
 
@@ -74,11 +119,13 @@ class Sanitize
 
   # Returns sanitized tag element.
   sanitizeTag: ($, $element) ->
-    assert.equal $element[0].type, 'tag'
+    assert @isTag $element[0]
 
-    return unless $element[0].name of @allowedTags
+    nodeName = @nodeName $element[0]
 
-    allowedAttributes = @allowedTags[$element[0].name]
+    return unless nodeName of @allowedTags
+
+    allowedAttributes = @allowedTags[nodeName]
 
     if _.isFunction allowedAttributes
       # Should sanitize the tag and return its sanitized contents.
@@ -104,16 +151,18 @@ class Sanitize
         # Otherwise any of tags specified can match.
         expectedElement = expectedTree
 
-      if $el[0].type is 'text'
+      if @isText $el[0]
         # "$text" is a special tag name which specifies text.
         return unless expectedElement.$text
 
         return @sanitizeText $, $el
 
-      else if $el[0].type is 'tag'
-        return unless $el[0].name of expectedElement
+      else if @isTag $el[0]
+        nodeName = @nodeName $el[0]
 
-        expectedElementDescription = expectedElement[$el[0].name]
+        return unless nodeName of expectedElement
+
+        expectedElementDescription = expectedElement[nodeName]
 
         if _.isFunction expectedElementDescription
           # Should sanitize the tag and return its sanitized contents.
@@ -122,7 +171,7 @@ class Sanitize
           @sanitizeAttributes $, $el, (expectedElementDescription.attributes or {})
 
           # Special case for links.
-          if $el[0].name is 'a' and 'href' of $el[0].attribs
+          if nodeName is 'a' and 'href' of @attributes($element[0])
             href = @sanitizeHref $, $el.attr('href')
             $el.attr 'href', href
 
