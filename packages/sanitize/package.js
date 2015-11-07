@@ -8,7 +8,8 @@ Package.onUse(function (api) {
 
   // Core dependencies.
   api.use([
-    'coffeescript'
+    'coffeescript',
+    'underscore'
   ]);
 
   // 3rd party dependencies.
@@ -28,4 +29,25 @@ Package.onUse(function (api) {
   api.addFiles([
     'sanitize.coffee'
   ], 'server');
+});
+
+Package.onTest(function (api) {
+  // Core dependencies.
+  api.use([
+    'coffeescript'
+  ]);
+
+  // Internal dependencies.
+  api.use([
+    'sanitize'
+  ]);
+
+  // 3rd party dependencies.
+  api.use([
+    'peerlibrary:classy-test@0.2.20'
+  ]);
+
+  api.addFiles([
+    'tests.coffee'
+   ], 'server');
 });

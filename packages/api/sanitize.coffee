@@ -29,7 +29,7 @@ sanitizeAttachment = ($, $element, sanitize) ->
     # Invalid.
     return
 
-  sanitize.sanitizeTree $, $element,
+  sanitize.sanitizeTree $, $element, [
     figure:
       attributes:
         class: true
@@ -49,6 +49,7 @@ sanitizeAttachment = ($, $element, sanitize) ->
                 class: true
               children:
                 $text: true
+  ]
 
 share.sanitize = new Sanitize
   div: {}
