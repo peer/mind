@@ -20,7 +20,7 @@ class Sanitize
 
     $root = $('<div/>')
 
-    $root.append $.parseHTML body
+    $root.append $.parseHTML(body)
 
     @_sanitizeHTMLRoot $, $root
 
