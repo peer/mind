@@ -34,8 +34,7 @@ class Point.NewComponent extends UIComponent
           alert "New point error: #{error.reason or error}"
           return
 
-        @$('[name="body"]').val('')
-        @$('[name="category"]').prop('checked', false)
+        event.target.reset()
 
   categories: ->
     for category, value of Point.CATEGORY

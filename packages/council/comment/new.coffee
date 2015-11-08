@@ -28,4 +28,4 @@ class Comment.NewComponent extends UIComponent
           alert "New comment error: #{error.reason or error}"
           return
 
-        @$('[name="body"]').val('')
+        event.target.reset()

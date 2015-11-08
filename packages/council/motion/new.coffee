@@ -28,4 +28,4 @@ class Motion.NewComponent extends UIComponent
           alert "New motion error: #{error.reason or error}"
           return
 
-        @$('[name="body"]').val('')
+        event.target.reset()
