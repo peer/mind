@@ -52,6 +52,7 @@ Package.onUse(function (api) {
     'metadata.styl',
     'editor.html',
     'editor.coffee',
+    'editor.styl',
     'account/config.coffee',
     'account/form.coffee',
     'flow-router/title.coffee',

@@ -6,9 +6,14 @@ class EditorComponent extends UIComponent
 
     _.extend @, _.pick (kwargs?.hash or {}), 'id', 'name', 'label'
 
+  editor: ->
+    @$('trix-editor').get(0)?.editor
+
   events: ->
     super.concat
       'trix-attachment-add': @onAttachmentAdd
+      'click .select-file-link': @onSelectFileClick
+      'change .select-file': @onSelectFileChange
 
   onAttachmentAdd: (event) ->
     attachment = event.originalEvent.attachment
@@ -50,6 +55,24 @@ class EditorComponent extends UIComponent
     else
       console.error "Attachment without documentId error", attachment
       alert "Attachment without documentId error."
+
+  onSelectFileClick: (event) ->
+    event.preventDefault()
+
+    @$('.select-file').click()
+
+  onSelectFileChange: (event) ->
+    event.preventDefault()
+
+    return if event.target.files?.length is 0
+
+    for file in event.target.files
+      @editor().insertFile file
+
+    # Replaces file input with a new version which does not have any file selected. This assures that change event
+    # is triggered even if the user selects the same file. It is not really reasonable to do that, but it is still
+    # better that we do something than simply nothing because no event is triggered.
+    $(event.target).replaceWith($(event.target).clone())
 
 class EditorComponent.Toolbar extends UIComponent
   @register 'EditorComponent.Toolbar'
