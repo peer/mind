@@ -11,7 +11,8 @@ Package.onUse(function (api) {
     'coffeescript',
     'underscore-extra',
     'accounts-password',
-    'stylus'
+    'stylus',
+    'jquery'
   ]);
 
   // 3rd party dependencies.

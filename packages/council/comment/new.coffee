@@ -35,5 +35,6 @@ class Comment.NewComponent extends UIComponent
         event.target.reset()
 
   hasBody: ->
-    # We require body to have at least some text content.
-    $(@$('[name="body"]').val()).text()
+    # We require body to have at least some text content or a figure.
+    $body = $(@$('[name="body"]').val())
+    $body.text() or $body.has('figure')

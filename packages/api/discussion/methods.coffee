@@ -9,11 +9,14 @@ Meteor.methods
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
     if Meteor.isServer
-      descriptionText = cheerio.load(document.description).root().text()
+      $root = cheerio.load(document.description).root()
     else
-      descriptionText = $('<div/>').append($.parseHTML(document.description)).text()
+      $root = $('<div/>').append($.parseHTML(document.description))
 
-    check descriptionText, Match.NonEmptyString
+    descriptionText = $root.text()
+
+    check descriptionText, Match.OneOf Match.NonEmptyString, Match.Where ->
+      $root.has('figure')
 
     attachments = Discussion.extractAttachments document.description
 

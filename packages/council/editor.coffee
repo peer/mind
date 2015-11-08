@@ -81,3 +81,23 @@ class EditorComponent.Toolbar extends UIComponent
     Trix.config.lang
 
 Trix.config.toolbar.content = Trix.makeFragment Blaze.toHTML EditorComponent.Toolbar.renderComponent()
+
+# Currently we prevent editing of captions of previewable attachments.
+# TODO: Make previewable attachments' caption optional but still editable. See https://github.com/basecamp/trix/issues/87
+
+originalCreateNodes = Trix.AttachmentView::createNodes
+Trix.AttachmentView::createNodes = ->
+  [cursorTarget1, element, cursorTarget2] = originalCreateNodes.call @
+
+  if not @attachmentPiece.getCaption() and @attachment.isPreviewable()
+    $element = $(element)
+    $element.find('figcaption').remove()
+    element = $element.get(0)
+
+  [cursorTarget1, element, cursorTarget2]
+
+originalMakeCaptionEditable = Trix.AttachmentEditorController::makeCaptionEditable
+Trix.AttachmentEditorController::makeCaptionEditable = ->
+  return if not @attachmentPiece.getCaption() and @attachment.isPreviewable()
+
+  originalMakeCaptionEditable.call @

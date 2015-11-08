@@ -9,11 +9,14 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
     document.body = documentClass.sanitize.sanitizeHTML document.body
 
     if Meteor.isServer
-      bodyText = cheerio.load(document.body).root().text()
+      $root = cheerio.load(document.body).root()
     else
-      bodyText = $('<div/>').append($.parseHTML(document.body)).text()
+      $root = $('<div/>').append($.parseHTML(document.body))
 
-    check bodyText, Match.NonEmptyString
+    bodyText = $root.text()
+
+    check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
+      $root.has('figure')
 
     attachments = documentClass.extractAttachments document.body
 
