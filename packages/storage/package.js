@@ -21,6 +21,9 @@ Package.onUse(function (api) {
     'peerlibrary:connect@2.28.1_1',
     'peerlibrary:blocking@0.5.2'
   ]);
+  api.use([
+    'kadira:flow-router@2.8.0'
+  ], {weak: true});
 
   api.export('Storage');
 
