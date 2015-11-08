@@ -5,6 +5,21 @@ Meteor.methods
       discussion:
         _id: Match.DocumentId
 
+    attachments = []
+
+    document.body = Motion.sanitize.sanitizeHTML document.body
+
+    if Meteor.isServer
+      bodyText = cheerio.load(document.body).root().text()
+    else
+      bodyText = $('<div/>').append($.parseHTML(document.body)).text()
+
+    check bodyText, Match.NonEmptyString
+
+    attachments = Motion.extractAttachments document.body
+
+    bodyDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.body
+
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
@@ -15,7 +30,7 @@ Meteor.methods
     throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
     createdAt = new Date()
-    Motion.documents.insert
+    documentId = Motion.documents.insert
       createdAt: createdAt
       updatedAt: createdAt
       lastActivity: createdAt
@@ -23,6 +38,8 @@ Meteor.methods
       discussion:
         _id: discussion._id
       body: document.body
+      bodyDisplay: bodyDisplay
+      bodyAttachments: ({_id} for _id in attachments)
       changes: [
         updatedAt: createdAt
         author: user.getReference()
@@ -34,6 +51,19 @@ Meteor.methods
       votingClosedAt: null
       withdrawnBy: null
       withdrawnAt: null
+
+    assert documentId
+
+    StorageFile.documents.update
+      _id:
+        $in: attachments
+    ,
+      $set:
+        active: true
+    ,
+      multi: true
+
+    documentId
 
   'Motion.update': (document) ->
     check document,

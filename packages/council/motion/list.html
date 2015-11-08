@@ -34,7 +34,8 @@
       </form>
     {{else}}
       <div class="card-content">
-        {{> ExpandableButton}}<p>{{body}}</p>
+        {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+        {{> ExpandableButton}}<div class="trix-content">{{{bodyDisplay}}}</div>
         {{#if isExpanded}}
           <div class="expansion">
             <div class="divider"></div>

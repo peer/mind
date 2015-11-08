@@ -17,6 +17,10 @@ class Motion.NewComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
+    # TODO: We cannot use required for body input with trix.
+    # TODO: Make a warning or something?
+    return unless @hasBody()
+
     Meteor.call 'Motion.new',
       body: @$('[name="body"]').val()
       discussion:
@@ -29,3 +33,7 @@ class Motion.NewComponent extends UIComponent
           return
 
         event.target.reset()
+
+  hasBody: ->
+    # We require body to have at least some text content.
+    $(@$('[name="body"]').val()).text()
