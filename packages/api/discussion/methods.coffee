@@ -6,7 +6,7 @@ Meteor.methods
 
     attachments = []
 
-    document.description = share.sanitize.sanitizeHTML document.description
+    document.description = Discussion.sanitize.sanitizeHTML document.description
 
     if Meteor.isServer
       descriptionText = cheerio.load(document.description).root().text()
@@ -16,6 +16,8 @@ Meteor.methods
     check descriptionText, Match.NonEmptyString
 
     attachments = share.extractAttachments document.description
+
+    descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
@@ -28,6 +30,8 @@ Meteor.methods
       author: user.getReference()
       title: document.title
       description: document.description
+      descriptionDisplay: descriptionDisplay
+      descriptionAttachments: ({_id} for _id in attachments)
       changes: [
         updatedAt: createdAt
         author: user.getReference()
@@ -35,7 +39,6 @@ Meteor.methods
         description: document.description
       ]
       meetings: []
-      attachments: ({_id} for _id in attachments)
 
     assert documentId
 

@@ -11,7 +11,7 @@ Package.onUse(function (api) {
     'coffeescript',
     'accounts-base',
     'ddp',
-    'underscore'
+    'underscore-extra'
   ]);
 
   // 3rd party dependencies.
@@ -27,7 +27,8 @@ Package.onUse(function (api) {
     'voting',
     'classy-job',
     'jobs',
-    'storage'
+    'storage',
+    'sanitize'
   ]);
 
   api.export('User');
@@ -47,7 +48,7 @@ Package.onUse(function (api) {
   ], 'server');
 
   api.addFiles([
-    'underscore.coffee',
+    'sanitize.coffee',
     'base.coffee',
     'upvotable.coffee',
     'triggers.coffee',

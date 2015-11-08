@@ -111,6 +111,7 @@ trix@0.1.0
 ui@1.0.8
 ui-components@0.1.0
 underscore@1.0.4
+underscore-extra@0.1.0
 url@1.0.5
 useraccounts:core@1.12.4
 useraccounts:flow-routing@1.12.4

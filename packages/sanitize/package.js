@@ -9,7 +9,7 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore',
+    'underscore-extra',
     'jquery'
   ]);
 
@@ -18,11 +18,6 @@ Package.onUse(function (api) {
     'fermuch:cheerio@0.19.0',
     'peerlibrary:assert@0.2.5',
     'peerlibrary:url-utils@0.4.0_3'
-  ]);
-
-  // Internal dependencies.
-  api.use([
-    'core'
   ]);
 
   api.export('Sanitize');

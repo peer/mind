@@ -9,7 +9,7 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore',
+    'underscore-extra',
     'logging',
     'random',
     'ejson'

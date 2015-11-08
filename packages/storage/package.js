@@ -10,7 +10,7 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'webapp',
-    'underscore'
+    'underscore-extra'
   ]);
 
   // 3rd party dependencies.

@@ -13,7 +13,7 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore',
+    'underscore-extra',
     'random',
     'jquery'
   ]);
@@ -32,13 +32,11 @@ Package.onUse(function (api) {
   api.use([
     'core',
     'voting',
-    'sanitize',
     'storage'
   ]);
 
   api.addFiles([
     'upvotable.coffee',
-    'sanitize.coffee',
     'attachments.coffee',
     'meeting/methods.coffee',
     'discussion/methods.coffee',

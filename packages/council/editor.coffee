@@ -4,7 +4,7 @@ class EditorComponent extends UIComponent
   constructor: (kwargs) ->
     super
 
-    _.extend @, _.pick (kwargs?.hash or {}), 'id', 'name'
+    _.extend @, _.pick (kwargs?.hash or {}), 'id', 'name', 'label'
 
   events: ->
     super.concat

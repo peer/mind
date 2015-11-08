@@ -7,6 +7,9 @@ class Discussion extends share.BaseDocument
   #   username
   # title: the latest version of the title
   # description: the latest version of the description
+  # descriptionDisplay: HTML content of the description without tags needed for editing
+  # descriptionAttachments: list of
+  #   _id
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
@@ -15,8 +18,6 @@ class Discussion extends share.BaseDocument
   #   title
   #   description
   # meetings: list, if a discussion is associated with a meeting (or meetings)
-  #   _id
-  # attachments: list of
   #   _id
 
   @Meta
@@ -28,11 +29,11 @@ class Discussion extends share.BaseDocument
         [fields._id, fields.changes?[fields.changes?.length - 1]?.title or '']
       description: @GeneratedField 'self', ['changes'], (fields) ->
         [fields._id, fields.changes?[fields.changes?.length - 1]?.description or '']
+      descriptionAttachments: [@ReferenceField StorageFile]
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
       meetings: [@ReferenceField Meeting]
-      attachments: [@ReferenceField StorageFile]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes', 'meetings']
 
@@ -43,7 +44,7 @@ class Discussion extends share.BaseDocument
     lastActivity: 1
     author: 1
     title: 1
-    description: 1
+    descriptionDisplay: 1
     meetings: 1
 
 if Meteor.isServer
