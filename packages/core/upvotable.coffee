@@ -47,7 +47,6 @@ class share.UpvotableDocument extends share.BaseDocument
     lastActivity: 1
     author: 1
     discussion: 1
-    body: 1
     upvotesCount: 1
     upvotes:
       # We publish only an entry associated with the current user.

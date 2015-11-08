@@ -1,7 +1,29 @@
-share.newUpvotable = (documentClass, document, match, extend) ->
+share.newUpvotable = (documentClass, document, richText, match, extend) ->
   check document, match
 
   extend ?= (user, doc) -> doc
+
+  if richText
+    attachments = []
+
+    document.body = documentClass.sanitize.sanitizeHTML document.body
+
+    if Meteor.isServer
+      bodyText = cheerio.load(document.body).root().text()
+    else
+      bodyText = $('<div/>').append($.parseHTML(document.body)).text()
+
+    check bodyText, Match.NonEmptyString
+
+    attachments = documentClass.extractAttachments document.body
+
+    bodyDisplay = documentClass.sanitizeForDisplay.sanitizeHTML document.body
+
+    richTextDocument =
+      bodyDisplay: bodyDisplay
+      bodyAttachments: ({_id} for _id in attachments)
+  else
+    richTextDocument = {}
 
   user = Meteor.user User.REFERENCE_FIELDS()
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
@@ -13,7 +35,7 @@ share.newUpvotable = (documentClass, document, match, extend) ->
   throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
   createdAt = new Date()
-  documentClass.documents.insert extend user,
+  documentId = documentClass.documents.insert extend user, _.extend richTextDocument,
     createdAt: createdAt
     updatedAt: createdAt
     lastActivity: createdAt
@@ -28,6 +50,20 @@ share.newUpvotable = (documentClass, document, match, extend) ->
     ]
     upvotes: []
     upvotesCount: 0
+
+  assert documentId
+
+  if richText
+    StorageFile.documents.update
+      _id:
+        $in: attachments
+    ,
+      $set:
+        active: true
+    ,
+      multi: true
+
+  documentId
 
 share.upvoteUpvotable = (documentClass, documentId) ->
   check documentId, Match.DocumentId

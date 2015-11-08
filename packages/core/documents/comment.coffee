@@ -8,6 +8,9 @@ class Comment extends share.UpvotableDocument
   # discussion:
   #   _id
   # body: the latest version of the body
+  # bodyDisplay: HTML content of the body without tags needed for editing
+  # bodyAttachments: list of
+  #   _id
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
@@ -22,6 +25,19 @@ class Comment extends share.UpvotableDocument
 
   @Meta
     name: 'Comment'
+    fields: (fields) =>
+      _.extend fields,
+        bodyDisplay: @GeneratedField 'self', ['body'], (fields) =>
+          [fields._id, @sanitizeForDisplay.sanitizeHTML fields.body]
+        bodyAttachments: [
+          # TODO: Make it an array of references to StorageFile as well.
+          @GeneratedField 'self', ['body'], (fields) =>
+            [fields._id, ({_id} for _id in @extractAttachments fields.body)]
+        ]
+
+  @PUBLISH_FIELDS: ->
+    _.extend super,
+      bodyDisplay: 1
 
 if Meteor.isServer
   Comment.Meta.collection._ensureIndex

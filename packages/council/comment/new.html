@@ -5,8 +5,7 @@
         <form class="col s12 comment-new">
           <div class="row">
             <div class="input-field col s12">
-              <textarea name="body" id="new-comment-body" class="materialize-textarea" required></textarea>
-              <label for="new-comment-body">Comment</label>
+              {{> EditorComponent args name='body' id='new-point-description' label='Comment'}}
             </div>
           </div>
           <div class="row">

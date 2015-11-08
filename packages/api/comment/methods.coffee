@@ -1,6 +1,6 @@
 Meteor.methods
   'Comment.new': (document) ->
-    share.newUpvotable Comment, document,
+    share.newUpvotable Comment, document, true,
       body: Match.NonEmptyString
       discussion:
         _id: Match.DocumentId
