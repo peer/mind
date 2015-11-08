@@ -11,7 +11,8 @@ Package.onUse(function (api) {
     'coffeescript',
     'accounts-base',
     'ddp',
-    'underscore-extra'
+    'underscore-extra',
+    'jquery'
   ]);
 
   // 3rd party dependencies.
@@ -19,7 +20,8 @@ Package.onUse(function (api) {
     'peerlibrary:peerdb@0.19.1',
     'peerlibrary:meteor-file@0.2.1',
     'peerlibrary:reactive-field@0.1.0',
-    'peerlibrary:assert@0.2.5'
+    'peerlibrary:assert@0.2.5',
+    'fermuch:cheerio@0.19.0'
   ]);
 
   // Internal dependencies.
@@ -48,7 +50,6 @@ Package.onUse(function (api) {
   ], 'server');
 
   api.addFiles([
-    'sanitize.coffee',
     'base.coffee',
     'upvotable.coffee',
     'triggers.coffee',

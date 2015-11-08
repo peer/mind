@@ -15,7 +15,7 @@ Meteor.methods
 
     check descriptionText, Match.NonEmptyString
 
-    attachments = share.extractAttachments document.description
+    attachments = Discussion.extractAttachments document.description
 
     descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
 

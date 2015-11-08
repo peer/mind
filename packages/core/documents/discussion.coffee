@@ -29,7 +29,13 @@ class Discussion extends share.BaseDocument
         [fields._id, fields.changes?[fields.changes?.length - 1]?.title or '']
       description: @GeneratedField 'self', ['changes'], (fields) =>
         [fields._id, fields.changes?[fields.changes?.length - 1]?.description or '']
-      descriptionAttachments: [@ReferenceField StorageFile]
+      descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
+        [fields._id, @sanitizeForDisplay.sanitizeHTML fields.description]
+      descriptionAttachments: [
+        # TODO: Make it an array of references to StorageFile as well.
+        @GeneratedField 'self', ['description'], (fields) =>
+          [fields._id, ({_id} for _id in @extractAttachments fields.description)]
+      ]
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
