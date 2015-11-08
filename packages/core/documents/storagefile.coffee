@@ -34,7 +34,7 @@ class StorageFile extends share.BaseDocument
       author: @ReferenceField User
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['status', 'readProgress', 'uploadProgress'], true
-      removeFile: @Trigger ['filename'], (document, oldDocument) ->
+      removeFile: @Trigger ['filename'], (document, oldDocument) =>
         return if document
 
         assert oldDocument

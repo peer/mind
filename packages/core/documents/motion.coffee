@@ -31,7 +31,7 @@ class Motion extends share.BaseDocument
       author: @ReferenceField User, User.REFERENCE_FIELDS()
       discussion: @ReferenceField Discussion
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
-      body: @GeneratedField 'self', ['changes'], (fields) ->
+      body: @GeneratedField 'self', ['changes'], (fields) =>
         [fields._id, fields.changes?[fields.changes?.length - 1]?.body or '']
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()

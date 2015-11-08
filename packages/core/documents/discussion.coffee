@@ -25,9 +25,9 @@ class Discussion extends share.BaseDocument
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
-      title: @GeneratedField 'self', ['changes'], (fields) ->
+      title: @GeneratedField 'self', ['changes'], (fields) =>
         [fields._id, fields.changes?[fields.changes?.length - 1]?.title or '']
-      description: @GeneratedField 'self', ['changes'], (fields) ->
+      description: @GeneratedField 'self', ['changes'], (fields) =>
         [fields._id, fields.changes?[fields.changes?.length - 1]?.description or '']
       descriptionAttachments: [@ReferenceField StorageFile]
       changes: [

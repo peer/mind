@@ -22,7 +22,7 @@ class Vote extends share.BaseDocument
         [fields._id, fields.changes?[fields.changes?.length - 1]?.value ? Vote.VALUE.DEFAULT]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes'], true
-      computeTally: @Trigger ['motion', 'changes'], (document, oldDocument) ->
+      computeTally: @Trigger ['motion', 'changes'], (document, oldDocument) =>
         for motionId in _.uniq([document?.motion?._id, oldDocument?.motion?._id]) when motionId
           new ComputeTallyJob(motion: _id: motionId).enqueue
             skipIfExisting: true
