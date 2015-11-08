@@ -55,3 +55,5 @@ class JobQueue extends share.BaseDocument
         motion: @ReferenceField Motion, [], false
       result:
         tally: @ReferenceField Tally, [], false
+
+# Some indexes are ensured by JobsWorker.initialize.

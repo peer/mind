@@ -27,3 +27,7 @@ class Tally extends share.BaseDocument
     abstentionsCount: 1
     confidenceLevel: 1
     result: 1
+
+if Meteor.isServer
+  Tally.Meta.collection._ensureIndex
+    createdAt: 1
