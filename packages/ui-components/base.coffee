@@ -35,9 +35,9 @@ class UIComponent extends BlazeComponent
 
     callbacks = {}
     if _.isFunction lastArgument
-      callbacks.onReady = params.pop()
+      callbacks.onReady = args.pop()
     else if _.any [lastArgument?.onReady, lastArgument?.onError, lastArgument?.onStop], _.isFunction
-      callbacks = params.pop()
+      callbacks = args.pop()
 
     unless callbacks.onError or callbacks.onStop
       callbacks.onStop = (error) =>
