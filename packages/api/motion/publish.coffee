@@ -9,7 +9,7 @@ new PublishEndpoint 'Motion.list', (discussionId) ->
 new PublishEndpoint 'Motion.vote', (motionId) ->
   check motionId, Match.DocumentId
 
-  return @ready() unless @userId
+  return [] unless @userId
 
   Vote.documents.find
     'motion._id': motionId
