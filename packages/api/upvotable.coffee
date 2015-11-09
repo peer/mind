@@ -3,6 +3,15 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
 
   extend ?= (user, doc) -> doc
 
+  user = Meteor.user User.REFERENCE_FIELDS()
+  throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+  discussion = Discussion.documents.findOne document.discussion._id,
+    fields:
+      _id: 1
+
+  throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
+
   if richText
     attachments = []
 
@@ -27,15 +36,6 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
       bodyAttachments: ({_id} for _id in attachments)
   else
     richTextDocument = {}
-
-  user = Meteor.user User.REFERENCE_FIELDS()
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
-
-  discussion = Discussion.documents.findOne document.discussion._id,
-    fields:
-      _id: 1
-
-  throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
   createdAt = new Date()
   documentId = documentClass.documents.insert extend user, _.extend richTextDocument,

@@ -4,6 +4,9 @@ Meteor.methods
       title: Match.NonEmptyString
       description: Match.NonEmptyString
 
+    user = Meteor.user User.REFERENCE_FIELDS()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
     attachments = []
 
     document.description = Discussion.sanitize.sanitizeHTML document.description
@@ -21,9 +24,6 @@ Meteor.methods
     attachments = Discussion.extractAttachments document.description
 
     descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
-
-    user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     createdAt = new Date()
     documentId = Discussion.documents.insert

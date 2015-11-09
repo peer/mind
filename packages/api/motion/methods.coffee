@@ -5,6 +5,15 @@ Meteor.methods
       discussion:
         _id: Match.DocumentId
 
+    user = Meteor.user User.REFERENCE_FIELDS()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+    discussion = Discussion.documents.findOne document.discussion._id,
+      fields:
+        _id: 1
+
+    throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
+
     attachments = []
 
     document.body = Motion.sanitize.sanitizeHTML document.body
@@ -21,16 +30,7 @@ Meteor.methods
 
     attachments = Motion.extractAttachments document.body
 
-    bodyDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.body
-
-    user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
-
-    discussion = Discussion.documents.findOne document.discussion._id,
-      fields:
-        _id: 1
-
-    throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
+    bodyDisplay = Motion.sanitizeForDisplay.sanitizeHTML document.body
 
     createdAt = new Date()
     documentId = Motion.documents.insert
