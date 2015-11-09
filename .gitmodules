@@ -6,7 +6,7 @@
 	url = https://github.com/mitar/meteor-chartist-js.git
 [submodule "packages/trix/vendor"]
 	path = packages/trix/vendor
-	url = https://github.com/basecamp/trix.git
+	url = https://github.com/mitar/trix.git
 [submodule "packages/kadira:flow-router"]
 	path = packages/kadira:flow-router
 	url = https://github.com/peerlibrary/flow-router.git
