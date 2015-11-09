@@ -31,9 +31,9 @@ Meteor.methods
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
       $root.has('figure')
 
-    attachments = Comment.extractAttachments document.body
-
     bodyDisplay = Comment.sanitizeForDisplay.sanitizeHTML document.body
+
+    attachments = Comment.extractAttachments document.body
 
     # TODO: Should we also allow moderators to update comments?
     updatedAt = new Date()

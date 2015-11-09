@@ -25,9 +25,9 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
       $root.has('figure')
 
-    attachments = documentClass.extractAttachments document.body
-
     bodyDisplay = documentClass.sanitizeForDisplay.sanitizeHTML document.body
+
+    attachments = documentClass.extractAttachments document.body
 
     richTextDocument =
       bodyDisplay: bodyDisplay

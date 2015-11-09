@@ -19,9 +19,9 @@ Meteor.methods
     check descriptionText, Match.OneOf Match.NonEmptyString, Match.Where ->
       $root.has('figure')
 
-    attachments = Discussion.extractAttachments document.description
-
     descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
+
+    attachments = Discussion.extractAttachments document.description
 
     createdAt = new Date()
     documentId = Discussion.documents.insert

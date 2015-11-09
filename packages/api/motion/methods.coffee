@@ -26,9 +26,9 @@ Meteor.methods
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
       $root.has('figure')
 
-    attachments = Motion.extractAttachments document.body
-
     bodyDisplay = Motion.sanitizeForDisplay.sanitizeHTML document.body
+
+    attachments = Motion.extractAttachments document.body
 
     createdAt = new Date()
     documentId = Motion.documents.insert
