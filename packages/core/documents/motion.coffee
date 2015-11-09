@@ -36,10 +36,11 @@ class Motion extends share.BaseDocument
       body: @GeneratedField 'self', ['changes'], (fields) =>
         [fields._id, fields.changes?[fields.changes?.length - 1]?.body or '']
       bodyDisplay: @GeneratedField 'self', ['body'], (fields) =>
-        [fields._id, @sanitizeForDisplay.sanitizeHTML fields.body]
+        [fields._id, fields.body and @sanitizeForDisplay.sanitizeHTML fields.body]
       bodyAttachments: [
         # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['body'], (fields) =>
+          return [fields._id, []] unless fields.body
           [fields._id, ({_id} for _id in @extractAttachments fields.body)]
       ]
       changes: [
