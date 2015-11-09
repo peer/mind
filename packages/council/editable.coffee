@@ -6,7 +6,28 @@ class share.EditableMixin extends UIMixin
   onCreated: ->
     super
 
-    @isBeingEdited = new ReactiveField false
+    @_isBeingEdited = new ReactiveField false
+
+    @_editingSubscriptions = new ReactiveField []
+
+    @editingSubscriptionsReady = new ComputedField =>
+      _.all @_editingSubscriptions(), (handle) =>
+        handle.ready()
+
+    # This has to be before the isBeingEdited computed field so that _editingSubscriptions
+    # is changed on _isBeingEdited's change before computed field is reevaluated.
+    @autorun (computation) =>
+      return unless @_isBeingEdited()
+
+      subscriptions = @callFirstWith null, 'editingSubscriptions'
+
+      subscriptions ?= []
+      subscriptions = [subscriptions] unless _.isArray subscriptions
+
+      @_editingSubscriptions subscriptions
+
+    @isBeingEdited = new ComputedField =>
+      @_isBeingEdited() and @editingSubscriptionsReady()
 
     @autorun (computation) =>
       return unless @isBeingEdited()
@@ -22,15 +43,15 @@ class share.EditableMixin extends UIMixin
   onEditButton: (event) ->
     event.preventDefault()
 
-    @isBeingEdited true
+    @_isBeingEdited true
 
   onSaveEditButton: (event) ->
     event.preventDefault()
 
     @callFirstWith null, 'onSaveEdit', event, =>
-      @isBeingEdited false
+      @_isBeingEdited false
 
   onCancelEditButton: (event) ->
     event.preventDefault()
 
-    @isBeingEdited false
+    @_isBeingEdited false

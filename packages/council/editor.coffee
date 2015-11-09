@@ -4,7 +4,7 @@ class EditorComponent extends UIComponent
   constructor: (kwargs) ->
     super
 
-    _.extend @, _.pick (kwargs?.hash or {}), 'id', 'name', 'label'
+    _.extend @, _.pick (kwargs?.hash or {}), 'id', 'name', 'label', 'autofocus'
 
   editor: ->
     @$('trix-editor').get(0)?.editor
@@ -73,6 +73,9 @@ class EditorComponent extends UIComponent
     # is triggered even if the user selects the same file. It is not really reasonable to do that, but it is still
     # better that we do something than simply nothing because no event is triggered.
     $(event.target).replaceWith($(event.target).clone())
+
+  value: ->
+    @data()?[@name] or ''
 
 class EditorComponent.Toolbar extends UIComponent
   @register 'EditorComponent.Toolbar'

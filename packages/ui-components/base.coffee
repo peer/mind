@@ -86,6 +86,13 @@ class UIComponent extends BlazeComponent
 
     not args[0]
 
+  $join: (delimiter, args...) ->
+    # Removing kwargs.
+    assert args[args.length - 1] instanceof Spacebars.kw
+    args.pop()
+
+    args.join delimiter
+
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>
       super parent, node, before
