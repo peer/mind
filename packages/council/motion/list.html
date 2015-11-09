@@ -21,8 +21,7 @@
       <form class="editable-form">
         <div class="card-content">
           <div class="input-field">
-            <textarea name="body" id="edit-motion-body-{{_id}}" class="materialize-textarea" required>{{body}}</textarea>
-            <label for="edit-motion-body-{{_id}}">Motion</label>
+            {{> EditorComponent args name='body' id=($join '-' 'edit-motion-body' _id) label='Motion' autofocus=''}}
           </div>
         </div>
         <div class="card-action">

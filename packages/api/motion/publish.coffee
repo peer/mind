@@ -6,6 +6,15 @@ new PublishEndpoint 'Motion.list', (discussionId) ->
   ,
     fields: Motion.PUBLISH_FIELDS()
 
+new PublishEndpoint 'Motion.forEdit', (motionId) ->
+  check motionId, Match.DocumentId
+
+  Motion.documents.find
+    _id: motionId
+  ,
+    fields:
+      body: 1
+
 new PublishEndpoint 'Motion.vote', (motionId) ->
   check motionId, Match.DocumentId
 

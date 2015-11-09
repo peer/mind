@@ -74,9 +74,25 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
+    document.body = Motion.sanitize.sanitizeHTML document.body
+
+    if Meteor.isServer
+      $root = cheerio.load(document.body).root()
+    else
+      $root = $('<div/>').append($.parseHTML(document.body))
+
+    bodyText = $root.text()
+
+    check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
+      $root.has('figure')
+
+    bodyDisplay = Motion.sanitizeForDisplay.sanitizeHTML document.body
+
+    attachments = Motion.extractAttachments document.body
+
     # TODO: We should also allow moderators to update motions.
     updatedAt = new Date()
-    Motion.documents.update
+    changed = Motion.documents.update
       _id: document._id
       'author._id': user._id
       votingOpenedBy: null
@@ -91,11 +107,25 @@ Meteor.methods
       $set:
         updatedAt: updatedAt
         body: document.body
+        bodyDisplay: bodyDisplay
+        bodyAttachments: ({_id} for _id in attachments)
       $push:
         changes:
           updatedAt: updatedAt
           author: user.getReference()
           body: document.body
+
+    if changed
+      StorageFile.documents.update
+        _id:
+          $in: attachments
+      ,
+        $set:
+          active: true
+      ,
+        multi: true
+
+    changed
 
   'Motion.openVoting': (motionId) ->
     check motionId, Match.DocumentId

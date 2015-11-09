@@ -56,14 +56,15 @@ class Motion.ListItemComponent extends UIComponent
   methodPrefix: ->
     'Motion'
 
+  editingSubscriptions: ->
+    @subscribe 'Motion.forEdit', @data()._id
+
   onBeingEdited: ->
     @callFirstWith @, 'isExpanded', false
 
     Tracker.afterFlush =>
-      # A bit of mangling to get cursor to focus at the end of the text.
-      $textarea = @$('[name="body"]')
-      body = $textarea.val()
-      $textarea.focus().val('').val(body).trigger('autoresize')
+      # TODO: Move the cursor to the end of the content.
+      #@$('trix-editor').get(0).editor.setSelectedRange(-1)
 
   events: ->
     super.concat
@@ -99,6 +100,10 @@ class Motion.ListItemComponent extends UIComponent
         return
 
   onSaveEdit: (event, onSuccess) ->
+    # TODO: We cannot use required for body input with trix.
+    # TODO: Make a warning or something?
+    return unless @hasBody()
+
     Meteor.call 'Motion.update',
       _id: @data()._id
       body: @$('[name="body"]').val()
@@ -110,6 +115,11 @@ class Motion.ListItemComponent extends UIComponent
           return
 
         onSuccess()
+
+  hasBody: ->
+    # We require body to have at least some text content or a figure.
+    $body = $(@$('[name="body"]').val())
+    $body.text() or $body.has('figure')
 
   motionPassed: ->
     tally = Tally.documents.findOne
