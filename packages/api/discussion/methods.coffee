@@ -7,8 +7,6 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    attachments = []
-
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
     if Meteor.isServer

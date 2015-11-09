@@ -13,8 +13,6 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
   throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
   if richText
-    attachments = []
-
     document.body = documentClass.sanitize.sanitizeHTML document.body
 
     if Meteor.isServer

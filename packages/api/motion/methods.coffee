@@ -14,8 +14,6 @@ Meteor.methods
 
     throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
-    attachments = []
-
     document.body = Motion.sanitize.sanitizeHTML document.body
 
     if Meteor.isServer
