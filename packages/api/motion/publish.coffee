@@ -24,7 +24,8 @@ new PublishEndpoint 'Motion.vote', (motionId) ->
     'motion._id': motionId
     'author._id': @userId
   ,
-    Vote.PUBLISH_FIELDS()
+    fields:
+      Vote.PUBLISH_FIELDS()
 
 new PublishEndpoint 'Motion.tally', (motionId) ->
   check motionId, Match.DocumentId
