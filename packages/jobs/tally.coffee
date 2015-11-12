@@ -1,4 +1,6 @@
 class ComputeTallyJob extends Job
+  @COMPUTE_TALLY_VERSION: '0.1.0'
+
   @register()
 
   run: ->
@@ -8,9 +10,13 @@ class ComputeTallyJob extends Job
     Motion = Package.core.Motion unless Motion
     VotingEngine = Package.voting.VotingEngine unless VotingEngine
 
-    motion = @data.motion
+    motion = Motion.documents.findOne @data.motion._id,
+      fields:
+        majority: 1
 
-    throw new Error ("Motion '#{motion._id}' does not exist.") unless Motion.documents.exists motion._id
+    assert motion.majority
+
+    throw new Error ("Motion '#{@data.motion._id}' does not exist.") unless motion
 
     votes = Vote.documents.find('motion._id': motion._id).map (vote, index, cursor) ->
       vote.value
@@ -20,14 +26,16 @@ class ComputeTallyJob extends Job
     # TODO: Get all users with voting role?
     populationSize = 10 # User.documents.count()
 
-    result = VotingEngine.computeTally votes, populationSize
+    result = VotingEngine.computeTally motion.majority, votes, populationSize
 
     documentId = Tally.documents.insert
       createdAt: computedAt
+      version: @constructor.COMPUTE_TALLY_VERSION
       motion:
         _id: motion._id
       job:
         _id: @_id
+      majority: motion.majority
       populationSize: populationSize
       votesCount: result.votesCount
       abstentionsCount: result.abstentionsCount

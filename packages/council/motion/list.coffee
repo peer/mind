@@ -66,39 +66,6 @@ class Motion.ListItemComponent extends UIComponent
       # TODO: Move the cursor to the end of the content.
       #@$('trix-editor').get(0).editor.setSelectedRange(-1)
 
-  events: ->
-    super.concat
-      'click .open-voting': @onOpenVoting
-      'click .close-voting': @onCloseVoting
-      'click .withdraw-motion': @onWithdrawMotion
-
-  onOpenVoting: (event) ->
-    event.preventDefault()
-
-    Meteor.call 'Motion.openVoting', @data()._id, (error, result) =>
-      if error
-        console.error "Open voting error", error
-        alert "Open voting error: #{error.reason or error}"
-        return
-
-  onCloseVoting: (event) ->
-    event.preventDefault()
-
-    Meteor.call 'Motion.closeVoting', @data()._id, (error, result) =>
-      if error
-        console.error "Close voting error", error
-        alert "Close voting error: #{error.reason or error}"
-        return
-
-  onWithdrawMotion: (event) ->
-    event.preventDefault()
-
-    Meteor.call 'Motion.withdrawVoting', @data()._id, (error, result) =>
-      if error
-        console.error "Motion withdraw error", error
-        alert "Motion withdraw error: #{error.reason or error}"
-        return
-
   onSaveEdit: (event, onSuccess) ->
     # TODO: We cannot use required for body input with trix.
     # TODO: Make a warning or something?
@@ -133,6 +100,93 @@ class Motion.ListItemComponent extends UIComponent
         confidenceLevel: 1
 
     tally?.result > 0 && tally?.confidenceLevel >= 0.90
+
+class Motion.WithdrawComponent extends UIComponent
+  @register 'Motion.WithdrawComponent'
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      $modalTrigger = @ancestorComponent(Motion.ListItemComponent).$(".modal-trigger[data-target='motion-withdraw-dialog-#{@data()._id}']")
+      return unless $modalTrigger
+      computation.stop()
+
+      $modalTrigger.leanModal()
+
+  events: ->
+    super.concat
+      'click .confirm-withdraw-motion': @onWithdrawMotion
+
+  onWithdrawMotion: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Motion.withdrawVoting', @data()._id, (error, result) =>
+      if error
+        console.error "Motion withdraw error", error
+        alert "Motion withdraw error: #{error.reason or error}"
+        return
+
+class Motion.OpenVotingComponent extends UIComponent
+  @register 'Motion.OpenVotingComponent'
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      $modalTrigger = @ancestorComponent(Motion.ListItemComponent).$(".modal-trigger[data-target='open-voting-dialog-#{@data()._id}']")
+      return unless $modalTrigger
+      computation.stop()
+
+      $modalTrigger.leanModal()
+
+  events: ->
+    super.concat
+      'click .simplemajority-open-voting': @onOpenSimpleMajority
+      'click .supermajority-open-voting': @onOpenSuperMajority
+
+  onOpenSimpleMajority: (event) ->
+    event.preventDefault()
+
+    @_openMotion Motion.MAJORITY.SIMPLE
+
+  onOpenSuperMajority: (event) ->
+    event.preventDefault()
+
+    @_openMotion Motion.MAJORITY.SUPER
+
+  _openMotion: (majority) ->
+    Meteor.call 'Motion.openVoting', @data()._id, majority, (error, result) =>
+      if error
+        console.error "Open voting error", error
+        alert "Open voting error: #{error.reason or error}"
+        return
+
+class Motion.CloseVotingComponent extends UIComponent
+  @register 'Motion.CloseVotingComponent'
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      $modalTrigger = @ancestorComponent(Motion.ListItemComponent).$(".modal-trigger[data-target='close-voting-dialog-#{@data()._id}']")
+      return unless $modalTrigger
+      computation.stop()
+
+      $modalTrigger.leanModal()
+
+  events: ->
+    super.concat
+      'click .confirm-close-voting': @onCloseVoting
+
+  onCloseVoting: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Motion.closeVoting', @data()._id, (error, result) =>
+      if error
+        console.error "Close voting error", error
+        alert "Close voting error: #{error.reason or error}"
+        return
 
 class Motion.TallyComponent extends UIComponent
   @register 'Motion.TallyComponent'
@@ -281,3 +335,9 @@ class Motion.TallyChartComponent extends UIComponent
 
   round: (value) ->
     value?.toFixed 2
+
+  displayMajority: ->
+    if @data().majority is Motion.MAJORITY.SIMPLE
+      "simple majority"
+    else if @data().majority is Motion.MAJORITY.SUPER
+      "supermajority"

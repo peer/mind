@@ -52,6 +52,7 @@ Meteor.methods
       votingClosedAt: null
       withdrawnBy: null
       withdrawnAt: null
+      majority: null
 
     assert documentId
 
@@ -101,6 +102,7 @@ Meteor.methods
       votingClosedAt: null
       withdrawnBy: null
       withdrawnAt: null
+      majority: null
       body:
         $ne: document.body
     ,
@@ -127,8 +129,9 @@ Meteor.methods
 
     changed
 
-  'Motion.openVoting': (motionId) ->
+  'Motion.openVoting': (motionId, majority) ->
     check motionId, Match.DocumentId
+    check majority, Match.Enumeration String, Motion.MAJORITY
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
@@ -144,10 +147,12 @@ Meteor.methods
       votingClosedAt: null
       withdrawnBy: null
       withdrawnAt: null
+      majority: null
     ,
       $set:
         votingOpenedBy: user.getReference()
         votingOpenedAt: openedAt
+        majority: majority
 
   'Motion.closeVoting': (motionId) ->
     check motionId, Match.DocumentId
@@ -168,6 +173,8 @@ Meteor.methods
       votingClosedAt: null
       withdrawnBy: null
       withdrawnAt: null
+      majority:
+        $ne: null
     ,
       $set:
         votingClosedBy: user.getReference()
@@ -190,6 +197,7 @@ Meteor.methods
       votingClosedAt: null
       withdrawnBy: null
       withdrawnAt: null
+      majority: null
     ,
       $set:
         withdrawnBy: user.getReference()
@@ -215,10 +223,11 @@ Meteor.methods
         votingClosedAt: 1
         withdrawnBy: 1
         withdrawnAt: 1
+        majority: 1
 
     throw new Meteor.Error 'not-found', "Motion '#{document.motion._id}' cannot be found." unless motion
 
-    throw new Meteor.Error 'bad-request', "Motion '#{document.motion._id}' is not open." unless motion.votingOpenedBy and motion.votingOpenedAt and not motion.votingClosedBy and not motion.votingClosedAt and not motion.withdrawnBy and not motion.withdrawnAt
+    throw new Meteor.Error 'bad-request', "Motion '#{document.motion._id}' is not open." unless motion.isOpen()
 
     createdAt = new Date()
     try

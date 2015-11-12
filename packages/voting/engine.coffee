@@ -13,7 +13,10 @@ class VotingEngine extends VotingEngine
       result *= (max + i) / i
     result
 
-  @computeTally: (votes, populationSize) ->
+  @computeTally: (majority, votes, populationSize) ->
+    # We are loading packages in unordered mode, so we are fixing imports here, if needed.
+    Motion = Package.core.Motion unless Motion
+
     votesCount = 0
     abstentionsCount = 0
     inFavorVotesCount = 0
@@ -47,10 +50,14 @@ class VotingEngine extends VotingEngine
 
     effectivePopulationSize = populationSize - abstentionsCount
 
-    # TODO: Support super-majority vote as well.
-    threshold = Math.floor(effectivePopulationSize / 2)
-    bias = (Math.floor(effectivePopulationSize / 2) + 1) / effectivePopulationSize
+    if majority is Motion.MAJORITY.SIMPLE
+      threshold = Math.floor(effectivePopulationSize / 2)
+    else if majority is Motion.MAJORITY.SUPER
+      threshold = Math.floor(effectivePopulationSize * 2 / 3)
+    else
+      assert false, majority
 
+    bias = (threshold + 1) / effectivePopulationSize
     upperBound = effectivePopulationSize - votesCount
     lowerBound = Math.ceil(threshold - majorityVotesCount + 1)
 

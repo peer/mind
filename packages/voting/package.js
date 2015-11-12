@@ -19,7 +19,8 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
-  ]);
+    'core'
+  ], {unordered: true});
 
   api.export('VotingEngine');
 

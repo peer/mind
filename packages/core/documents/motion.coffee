@@ -26,6 +26,7 @@ class Motion extends share.BaseDocument
   # votingClosedAt: time when voting ended
   # withdrawnBy
   # withdrawnAt
+  # majority: one of Motion.MAJORITY values
 
   @Meta
     name: 'Motion'
@@ -66,15 +67,20 @@ class Motion extends share.BaseDocument
     votingClosedAt: 1
     withdrawnBy: 1
     withdrawnAt: 1
+    majority: 1
+
+  @MAJORITY:
+    SIMPLE: 'simple'
+    SUPER: 'super'
 
   isWithdrawn: ->
     !!(@withdrawnAt and @withdrawnBy)
 
   isOpen: ->
-    !!(@votingOpenedAt and @votingOpenedBy and not @votingClosedAt and not @votingClosedBy and not @isWithdrawn())
+    !!(@votingOpenedAt and @votingOpenedBy and not @votingClosedAt and not @votingClosedBy and @majority and not @isWithdrawn())
 
   isClosed: ->
-    !!(@votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and not @isWithdrawn())
+    !!(@votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and @majority and not @isWithdrawn())
 
 if Meteor.isServer
   Motion.Meta.collection._ensureIndex

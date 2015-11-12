@@ -56,13 +56,16 @@
         <div class="card-action">
           <div class="buttons">
             {{#if canOpen}}
-              <button class="open-voting waves-effect waves-light btn-flat" type="button"><i class="material-icons left">play_arrow</i>Open voting</button>
+              <button class="waves-effect waves-light btn-flat modal-trigger" type="button" data-target="open-voting-dialog-{{_id}}"><i class="material-icons left">play_arrow</i>Open voting</button>
+              {{> Motion.OpenVotingComponent}}
             {{/if}}
             {{#if canClose}}
-              <button class="close-voting waves-effect waves-light btn-flat" type="button"><i class="material-icons left">stop</i>Close voting</button>
+              <button class="waves-effect waves-light btn-flat modal-trigger" type="button" data-target="close-voting-dialog-{{_id}}"><i class="material-icons left">stop</i>Close voting</button>
+              {{> Motion.CloseVotingComponent}}
             {{/if}}
             {{#if canWithdraw}}
-              <button class="withdraw-motion waves-effect waves-light btn-flat" type="button"><i class="material-icons left">delete</i>Withdraw</button>
+              <button class="waves-effect waves-light btn-flat modal-trigger" type="button" data-target="motion-withdraw-dialog-{{_id}}"><i class="material-icons left">delete</i>Withdraw</button>
+              {{> Motion.WithdrawComponent}}
             {{/if}}
           </div>
         </div>
@@ -94,6 +97,44 @@
   </div>
 </template>
 
+<template name="Motion.WithdrawComponent">
+  <div id="motion-withdraw-dialog-{{_id}}" class="modal">
+    <div class="modal-content">
+      <h4>Withdraw the motion</h4>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-withdraw-motion waves-effect waves-light btn-flat modal-action modal-close" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+      <button class="confirm-withdraw-motion waves-effect waves-light btn-flat modal-action modal-close" type="submit"><i class="material-icons left">done</i>Withdraw</button>
+    </div>
+  </div>
+</template>
+
+<template name="Motion.OpenVotingComponent">
+  <div id="open-voting-dialog-{{_id}}" class="modal">
+    <div class="modal-content">
+      <h4>Open voting on the motion</h4>
+      <p>Select the majority requirement for the motion.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-open-voting waves-effect waves-light btn-flat modal-action modal-close" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+      <button class="supermajority-open-voting waves-effect waves-light btn-flat modal-action modal-close" type="submit"><i class="material-icons left">done</i>Supermajority</button>
+      <button class="simplemajority-open-voting waves-effect waves-light btn-flat modal-action modal-close" type="submit"><i class="material-icons left">done</i>Simple majority</button>
+    </div>
+  </div>
+</template>
+
+<template name="Motion.CloseVotingComponent">
+  <div id="close-voting-dialog-{{_id}}" class="modal">
+    <div class="modal-content">
+      <h4>Close voting on the motion</h4>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-close-voting waves-effect waves-light btn-flat modal-action modal-close" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+      <button class="confirm-close-voting waves-effect waves-light btn-flat modal-action modal-close" type="submit"><i class="material-icons left">done</i>Close</button>
+    </div>
+  </div>
+</template>
+
 <template name="Motion.TallyComponent">
   {{#if tallyExists}}
     {{> Motion.TallyChartComponent}}
@@ -113,12 +154,14 @@
     <small class="stats-item">Tally: {{round tally.result}}</small>
   </div>
   {{#if $or votingOpenedAt votingClosedAt}}
-    <div class="tally-dates grey-text">
+    <div class="tally-stats grey-text">
       {{#if votingClosedAt}}
-        <small class="dates-item">Closed: <span title="{{formatDate votingClosedAt DEFAULT_DATETIME_FORMAT}}">{{fromNow votingClosedAt}}</span></small>
-        <small class="dates-item">Duration: <span title="{{formatDuration votingOpenedAt votingClosedAt}}">{{formatDuration votingOpenedAt votingClosedAt 2}}</span></small>
+        <small class="stats-item">Requirement: {{displayMajority}}</small>
+        <small class="stats-item">Duration: <span title="{{formatDuration votingOpenedAt votingClosedAt}}">{{formatDuration votingOpenedAt votingClosedAt 2}}</span></small>
+        <small class="stats-item">Closed: <span title="{{formatDate votingClosedAt DEFAULT_DATETIME_FORMAT}}">{{fromNow votingClosedAt}}</span></small>
       {{else}}
-        <small class="dates-item">Duration: <span title="{{formatDuration votingOpenedAt null}}">{{formatDuration votingOpenedAt null 3}}</span></small>
+        <small class="stats-item">Requirement: {{displayMajority}}</small>
+        <small class="stats-item">Duration: <span title="{{formatDuration votingOpenedAt null}}">{{formatDuration votingOpenedAt null 3}}</span></small>
       {{/if}}
     </div>
   {{/if}}
