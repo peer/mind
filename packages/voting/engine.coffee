@@ -70,16 +70,18 @@ class VotingEngine extends VotingEngine
     else
       assert false, majority
 
-    thresholdPlusOne = threshold + 1
-    bias = thresholdPlusOne / effectivePopulationSize
+    bias = (threshold + 1) / effectivePopulationSize
+    lowerBound = Math.ceil(threshold - majorityVotesCount + 1)
     upperBound = effectivePopulationSize - votesCount
-    lowerBound = Math.ceil(thresholdPlusOne - majorityVotesCount)
 
     confidenceLevel = @sumBinomialProbabilityMass lowerBound, upperBound, effectivePopulationSize - votesCount, bias
 
     neededVotes = 0
-    while thresholdPlusOne + neededVotes < effectivePopulationSize or thresholdPlusOne - neededVotes > 0
-      break if @sumBinomialProbabilityMass(thresholdPlusOne + neededVotes, thresholdPlusOne - neededVotes, effectivePopulationSize - votesCount, bias) >= 0.90
+    loop
+      lowerBound = Math.ceil(bias * (effectivePopulationSize - votesCount) - neededVotes)
+      upperBound = Math.floor(bias * (effectivePopulationSize - votesCount) + neededVotes)
+
+      break if @sumBinomialProbabilityMass(lowerBound, upperBound, effectivePopulationSize - votesCount, bias) >= 0.90
 
       neededVotes++
 
