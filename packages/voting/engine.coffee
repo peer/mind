@@ -1,6 +1,6 @@
 class VotingEngine extends VotingEngine
   @isInteger: (value) ->
-	  _.isNumber(value) && _.isFinite(value) && value is Math.round(value)
+    _.isNumber(value) && _.isFinite(value) && value is Math.round(value)
 
   @combinations: (n, k) ->
     assert @isInteger(n), n
