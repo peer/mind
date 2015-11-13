@@ -148,9 +148,9 @@
 <template name="Motion.TallyChartComponent">
   <div class="tally-chart ct-major-twelfth"></div>
   <div class="tally-stats grey-text">
-    <small class="stats-item">Votes: {{tally.votesCount}}</small>
-    <small class="stats-item">Abstentions: {{tally.abstentionsCount}}</small>
-    <small class="stats-item">Confidence: {{round tally.confidenceLevel}}</small>
+    <small class="stats-item">Votes: {{tally.votes}}</small>
+    <small class="stats-item">Abstentions: {{tally.abstentions}}</small>
+    <small class="stats-item">Confidence: {{round tally.confidence}}</small>
     <small class="stats-item">Tally: {{round tally.result}}</small>
   </div>
   {{#if $or votingOpenedAt votingClosedAt}}

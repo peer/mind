@@ -97,9 +97,9 @@ class Motion.ListItemComponent extends UIComponent
         createdAt: -1
       fields:
         result: 1
-        confidenceLevel: 1
+        confidence: 1
 
-    tally?.result > 0 && tally?.confidenceLevel >= 0.90
+    tally?.result > 0 && tally?.confidence >= 0.90
 
 class Motion.WithdrawComponent extends UIComponent
   @register 'Motion.WithdrawComponent'

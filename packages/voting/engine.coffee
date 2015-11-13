@@ -5,12 +5,30 @@ class VotingEngine extends VotingEngine
   @combinations: (n, k) ->
     assert @isInteger(n), n
     assert @isInteger(k), k
-    assert k <= n, {k, n}
+    assert 0 <= k <= n, {k, n}
 
     max = Math.max(k, n - k)
     result = 1
     for i in [1..n - max] by +1
       result *= (max + i) / i
+    result
+
+  @binomialProbabilityMass: (k, n, p) ->
+    assert @isInteger(n), n
+    assert @isInteger(k), k
+    assert 0 <= k <= n, {k, n}
+
+    @combinations(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k)
+
+  @sumBinomialProbabilityMass: (lowerBound, upperBound, n, p) ->
+    assert @isInteger(lowerBound), lowerBound
+    assert @isInteger(upperBound), upperBound
+    assert @isInteger(n), n
+    assert 0 <= n, n
+
+    result = 0
+    for k in [lowerBound..upperBound] by +1
+      result += @binomialProbabilityMass k, n, p
     result
 
   @computeTally: (majority, votes, populationSize) ->
@@ -43,11 +61,6 @@ class VotingEngine extends VotingEngine
 
     majorityVotesCount = Math.max(inFavorVotesCount, againstVotesCount)
 
-    if votesCount > 0
-      result = (inFavorVotesCount / votesCount) * 2 - 1
-    else
-      result = 0
-
     effectivePopulationSize = populationSize - abstentionsCount
 
     if majority is Motion.MAJORITY.SIMPLE
@@ -57,13 +70,27 @@ class VotingEngine extends VotingEngine
     else
       assert false, majority
 
-    bias = (threshold + 1) / effectivePopulationSize
+    thresholdPlusOne = threshold + 1
+    bias = thresholdPlusOne / effectivePopulationSize
     upperBound = effectivePopulationSize - votesCount
-    lowerBound = Math.ceil(threshold - majorityVotesCount + 1)
+    lowerBound = Math.ceil(thresholdPlusOne - majorityVotesCount)
 
-    confidenceLevel = 0
-    for k in [lowerBound..upperBound] by +1
-      confidenceLevel += @combinations(effectivePopulationSize - votesCount, k) * Math.pow(bias, k) * Math.pow(1 - bias, effectivePopulationSize - votesCount - k)
+    confidenceLevel = @sumBinomialProbabilityMass lowerBound, upperBound, effectivePopulationSize - votesCount, bias
+
+    neededVotes = 0
+    while thresholdPlusOne + neededVotes < effectivePopulationSize or thresholdPlusOne - neededVotes > 0
+      break if @sumBinomialProbabilityMass(thresholdPlusOne + neededVotes, thresholdPlusOne - neededVotes, effectivePopulationSize - votesCount, bias) >= 0.90
+
+      neededVotes++
+
+    if votesCount > 0
+      confidenceIntervalLowerBound = Math.max(-1, ((inFavorVotesCount - neededVotes) / votesCount) * 2 - 1)
+      confidenceIntervalUpperBound = Math.min(1, ((inFavorVotesCount + neededVotes) / votesCount) * 2 - 1)
+      result = (inFavorVotesCount / votesCount) * 2 - 1
+    else
+      confidenceIntervalLowerBound = -1
+      confidenceIntervalUpperBound = 1
+      result = 0
 
     {
       populationSize
@@ -72,5 +99,7 @@ class VotingEngine extends VotingEngine
       inFavorVotesCount
       againstVotesCount
       confidenceLevel
+      confidenceIntervalLowerBound
+      confidenceIntervalUpperBound
       result
     }

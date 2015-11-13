@@ -28,6 +28,7 @@ class ComputeTallyJob extends Job
 
     result = VotingEngine.computeTally motion.majority, votes, populationSize
 
+    # In stored documents we use shorter field names so that less data has to stored and be transferred to the client.
     documentId = Tally.documents.insert
       createdAt: computedAt
       version: @constructor.COMPUTE_TALLY_VERSION
@@ -36,12 +37,14 @@ class ComputeTallyJob extends Job
       job:
         _id: @_id
       majority: motion.majority
-      populationSize: populationSize
-      votesCount: result.votesCount
-      abstentionsCount: result.abstentionsCount
-      inFavorVotesCount: result.inFavorVotesCount
-      againstVotesCount: result.againstVotesCount
-      confidenceLevel: result.confidenceLevel
+      population: populationSize
+      votes: result.votesCount
+      abstentions: result.abstentionsCount
+      inFavor: result.inFavorVotesCount
+      against: result.againstVotesCount
+      confidence: result.confidenceLevel
+      confidenceLower: result.confidenceIntervalLowerBound
+      confidenceUpper: result.confidenceIntervalUpperBound
       result: result.result
 
     assert documentId
