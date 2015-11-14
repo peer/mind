@@ -3,11 +3,13 @@ class Tally extends share.BaseDocument
   # version: version of the tally computing code which computed this tally
   # motion: tally is for this motion
   #   _id
+  # votes: list of votes used to compute this tally
+  #   _id
+  # votesCount: votes count (it is not a generator on purpose, so that the document is not modified after it is created)
   # job: job which computed this tally
   #   _id:
   # majority: one of Motion.MAJORITY values
   # population: population size
-  # votes: votes count
   # abstentions: abstentions count
   # inFavor: in favor votes count
   # against: against votes count
@@ -21,13 +23,14 @@ class Tally extends share.BaseDocument
     collection: 'Tallies'
     fields: =>
       motion: @ReferenceField Motion
+      votes: [@ReferenceField Vote]
       job: @ReferenceField JobQueue
 
   @PUBLISH_FIELDS: ->
     createdAt: 1
     motion: 1
+    votesCount: 1
     population: 1
-    votes: 1
     abstentions: 1
     confidence: 1
     confidenceLower: 1
