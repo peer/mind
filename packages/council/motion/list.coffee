@@ -35,23 +35,23 @@ class Motion.ListItemComponent extends UIComponent
       @subscribe 'Motion.latestTally', @data()._id if @data()?._id
 
     @canOpen = new ComputedField =>
-      # TODO: We should also allow moderators to open motions.
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
+      # TODO: Allow only those in "openVoting" role, which should be a sub-role of "moderator" role.
+      Roles.userIsInRole(Meteor.userId(), 'moderator') and @data() and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
     @canClose = new ComputedField =>
-      # TODO: We should also allow moderators to close motions.
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id and @data().isOpen() and not @data().isWithdrawn()
+      # TODO: Allow only those in "closeVoting" role, which should be a sub-role of "moderator" role.
+      Roles.userIsInRole(Meteor.userId(), 'moderator') and @data() and @data().isOpen() and not @data().isWithdrawn()
 
     @canVote = new ComputedField =>
-      !!Meteor.userId()
+      # TODO: Allow only those in "vote" role, which should be a sub-role of "member" role.
+      Roles.userIsInRole Meteor.userId(), 'member'
 
     @canEdit = new ComputedField =>
-      # TODO: We should also allow moderators to edit motions.
-      @canOpen()
+      @data() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @data().author._id)) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
     @canWithdraw = new ComputedField =>
-      # TODO: We should also allow moderators to withdraw motions.
-      @canEdit()
+      # TODO: We should also allow moderators to withdraw motions?
+      @data() and Meteor.userId() is @data().author._id and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
   methodPrefix: ->
     'Motion'

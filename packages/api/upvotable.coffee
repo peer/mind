@@ -72,6 +72,9 @@ share.upvoteUpvotable = (documentClass, documentId) ->
   userId = Meteor.userId()
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
 
+  # TODO: Allow only those in "upovote" role, which should be a sub-role of "member" role.
+  throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole userId, 'member'
+
   createdAt = new Date()
   documentClass.documents.update
     _id: documentId
@@ -97,6 +100,8 @@ share.removeUpvoteUpvotable = (documentClass, documentId) ->
 
   userId = Meteor.userId()
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+  # We allow anyone to remove their own upvote.
 
   lastActivity = new Date()
   documentClass.documents.update

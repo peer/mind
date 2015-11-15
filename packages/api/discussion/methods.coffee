@@ -7,6 +7,9 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
+    # TODO: Allow only to those in "discussion" role, which should be a sub-role of "member" role.
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole user._id, 'member'
+
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
     if Meteor.isServer

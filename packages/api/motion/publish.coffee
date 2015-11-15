@@ -9,6 +9,8 @@ new PublishEndpoint 'Motion.list', (discussionId) ->
 new PublishEndpoint 'Motion.forEdit', (motionId) ->
   check motionId, Match.DocumentId
 
+  # TODO: Allow only for those who can edit the motion?
+
   Motion.documents.find
     _id: motionId
   ,

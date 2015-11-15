@@ -9,6 +9,8 @@ new PublishEndpoint 'Comment.list', (discussionId) ->
 new PublishEndpoint 'Comment.forEdit', (commentId) ->
   check commentId, Match.DocumentId
 
+  # TODO: Allow only for those who can edit the comment?
+
   Comment.documents.find
     _id: commentId
   ,

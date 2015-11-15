@@ -95,3 +95,6 @@ if Meteor.isServer
 
   User.Meta.collection._ensureIndex
     lastActivity: 1
+
+  User.Meta.collection._ensureIndex
+    roles: 1

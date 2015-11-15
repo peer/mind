@@ -5,7 +5,8 @@ class Motion.NewComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      !!Meteor.userId()
+      # TODO: Allow only to those in "motion" role, which should be a sub-role of "member" role.
+      Roles.userIsInRole Meteor.userId(), 'member'
 
   currentDiscussionId: ->
     @ancestorComponent(Motion.ListComponent)?.currentDiscussionId()

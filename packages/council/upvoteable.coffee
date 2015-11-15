@@ -7,7 +7,8 @@ class share.UpvoteableMixin extends UIMixin
     super
 
     @canUpvote = new ComputedField =>
-      'upvote' if Meteor.userId() and @data() and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
+      # TODO: Allow only those in "upovote" role, which should be a sub-role of "member" role.
+      'upvote' if Roles.userIsInRole(Meteor.userId(), 'member') and @data() and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
 
     @canRemoveUpvote = new ComputedField =>
       'remove-upvote' if Meteor.userId() and @data() and Meteor.userId() isnt @data().author._id and Meteor.userId() in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')

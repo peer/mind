@@ -8,6 +8,9 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
+    # TODO: Allow only to those in "motion" role, which should be a sub-role of "member" role.
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole user._id, 'member'
+
     discussion = Discussion.documents.findOne document.discussion._id,
       fields:
         _id: 1
@@ -91,11 +94,15 @@ Meteor.methods
 
     attachments = Motion.extractAttachments document.body
 
-    # TODO: We should also allow moderators to update motions.
+    if Roles.userIsInRole user._id, 'moderator'
+      permissionCheck = {}
+    else
+      permissionCheck =
+        'author._id': user._id
+
     updatedAt = new Date()
-    changed = Motion.documents.update
+    changed = Motion.documents.update _.extend(permissionCheck,
       _id: document._id
-      'author._id': user._id
       votingOpenedBy: null
       votingOpenedAt: null
       votingClosedBy: null
@@ -105,7 +112,7 @@ Meteor.methods
       majority: null
       body:
         $ne: document.body
-    ,
+    ),
       $set:
         updatedAt: updatedAt
         body: document.body
@@ -136,11 +143,21 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    # TODO: We should also allow moderators to open motions.
+    # TODO: Allow only those in "openVoting" role, which should be a sub-role of "moderator" role.
+    if Roles.userIsInRole user._id, 'moderator'
+      permissionCheck = {}
+    else
+      permissionCheck =
+        # TODO: Find a better "no-match" query.
+        $and: [
+          _id: 'a'
+        ,
+          _id: 'b'
+        ]
+
     openedAt = new Date()
-    Motion.documents.update
+    Motion.documents.update _.extend(permissionCheck,
       _id: motionId
-      'author._id': user._id
       votingOpenedBy: null
       votingOpenedAt: null
       votingClosedBy: null
@@ -148,7 +165,7 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
       majority: null
-    ,
+    ),
       $set:
         votingOpenedBy: user.getReference()
         votingOpenedAt: openedAt
@@ -160,9 +177,20 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    # TODO: We should also allow moderators to close motions.
+    # TODO: Allow only those in "closeVoting" role, which should be a sub-role of "moderator" role.
+    if Roles.userIsInRole user._id, 'moderator'
+      permissionCheck = {}
+    else
+      permissionCheck =
+        # TODO: Find a better "no-match" query.
+        $and: [
+          _id: 'a'
+        ,
+          _id: 'b'
+        ]
+
     closedAt = new Date()
-    Motion.documents.update
+    Motion.documents.update _.extend(permissionCheck,
       _id: motionId
       'author._id': user._id
       votingOpenedBy:
@@ -175,7 +203,7 @@ Meteor.methods
       withdrawnAt: null
       majority:
         $ne: null
-    ,
+    ),
       $set:
         votingClosedBy: user.getReference()
         votingClosedAt: closedAt
@@ -186,11 +214,13 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    # TODO: We should also allow moderators to withdraw motions.
-    withdrawnAt = new Date()
-    Motion.documents.update
-      _id: motionId
+    # TODO: We should also allow moderators to withdraw motions?
+    permissionCheck =
       'author._id': user._id
+
+    withdrawnAt = new Date()
+    Motion.documents.update _.extend(permissionCheck,
+      _id: motionId
       votingOpenedBy: null
       votingOpenedAt: null
       votingClosedBy: null
@@ -198,7 +228,7 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
       majority: null
-    ,
+    ),
       $set:
         withdrawnBy: user.getReference()
         withdrawnAt: withdrawnAt
@@ -212,6 +242,9 @@ Meteor.methods
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+    # TODO: Allow only those in "vote" role, which should be a sub-role of "member" role.
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole user._id, 'member'
 
     motion = Motion.documents.findOne document.motion._id,
       fields:

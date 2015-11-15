@@ -28,8 +28,8 @@ class ComputeTallyJob extends Job
 
     computedAt = new Date()
 
-    # TODO: Get all users with voting role?
-    populationSize = 10 # User.documents.count()
+    # TODO: Get all users with "voting" role?
+    populationSize = Roles.getUsersInRole('member').count()
 
     result = VotingEngine.computeTally motion.majority, votesValues, populationSize
 

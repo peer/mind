@@ -57,8 +57,7 @@ class Point.ListItemComponent extends UIComponent
     super
 
     @canEdit = new ComputedField =>
-      # TODO: We should also allow moderators to edit points.
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id
+      Roles.userIsInRole Meteor.userId(), 'moderator'
 
   methodPrefix: ->
     'Point'

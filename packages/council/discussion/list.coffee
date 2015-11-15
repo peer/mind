@@ -5,7 +5,8 @@ class Discussion.ListComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      !!Meteor.userId()
+      # TODO: Allow only to those in "discussion" role, which should be a sub-role of "member" role.
+      Roles.userIsInRole Meteor.userId(), 'member'
 
     @subscribe 'Meeting.list'
     @subscribe 'Discussion.list'

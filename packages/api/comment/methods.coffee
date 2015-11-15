@@ -1,5 +1,9 @@
 Meteor.methods
   'Comment.new': (document) ->
+    # TODO: Allow only those in "comment" role, which should be a sub-role of "member" role.
+    # TODO: Move check into newUpvotable.
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole Meteor.userId(), 'member'
+
     share.newUpvotable Comment, document, true,
       body: Match.NonEmptyString
       discussion:
@@ -36,13 +40,15 @@ Meteor.methods
     attachments = Comment.extractAttachments document.body
 
     # TODO: Should we also allow moderators to update comments?
-    updatedAt = new Date()
-    changed = Comment.documents.update
-      _id: document._id
+    permissionCheck =
       'author._id': user._id
+
+    updatedAt = new Date()
+    changed = Comment.documents.update _.extend(permissionCheck,
+      _id: document._id
       body:
         $ne: document.body
-    ,
+    ),
       $set:
         updatedAt: updatedAt
         body: document.body
