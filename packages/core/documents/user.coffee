@@ -7,6 +7,7 @@ class User extends share.BaseDocument
   #   address: e-mail address
   #   verified: is e-mail address verified
   # services: list of authentication/linked services
+  # roles: list of roles names (strings) this user is part of
 
   @Meta
     name: 'User'

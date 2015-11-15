@@ -1,0 +1,9 @@
+<template name="Admin.AccountsComponent">
+  {{#if hasAccess}}
+    <div class="section">
+      {{> accountsAdmin}}
+    </div>
+  {{else}}
+    {{> NotFoundComponent}}
+  {{/if}}
+</template>

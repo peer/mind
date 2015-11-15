@@ -21,7 +21,8 @@ Package.onUse(function (api) {
     'peerlibrary:meteor-file@0.2.1',
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:assert@0.2.5',
-    'fermuch:cheerio@0.19.0'
+    'fermuch:cheerio@0.19.0',
+    'alanning:roles@1.2.14'
   ]);
 
   // Internal dependencies.
@@ -43,10 +44,14 @@ Package.onUse(function (api) {
   api.export('Tally');
   api.export('JobQueue');
   api.export('StorageFile');
+  api.export('Admin');
+
+  api.imply('alanning:roles');
 
   api.addFiles([
     'publish.coffee',
-    'worker.coffee'
+    'worker.coffee',
+    'roles.coffee'
   ], 'server');
 
   api.addFiles([
@@ -54,6 +59,7 @@ Package.onUse(function (api) {
     'upvotable.coffee',
     'triggers.coffee',
     'storage.coffee',
+    'admin.coffee',
     'documents/user.coffee',
     'documents/discussion.coffee',
     'documents/meeting.coffee',

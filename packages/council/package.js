@@ -26,7 +26,8 @@ Package.onUse(function (api) {
     'useraccounts:materialize@1.12.4',
     'useraccounts:flow-routing@1.12.4',
     'velocityjs:velocityjs@1.2.1',
-    'mfpierre:chartist-js@1.6.0'
+    'mfpierre:chartist-js@1.6.0',
+    'cunneen:accounts-admin-materializecss@0.2.19'
   ]);
 
   // Internal dependencies.
@@ -93,6 +94,8 @@ Package.onUse(function (api) {
     'motion/new.coffee',
     'motion/vote.html',
     'motion/vote.coffee',
-    'motion/vote.styl'
+    'motion/vote.styl',
+    'admin/accounts.html',
+    'admin/accounts.coffee'
   ], 'client');
 });
