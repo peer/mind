@@ -40,6 +40,10 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
+    'account/config.coffee'
+  ]);
+
+  api.addFiles([
     'upvoteable.html',
     'upvoteable.coffee',
     'upvoteable.styl',
@@ -55,7 +59,6 @@ Package.onUse(function (api) {
     'editor.html',
     'editor.coffee',
     'editor.styl',
-    'account/config.coffee',
     'account/form.coffee',
     'flow-router/title.coffee',
     'flow-router/root.html',
