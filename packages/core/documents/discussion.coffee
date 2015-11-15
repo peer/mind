@@ -5,6 +5,7 @@ class Discussion extends share.BaseDocument
   # author:
   #   _id
   #   username
+  #   avatar
   # title: the latest version of the title
   # description: the latest version of the description
   # descriptionDisplay: HTML content of the description without tags needed for editing
@@ -15,6 +16,7 @@ class Discussion extends share.BaseDocument
   #   author: author of the change
   #     _id
   #     username
+  #     avatar
   #   title
   #   description
   # meetings: list, if a discussion is associated with a meeting (or meetings)

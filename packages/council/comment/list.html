@@ -21,7 +21,7 @@
 
 <template name="Comment.ListItemComponent">
   <li class="collection-item avatar">
-    <img src="https://avatars1.githubusercontent.com/u/585279?v=3&s=460" alt="{{author.username}}" class="circle" />
+    <img src="{{storageUrl author.avatar}}" alt="{{author.username}}" class="circle" />
     {{#if isBeingEdited}}
       <form class="editable-form">
         <div class="input-field">

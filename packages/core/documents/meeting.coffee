@@ -5,6 +5,7 @@ class Meeting extends share.BaseDocument
   # author:
   #   _id
   #   username
+  #   avatar
   # startAt: time when the meeting started (or will start)
   # endAt: time when the meeting ended (or will end)
   # description: the latest version of the description
@@ -13,6 +14,7 @@ class Meeting extends share.BaseDocument
   #   author: author of the change
   #     _id
   #     username
+  #     avatar
   #   description
 
   @Meta

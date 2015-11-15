@@ -12,7 +12,8 @@ Package.onUse(function (api) {
     'accounts-base',
     'ddp',
     'underscore-extra',
-    'jquery'
+    'jquery',
+    'random'
   ]);
 
   // 3rd party dependencies.

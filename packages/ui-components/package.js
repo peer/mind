@@ -24,6 +24,7 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
+    'storage'
   ]);
 
   api.imply([

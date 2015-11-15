@@ -53,6 +53,9 @@ class UIComponent extends BlazeComponent
 
     FlowRouter.path pathName, params, queryParams
 
+  storageUrl: (filename, kwargs) ->
+    Storage.url filename
+
   ancestorComponent: (componentClass) ->
     component = @parentComponent()
     while component and component not instanceof componentClass

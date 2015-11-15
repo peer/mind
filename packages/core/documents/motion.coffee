@@ -5,6 +5,7 @@ class Motion extends share.BaseDocument
   # author:
   #   _id
   #   username
+  #   avatar
   # discussion:
   #   _id
   # body: the latest version of the body
@@ -15,16 +16,22 @@ class Motion extends share.BaseDocument
   #   author: author of the change
   #     _id
   #     username
+  #     avatar
   #   body
   # votingOpenedBy:
   #   _id
   #   username
+  #   avatar
   # votingOpenedAt: time when voting started
   # votingClosedBy:
   #   _id
   #   username
+  #   avatar
   # votingClosedAt: time when voting ended
-  # withdrawnBy
+  # withdrawnBy;
+  #   _id
+  #   username
+  #   avatar
   # withdrawnAt
   # majority: one of Motion.MAJORITY values
 

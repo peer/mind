@@ -4,6 +4,7 @@ class Vote extends share.BaseDocument
   # author:
   #   _id
   #   username
+  #   avatar
   # motion:
   #   _id
   #   discussion
