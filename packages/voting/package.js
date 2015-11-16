@@ -27,3 +27,24 @@ Package.onUse(function (api) {
     'engine.coffee'
   ], 'server');
 });
+
+Package.onTest(function (api) {
+  // Core dependencies.
+  api.use([
+    'coffeescript'
+  ]);
+
+  // Internal dependencies.
+  api.use([
+    'voting'
+  ]);
+
+  // 3rd party dependencies.
+  api.use([
+    'peerlibrary:classy-test@0.2.20'
+  ]);
+
+  api.addFiles([
+    'tests.coffee'
+   ], 'server');
+});
