@@ -19,6 +19,7 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:peerdb@0.19.1',
+    'peerlibrary:peerdb-migrations@0.1.1',
     'peerlibrary:meteor-file@0.2.1',
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:assert@0.2.5',
