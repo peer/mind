@@ -194,15 +194,20 @@ class UIComponent extends BlazeComponent
     # Cut the length to provided size.
     partials = partials[0...size] if size
 
-    if reactive and Tracker.active and partials.length
+    if reactive and Tracker.active
       seconds = Math.round(duration.as 's')
-      lastPartial = partials[partials.length - 1].key
-      if lastPartial is 'minute'
-        expirationMs = (60 - seconds % 60) * 1000 + 500
-      else if lastPartial is 'hour'
-        expirationMs = ((60 * 60) - seconds % (60 * 60)) * 1000 + 500
+
+      if partials.length
+        lastPartial = partials[partials.length - 1].key
+        if lastPartial is 'minute'
+          expirationMs = (60 - seconds % 60) * 1000 + 500
+        else if lastPartial is 'hour'
+          expirationMs = ((60 * 60) - seconds % (60 * 60)) * 1000 + 500
+        else
+          expirationMs = ((24 * 60 * 60) - seconds % (24 * 60 * 60)) * 1000 + 500
       else
-        expirationMs = ((24 * 60 * 60) - seconds % (24 * 60 * 60)) * 1000 + 500
+        assert seconds < 60, seconds
+        expirationMs = (60 - seconds) * 1000 + 500
 
       invalidateAfter expirationMs
 
@@ -214,7 +219,10 @@ class UIComponent extends BlazeComponent
 
       "#{value} #{key}"
 
-    partials.join ' '
+    if partials.length
+      partials.join ' '
+    else
+      "less than a minute"
 
 class UIMixin extends UIComponent
   data: ->
