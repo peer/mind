@@ -50,8 +50,7 @@ class Motion.ListItemComponent extends UIComponent
       @data() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @data().author._id)) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
     @canWithdraw = new ComputedField =>
-      # TODO: We should also allow moderators to withdraw motions?
-      @data() and Meteor.userId() is @data().author._id and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
+      @data() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @data().author._id)) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
   methodPrefix: ->
     'Motion'

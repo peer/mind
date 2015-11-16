@@ -213,9 +213,11 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    # TODO: We should also allow moderators to withdraw motions?
-    permissionCheck =
-      'author._id': user._id
+    if Roles.userIsInRole user._id, 'moderator'
+      permissionCheck = {}
+    else
+      permissionCheck =
+        'author._id': user._id
 
     withdrawnAt = new Date()
     Motion.documents.update _.extend(permissionCheck,
