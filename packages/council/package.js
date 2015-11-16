@@ -45,6 +45,10 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
+    'account/templates.coffee'
+  ], 'server');
+
+  api.addFiles([
     'upvoteable.html',
     'upvoteable.coffee',
     'upvoteable.styl',
