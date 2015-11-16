@@ -192,7 +192,6 @@ Meteor.methods
     closedAt = new Date()
     Motion.documents.update _.extend(permissionCheck,
       _id: motionId
-      'author._id': user._id
       votingOpenedBy:
         $ne: null
       votingOpenedAt:
