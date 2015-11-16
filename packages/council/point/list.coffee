@@ -62,6 +62,9 @@ class Point.ListItemComponent extends UIComponent
   methodPrefix: ->
     'Point'
 
+  contentName: ->
+    'point'
+
   onBeingEdited: ->
     @callFirstWith @, 'isExpanded', false
 

@@ -19,7 +19,10 @@ class share.UpvoteableMixin extends UIMixin
       'click .remove-upvote': @onRemoveUpvote
 
   _methodPrefix: ->
-    @callFirstWith null, 'methodPrefix' or throw new Error "Missing method prefix."
+    @callFirstWith(null, 'methodPrefix') or throw new Error "Missing method prefix."
+
+  _contentName: ->
+    @callFirstWith(null, 'contentName') or throw new Error "Missing content name."
 
   onUpvote: (event) ->
     event.preventDefault()
@@ -44,4 +47,4 @@ class share.UpvoteableMixin extends UIMixin
 
     return title: "Sign in to upvote." unless Meteor.userId()
 
-    title: "You cannot upvote your content."
+    title: "You cannot upvote your #{@_contentName()}."

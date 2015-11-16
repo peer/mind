@@ -38,6 +38,9 @@ class Comment.ListItemComponent extends UIComponent
   methodPrefix: ->
     'Comment'
 
+  contentName: ->
+    'comment'
+
   editingSubscriptions: ->
     @subscribe 'Comment.forEdit', @data()._id
 
