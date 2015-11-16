@@ -28,8 +28,6 @@ class Vote extends share.BaseDocument
           new ComputeTallyJob(motion: _id: motionId).enqueue
             skipIfExisting: true
 
-  @VALUE: VotingEngine.VALUE
-
   # Vote should be published only to its author.
   @PUBLISH_FIELDS: ->
     _id: 1
@@ -38,6 +36,8 @@ class Vote extends share.BaseDocument
     author: 1
     motion: 1
     value: 1
+
+  @VALUE: VotingEngine.VALUE
 
 if Meteor.isServer
   Vote.Meta.collection._ensureIndex
@@ -52,4 +52,3 @@ if Meteor.isServer
     'motion._id': 1
   ,
     unique: true
-

@@ -17,11 +17,6 @@ Package.onUse(function (api) {
     'peerlibrary:assert@0.2.5'
   ]);
 
-  // Internal dependencies.
-  api.use([
-    'core'
-  ], {unordered: true});
-
   api.export('VotingEngine');
 
   api.addFiles([

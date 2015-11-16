@@ -76,9 +76,7 @@ class Motion extends share.BaseDocument
     withdrawnAt: 1
     majority: 1
 
-  @MAJORITY:
-    SIMPLE: 'simple'
-    SUPER: 'super'
+  @MAJORITY: VotingEngine.MAJORITY
 
   isWithdrawn: ->
     !!(@withdrawnAt and @withdrawnBy)

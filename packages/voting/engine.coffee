@@ -32,9 +32,6 @@ class VotingEngine extends VotingEngine
     result
 
   @computeTally: (majority, votes, populationSize) ->
-    # We are loading packages in unordered mode, so we are fixing imports here, if needed.
-    Motion = Package.core.Motion unless Motion
-
     votesCount = 0
     abstentionsCount = 0
     inFavorVotesCount = 0
@@ -63,9 +60,9 @@ class VotingEngine extends VotingEngine
 
     effectivePopulationSize = populationSize - abstentionsCount
 
-    if majority is Motion.MAJORITY.SIMPLE
+    if majority is @MAJORITY.SIMPLE
       threshold = Math.floor(effectivePopulationSize / 2)
-    else if majority is Motion.MAJORITY.SUPER
+    else if majority is @MAJORITY.SUPER
       threshold = Math.floor(effectivePopulationSize * 2 / 3)
     else
       assert false, majority
