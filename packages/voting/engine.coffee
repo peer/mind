@@ -5,7 +5,7 @@ class VotingEngine extends VotingEngine
   @combinations: (n, k) ->
     assert @isInteger(n), n
     assert @isInteger(k), k
-    assert 0 <= k <= n, {k, n}
+    assert 0 <= k <= n, JSON.stringify {k, n}
 
     max = Math.max(k, n - k)
     result = 1
@@ -16,7 +16,7 @@ class VotingEngine extends VotingEngine
   @binomialProbabilityMass: (k, n, p) ->
     assert @isInteger(n), n
     assert @isInteger(k), k
-    assert 0 <= k <= n, {k, n}
+    assert 0 <= k <= n, JSON.stringify {k, n}
 
     @combinations(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k)
 
@@ -32,10 +32,13 @@ class VotingEngine extends VotingEngine
     result
 
   @computeTally: (majority, votes, populationSize) ->
+    assert votes.length <= populationSize, JSON.stringify {length: votes.length, populationSize}
+
     votesCount = 0
     abstentionsCount = 0
     inFavorVotesCount = 0
     againstVotesCount = 0
+    confidenceLevel = 0
 
     for vote in votes
       if vote is @VALUE.ABSTAIN
@@ -67,20 +70,23 @@ class VotingEngine extends VotingEngine
     else
       assert false, majority
 
-    bias = (threshold + 1) / effectivePopulationSize
-    lowerBound = Math.ceil(threshold - majorityVotesCount + 1)
-    upperBound = effectivePopulationSize - votesCount
+    if effectivePopulationSize > 0
+      bias = (threshold + 1) / effectivePopulationSize
+      lowerBound = Math.ceil(threshold - majorityVotesCount + 1)
+      upperBound = effectivePopulationSize - votesCount
 
-    confidenceLevel = @sumBinomialProbabilityMass lowerBound, upperBound, effectivePopulationSize - votesCount, bias
+      assert 0.0 <= bias <= 1.0, bias
 
-    neededVotes = 0
-    loop
-      lowerBound = Math.ceil(bias * (effectivePopulationSize - votesCount) - neededVotes)
-      upperBound = Math.floor(bias * (effectivePopulationSize - votesCount) + neededVotes)
+      confidenceLevel = @sumBinomialProbabilityMass lowerBound, upperBound, effectivePopulationSize - votesCount, bias
 
-      break if @sumBinomialProbabilityMass(lowerBound, upperBound, effectivePopulationSize - votesCount, bias) >= 0.90
+      neededVotes = 0
+      loop
+        lowerBound = Math.ceil(bias * (effectivePopulationSize - votesCount) - neededVotes)
+        upperBound = Math.floor(bias * (effectivePopulationSize - votesCount) + neededVotes)
 
-      neededVotes++
+        break if @sumBinomialProbabilityMass(lowerBound, upperBound, effectivePopulationSize - votesCount, bias) >= 0.90
+
+        neededVotes++
 
     if votesCount > 0
       confidenceIntervalLowerBound = Math.max(-1, ((inFavorVotesCount - neededVotes) / votesCount) * 2 - 1)
