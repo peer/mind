@@ -33,7 +33,8 @@ class ComputeTallyJob extends Job
 
     result = VotingEngine.computeTally motion.majority, votesValues, populationSize
 
-    assert.equal votes.length, result.votesCount
+    # Some votes might be abstentions or nothing votes.
+    assert result.votesCount <= votes.length, JSON.stringify {votesCount: result.votesCount, length: votes.length}
 
     # In stored documents we use shorter field names so that less data has to stored and be transferred to the client.
     documentId = Tally.documents.insert
