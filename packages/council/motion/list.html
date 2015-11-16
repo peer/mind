@@ -138,24 +138,24 @@
 <template name="Motion.TallyComponent">
   {{#if tallyExists}}
     {{> Motion.TallyChartComponent}}
+    <div class="tally-stats grey-text">
+      <small class="stats-item">Votes: {{tally.votesCount}}</small>
+      <small class="stats-item">Abstentions: {{tally.abstentions}}</small>
+      <small class="stats-item">Confidence: {{round tally.confidence}}</small>
+      <small class="stats-item">Result: {{round tally.result}}</small>
+    </div>
   {{else}}
-    <div class="center-align grey-text">
-      Pending first vote.
+    <div class="center-align grey-text tally-message">
+      {{#if isClosed}}
+        No votes were cast.
+      {{else}}
+        Pending first vote.
+      {{/if}}
     </div>
   {{/if}}
-</template>
-
-<template name="Motion.TallyChartComponent">
-  <div class="tally-chart ct-major-twelfth"></div>
-  <div class="tally-stats grey-text">
-    <small class="stats-item">Votes: {{tally.votesCount}}</small>
-    <small class="stats-item">Abstentions: {{tally.abstentions}}</small>
-    <small class="stats-item">Confidence: {{round tally.confidence}}</small>
-    <small class="stats-item">Tally: {{round tally.result}}</small>
-  </div>
-  {{#if $or votingOpenedAt votingClosedAt}}
+  {{#if $or isOpen isClosed}}
     <div class="tally-stats grey-text">
-      {{#if votingClosedAt}}
+      {{#if isClosed}}
         <small class="stats-item">Requirement: {{displayMajority}}</small>
         <small class="stats-item">Duration: <span title="{{formatDuration votingOpenedAt votingClosedAt}}">{{formatDuration votingOpenedAt votingClosedAt 2}}</span></small>
         <small class="stats-item">Closed: <span title="{{formatDate votingClosedAt DEFAULT_DATETIME_FORMAT}}">{{fromNow votingClosedAt}}</span></small>
@@ -165,4 +165,8 @@
       {{/if}}
     </div>
   {{/if}}
+</template>
+
+<template name="Motion.TallyChartComponent">
+  <div class="tally-chart ct-major-twelfth"></div>
 </template>

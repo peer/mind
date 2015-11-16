@@ -194,11 +194,32 @@ class Motion.TallyComponent extends UIComponent
     super
 
     @autorun (computation) =>
-      @subscribe 'Motion.latestTally', @data()._id if @data()?._id
+      @subscribe 'Motion.tally', @data()._id if @data()?._id
+
+    @currentPointId = new ReactiveField null
 
   tallyExists: ->
     Tally.documents.exists
       'motion._id': @data()._id
+
+  tally: ->
+    return Tally.documents.findOne currentPointId if currentPointId = @currentPointId()
+
+    Tally.documents.findOne
+      'motion._id': @data()._id
+    ,
+      sort:
+        # The latest tally document.
+        createdAt: -1
+
+  round: (value) ->
+    value?.toFixed 2
+
+  displayMajority: ->
+    if @data().majority is Motion.MAJORITY.SIMPLE
+      "simple majority"
+    else if @data().majority is Motion.MAJORITY.SUPER
+      "supermajority"
 
 class Motion.TallyChartComponent extends UIComponent
   @register 'Motion.TallyChartComponent'
@@ -207,12 +228,7 @@ class Motion.TallyChartComponent extends UIComponent
     super
 
     @autorun (computation) =>
-      @subscribe 'Motion.tally', @data()._id if @data()?._id
-
-    @currentPointId = new ReactiveField null
-
-    @autorun (computation) =>
-      unless @isRendered() and @subscriptionsReady()
+      unless @isRendered() and @tallySubscriptionReady()
         @chart?.detach()
         @chart = null
       else
@@ -234,6 +250,9 @@ class Motion.TallyChartComponent extends UIComponent
 
         if @chart
           @chart.update data
+
+        else if not data.series[0].length
+          return
 
         else
           options =
@@ -265,6 +284,12 @@ class Motion.TallyChartComponent extends UIComponent
   onDestroyed: ->
     @chart?.detach()
     @chart = null
+
+  currentPointId: (args...) ->
+    @callAncestorWith 'currentPointId', args...
+
+  tallySubscriptionReady: ->
+    @ancestorComponent(Motion.TallyComponent).subscriptionsReady()
 
   events: ->
     super.concat
@@ -320,23 +345,3 @@ class Motion.TallyChartComponent extends UIComponent
   onMouseleave: (event) ->
     @currentPointId null
     @removeCrosshair()
-
-  tally: ->
-    if currentPointId = @currentPointId()
-      Tally.documents.findOne currentPointId
-    else
-      Tally.documents.findOne
-        'motion._id': @data()._id
-      ,
-        sort:
-          # The latest tally document.
-          createdAt: -1
-
-  round: (value) ->
-    value?.toFixed 2
-
-  displayMajority: ->
-    if @data().majority is Motion.MAJORITY.SIMPLE
-      "simple majority"
-    else if @data().majority is Motion.MAJORITY.SUPER
-      "supermajority"
