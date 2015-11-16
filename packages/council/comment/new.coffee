@@ -37,5 +37,5 @@ class Comment.NewComponent extends UIComponent
 
   hasBody: ->
     # We require body to have at least some text content or a figure.
-    $body = $(@$('[name="body"]').val())
-    $body.text() or $body.has('figure')
+    $body = $($.parseHTML(@$('[name="body"]').val()))
+    $body.text() or $body.has('figure').is()

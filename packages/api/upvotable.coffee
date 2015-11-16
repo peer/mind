@@ -23,7 +23,7 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
     bodyText = $root.text()
 
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure')
+      $root.has('figure').is()
 
     bodyDisplay = documentClass.sanitizeForDisplay.sanitizeHTML document.body
 

@@ -34,8 +34,8 @@ class Discussion.NewComponent extends UIComponent
 
   hasDescription: ->
     # We require description to have at least some text content or a figure.
-    $description = $(@$('[name="description"]').val())
-    $description.text() or $description.has('figure')
+    $description = $($.parseHTML(@$('[name="description"]').val()))
+    $description.text() or $description.has('figure').is()
 
 FlowRouter.route '/discussion/new',
   name: 'Discussion.new'
