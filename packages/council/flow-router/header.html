@@ -6,13 +6,44 @@
         <a href="" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
           <li><a href="{{pathFor 'Discussion.list'}}">Discussions</a></li>
-          <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+          {{#unless currentUser}}
+            <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+          {{else}}
+            <li>{{> AccountMenuComponent}}</li>
+          {{/unless}}
         </ul>
         <ul class="side-nav" id="mobile-menu">
+          {{#if currentUser}}
+            <li class="header">
+              <div href="" class="account">
+                <img src="{{storageUrl currentUser.avatar}}" alt="" class="circle" />
+                {{currentUser.username}}
+              </div>
+            </li>
+          {{/if}}
           <li><a href="{{pathFor 'Discussion.list'}}">Discussions</a></li>
-          <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+          {{#unless currentUser}}
+            <li class="divider"></li>
+            <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+          {{else}}
+            <li><a href="{{pathFor 'Account.changePassword'}}">Change password</a></li>
+            <li class="divider"></li>
+            <li><a href="" class="sign-out">Sign out</a></li>
+          {{/unless}}
         </ul>
       </div>
     </nav>
   </header>
+</template>
+
+<template name="AccountMenuComponent">
+  <a href="" class="account" data-activates="account-menu">
+    <img src="{{storageUrl currentUser.avatar}}" alt="" class="circle" />
+    {{currentUser.username}}
+  </a>
+  <ul id="account-menu" class="dropdown-content">
+    <li><a href="{{pathFor 'Account.changePassword'}}">Change password</a></li>
+    <li class="divider"></li>
+    <li><a href="" class="sign-out">Sign out</a></li>
+  </ul>
 </template>

@@ -50,6 +50,7 @@ Package.onUse(function (api) {
     'comment/publish.coffee',
     'point/publish.coffee',
     'motion/publish.coffee',
-    'storagefile/methods.coffee'
+    'storagefile/methods.coffee',
+    'user/publish.coffee'
   ], 'server');
 });

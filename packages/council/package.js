@@ -12,7 +12,8 @@ Package.onUse(function (api) {
     'underscore-extra',
     'accounts-password',
     'stylus',
-    'jquery'
+    'jquery',
+    'random'
   ]);
 
   // 3rd party dependencies.
@@ -68,6 +69,7 @@ Package.onUse(function (api) {
     'flow-router/layout.styl',
     'flow-router/header.html',
     'flow-router/header.coffee',
+    'flow-router/header.styl',
     'flow-router/footer.html',
     'flow-router/footer.coffee',
     'flow-router/not-found.html',

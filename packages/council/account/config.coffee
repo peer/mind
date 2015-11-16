@@ -2,7 +2,7 @@ AccountsTemplates.configure
   confirmPassword: true
   enablePasswordChange: true
   forbidClientAccountCreation: true
-  overrideLoginErrors: true
+  overrideLoginErrors: false
   sendVerificationEmail: false
   lowercaseUsername: false
   focusFirstInput: true

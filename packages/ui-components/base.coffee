@@ -56,6 +56,9 @@ class UIComponent extends BlazeComponent
   storageUrl: (filename, kwargs) ->
     Storage.url filename
 
+  currentUser: ->
+    Meteor.user()
+
   ancestorComponent: (componentClass) ->
     component = @parentComponent()
     while component and component not instanceof componentClass
