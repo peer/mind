@@ -35,15 +35,30 @@ class HeaderComponent extends UIComponent
 
     AccountsTemplates.logout()
 
-class AccountMenuComponent extends UIComponent
-  @register 'AccountMenuComponent'
+class AccountItemsComponent extends UIComponent
+  @register 'AccountItemsComponent'
+
+  constructor: (kwargs) ->
+    super
+
+    _.extend @, _.pick (kwargs?.hash or {}), 'isDropdown'
 
   onRendered: ->
     super
 
-    $('.account').dropdown
-      inDuration: 150
-      outDuration: 150
-      belowOrigin: true
-      alignment: 'right'
-      constrain_width: false
+    return unless @isDropdown
+
+    # If this component is used in a dropdown, then we use the fact that when it is rendered, we
+    # can enable dropdown inside the HeaderComponent on dropdown's activator. This makes sure that
+    # dropdown is enabled even if it is not initially rendered because an user is not yet signed in.
+    @autorun (computation) =>
+      $accountMenuActivator = @ancestorComponent(HeaderComponent).$('[data-activates="account-menu"]')
+      return unless $accountMenuActivator
+      computation.stop()
+
+      $accountMenuActivator.dropdown
+        inDuration: 150
+        outDuration: 150
+        belowOrigin: true
+        alignment: 'right'
+        constrain_width: false
