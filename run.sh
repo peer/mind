@@ -31,4 +31,4 @@ docker rm "${NAME}_mongodb" || true
 sleep 1
 docker run --detach=true --restart=always --name "${NAME}_mongodb" --hostname "${NAME}_mongodb" --expose 27017 --volume /srv/var/hosts:/etc/hosts:ro --volume "${SETTINGS}:/etc/service/mongod/run.settings" --volume "${MONGODB_LOG}:/var/log/mongod" --volume "${MONGODB_DATA}:/var/lib/mongodb" tozd/meteor-mongodb:2.6
 
-docker run --detach=true --restart=always --name council --hostname council --env ROOT_URL=http://council.cloyne.org --env MAIL_URL=mail.cloyne.net --env STORAGE_DIRECTORY=/storage --volume /srv/var/hosts:/etc/hosts:ro --volume "${SETTINGS}:/etc/service/meteor/run.settings" --volume "${METEOR_LOG}:/var/log/meteor" --volume "${METEOR_STORAGE}:/storage" mitar/council-app
+docker run --detach=true --restart=always --name council --hostname council --expose 3000 --env ROOT_URL=http://council.cloyne.org --env MAIL_URL=mail.cloyne.net --env STORAGE_DIRECTORY=/storage --volume /srv/var/hosts:/etc/hosts:ro --volume "${SETTINGS}:/etc/service/meteor/run.settings" --volume "${METEOR_LOG}:/var/log/meteor" --volume "${METEOR_STORAGE}:/storage" mitar/council-app
