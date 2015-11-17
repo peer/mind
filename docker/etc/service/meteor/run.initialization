@@ -1,2 +1,5 @@
 # Ensure that storage has proper permissions.
 chown meteor:meteor /storage || true
+
+# You can mount a volume (file) into this location to provide a script which sets environment variables.
+[ -f /etc/service/meteor/run.settings ] && source /etc/service/meteor/run.settings
