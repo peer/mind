@@ -4,9 +4,9 @@
       {{> EditButton}}
     {{/if}}
     <div class="chip author">
-      {{#if hasAvatar}}
+      {{#unless noAvatar}}
         <img src="{{storageUrl author.avatar}}" alt="{{author.username}}" class="circle" />
-      {{/if}}
+      {{/unless}}
       {{author.username}}
     </div>
     <span class="timestamp" title="{{formatDate createdAt DEFAULT_DATETIME_FORMAT}}">{{fromNow createdAt}}</span>
