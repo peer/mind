@@ -13,6 +13,7 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
+    'accounts-base',
     'underscore-extra',
     'random',
     'jquery'
@@ -51,6 +52,7 @@ Package.onUse(function (api) {
     'point/publish.coffee',
     'motion/publish.coffee',
     'storagefile/methods.coffee',
-    'user/publish.coffee'
+    'user/publish.coffee',
+    'user/methods.coffee'
   ], 'server');
 });
