@@ -33,7 +33,7 @@ Meteor.methods
     bodyText = $root.text()
 
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').is()
+      $root.has('figure').length
 
     bodyDisplay = Comment.sanitizeForDisplay.sanitizeHTML document.body
 

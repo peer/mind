@@ -20,7 +20,7 @@ Meteor.methods
     descriptionText = $root.text()
 
     check descriptionText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').is()
+      $root.has('figure').length
 
     descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
 

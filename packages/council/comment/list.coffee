@@ -71,4 +71,4 @@ class Comment.ListItemComponent extends UIComponent
   hasBody: ->
     # We require body to have at least some text content or a figure.
     $body = $($.parseHTML(@$('[name="body"]').val()))
-    $body.text() or $body.has('figure').is()
+    $body.text() or $body.has('figure').length

@@ -27,7 +27,7 @@ Meteor.methods
     bodyText = $root.text()
 
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').is()
+      $root.has('figure').length
 
     bodyDisplay = Motion.sanitizeForDisplay.sanitizeHTML document.body
 
@@ -88,7 +88,7 @@ Meteor.methods
     bodyText = $root.text()
 
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').is()
+      $root.has('figure').length
 
     bodyDisplay = Motion.sanitizeForDisplay.sanitizeHTML document.body
 
