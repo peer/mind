@@ -18,8 +18,8 @@ class Discussion.ListComponent extends UIComponent
         $exists: false
     ,
       sort:
-        # The oldest first.
-        createdAt: 1
+        # The newest first.
+        createdAt: -1
 
 class Discussion.ListItemComponent extends UIComponent
   @register 'Discussion.ListItemComponent'
