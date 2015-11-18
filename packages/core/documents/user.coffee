@@ -1,3 +1,6 @@
+# "i" is a suffix for automatically generated initials.
+AVATAR_INITIALS_REGEX = ///^avatar/\w+-i]\.///
+
 class User extends share.BaseDocument
   # createdAt: time of document creation
   # updatedAt: time of the last change
@@ -15,14 +18,22 @@ class User extends share.BaseDocument
     collection: Meteor.users
     fields: =>
       avatar: @GeneratedField 'self', ['avatar', 'username'], (fields) =>
-        # TODO: Allow custom avatars.
-        #return [] if fields.avatar
+        # Do not do anything if a custom avatar (no "i" suffix) is set.
+        return [] if fields.avatar and not AVATAR_INITIALS_REGEX.test fields.avatar
 
-        # "i" suffix for initials.
+        # "i" is a suffix for automatically generated initials.
         avatarFilename = "avatar/#{fields._id}-i.svg"
-        Storage.save avatarFilename, @generateAvatar fields.username
-        # Attach a query string to force reactive client-side update.
-        [fields._id, "#{avatarFilename}?#{Random.id()}"]
+        avatarContent = @generateAvatar fields.username
+
+        sha256 = new Crypto.SHA256
+          size: avatarContent.length
+        sha256.update avatarContent
+        avatarHash = sha256.finalize()
+
+        Storage.save avatarFilename, avatarContent
+
+        # Attach a query string to force reactive client-side update when the content changes.
+        [fields._id, "#{avatarFilename}?#{avatarHash.substr 0, 16}"]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
       lastActivity: share.LastActivityTrigger ['services']

@@ -27,6 +27,10 @@ Package.onUse(function (api) {
     'alanning:roles@1.2.14'
   ]);
 
+  api.use([
+    'peerlibrary:crypto@0.2.1'
+  ], 'server');
+
   // Internal dependencies.
   api.use([
     'voting',
