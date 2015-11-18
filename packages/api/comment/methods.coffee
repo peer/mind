@@ -2,7 +2,7 @@ Meteor.methods
   'Comment.new': (document) ->
     # TODO: Allow only those in "comment" role, which should be a sub-role of "member" role.
     # TODO: Move check into newUpvotable.
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole Meteor.userId(), 'member'
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole Meteor.userId(), ['member', 'manager']
 
     share.newUpvotable Comment, document, true,
       body: Match.NonEmptyString

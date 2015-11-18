@@ -47,4 +47,7 @@ class share.UpvoteableMixin extends UIMixin
 
     return title: "Sign in to upvote." unless Meteor.userId()
 
-    title: "You cannot upvote your #{@_contentName()}."
+    if Meteor.userId() is @data().author._id
+      title: "You cannot upvote your #{@_contentName()}."
+    else
+      title: "You cannot upvote this #{@_contentName()}."

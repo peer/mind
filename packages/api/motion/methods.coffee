@@ -9,7 +9,7 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     # TODO: Allow only to those in "motion" role, which should be a sub-role of "member" role.
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole user._id, 'member'
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole user._id, ['member', 'manager']
 
     discussion = Discussion.documents.findOne document.discussion._id,
       fields:

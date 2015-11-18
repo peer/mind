@@ -6,7 +6,7 @@ class Comment.NewComponent extends UIComponent
 
     @canNew = new ComputedField =>
       # TODO: Allow only those in "comment" role, which should be a sub-role of "member" role.
-      Roles.userIsInRole Meteor.userId(), 'member'
+      Roles.userIsInRole Meteor.userId(), ['member', 'manager']
 
   currentDiscussionId: ->
     @ancestorComponent(Comment.ListComponent)?.currentDiscussionId()

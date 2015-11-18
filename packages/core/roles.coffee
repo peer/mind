@@ -1,5 +1,6 @@
 Meteor.startup ->
+  # TODO: Create sub-roles for each action: "vote", "comment", "upvote".
   Roles.createRole 'admin', true
   Roles.createRole 'moderator', true
-  # TODO: Create sub-roles for each action: "vote", "comment", "upvote".
+  Roles.createRole 'manager', true
   Roles.createRole 'member', true
