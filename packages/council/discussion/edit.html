@@ -1,0 +1,34 @@
+<template name="Discussion.EditComponent">
+  {{#if notFound}}
+    {{> NotFoundComponent}}
+  {{else}}
+    {{#if canEdit}}
+      <div class="section">
+        <div class="row">
+          <form class="col s12 discussion-edit">
+            <div class="row">
+              <div class="input-field col s12">
+                <input type="text" name="title" id="edit-discussion-title" required value="{{discussion.title}}" />
+                <label for="edit-discussion-title">Title</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                {{#with discussion}}
+                  {{> EditorComponent args name='description' id='edit-discussion-description' label='Description'}}
+                {{/with}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12 center-align">
+                <button type="submit" name="edit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Edit discussion</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    {{else}}
+      {{> AccessDeniedComponent}}
+    {{/if}}
+  {{/if}}
+</template>

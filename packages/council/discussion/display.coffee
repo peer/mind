@@ -23,6 +23,9 @@ class Discussion.DisplayComponent extends UIComponent
       else
         share.PageTitle "Not found"
 
+    @canEdit = new ComputedField =>
+      @discussion() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @discussion().author._id))
+
   discussion: ->
     Discussion.documents.findOne @currentDiscussionId()
 
