@@ -14,9 +14,11 @@
             </div>
             <div class="row">
               <div class="input-field col s12">
-                {{#with discussion}}
-                  {{> EditorComponent args name='description' id='edit-discussion-description' label='Description'}}
-                {{/with}}
+                {{#if subscriptionsReady}}
+                  {{#with discussion}}
+                    {{> EditorComponent args name='description' id='edit-discussion-description' label='Description'}}
+                  {{/with}}
+                {{/if}}
               </div>
             </div>
             <div class="row">
