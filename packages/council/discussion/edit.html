@@ -3,34 +3,38 @@
     {{> NotFoundComponent}}
   {{else}}
     {{#if canEdit}}
-      <div class="section">
-        <div class="row">
-          <form class="col s12 discussion-edit">
-            <div class="row">
-              <div class="input-field col s12">
-                <input type="text" name="title" id="edit-discussion-title" required value="{{discussion.title}}" />
-                <label for="edit-discussion-title">Title</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                {{#if subscriptionsReady}}
-                  {{#with discussion}}
-                    {{> EditorComponent args name='description' id='edit-discussion-description' label='Description'}}
-                  {{/with}}
-                {{/if}}
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12 center-align">
-                <button type="submit" name="edit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Edit discussion</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+      {{#if subscriptionsReady}}
+        {{#with discussion}}
+          {{> Discussion.EditFormComponent}}
+        {{/with}}
+      {{/if}}
     {{else}}
       {{> AccessDeniedComponent}}
     {{/if}}
   {{/if}}
+</template>
+
+<template name="Discussion.EditFormComponent">
+  <div class="section">
+    <div class="row">
+      <form class="col s12 discussion-edit">
+        <div class="row">
+          <div class="input-field col s12">
+            <input type="text" name="title" id="edit-discussion-title" required value="{{title}}" />
+            <label for="edit-discussion-title">Title</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            {{> EditorComponent args name='description' id='edit-discussion-description' label='Description'}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 center-align">
+            <button type="submit" name="edit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Edit discussion</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>

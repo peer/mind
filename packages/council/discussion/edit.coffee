@@ -8,6 +8,18 @@ class Discussion.EditComponent extends Discussion.DisplayComponent
       discussionId = @currentDiscussionId()
       @subscribe 'Discussion.forEdit', discussionId if discussionId
 
+class Discussion.EditFormComponent extends UIComponent
+  @register 'Discussion.EditFormComponent'
+
+  onRendered: ->
+    super
+
+    Tracker.afterFlush =>
+      # A bit of mangling to get cursor to focus at the end of the text.
+      $title = @$('[name="title"]')
+      title = $title.val()
+      $title.focus().val('').val(title)
+
   events: ->
     super.concat
       'submit .discussion-edit': @onSubmit
@@ -20,7 +32,7 @@ class Discussion.EditComponent extends Discussion.DisplayComponent
     return unless @hasDescription()
 
     Meteor.call 'Discussion.update',
-      _id: @currentDiscussionId()
+      _id: @data()._id
       title: @$('[name="title"]').val()
       description: @$('[name="description"]').val()
     ,
@@ -31,7 +43,7 @@ class Discussion.EditComponent extends Discussion.DisplayComponent
           return
 
         FlowRouter.go 'Discussion.display',
-          _id: @currentDiscussionId()
+          _id: @data()._id
 
   hasDescription: ->
     # We require description to have at least some text content or a figure.
