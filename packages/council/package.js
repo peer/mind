@@ -78,6 +78,8 @@ Package.onUse(function (api) {
     'flow-router/footer.coffee',
     'flow-router/not-found.html',
     'flow-router/not-found.coffee',
+    'flow-router/access-denied.html',
+    'flow-router/access-denied.coffee',
     'flow-router/icons.html',
     'discussion/list.html',
     'discussion/list.coffee',
