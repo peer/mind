@@ -1,4 +1,4 @@
-class Discussion.EditComponent extends Discussion.DisplayComponent
+class Discussion.EditComponent extends Discussion.OneComponent
   @register 'Discussion.EditComponent'
 
   onCreated: ->
