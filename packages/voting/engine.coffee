@@ -65,13 +65,19 @@ class VotingEngine extends VotingEngine
     nonvotersCount = effectivePopulationSize - votesCount
 
     if majority is @MAJORITY.SIMPLE
-      threshold = effectivePopulationSize / 2
+      probability = 1 / 2
+      threshold = effectivePopulationSize * probability
     else if majority is @MAJORITY.SUPER
-      threshold = effectivePopulationSize * 2 / 3
+      probability = 2 / 3
+      threshold = effectivePopulationSize * probability
     else
       assert false, majority
 
     if effectivePopulationSize > 0
+      # We assume here that the population has a slight bias (one person) towards the majority and not
+      # that it is completely 50/50 split. If the latter is wanted, "probability" could be used directly.
+      # This slight bias lowers the quorum a bit because we observed that it aligns better with what
+      # one would expect for quorum to be given a population size and votes.
       bias = (Math.floor(threshold) + 1) / effectivePopulationSize
       lowerBound = Math.max(Math.ceil(threshold - votesCount * majorityResult), 0)
       upperBound = nonvotersCount
@@ -80,23 +86,29 @@ class VotingEngine extends VotingEngine
 
       confidenceLevel = @sumBinomialProbabilityMass lowerBound, upperBound, nonvotersCount, bias
 
+      # We compute confidence interval numerically by searching for a solution to how many more votes are
+      # needed for 0.90 confidence. Fo this we are using directly "probability" and not "bias".
       neededVotes = 0
       loop
-        lowerBound = Math.ceil(bias * nonvotersCount - neededVotes)
-        upperBound = Math.floor(bias * nonvotersCount + neededVotes)
+        lowerBound = Math.ceil(probability * nonvotersCount - neededVotes)
+        upperBound = Math.floor(probability * nonvotersCount + neededVotes)
 
         if upperBound > nonvotersCount
           # Solution not found, setting maximum possible needed votes.
           neededVotes = nonvotersCount
           break
 
-        break if @sumBinomialProbabilityMass(lowerBound, upperBound, nonvotersCount, bias) >= 0.90
+        break if @sumBinomialProbabilityMass(lowerBound, upperBound, nonvotersCount, probability) >= 0.90
 
         neededVotes++
 
     if votesCount > 0
-      confidenceIntervalLowerBound = Math.max(0, (votesCount * result + bias * nonvotersCount - neededVotes) / effectivePopulationSize)
-      confidenceIntervalUpperBound = Math.min(1, (votesCount * result + bias * nonvotersCount + neededVotes) / effectivePopulationSize)
+      confidenceIntervalLowerBound = Math.max(0, (votesCount * majorityResult + probability * nonvotersCount - neededVotes) / effectivePopulationSize)
+      confidenceIntervalUpperBound = Math.min(1, (votesCount * majorityResult + probability * nonvotersCount + neededVotes) / effectivePopulationSize)
+
+      # We have to reverse and shift the interval if we majorityResult is leaning towards 0 (-1 rescaled).
+      if result isnt majorityResult
+        [confidenceIntervalLowerBound, confidenceIntervalUpperBound] = [1 - confidenceIntervalUpperBound, 1 - confidenceIntervalLowerBound]
 
       # Rescale.
       result = result * 2 - 1

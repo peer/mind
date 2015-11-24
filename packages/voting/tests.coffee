@@ -47,7 +47,7 @@ class VotingTestCase extends ClassyTestCase
       votesCount: 6
       abstentionsCount: 0
       confidenceLevel: 1.0000000000000002
-      confidenceIntervalLowerBound: 0.28
+      confidenceIntervalLowerBound: 0.19999999999999996
       confidenceIntervalUpperBound: 1
       result: 1
 
@@ -56,8 +56,8 @@ class VotingTestCase extends ClassyTestCase
       votesCount: 3
       abstentionsCount: 5
       confidenceLevel: 0.84
-      confidenceIntervalLowerBound: -0.5199999999999999
-      confidenceIntervalUpperBound: 1
+      confidenceIntervalLowerBound: -0.19999999999999996
+      confidenceIntervalUpperBound: 0.6000000000000001
       result: 0.33333333333333326
 
     @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SIMPLE, ['abstain', 'abstain', 'abstain', 'abstain', 'abstain', 1.0, 1.0, -1.0, 'default', 'default'], 10),
@@ -65,8 +65,8 @@ class VotingTestCase extends ClassyTestCase
       votesCount: 3
       abstentionsCount: 5
       confidenceLevel: 0.84
-      confidenceIntervalLowerBound: -0.5199999999999999
-      confidenceIntervalUpperBound: 1
+      confidenceIntervalLowerBound: -0.19999999999999996
+      confidenceIntervalUpperBound: 0.6000000000000001
       result: 0.33333333333333326
 
     @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SIMPLE, ['abstain', 'abstain', 'abstain', 'abstain', 'abstain', 1.0, 1.0, -1.0, 1.0], 10),
@@ -74,8 +74,8 @@ class VotingTestCase extends ClassyTestCase
       votesCount: 4
       abstentionsCount: 5
       confidenceLevel: 1
-      confidenceIntervalLowerBound: 0.040000000000000036
-      confidenceIntervalUpperBound: 0.8399999999999999
+      confidenceIntervalLowerBound: 0.0
+      confidenceIntervalUpperBound: 0.8
       result: 0.5
 
     @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SIMPLE, ['abstain', 'abstain', 'abstain', 'abstain', 'abstain', 1.0, 1.0, -1.0, 1.0, -1.0], 10),
@@ -101,8 +101,8 @@ class VotingTestCase extends ClassyTestCase
       votesCount: 10
       abstentionsCount: 1
       confidenceLevel: 0.9334331183777842
-      confidenceIntervalLowerBound: -0.10664819944598347
-      confidenceIntervalUpperBound: 0.5249307479224377
+      confidenceIntervalLowerBound: -0.13157894736842102
+      confidenceIntervalUpperBound: 0.5
       result: 0.3500000000000001
 
     @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SIMPLE, ['abstain', 'abstain', 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, -1.0, -1.0, 0.5], 13),
@@ -110,8 +110,8 @@ class VotingTestCase extends ClassyTestCase
       votesCount: 9
       abstentionsCount: 2
       confidenceLevel: 0.7933884297520661
-      confidenceIntervalLowerBound: -0.30165289256198347
-      confidenceIntervalUpperBound: 0.4256198347107438
+      confidenceIntervalLowerBound: -0.13636363636363635
+      confidenceIntervalUpperBound: 0.2272727272727273
       result: 0.05555555555555558
 
     @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SIMPLE, ['abstain', 'abstain', 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, -1.0, -1.0, 0.5, 1.0], 13),
@@ -119,8 +119,8 @@ class VotingTestCase extends ClassyTestCase
       votesCount: 10
       abstentionsCount: 2
       confidenceLevel: 1
-      confidenceIntervalLowerBound: -0.0371900826446282
-      confidenceIntervalUpperBound: 0.32644628099173545
+      confidenceIntervalLowerBound: -0.045454545454545414
+      confidenceIntervalUpperBound: 0.3181818181818181
       result: 0.1499999999999999
 
     @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SIMPLE, ['abstain', 'abstain', 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, -1.0, -1.0, 0.5, 1.0, 1.0], 13),
@@ -131,5 +131,14 @@ class VotingTestCase extends ClassyTestCase
       confidenceIntervalLowerBound: 0.2272727272727273
       confidenceIntervalUpperBound: 0.2272727272727273
       result: 0.2272727272727273
+
+    @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SUPER, ['abstain', -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 0.5, 0.5, 1.0], 20),
+      populationSize: 20
+      votesCount: 10
+      abstentionsCount: 1
+      confidenceLevel: 0.6927864321251747
+      confidenceIntervalLowerBound: -0.631578947368421
+      confidenceIntervalUpperBound: -0.21052631578947367
+      result: -0.5
 
 ClassyTestCase.addTest new VotingTestCase()
