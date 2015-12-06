@@ -80,7 +80,7 @@ peerlibrary:connect@2.28.1_1
 peerlibrary:crypto@0.2.1
 peerlibrary:directcollection@0.5.0
 peerlibrary:fiber-utils@0.6.0
-peerlibrary:flow-router@2.10.0_1
+peerlibrary:flow-router@2.10.0_2
 peerlibrary:meteor-file@0.2.1
 peerlibrary:middleware@0.1.1
 peerlibrary:peerdb@0.19.2

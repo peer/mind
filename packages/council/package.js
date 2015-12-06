@@ -18,7 +18,7 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:flow-router@2.10.0_1',
+    'peerlibrary:flow-router@2.10.0_2',
     'kadira:blaze-layout@2.3.0',
     'peerlibrary:computed-field@0.3.0',
     'peerlibrary:reactive-field@0.1.0',

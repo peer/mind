@@ -22,7 +22,7 @@ Package.onUse(function (api) {
     'peerlibrary:blocking@0.5.2'
   ]);
   api.use([
-    'peerlibrary:flow-router@2.10.0_1'
+    'peerlibrary:flow-router@2.10.0_2'
   ], {weak: true});
 
   api.export('Storage');
