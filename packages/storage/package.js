@@ -22,7 +22,7 @@ Package.onUse(function (api) {
     'peerlibrary:blocking@0.5.2'
   ]);
   api.use([
-    'kadira:flow-router@2.8.0'
+    'peerlibrary:flow-router@2.10.0_1'
   ], {weak: true});
 
   api.export('Storage');

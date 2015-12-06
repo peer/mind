@@ -8,7 +8,7 @@ class Storage
 
     # If flow router is in use and there is support for ignoring paths, we register storage path for
     # ignoring so that links to stored files are not intercepted by flow router by go to the server.
-    FlowRouter = Package['kadira:flow-router']?.FlowRouter
+    FlowRouter = Package['peerlibrary:flow-router']?.FlowRouter
     if FlowRouter and FlowRouter.ignore
       FlowRouter.ignore @options.storagePath
 

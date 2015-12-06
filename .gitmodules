@@ -7,9 +7,6 @@
 [submodule "packages/trix/vendor"]
 	path = packages/trix/vendor
 	url = https://github.com/mitar/trix.git
-[submodule "packages/kadira:flow-router"]
-	path = packages/kadira:flow-router
-	url = https://github.com/peerlibrary/flow-router.git
 [submodule "packages/cunneen:accounts-admin-materializecss"]
 	path = packages/cunneen:accounts-admin-materializecss
 	url = https://github.com/mitar/meteor-accounts-admin-materializecss.git

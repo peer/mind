@@ -18,14 +18,14 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'kadira:flow-router@2.8.0',
-    'kadira:blaze-layout@2.2.0',
+    'peerlibrary:flow-router@2.10.0_1',
+    'kadira:blaze-layout@2.3.0',
     'peerlibrary:computed-field@0.3.0',
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:assert@0.2.5',
     'materialize:materialize@0.97.1',
     'useraccounts:materialize@1.12.4',
-    'useraccounts:flow-routing@1.12.4',
+    'useraccounts:flow-routing@1.13.0',
     'velocityjs:velocityjs@1.2.1',
     'mfpierre:chartist-js@1.6.0',
     'cunneen:accounts-admin-materializecss@0.2.19'
