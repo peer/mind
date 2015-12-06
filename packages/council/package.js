@@ -28,7 +28,8 @@ Package.onUse(function (api) {
     'useraccounts:flow-routing@1.13.0',
     'velocityjs:velocityjs@1.2.1',
     'mfpierre:chartist-js@1.6.0',
-    'cunneen:accounts-admin-materializecss@0.2.19'
+    'cunneen:accounts-admin-materializecss@0.2.19',
+    'peerlibrary:blaze-layout-component@0.1.0'
   ]);
 
   // Internal dependencies.
@@ -66,8 +67,6 @@ Package.onUse(function (api) {
     'editor.styl',
     'account/form.coffee',
     'flow-router/title.coffee',
-    'flow-router/root.html',
-    'flow-router/root.coffee',
     'flow-router/layout.html',
     'flow-router/layout.coffee',
     'flow-router/layout.styl',
