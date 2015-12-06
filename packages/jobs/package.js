@@ -19,7 +19,7 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
-    'classy-job'
+    'peerlibrary:classy-job@0.1.0'
   ]);
 
   // Dependencies for jobs themselves, can be unordered.

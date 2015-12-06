@@ -16,7 +16,6 @@ caching-compiler@1.0.0
 caching-html-compiler@1.0.2
 callback-hook@1.0.4
 check@1.1.0
-classy-job@0.1.0
 coffeescript@1.0.11
 core@0.1.0
 cosmos:browserify@0.9.2
@@ -75,6 +74,7 @@ peerlibrary:blaze-components@0.15.1
 peerlibrary:blaze-layout-component@0.1.0
 peerlibrary:blocking@0.5.2
 peerlibrary:check-extension@0.2.0
+peerlibrary:classy-job@0.1.0
 peerlibrary:computed-field@0.3.1
 peerlibrary:connect@2.28.1_1
 peerlibrary:crypto@0.2.1

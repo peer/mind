@@ -34,7 +34,7 @@ Package.onUse(function (api) {
   // Internal dependencies.
   api.use([
     'voting',
-    'classy-job',
+    'peerlibrary:classy-job@0.1.0',
     'jobs',
     'storage',
     'sanitize'
