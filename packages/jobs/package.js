@@ -14,12 +14,12 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:assert@0.2.5',
-    'alanning:roles@1.2.14'
+    'alanning:roles@1.2.14',
+    'peerlibrary:classy-job@0.1.0'
   ]);
 
   // Internal dependencies.
   api.use([
-    'peerlibrary:classy-job@0.1.0'
   ]);
 
   // Dependencies for jobs themselves, can be unordered.

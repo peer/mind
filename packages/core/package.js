@@ -24,7 +24,8 @@ Package.onUse(function (api) {
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:assert@0.2.5',
     'fermuch:cheerio@0.19.0',
-    'alanning:roles@1.2.14'
+    'alanning:roles@1.2.14',
+    'peerlibrary:classy-job@0.1.0'
   ]);
 
   api.use([
@@ -34,7 +35,6 @@ Package.onUse(function (api) {
   // Internal dependencies.
   api.use([
     'voting',
-    'peerlibrary:classy-job@0.1.0',
     'jobs',
     'storage',
     'sanitize'
