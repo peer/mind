@@ -76,27 +76,6 @@ class User extends share.BaseDocument
   getReference: ->
     _.pick @, _.keys @constructor.REFERENCE_FIELDS()
 
-Meteor.user = (userId, fields) ->
-  if not fields and _.isObject userId
-    fields = userId
-    userId = null
-
-  # Meteor.userId is reactive
-  userId ?= Meteor.userId()
-  fields ?= {}
-
-  return null unless userId
-
-  User.documents.findOne
-    _id: userId
-  ,
-    fields: fields
-
-# Forbid users from making any modifications to their user document.
-User.Meta.collection.deny
-  update: ->
-    true
-
 if Meteor.isServer
   User.Meta.collection._ensureIndex
     createdAt: 1
