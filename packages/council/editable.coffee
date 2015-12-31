@@ -1,6 +1,10 @@
-# TODO: Make a component once the animations hook bug is fixed.
-#class EditButton extends UIComponent
-#  @register 'EditButton'
+class EditButton extends UIComponent
+  @register 'EditButton'
+
+  onButtonClick: (event) ->
+    event.preventDefault()
+
+    @callAncestorWith 'startEditing'
 
 class share.EditableMixin extends UIMixin
   onCreated: ->
@@ -34,16 +38,13 @@ class share.EditableMixin extends UIMixin
 
       @callFirstWith null, 'onBeingEdited'
 
+  startEditing: ->
+    @_isBeingEdited true
+
   events: ->
     super.concat
-      'click .edit-button': @onEditButton
       'submit .editable-form': @onSaveEditButton
       'click .cancel-edit-button': @onCancelEditButton
-
-  onEditButton: (event) ->
-    event.preventDefault()
-
-    @_isBeingEdited true
 
   onSaveEditButton: (event) ->
     event.preventDefault()
