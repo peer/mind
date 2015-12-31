@@ -39,7 +39,7 @@
 
 <template name="Point.ListItemComponent">
   <li class="collection-item">
-    {{#if isBeingEdited}}
+    {{#if $and canEdit isBeingEdited}}
       <form class="editable-form">
         <div class="input-field">
           <textarea name="body" id="edit-point-body-{{_id}}" class="materialize-textarea" required>{{body}}</textarea>

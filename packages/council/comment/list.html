@@ -22,7 +22,7 @@
 <template name="Comment.ListItemComponent">
   <li class="collection-item avatar">
     <img src="{{storageUrl author.avatar}}" alt="{{author.username}}" class="circle" />
-    {{#if isBeingEdited}}
+    {{#if $and canEdit isBeingEdited}}
       <form class="editable-form">
         <div class="input-field">
           {{> EditorComponent args name='body' id=($join '-' 'edit-comment-body' _id) label='Comment' autofocus=''}}
