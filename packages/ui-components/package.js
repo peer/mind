@@ -16,7 +16,7 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:blaze-components@0.16.1',
+    'peerlibrary:blaze-components@0.16.2',
     'peerlibrary:flow-router@2.10.0_2',
     'momentjs:moment@2.10.6',
     'peerlibrary:assert@0.2.5'
