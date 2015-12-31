@@ -1,6 +1,14 @@
-# TODO: Make a component once the animations hook bug is fixed.
-#class ExpandableButton extends UIComponent
-#  @register 'ExpandableButton'
+class ExpandableButton extends UIComponent
+  @register 'ExpandableButton'
+
+  onButtonClick: (event) ->
+    event.preventDefault()
+
+    # Toggle.
+    @callAncestorWith 'expandWithAnimation', not @isExpanded()
+
+  isExpanded: ->
+    @callAncestorWith 'isExpanded'
 
 class share.ExpandableMixin extends UIMixin
   onCreated: ->
@@ -8,16 +16,6 @@ class share.ExpandableMixin extends UIMixin
 
     @isExpanded = new ReactiveField false
     @_expandWithAnimation = false
-
-  events: ->
-    super.concat
-      'click .expand-button': @onExpandButton
-
-  onExpandButton: (event) ->
-    event.preventDefault()
-
-    # Toggle.
-    @expandWithAnimation not @isExpanded()
 
   expandWithAnimation: (value) ->
     @isExpanded value
