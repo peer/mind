@@ -52,9 +52,6 @@ class Motion.ListItemComponent extends UIComponent
     @canWithdraw = new ComputedField =>
       @data() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @data().author._id)) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
-  methodPrefix: ->
-    'Motion'
-
   editingSubscriptions: ->
     @subscribe 'Motion.forEdit', @data()._id
 

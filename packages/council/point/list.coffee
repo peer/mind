@@ -51,19 +51,13 @@ class Point.ListItemComponent extends UIComponent
   @register 'Point.ListItemComponent'
 
   mixins: ->
-    super.concat share.UpvoteableMixin, share.ExpandableMixin, share.EditableMixin
+    super.concat share.ExpandableMixin, share.EditableMixin
 
   onCreated: ->
     super
 
     @canEdit = new ComputedField =>
       Roles.userIsInRole Meteor.userId(), 'moderator'
-
-  methodPrefix: ->
-    'Point'
-
-  contentName: ->
-    'point'
 
   onBeingEdited: ->
     @callFirstWith @, 'isExpanded', false

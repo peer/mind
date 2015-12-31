@@ -26,7 +26,7 @@ class Comment.ListItemComponent extends UIComponent
   @register 'Comment.ListItemComponent'
 
   mixins: ->
-    super.concat share.UpvoteableMixin, share.ExpandableMixin, share.EditableMixin
+    super.concat share.ExpandableMixin, share.EditableMixin
 
   onCreated: ->
     super
@@ -34,12 +34,6 @@ class Comment.ListItemComponent extends UIComponent
     @canEdit = new ComputedField =>
       # TODO: Should we also allow moderators to edit comments?
       Meteor.userId() and @data() and Meteor.userId() is @data().author._id
-
-  methodPrefix: ->
-    'Comment'
-
-  contentName: ->
-    'comment'
 
   editingSubscriptions: ->
     @subscribe 'Comment.forEdit', @data()._id

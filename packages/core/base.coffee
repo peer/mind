@@ -115,3 +115,33 @@ class share.BaseDocument extends Document
 
     # Convert cheerio/jQuery array to a standard array.
     $documentIds.get()
+
+  # Verbose name is used when representing the class in a non-technical
+  # setting. The convention is not to capitalize the first letter of
+  # the verboseName. We capitalize the first letter where we need to.
+  @verboseName: ->
+    # Convert TitleCase into Title Case, and make lower case.
+    @Meta._name.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase()
+
+  @verboseNamePlural: ->
+    "#{@verboseName()}s"
+
+  @verboseNameWithCount: (quantity) ->
+    quantity = 0 unless quantity
+    return "1 #{@verboseName()}" if quantity is 1
+    "#{quantity} #{@verboseNamePlural()}"
+
+  verboseName: ->
+    @constructor.verboseName()
+
+  verboseNamePlural: ->
+    @constructor.verboseNamePlural()
+
+  verboseNameWithCount: (quantity) ->
+    @constructor.verboseNameWithCount()
+
+  @methodPrefix: ->
+    @Meta._name
+
+  methodPrefix: ->
+    @constructor.methodPrefix()
