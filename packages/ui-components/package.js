@@ -28,7 +28,7 @@ Package.onUse(function (api) {
   ]);
 
   api.imply([
-    'templating'
+    'peerlibrary:blaze-components'
   ]);
 
   api.export('UIComponent');
