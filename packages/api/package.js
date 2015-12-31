@@ -22,7 +22,7 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:middleware@0.1.1',
-    'peerlibrary:reactive-publish@0.1.1',
+    'peerlibrary:reactive-publish@0.1.3',
     'peerlibrary:check-extension@0.2.0',
     'peerlibrary:assert@0.2.5',
     'fermuch:cheerio@0.19.0',
