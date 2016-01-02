@@ -24,7 +24,7 @@ class Vote extends share.BaseDocument
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes'], true
       computeTally: @Trigger ['motion', 'changes'], (document, oldDocument) =>
-        for motionId in _.uniq([document?.motion?._id, oldDocument?.motion?._id]) when motionId
+        for motionId in _.uniq([document?.motion?._id, oldDocument?.motion?._id]) when motionId and Motion.documents.exists motionId
           new ComputeTallyJob(motion: _id: motionId).enqueue
             skipIfExisting: true
 
