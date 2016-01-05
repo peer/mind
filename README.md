@@ -42,6 +42,18 @@ var userId = Package['accounts-base'].Accounts.createUser({username: 'admin', pa
 Package['alanning:roles'].Roles.addUsersToRoles(userId, ['admin', 'moderator', 'manager', 'member']);
 ```
 
+## Running ##
+
+To run the application in production you can use [Docker](https://www.docker.com/).
+
+The application is provided as [mitar/council-app](https://hub.docker.com/r/mitar/council-app/) Docker image.
+It is based on [tozd/meteor](https://hub.docker.com/r/tozd/meteor/) image for Meteor applications.
+[tozd/meteor-mongodb](https://hub.docker.com/r/tozd/meteor-mongodb/) image is recommended for MongoDB because
+it creates necessary Meteor MongoDB database configuration automatically.
+
+You can see [`run.sh`](https://github.com/mitar/council-app/blob/master/run.sh) file for an example how to run it.
+**You have to adapt the script for your installation.** It contains hard-coded values for another installation.
+
 ## Related projects ##
 
 * https://www.loomio.org/
