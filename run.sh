@@ -14,7 +14,7 @@ MONGODB_LOG="${DATA_ROOT}/${NAME}/mongodb/log"
 METEOR_LOG="${DATA_ROOT}/${NAME}/meteor/log"
 METEOR_STORAGE="${DATA_ROOT}/${NAME}/meteor/storage"
 
-# File is used by both mitar/council-app and tozd/meteor-mongodb images. The latter automatically creates the
+# This file is used by both mitar/council-app and tozd/meteor-mongodb images. The latter automatically creates the
 # database and accounts with provided passwords. The file should look like:
 #
 # MONGODB_ADMIN_PWD='<pass>'
@@ -23,17 +23,17 @@ METEOR_STORAGE="${DATA_ROOT}/${NAME}/meteor/storage"
 #
 # export MONGO_URL="mongodb://meteor:${MONGODB_CREATE_PWD}@council_mongodb/meteor"
 # export MONGO_OPLOG_URL="mongodb://oplogger:${MONGODB_OPLOGGER_PWD}@council_mongodb/local?authSource=admin"
-SETTINGS="${DATA_ROOT}/${NAME}/run.settings"
+CONFIG="${DATA_ROOT}/${NAME}/run.config"
 
 mkdir -p "$MONGODB_DATA"
 mkdir -p "$MONGODB_LOG"
 mkdir -p "$METEOR_LOG"
 mkdir -p "$METEOR_STORAGE"
 
-touch "$SETTINGS"
+touch "$CONFIG"
 
-if [ ! -s "$SETTINGS" ]; then
-  echo "Set MONGODB_CREATE_PWD, MONGODB_ADMIN_PWD, MONGODB_OPLOGGER_PWD and export MONGO_URL, MONGO_OPLOG_URL environment variables in '$SETTINGS'."
+if [ ! -s "$CONFIG" ]; then
+  echo "Set MONGODB_CREATE_PWD, MONGODB_ADMIN_PWD, MONGODB_OPLOGGER_PWD and export MONGO_URL, MONGO_OPLOG_URL environment variables in '$CONFIG'."
   exit 1
 fi
 
@@ -42,11 +42,11 @@ sleep 1
 docker rm "${NAME}_mongodb" || true
 sleep 1
 # Mounted volume "/srv/var/hosts:/etc/hosts:ro" is used by tozd/docker-hosts service discovery and can be removed.
-docker run --detach=true --restart=always --name "${NAME}_mongodb" --hostname "${NAME}_mongodb" --expose 27017 --volume /srv/var/hosts:/etc/hosts:ro --volume "${SETTINGS}:/etc/service/mongod/run.settings" --volume "${MONGODB_LOG}:/var/log/mongod" --volume "${MONGODB_DATA}:/var/lib/mongodb" tozd/meteor-mongodb:2.6
+docker run --detach=true --restart=always --name "${NAME}_mongodb" --hostname "${NAME}_mongodb" --expose 27017 --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/mongod/run.config" --volume "${MONGODB_LOG}:/var/log/mongod" --volume "${MONGODB_DATA}:/var/lib/mongodb" tozd/meteor-mongodb:2.6
 
 docker stop "${NAME}" || true
 sleep 1
 docker rm "${NAME}" || true
 sleep 1
 # Mounted volume "/srv/var/hosts:/etc/hosts:ro" is used by tozd/docker-hosts service discovery and can be removed.
-docker run --detach=true --restart=always --name "${NAME}" --hostname council --expose 3000 --env ROOT_URL=http://council.cloyne.org --env MAIL_URL=smtp://mail.cloyne.net --env STORAGE_DIRECTORY=/storage --volume /srv/var/hosts:/etc/hosts:ro --volume "${SETTINGS}:/etc/service/meteor/run.settings" --volume "${METEOR_LOG}:/var/log/meteor" --volume "${METEOR_STORAGE}:/storage" mitar/council-app
+docker run --detach=true --restart=always --name "${NAME}" --hostname council --expose 3000 --env ROOT_URL=http://council.cloyne.org --env MAIL_URL=smtp://mail.cloyne.net --env STORAGE_DIRECTORY=/storage --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/meteor/run.config" --volume "${METEOR_LOG}:/var/log/meteor" --volume "${METEOR_STORAGE}:/storage" mitar/council-app
