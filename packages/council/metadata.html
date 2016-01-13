@@ -1,7 +1,7 @@
 <template name="MetadataComponent">
   <div class="metadata">
     {{#if canEdit}}
-      {{> EditButton}}
+      {{> renderEditButton}}
     {{/if}}
     <div class="chip author">
       {{#unless noAvatar}}

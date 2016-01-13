@@ -2,17 +2,10 @@
   {{#if notFound}}
     {{> NotFoundComponent}}
   {{else}}
-    {{#if canEdit}}
-      <div class="fixed-action-btn">
-        <a href="{{pathFor 'Discussion.edit' params=discussion}}" class="btn-floating btn-large waves-effect waves-light red">
-          <i class="large material-icons">edit</i>
-        </a>
-      </div>
-    {{/if}}
-    <div class="section">
+    <div class="section discussion">
       <div class="row">
         <h4 class="col s12">
-          {{discussion.title}}
+          {{> ExpandableButton}}{{discussion.title}}
         </h4>
       </div>
       <div class="row">
@@ -21,6 +14,20 @@
           {{{discussion.descriptionDisplay}}}
         </div>
       </div>
+      {{#if isExpanded}}
+        <div class="row expansion">
+          <div class="col s12">
+            <div class="divider"></div>
+            {{#with discussion}}
+              {{> MetadataComponent args editButton='Discussion.EditButton'}}
+            {{/with}}
+          </div>
+        </div>
+      {{/if}}
     </div>
   {{/if}}
+</template>
+
+<template name="Discussion.EditButton">
+  <a href="{{pathFor 'Discussion.edit' params=this}}" class="edit-button waves-effect waves-light btn-flat right"><i class="material-icons tiny">edit</i></a>
 </template>

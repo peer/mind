@@ -1,6 +1,12 @@
 class Discussion.DisplayComponent extends Discussion.OneComponent
   @register 'Discussion.DisplayComponent'
 
+  mixins: ->
+    super.concat share.ExpandableMixin
+
+class Discussion.EditButton extends UIComponent
+  @register 'Discussion.EditButton'
+
 FlowRouter.route '/discussion/:_id',
   name: 'Discussion.display'
   action: (params, queryParams) ->
