@@ -29,7 +29,8 @@ Package.onUse(function (api) {
     'velocityjs:velocityjs@1.2.1',
     'mfpierre:chartist-js@1.6.0',
     'cunneen:accounts-admin-materializecss@0.2.19',
-    'peerlibrary:blaze-layout-component@0.1.0'
+    'peerlibrary:blaze-layout-component@0.1.0',
+    'momentjs:moment@2.10.6'
   ]);
 
   // Internal dependencies.
@@ -100,6 +101,13 @@ Package.onUse(function (api) {
     'point/new.html',
     'point/new.coffee',
     'point/new.styl',
+    'meeting/base.coffee',
+    'meeting/list.html',
+    'meeting/list.coffee',
+    'meeting/new.html',
+    'meeting/new.coffee',
+    'meeting/display.html',
+    'meeting/display.coffee',
     'motion/list.html',
     'motion/list.coffee',
     'motion/list.styl',

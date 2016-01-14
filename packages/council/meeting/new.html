@@ -1,0 +1,50 @@
+<template name="Meeting.NewComponent">
+  {{#if canNew}}
+    <div class="section">
+      <div class="row">
+        <form class="col s12 meeting-new">
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="text" name="title" id="new-meeting-title" required />
+              <label for="new-meeting-title">Title</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6">
+              <input type="date" class="datepicker" name="start-date" id="new-meeting-start-date" required />
+              <label for="new-meeting-start-date">Start date</label>
+            </div>
+            <div class="input-field col s6">
+              {{! TODO: Style time picker. }}
+              <input type="time" name="start-time" id="new-meeting-start-time" required />
+              <label for="new-meeting-start-time">Start time</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6">
+              <input type="date" class="datepicker" name="end-date" id="new-meeting-end-date" />
+              <label for="new-meeting-end-date">End date</label>
+            </div>
+            <div class="input-field col s6">
+              {{! TODO: Style time picker. }}
+              <input type="time" name="end-time" id="new-meeting-end-time" />
+              <label for="new-meeting-end-time">End time</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              {{> EditorComponent args name='description' id='new-meeting-description' label='Description'}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 center-align">
+              <button type="submit" name="new" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Create new meeting</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  {{else}}
+    {{> NotFoundComponent}}
+  {{/if}}
+</template>

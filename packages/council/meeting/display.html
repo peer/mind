@@ -1,0 +1,48 @@
+<template name="Meeting.DisplayComponent">
+  {{#if notFound}}
+    {{> NotFoundComponent}}
+  {{else}}
+    <div class="section meeting">
+      <div class="row">
+        <h4 class="col s12">
+          {{> ExpandableButton}}{{meeting.title}}
+        </h4>
+      </div>
+      {{#if meeting.descriptionDisplay}}
+        <div class="row">
+          <div class="col s12 trix-content">
+            {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+            {{{meeting.descriptionDisplay}}}
+          </div>
+        </div>
+      {{/if}}
+      {{#if isExpanded}}
+        <div class="row expansion">
+          <div class="col s12">
+            <div class="divider"></div>
+            {{#with meeting}}
+              {{> MetadataComponent args editButton='Meeting.EditButton'}}
+            {{/with}}
+          </div>
+        </div>
+      {{/if}}
+    </div>
+    <div class="section">
+      {{#if discussions.exists}}
+        <div class="collection z-depth-1">
+          {{#each discussions}}
+            {{> Meeting.DiscussionsListItemComponent}}
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+</template>
+
+<template name="Meeting.EditButton">
+  <a href="{{pathFor 'Meeting.edit' params=data}}" class="edit-button waves-effect waves-light btn-flat right"><i class="material-icons tiny">edit</i></a>
+</template>
+
+<template name="Meeting.DiscussionsListItemComponent">
+  <a href="{{pathFor 'Meeting.display' params=data}}" class="collection-item">{{title}}</a>
+</template>

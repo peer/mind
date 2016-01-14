@@ -1,0 +1,22 @@
+<template name="Meeting.ListComponent">
+  {{#if canNew}}
+    <div class="fixed-action-btn">
+      <a href="{{pathFor 'Meeting.new'}}" class="btn-floating btn-large waves-effect waves-light red">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
+  {{/if}}
+  <div class="section">
+    {{#if meetings.exists}}
+      <div class="collection z-depth-1">
+        {{#each meetings}}
+          {{> Meeting.ListItemComponent}}
+        {{/each}}
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="Meeting.ListItemComponent">
+  <a href="{{pathFor 'Meeting.display' params=data}}" class="collection-item">{{title}}</a>
+</template>
