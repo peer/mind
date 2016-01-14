@@ -8,6 +8,16 @@
           {{> ExpandableButton}}{{meeting.title}}
         </h4>
       </div>
+      <div class="row">
+        <div class="col s6">
+          Start: {{formatDate meeting.startAt DEFAULT_DATETIME_FORMAT}}
+        </div>
+        <div class="col s6">
+          {{#if meeting.endAt}}
+            End: {{formatDate meeting.endAt DEFAULT_DATETIME_FORMAT}}
+          {{/if}}
+        </div>
+      </div>
       {{#if meeting.descriptionDisplay}}
         <div class="row">
           <div class="col s12 trix-content">
