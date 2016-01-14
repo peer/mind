@@ -17,14 +17,6 @@ class Meeting.NewComponent extends UIComponent
     super.concat
       'submit .meeting-new': @onSubmit
 
-  constructDatetime: (date, time) ->
-    # TODO: Make a warning or something?
-    throw new Error "Both date and time fields are required together." if (date and not time) or (time and not date)
-
-    return null unless date and time
-
-    moment("#{date} #{time}", 'YYYY-MM-DD HH:mm').toDate()
-
   onSubmit: (event) ->
     event.preventDefault()
 

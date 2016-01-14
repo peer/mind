@@ -224,6 +224,15 @@ class UIComponent extends BlazeComponent
     else
       "less than a minute"
 
+  # Construct a date object from inputs of form fields of type "date" and "time".
+  constructDatetime: (date, time) ->
+    # TODO: Make a warning or something?
+    throw new Error "Both date and time fields are required together." if (date and not time) or (time and not date)
+
+    return null unless date and time
+
+    moment("#{date} #{time}", 'YYYY-MM-DD HH:mm').toDate()
+
 class UIMixin extends UIComponent
   data: ->
     @mixinParent().data()

@@ -16,3 +16,14 @@ new PublishEndpoint 'Meeting.discussion', (meetingId) ->
   ,
     fields:
       Discussion.PUBLISH_FIELDS()
+
+new PublishEndpoint 'Meeting.forEdit', (meetingId) ->
+  check meetingId, Match.DocumentId
+
+  # TODO: Allow only for those who can edit the meeting?
+
+  Meeting.documents.find
+    _id: meetingId
+  ,
+    fields:
+      description: 1

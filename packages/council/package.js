@@ -106,6 +106,8 @@ Package.onUse(function (api) {
     'meeting/list.coffee',
     'meeting/new.html',
     'meeting/new.coffee',
+    'meeting/edit.html',
+    'meeting/edit.coffee',
     'meeting/display.html',
     'meeting/display.coffee',
     'motion/list.html',
