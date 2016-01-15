@@ -19,7 +19,7 @@ class Discussion extends share.BaseDocument
   #     avatar
   #   title
   #   description
-  # meetings: list, if a discussion is associated with a meeting (or meetings)
+  # meetings: list, if a discussion is associated with a meeting (or meetings) (reverse field from Meeting.discussions)
   #   _id
 
   @Meta
@@ -42,9 +42,8 @@ class Discussion extends share.BaseDocument
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
-      meetings: [@ReferenceField Meeting]
     triggers: =>
-      updatedAt: share.UpdatedAtTrigger ['changes', 'meetings']
+      updatedAt: share.UpdatedAtTrigger ['changes']
 
   @PUBLISH_FIELDS: ->
     _id: 1
@@ -54,7 +53,6 @@ class Discussion extends share.BaseDocument
     author: 1
     title: 1
     descriptionDisplay: 1
-    meetings: 1
 
 if Meteor.isServer
   Discussion.Meta.collection._ensureIndex

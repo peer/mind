@@ -13,6 +13,8 @@ class Meeting extends share.BaseDocument
   # descriptionDisplay: HTML content of the description without tags needed for editing
   # descriptionAttachments: list of
   #   _id
+  # discussions: list of (order matters)
+  #   _id
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
@@ -41,6 +43,7 @@ class Meeting extends share.BaseDocument
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
+      discussions: [@ReferenceField Discussion, [], true, 'meetings']
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS()
       ]
@@ -57,6 +60,7 @@ class Meeting extends share.BaseDocument
     startAt: 1
     endAt: 1
     descriptionDisplay: 1
+    discussions: 1
 
 if Meteor.isServer
   Meeting.Meta.collection._ensureIndex

@@ -39,6 +39,7 @@ Meteor.methods
       description: document.description
       descriptionDisplay: descriptionDisplay
       descriptionAttachments: ({_id} for _id in attachments)
+      discussions: []
       changes: [
         updatedAt: createdAt
         author: user.getReference()

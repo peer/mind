@@ -13,7 +13,8 @@ Package.onUse(function (api) {
     'accounts-password',
     'stylus',
     'jquery',
-    'random'
+    'random',
+    'ejson'
   ]);
 
   // 3rd party dependencies.
