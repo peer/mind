@@ -8,18 +8,13 @@ Package.onUse(function (api) {
 
   // Core dependencies.
   api.use([
-    'coffeescript',
-    'underscore-extra',
-    'spacebars',
-    'tracker'
+    'coffeescript'
   ]);
 
   // 3rd party dependencies.
   api.use([
     'peerlibrary:blaze-components@0.16.2',
-    'peerlibrary:flow-router@2.10.0_2',
-    'momentjs:moment@2.10.6',
-    'peerlibrary:assert@0.2.5'
+    'peerlibrary:blaze-common-component@0.1.0'
   ]);
 
   // Internal dependencies.

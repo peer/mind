@@ -26,7 +26,7 @@ Package.onUse(function (api) {
     'peerlibrary:assert@0.2.5',
     'materialize:materialize@0.97.1',
     'useraccounts:materialize@1.12.4',
-    'useraccounts:flow-routing@1.13.0',
+    'useraccounts:flow-routing@1.13.1',
     'velocityjs:velocityjs@1.2.1',
     'mfpierre:chartist-js@1.6.0',
     'cunneen:accounts-admin-materializecss@0.2.19',
