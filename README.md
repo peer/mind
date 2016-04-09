@@ -42,6 +42,24 @@ var userId = Package['accounts-base'].Accounts.createUser({username: 'admin', pa
 Package['alanning:roles'].Roles.addUsersToRoles(userId, ['admin', 'moderator', 'manager', 'member']);
 ```
 
+Furthermore, currently the app has hard-coded four user groups with hard-coded permissions for them:
+* `member`s can add discussion items, add comments to them, propose motions, upvote content, and vote on motions
+* `moderator`s can make points, and edit content of others
+* `manager`s can add discussion items, comment, and propose motions
+* `admin`s can manage user accounts
+
+After you have created an admin account, you can invite new users into the system. They will get an
+e-mail with instructions how to setup their password. To invite a user, run the following function
+in your browser's web console:
+
+```javascript
+Meteor.call('User.invite', 'email@example.com', 'username', console.log.bind(console));
+```
+
+Invited users initally do not belong to any group. Currently this means that effectively they cannot do anything
+in the app without being added to at least one group. To add them to a group, you can use an admin interface at
+[http://localhost:3000/admin/accounts](http://localhost:3000/admin/accounts).
+
 ## Running ##
 
 To run the application in production you can use [Docker](https://www.docker.com/).
