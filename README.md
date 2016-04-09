@@ -48,7 +48,7 @@ Furthermore, currently the app has hard-coded four user groups with hard-coded p
 * `manager`s can add discussion items, comment, and propose motions
 * `admin`s can manage user accounts
 
-After you have created an admin account, you can invite new users into the system. They will get an
+After you have created an admin account, you can invite new users into the app. They will get an
 e-mail with instructions how to setup their password. To invite a user, run the following function
 in your browser's web console:
 
