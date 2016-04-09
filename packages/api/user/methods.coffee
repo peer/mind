@@ -4,6 +4,9 @@ Meteor.methods
     check email, Match.NonEmptyString
     check username, Match.NonEmptyString
 
+    # TODO: Temporary.
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole Meteor.userId(), ['admin']
+
     userId = Accounts.createUser
       email: email
       username: username
