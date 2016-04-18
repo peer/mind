@@ -12,7 +12,8 @@ Package.onUse(function (api) {
     'accounts-base',
     'underscore-extra',
     'jquery',
-    'random'
+    'random',
+    'ddp'
   ]);
 
   // 3rd party dependencies.
@@ -56,8 +57,13 @@ Package.onUse(function (api) {
   api.addFiles([
     'worker.coffee',
     'roles.coffee',
-    'accounts.coffee'
+    'accounts.coffee',
+    'sandstorm-server.coffee'
   ], 'server');
+
+  api.addFiles([
+    'sandstorm-client.coffee'
+  ], 'client');
 
   api.addFiles([
     'base.coffee',
