@@ -7,7 +7,7 @@ unless Meteor.settings?.public?.sandstorm
 
       throw new Meteor.Error 'unauthorized', "Unauthorized." unless Meteor.userId()
 
-      throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.USER_ADMIN
+      throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.ACCOUNTS_ADMIN
 
       userId = Accounts.createUser
         email: email

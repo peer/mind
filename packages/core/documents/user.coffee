@@ -106,7 +106,7 @@ class User extends share.BaseDocument
     POINT_NEW: 'POINT_NEW'
     POINT_UPDATE: 'POINT_UPDATE'
     POINT_UPDATE_OWN: 'POINT_UPDATE_OWN'
-    USER_ADMIN: 'USER_ADMIN'
+    ACCOUNTS_ADMIN: 'ACCOUNTS_ADMIN'
 
   # TODO: Currently roles/permissions map is hard-coded, but change this when we migrate to roles 2.0 package.
   @ROLES:
@@ -146,7 +146,7 @@ class User extends share.BaseDocument
       @PERMISSIONS.POINT_UPDATE
     ]
     ADMIN: [
-      @PERMISSIONS.USER_ADMIN
+      @PERMISSIONS.ACCOUNTS_ADMIN
     ]
 
   @_checkPermissions: (permissions) ->

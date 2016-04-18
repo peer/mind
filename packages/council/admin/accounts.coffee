@@ -2,7 +2,7 @@ class Admin.AccountsComponent extends UIComponent
   @register 'Admin.AccountsComponent'
 
   hasAccess: ->
-    User.hasPermission User.PERMISSIONS.USER_ADMIN
+    User.hasPermission User.PERMISSIONS.ACCOUNTS_ADMIN
 
 FlowRouter.route '/admin/accounts',
   name: 'Admin.accounts'
