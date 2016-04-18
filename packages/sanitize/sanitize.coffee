@@ -78,21 +78,24 @@ class Sanitize
 
   # Returns sanitized href.
   sanitizeHref: ($, href) ->
+    rootUrl = Meteor.absoluteUrl()
+    # Remove trailing /.
+    rootUrl = rootUrl.substr 0, rootUrl.length - 1
+
     # If local absolute URL.
     if href[0] is '/'
       # We prepend root URL so that we can reuse the same normalization code.
-      rootUrl = Meteor.absoluteUrl()
-      rootUrl = rootUrl.substr 0, rootUrl.length - 1 # Remove trailing /.
       href = "#{rootUrl}#{href}"
 
     # If link is not valid and not HTTP or HTTPS, normalize returns null and attribute is then removed.
     # TODO: Do we want to allow mailto: links?
     href = UrlUtils.normalize href
-    if href and rootUrl
-      # Normalization should not change the root URL part.
-      assert _.startsWith href, rootUrl
-      # We remove root URL to return back to local absolute URL.
-      href = href.substring rootUrl.length
+    if href
+      # If URL is an absolute URL to the app (or because we prepended the root, or because
+      # it was provided already like that). Normalization should not change the root URL part.
+      if _.startsWith href, rootUrl
+        # We remove root URL to return back to local absolute URL.
+        href = href.substring rootUrl.length
 
     href
 
