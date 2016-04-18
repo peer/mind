@@ -1,6 +1,5 @@
 Meteor.startup ->
-  # TODO: Create sub-roles for each action: "vote", "comment", "upvote".
-  Roles.createRole 'admin', true
-  Roles.createRole 'moderator', true
-  Roles.createRole 'manager', true
-  Roles.createRole 'member', true
+  # TODO: When we migrate to roles 2.0 package create all permissions and default roles over them.
+  for roleKey of User.ROLES
+    # All this is hard-coded for now. We convert to lower case.
+    Roles.createRole roleKey.toLowerCase(), true

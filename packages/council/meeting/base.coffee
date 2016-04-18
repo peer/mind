@@ -23,7 +23,7 @@ class Meeting.OneComponent extends UIComponent
         share.PageTitle "Not found"
 
     @canEdit = new ComputedField =>
-      @meeting() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @meeting().author._id))
+      @meeting() and (User.hasPermission(User.PERMISSIONS.MEETING_UPDATE) or (User.hasPermission(User.PERMISSIONS.MEETING_UPDATE_OWN) and (Meteor.userId() is @meeting().author._id)))
 
   meeting: ->
     Meeting.documents.findOne @currentMeetingId()

@@ -32,8 +32,7 @@ class Comment.ListItemComponent extends UIComponent
     super
 
     @canEdit = new ComputedField =>
-      # TODO: Should we also allow moderators to edit comments?
-      Meteor.userId() and @data() and Meteor.userId() is @data().author._id
+      @data() and (User.hasPermission(User.PERMISSIONS.COMMENT_UPDATE) or (User.hasPermission(User.PERMISSIONS.COMMENT_UPDATE_OWN) and (Meteor.userId() is @data().author._id)))
 
   editingSubscriptions: ->
     @subscribe 'Comment.forEdit', @data()._id

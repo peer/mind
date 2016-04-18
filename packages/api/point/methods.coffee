@@ -1,8 +1,7 @@
 Meteor.methods
   'Point.new': (document) ->
-    # TODO: Allow only those in "point" role, which should be a sub-role of "moderator" role.
     # TODO: Move check into newUpvotable.
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole Meteor.userId(), 'moderator'
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.POINT_NEW
 
     share.newUpvotable Point, document, false,
       body: Match.NonEmptyString
@@ -30,9 +29,11 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    # Any moderator can update any point. Users cannot update their points even if there were moderators at some point.
-    if Roles.userIsInRole user._id, 'moderator'
+    if User.hasPermission User.PERMISSIONS.POINT_UPDATE
       permissionCheck = {}
+    else if User.hasPermission User.PERMISSIONS.POINT_UPDATE_OWN
+      permissionCheck =
+        'author._id': user._id
     else
       permissionCheck =
         # TODO: Find a better "no-match" query.

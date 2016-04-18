@@ -5,8 +5,7 @@ class Discussion.NewComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      # TODO: Allow only to those in "discussion" role, which should be a sub-role of "member" role.
-      Roles.userIsInRole Meteor.userId(), ['member', 'manager']
+      User.hasPermission User.PERMISSIONS.DISCUSSION_NEW
 
   events: ->
     super.concat

@@ -23,7 +23,7 @@ class Discussion.OneComponent extends UIComponent
         share.PageTitle "Not found"
 
     @canEdit = new ComputedField =>
-      @discussion() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @discussion().author._id))
+      @discussion() and (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE) or (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE_OWN) and (Meteor.userId() is @discussion().author._id)))
 
   discussion: ->
     Discussion.documents.findOne @currentDiscussionId()

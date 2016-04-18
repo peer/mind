@@ -7,8 +7,7 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    # TODO: Allow only to those in "discussion" role, which should be a sub-role of "member" role.
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole user._id, ['member', 'manager']
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.DISCUSSION_NEW
 
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
@@ -82,11 +81,19 @@ Meteor.methods
 
     attachments = Discussion.extractAttachments document.description
 
-    if Roles.userIsInRole user._id, 'moderator'
+    if User.hasPermission User.PERMISSIONS.DISCUSSION_UPDATE
       permissionCheck = {}
-    else
+    else if User.hasPermission User.PERMISSIONS.DISCUSSION_UPDATE_OWN
       permissionCheck =
         'author._id': user._id
+    else
+      permissionCheck =
+        # TODO: Find a better "no-match" query.
+        $and: [
+          _id: 'a'
+        ,
+          _id: 'b'
+        ]
 
     updatedAt = new Date()
     changed = Discussion.documents.update _.extend(permissionCheck,

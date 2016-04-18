@@ -3,6 +3,7 @@ class ComputeTallyJob extends Job
 
   run: ->
     # We are loading packages in unordered mode, so we are fixing imports here, if needed.
+    User = Package.core.User unless User
     Vote = Package.core.Vote unless Vote
     Tally = Package.core.Tally unless Tally
     Motion = Package.core.Motion unless Motion
@@ -26,8 +27,7 @@ class ComputeTallyJob extends Job
 
     computedAt = new Date()
 
-    # TODO: Get all users with "voting" role?
-    populationSize = Roles.getUsersInRole('member').count()
+    populationSize = User.withPermission(User.PERMISSIONS.MOTION_VOTE).count()
 
     result = VotingEngine.computeTally motion.majority, votesValues, populationSize
 

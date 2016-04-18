@@ -35,22 +35,19 @@ class Motion.ListItemComponent extends UIComponent
       @subscribe 'Motion.latestTally', @data()._id if @data()?._id
 
     @canOpen = new ComputedField =>
-      # TODO: Allow only those in "openVoting" role, which should be a sub-role of "moderator" role.
-      Roles.userIsInRole(Meteor.userId(), 'moderator') and @data() and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
+      @data() and User.hasPermission(User.PERMISSIONS.MOTION_OPEN_VOTING) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
     @canClose = new ComputedField =>
-      # TODO: Allow only those in "closeVoting" role, which should be a sub-role of "moderator" role.
-      Roles.userIsInRole(Meteor.userId(), 'moderator') and @data() and @data().isOpen() and not @data().isWithdrawn()
+      @data() and User.hasPermission(User.PERMISSIONS.MOTION_CLOSE_VOTING) and @data().isOpen() and not @data().isWithdrawn()
 
     @canVote = new ComputedField =>
-      # TODO: Allow only those in "vote" role, which should be a sub-role of "member" role.
-      Roles.userIsInRole Meteor.userId(), 'member'
+      User.hasPermission User.PERMISSIONS.MOTION_VOTE
 
     @canEdit = new ComputedField =>
-      @data() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @data().author._id)) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
+      @data() and (User.hasPermission(User.PERMISSIONS.MOTION_UPDATE) or (User.hasPermission(User.PERMISSIONS.MOTION_UPDATE_OWN) and (Meteor.userId() is @data().author._id))) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
     @canWithdraw = new ComputedField =>
-      @data() and (Roles.userIsInRole(Meteor.userId(), 'moderator') or (Meteor.userId() is @data().author._id)) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
+      @data() and (User.hasPermission(User.PERMISSIONS.MOTION_WITHDRAW) or (User.hasPermission(User.PERMISSIONS.MOTION_WITHDRAW_OWN) and (Meteor.userId() is @data().author._id))) and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
   editingSubscriptions: ->
     @subscribe 'Motion.forEdit', @data()._id
@@ -117,7 +114,7 @@ class Motion.WithdrawComponent extends UIComponent
   onWithdrawMotion: (event) ->
     event.preventDefault()
 
-    Meteor.call 'Motion.withdrawVoting', @data()._id, (error, result) =>
+    Meteor.call 'Motion.withdraw', @data()._id, (error, result) =>
       if error
         console.error "Motion withdraw error", error
         alert "Motion withdraw error: #{error.reason or error}"

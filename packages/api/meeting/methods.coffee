@@ -18,8 +18,7 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    # TODO: Allow only to those in "meeting" role, which should be a sub-role of "moderator" role.
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless Roles.userIsInRole user._id, ['moderator']
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.MEETING_NEW
 
     document.description = Meeting.sanitize.sanitizeHTML document.description
 
@@ -88,11 +87,19 @@ Meteor.methods
 
     attachments = Meeting.extractAttachments document.description
 
-    if Roles.userIsInRole user._id, 'moderator'
+    if User.hasPermission User.PERMISSIONS.MEETING_UPDATE
       permissionCheck = {}
-    else
+    else if User.hasPermission User.PERMISSIONS.MEETING_UPDATE_OWN
       permissionCheck =
         'author._id': user._id
+    else
+      permissionCheck =
+        # TODO: Find a better "no-match" query.
+        $and: [
+          _id: 'a'
+        ,
+          _id: 'b'
+        ]
 
     updatedAt = new Date()
     changed = Meeting.documents.update _.extend(permissionCheck,

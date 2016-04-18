@@ -57,7 +57,7 @@ class Point.ListItemComponent extends UIComponent
     super
 
     @canEdit = new ComputedField =>
-      Roles.userIsInRole Meteor.userId(), 'moderator'
+      @data() and (User.hasPermission(User.PERMISSIONS.POINT_UPDATE) or (User.hasPermission(User.PERMISSIONS.POINT_UPDATE_OWN) and (Meteor.userId() is @data().author._id)))
 
   onBeingEdited: ->
     @callFirstWith @, 'isExpanded', false

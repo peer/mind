@@ -5,8 +5,7 @@ class Meeting.NewComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      # TODO: Allow only to those in "meeting" role, which should be a sub-role of "moderator" role.
-      Roles.userIsInRole Meteor.userId(), ['moderator']
+      User.hasPermission User.PERMISSIONS.MEETING_NEW
 
   onRendered: ->
     # TODO: Check why it does not enable every time?

@@ -47,6 +47,113 @@ class User extends share.BaseDocument
     _id: 1
     avatar: 1
 
+  @PERMISSIONS:
+    UPVOTE: 'UPVOTE'
+    COMMENT_NEW: 'COMMENT_NEW'
+    COMMENT_UPDATE: 'COMMENT_UPDATE'
+    COMMENT_UPDATE_OWN: 'COMMENT_UPDATE_OWN'
+    DISCUSSION_NEW: 'DISCUSSION_NEW'
+    DISCUSSION_UPDATE: 'DISCUSSION_UPDATE'
+    DISCUSSION_UPDATE_OWN: 'DISCUSSION_UPDATE_OWN'
+    MEETING_NEW: 'MEETING_NEW'
+    MEETING_UPDATE: 'MEETING_UPDATE'
+    MEETING_UPDATE_OWN: 'MEETING_UPDATE_OWN'
+    MOTION_NEW: 'MOTION_NEW'
+    MOTION_UPDATE: 'MOTION_UPDATE'
+    MOTION_UPDATE_OWN: 'MOTION_UPDATE_OWN'
+    MOTION_OPEN_VOTING: 'MOTION_OPEN_VOTING'
+    MOTION_CLOSE_VOTING: 'MOTION_CLOSE_VOTING'
+    MOTION_WITHDRAW: 'MOTION_WITHDRAW'
+    MOTION_WITHDRAW_OWN: 'MOTION_WITHDRAW_OWN'
+    MOTION_VOTE: 'MOTION_VOTE'
+    POINT_NEW: 'POINT_NEW'
+    POINT_UPDATE: 'POINT_UPDATE'
+    POINT_UPDATE_OWN: 'POINT_UPDATE_OWN'
+    USER_ADMIN: 'USER_ADMIN'
+
+  # TODO: Currently roles/permissions map is hard-coded, but change this when we migrate to roles 2.0 package.
+  @ROLES:
+    MEMBER: [
+      @PERMISSIONS.UPVOTE
+      @PERMISSIONS.COMMENT_NEW
+      @PERMISSIONS.COMMENT_UPDATE_OWN
+      @PERMISSIONS.DISCUSSION_NEW
+      @PERMISSIONS.DISCUSSION_UPDATE_OWN
+      @PERMISSIONS.MOTION_NEW
+      @PERMISSIONS.MOTION_UPDATE_OWN
+      @PERMISSIONS.MOTION_WITHDRAW_OWN
+      @PERMISSIONS.MOTION_VOTE
+    ]
+    MANAGER: [
+      @PERMISSIONS.COMMENT_NEW
+      @PERMISSIONS.COMMENT_UPDATE_OWN
+      @PERMISSIONS.DISCUSSION_NEW
+      @PERMISSIONS.DISCUSSION_UPDATE_OWN
+      @PERMISSIONS.MOTION_NEW
+      @PERMISSIONS.MOTION_UPDATE_OWN
+      @PERMISSIONS.MOTION_WITHDRAW_OWN
+    ]
+    # Moderators can create new meetings and points, and update them, but cannot
+    # update own meetings and points, so that if they loose permissions they cannot
+    # update anymore old meetings and points they made.
+    MODERATOR: [
+      @PERMISSIONS.COMMENT_UPDATE
+      @PERMISSIONS.DISCUSSION_UPDATE
+      @PERMISSIONS.MOTION_UPDATE
+      @PERMISSIONS.MOTION_OPEN_VOTING
+      @PERMISSIONS.MOTION_CLOSE_VOTING
+      @PERMISSIONS.MOTION_WITHDRAW
+      @PERMISSIONS.MEETING_NEW
+      @PERMISSIONS.MEETING_UPDATE
+      @PERMISSIONS.POINT_NEW
+      @PERMISSIONS.POINT_UPDATE
+    ]
+    ADMIN: [
+      @PERMISSIONS.USER_ADMIN
+    ]
+
+  # Currently with roles 1.0 package we do not really assign to users permissions, but
+  # just roles. So here we are mapping permissions to all roles which have those permissions.
+  # TODO: Change all this logic when we migrate to roles 2.0 package.
+  @_convertToRoles: (permissions) ->
+    permissions = [permissions] unless _.isArray permissions
+
+    roles = []
+
+    for permission in permissions
+      found = false
+      for knownPermissionKey, knownPermissionValue of @PERMISSIONS
+        if knownPermissionValue is permission
+          found = true
+          break
+
+      # We want to be strict and catch any invalid permission. One should
+      # be using constants and not strings directly anyway.
+      throw new Error "Unknown permission '#{permission}'." unless found
+
+      for roleKey, rolePermissions of @ROLES when permission in rolePermissions
+        # All this is hard-coded for now. We convert to lower case.
+        roles.push roleKey.toLowerCase()
+
+    roles
+
+  @hasPermission: (permissions) ->
+    roles = @_convertToRoles permissions
+
+    # We are using the peerlibrary:user-extra package to make this work everywhere.
+    userId = Meteor.userId()
+    return false unless userId
+
+    Roles.userIsInRole userId, roles
+
+  @withPermission: (permissions) ->
+    roles = @_convertToRoles permissions
+
+    # TODO: In roles 2.0 package getUsersInRole accepts an array as well.
+    throw new Error "Currently only one role is supported." if roles.length isnt 1
+
+    Roles.getUsersInRole roles[0]
+
   # Copied from: https://github.com/RocketChat/Rocket.Chat/blob/master/server/startup/avatar.coffee
   @generateAvatar: (username="") ->
     colors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B']

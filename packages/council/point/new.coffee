@@ -5,7 +5,7 @@ class Point.NewComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      Roles.userIsInRole Meteor.userId(), 'moderator'
+      User.hasPermission User.PERMISSIONS.POINT_NEW
 
   currentDiscussionId: ->
     @ancestorComponent(Point.ListComponent)?.currentDiscussionId()

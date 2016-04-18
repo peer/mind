@@ -2,7 +2,7 @@ class Admin.AccountsComponent extends UIComponent
   @register 'Admin.AccountsComponent'
 
   hasAccess: ->
-    Roles.userIsInRole Meteor.userId(), 'admin'
+    User.hasPermission User.PERMISSIONS.USER_ADMIN
 
 FlowRouter.route '/admin/accounts',
   name: 'Admin.accounts'
