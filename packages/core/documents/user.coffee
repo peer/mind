@@ -1,5 +1,5 @@
 # "i" is a suffix for automatically generated initials.
-AVATAR_INITIALS_REGEX = ///^avatar/\w+-i]\.///
+AVATAR_INITIALS_REGEX = ///^avatar/\w+-i\.///
 
 class User extends share.BaseDocument
   # createdAt: time of document creation
