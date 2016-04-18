@@ -14,7 +14,8 @@ Package.onUse(function (api) {
     'stylus',
     'jquery',
     'random',
-    'ejson'
+    'ejson',
+    'tracker'
   ]);
 
   // 3rd party dependencies.
@@ -82,6 +83,7 @@ Package.onUse(function (api) {
     'flow-router/access-denied.html',
     'flow-router/access-denied.coffee',
     'flow-router/icons.html',
+    'flow-router/sandstorm.coffee',
     'discussion/base.coffee',
     'discussion/list.html',
     'discussion/list.coffee',
