@@ -1,7 +1,19 @@
 <template name="Admin.AccountsComponent">
   {{#if hasAccess}}
     <div class="section">
-      {{> accountsAdmin}}
+      {{#if isSandstorm}}
+        <div class="row">
+          <h4 class="col s12">
+            Accounts are manged through Sandstorm
+          </h4>
+          <p class="col s12">
+            Consult Sandstorm grain sharing settings to see and manage who has access to this grain
+            and which permissions they have.
+          </p>
+        </div>
+      {{else}}
+        {{> accountsAdmin}}
+      {{/if}}
     </div>
   {{else}}
     {{> AccessDeniedComponent}}

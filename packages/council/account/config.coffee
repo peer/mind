@@ -1,60 +1,65 @@
-AccountsTemplates.configure
-  confirmPassword: true
-  enablePasswordChange: true
-  forbidClientAccountCreation: true
-  overrideLoginErrors: false
-  sendVerificationEmail: false
-  lowercaseUsername: false
-  focusFirstInput: true
-  showForgotPasswordLink: true
+if Meteor.settings?.public?.sandstorm
+  AccountsTemplates.configure
+    forbidClientAccountCreation: true
 
-  defaultTemplate: 'AccountFormComponent'
-  defaultLayout: 'MainLayoutComponent'
-  defaultLayoutRegions: {}
-  defaultContentRegion: 'main'
+else
+  AccountsTemplates.configure
+    confirmPassword: true
+    enablePasswordChange: true
+    forbidClientAccountCreation: true
+    overrideLoginErrors: false
+    sendVerificationEmail: false
+    lowercaseUsername: false
+    focusFirstInput: true
+    showForgotPasswordLink: true
 
-  #texts:
-    # TODO: This adds extra space, see: https://github.com/meteor-useraccounts/core/issues/583
-    #signInLink_suff: "."
+    defaultTemplate: 'AccountFormComponent'
+    defaultLayout: 'MainLayoutComponent'
+    defaultLayoutRegions: {}
+    defaultContentRegion: 'main'
 
-AccountsTemplates.configureRoute 'signIn',
-  name: 'Account.signIn'
-  path: '/account/signin'
+    #texts:
+      # TODO: This adds extra space, see: https://github.com/meteor-useraccounts/core/issues/583
+      #signInLink_suff: "."
 
-AccountsTemplates.configureRoute 'changePwd',
-  name: 'Account.changePassword'
-  path: '/account/password/change'
+  AccountsTemplates.configureRoute 'signIn',
+    name: 'Account.signIn'
+    path: '/account/signin'
 
-AccountsTemplates.configureRoute 'enrollAccount',
-  name: 'Account.enrollAccount'
-  path: '/account/enroll'
+  AccountsTemplates.configureRoute 'changePwd',
+    name: 'Account.changePassword'
+    path: '/account/password/change'
 
-AccountsTemplates.configureRoute 'forgotPwd',
-  name: 'Account.forgotPassword'
-  path: '/account/password/forgot'
+  AccountsTemplates.configureRoute 'enrollAccount',
+    name: 'Account.enrollAccount'
+    path: '/account/enroll'
 
-AccountsTemplates.configureRoute 'resetPwd',
-  name: 'Account.resetPassword'
-  path: '/account/password/reset'
+  AccountsTemplates.configureRoute 'forgotPwd',
+    name: 'Account.forgotPassword'
+    path: '/account/password/forgot'
 
-passwordField = AccountsTemplates.removeField 'password'
+  AccountsTemplates.configureRoute 'resetPwd',
+    name: 'Account.resetPassword'
+    path: '/account/password/reset'
 
-AccountsTemplates.removeField 'email'
+  passwordField = AccountsTemplates.removeField 'password'
 
-AccountsTemplates.addFields [
-  _id: 'username'
-  type: 'text'
-  displayName: 'username'
-  required: true
-  minLength: 5
-,
-  _id: 'email'
-  type: 'email'
-  required: true
-  displayName: 'email'
-  # TODO: Better regex.
-  re: /.+@(.+){2,}\.(.+){2,}/
-  errStr: 'Invalid email'
-,
-  passwordField
-]
+  AccountsTemplates.removeField 'email'
+
+  AccountsTemplates.addFields [
+    _id: 'username'
+    type: 'text'
+    displayName: 'username'
+    required: true
+    minLength: 5
+  ,
+    _id: 'email'
+    type: 'email'
+    required: true
+    displayName: 'email'
+    # TODO: Better regex.
+    re: /.+@(.+){2,}\.(.+){2,}/
+    errStr: 'Invalid email'
+  ,
+    passwordField
+  ]

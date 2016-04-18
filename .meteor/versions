@@ -46,6 +46,7 @@ jobs@0.1.0
 jquery@1.11.4
 kadira:blaze-layout@2.3.0
 kadira:flow-router@2.10.1
+kenton:accounts-sandstorm@0.2.1
 launch-screen@1.0.4
 livedata@1.0.15
 localstorage@1.0.5

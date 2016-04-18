@@ -44,8 +44,13 @@ class User extends share.BaseDocument
     avatar: 1
 
   @EXTRA_PUBLISH_FIELDS: ->
-    _id: 1
-    avatar: 1
+    if Meteor.settings?.public?.sandstorm
+      _id: 1
+      avatar: 1
+      'services.sandstorm': 1
+    else
+      _id: 1
+      avatar: 1
 
   @PERMISSIONS:
     UPVOTE: 'UPVOTE'
@@ -112,13 +117,8 @@ class User extends share.BaseDocument
       @PERMISSIONS.USER_ADMIN
     ]
 
-  # Currently with roles 1.0 package we do not really assign to users permissions, but
-  # just roles. So here we are mapping permissions to all roles which have those permissions.
-  # TODO: Change all this logic when we migrate to roles 2.0 package.
-  @_convertToRoles: (permissions) ->
+  @_checkPermissions: (permissions) ->
     permissions = [permissions] unless _.isArray permissions
-
-    roles = []
 
     for permission in permissions
       found = false
@@ -131,6 +131,17 @@ class User extends share.BaseDocument
       # be using constants and not strings directly anyway.
       throw new Error "Unknown permission '#{permission}'." unless found
 
+    permissions
+
+  # Currently with roles 1.0 package we do not really assign to users permissions, but
+  # just roles. So here we are mapping permissions to all roles which have those permissions.
+  # TODO: Change all this logic when we migrate to roles 2.0 package.
+  @_convertToRoles: (permissions) ->
+    permissions = @_checkPermissions permissions
+
+    roles = []
+
+    for permission in permissions
       for roleKey, rolePermissions of @ROLES when permission in rolePermissions
         # All this is hard-coded for now. We convert to lower case.
         roles.push roleKey.toLowerCase()
@@ -138,21 +149,42 @@ class User extends share.BaseDocument
     roles
 
   @hasPermission: (permissions) ->
-    roles = @_convertToRoles permissions
+    if Meteor.settings?.public?.sandstorm
+      permissions = @_checkPermissions permissions
 
-    # We are using the peerlibrary:user-extra package to make this work everywhere.
-    userId = Meteor.userId()
-    return false unless userId
+      # We are using the peerlibrary:user-extra package to make this work everywhere.
+      userId = Meteor.userId()
+      return false unless userId
 
-    Roles.userIsInRole userId, roles
+      @documents.exists
+        _id: userId
+        'services.sandstorm.permissions':
+          $in: permissions
+
+    else
+      roles = @_convertToRoles permissions
+
+      # We are using the peerlibrary:user-extra package to make this work everywhere.
+      userId = Meteor.userId()
+      return false unless userId
+
+      Roles.userIsInRole userId, roles
 
   @withPermission: (permissions) ->
-    roles = @_convertToRoles permissions
+    if Meteor.settings?.public?.sandstorm
+      permissions = @_checkPermissions permissions
 
-    # TODO: In roles 2.0 package getUsersInRole accepts an array as well.
-    throw new Error "Currently only one role is supported." if roles.length isnt 1
+      @documents.find
+        'services.sandstorm.permissions':
+          $in: permissions
 
-    Roles.getUsersInRole roles[0]
+    else
+      roles = @_convertToRoles permissions
+
+      # TODO: In roles 2.0 package getUsersInRole accepts an array as well.
+      throw new Error "Currently only one role is supported." if roles.length isnt 1
+
+      Roles.getUsersInRole roles[0]
 
   # Copied from: https://github.com/RocketChat/Rocket.Chat/blob/master/server/startup/avatar.coffee
   @generateAvatar: (username="") ->
@@ -183,6 +215,12 @@ class User extends share.BaseDocument
   getReference: ->
     _.pick @, _.keys @constructor.REFERENCE_FIELDS()
 
+  avatarUrl: ->
+    if Meteor.settings?.public?.sandstorm and @services?.sandstorm?.picture
+      @services?.sandstorm?.picture
+    else
+      Storage.url @avatar
+
 if Meteor.isServer
   User.Meta.collection._ensureIndex
     createdAt: 1
@@ -195,3 +233,7 @@ if Meteor.isServer
 
   User.Meta.collection._ensureIndex
     roles: 1
+
+  if Meteor.settings?.public?.sandstorm
+    User.Meta.collection._ensureIndex
+      'services.sandstorm.permissions': 1

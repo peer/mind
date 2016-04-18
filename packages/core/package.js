@@ -25,7 +25,8 @@ Package.onUse(function (api) {
     'fermuch:cheerio@0.19.0',
     'alanning:roles@1.2.14',
     'peerlibrary:classy-job@0.2.0',
-    'peerlibrary:user-extra@0.1.0'
+    'peerlibrary:user-extra@0.1.0',
+    'kenton:accounts-sandstorm@0.2.1'
   ]);
 
   api.use([
@@ -52,11 +53,10 @@ Package.onUse(function (api) {
   api.export('StorageFile');
   api.export('Admin');
 
-  api.imply('alanning:roles');
-
   api.addFiles([
     'worker.coffee',
-    'roles.coffee'
+    'roles.coffee',
+    'accounts.coffee'
   ], 'server');
 
   api.addFiles([
