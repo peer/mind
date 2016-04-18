@@ -6,11 +6,28 @@ nav ul .account img
   width 32px
   border-radius 50%
 
+nav ul .static
+  font-size 1rem
+  // TODO: Use $navbar-font-color here.
+  color #fff
+  display block
+  padding 0 15px
+
 // TODO: Use $medium-and-up or $small-screen-up here.
 @media only screen and (min-width: 601px)
   nav ul .account img
     margin-top 16px
 
-nav .side-nav li.signed-in-menu-item
-  // TODO: Use $secondary-color here.
-  background-color #26a69a
+nav .side-nav
+  li.signed-in-menu-item
+    // TODO: Use $secondary-color here.
+    background-color #26a69a
+
+  .static
+    color #444
+    display block
+    font-size 1rem
+    height 64px
+    line-height 64px
+    // TODO: Use $sidenav-padding-right here.
+    padding 0 15px
