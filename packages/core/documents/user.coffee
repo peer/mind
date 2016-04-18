@@ -16,24 +16,56 @@ class User extends share.BaseDocument
   @Meta
     name: 'User'
     collection: Meteor.users
-    fields: =>
-      avatar: @GeneratedField 'self', ['avatar', 'username'], (fields) =>
-        # Do not do anything if a custom avatar (no "i" suffix) is set.
-        return [] if fields.avatar and not AVATAR_INITIALS_REGEX.test fields.avatar
+    fields: (fields) =>
+      if Meteor.settings?.public?.sandstorm
+        fields.username = @GeneratedField 'self', ['services.sandstorm.preferredHandle'], (fields) =>
+          return [] unless fields.services?.sandstorm?.preferredHandle
 
-        # "i" is a suffix for automatically generated initials.
-        avatarFilename = "avatar/#{fields._id}-i.svg"
-        avatarContent = @generateAvatar fields.username
+          # We start with 1 so that the first number to try is 2.
+          counter = 1
+          username = fields.services.sandstorm.preferredHandle
 
-        sha256 = new Crypto.SHA256
-          size: avatarContent.length
-        sha256.update avatarContent
-        avatarHash = sha256.finalize()
+          loop
+            try
+              # This searches in a case insensitive way.
+              user = Accounts.findUserByUsername username
 
-        Storage.save avatarFilename, avatarContent
+              if user
+                counter++
+                username = "#{fields.services.sandstorm.preferredHandle}#{counter}"
+                continue
+              else
+                Accounts.setUsername fields._id, username
 
-        # Attach a query string to force reactive client-side update when the content changes.
-        [fields._id, "#{avatarFilename}?#{avatarHash.substr 0, 16}"]
+              # Redundant, because we just set it, but we still return the same values.
+              return [fields._id, username]
+
+            catch error
+              if /Username already exists/.test "#{error}"
+                counter++
+                username = "#{fields.services.sandstorm.preferredHandle}#{counter}"
+                continue
+
+              throw error
+
+      _.extend fields,
+        avatar: @GeneratedField 'self', ['avatar', 'username'], (fields) =>
+          # Do not do anything if a custom avatar (no "i" suffix) is set.
+          return [] if fields.avatar and not AVATAR_INITIALS_REGEX.test fields.avatar
+
+          # "i" is a suffix for automatically generated initials.
+          avatarFilename = "avatar/#{fields._id}-i.svg"
+          avatarContent = @generateAvatar fields.username
+
+          sha256 = new Crypto.SHA256
+            size: avatarContent.length
+          sha256.update avatarContent
+          avatarHash = sha256.finalize()
+
+          Storage.save avatarFilename, avatarContent
+
+          # Attach a query string to force reactive client-side update when the content changes.
+          [fields._id, "#{avatarFilename}?#{avatarHash.substr 0, 16}"]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
       lastActivity: share.LastActivityTrigger ['services']
