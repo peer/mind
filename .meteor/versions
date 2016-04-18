@@ -20,7 +20,7 @@ coffeescript@1.0.11
 core@0.1.0
 cosmos:browserify@0.9.3
 council@0.1.0
-cunneen:accounts-admin-materializecss@0.2.20
+cunneen:accounts-admin-materializecss@0.2.24
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.2
