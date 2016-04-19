@@ -50,7 +50,7 @@ generateSandstormAvatar = (fields) ->
   updateAvatar fields._id, 's', 'png', new Buffer avatarContent.toString(), 'base64'
 
 generateAvatar = (fields) ->
-  if fields.avatar and match = AVATAR_REGEX.match fields.avatar
+  if fields.avatar and match = AVATAR_REGEX.exec fields.avatar
     # Do not do anything if a custom avatar (no "i" suffix) is set.
     return [] unless match[1] is 'i'
 
