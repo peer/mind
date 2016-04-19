@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "identicon.js": {
+      "version": "https://github.com/mitar/identicon.js/archive/f779779335af160740707e2c80f4db559b7b3f5d.tar.gz"
+    }
+  }
+}

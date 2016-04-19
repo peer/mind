@@ -3,6 +3,10 @@ Package.describe({
   version: '0.1.0'
 });
 
+Npm.depends({
+  'identicon.js': 'https://github.com/mitar/identicon.js/archive/f779779335af160740707e2c80f4db559b7b3f5d.tar.gz'
+});
+
 Package.onUse(function (api) {
   api.versionsFrom('1.2.0.2');
 

@@ -1,5 +1,103 @@
-# "i" is a suffix for automatically generated initials.
-AVATAR_INITIALS_REGEX = ///^avatar/\w+-i\.///
+# Suffix can be:
+#  i - for automatically generated initials
+#  s - for generated default avatar for Sandstorm
+#  u - for avatar uploaded by user
+AVATAR_REGEX = ///^avatar/\w+-([isu])\.///
+
+generateSandstormUsername = (fields) ->
+  return [] unless fields.services?.sandstorm?.preferredHandle
+
+  # We start with 1 so that the first number to try is 2.
+  counter = 1
+  username = fields.services.sandstorm.preferredHandle
+
+  loop
+    try
+      # This searches in a case insensitive way.
+      user = Accounts.findUserByUsername username
+
+      if user
+        counter++
+        username = "#{fields.services.sandstorm.preferredHandle}#{counter}"
+        continue
+      else
+        Accounts.setUsername fields._id, username
+
+      # Redundant, because we just set it, but we still return the same values.
+      return [fields._id, username]
+
+    catch error
+      if /Username already exists/.test "#{error}"
+        counter++
+        username = "#{fields.services.sandstorm.preferredHandle}#{counter}"
+        continue
+
+      throw error
+
+generateSandstormAvatar = (fields) ->
+  return [fields._id, fields.services.sandstorm.picture] if fields.services?.sandstorm?.picture
+
+  # We have to generate Sandstorm default avatar on our own.
+  # See: https://github.com/sandstorm-io/sandstorm/issues/1866
+
+  Identicon = Npm.require 'identicon.js'
+
+  # Sandstorm ID is required and if it is missing, something strange
+  # is happening so it is OK to throw an error.
+  avatarContent = new Identicon fields.services.sandstorm.id,
+    size: 128
+
+  updateAvatar fields._id, 's', 'png', new Buffer avatarContent.toString(), 'base64'
+
+generateAvatar = (fields) ->
+  if fields.avatar and match = AVATAR_REGEX.match fields.avatar
+    # Do not do anything if a custom avatar (no "i" suffix) is set.
+    return [] unless match[1] is 'i'
+
+  # It is OK if fields.username does not exist.
+  avatarContent = initialsAvatar fields.username
+
+  updateAvatar fields._id, 'i', 'svg', avatarContent
+
+updateAvatar = (usedId, type, extension, avatarContent) ->
+  avatarFilename = "avatar/#{usedId}-#{type}.#{extension}"
+
+  sha256 = new Crypto.SHA256
+    size: avatarContent.length
+  sha256.update avatarContent
+  avatarHash = sha256.finalize()
+
+  # TODO: Remove other types and extensions of previously stored avatars.
+  Storage.save avatarFilename, avatarContent
+
+  # Attach a query string to force reactive client-side update when the content changes.
+  [usedId, "#{avatarFilename}?#{avatarHash.substr 0, 16}"]
+
+# Copied from: https://github.com/RocketChat/Rocket.Chat/blob/master/server/startup/avatar.coffee
+initialsAvatar = (username="") ->
+  colors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B']
+
+  position = username.length % colors.length
+  color = colors[position]
+  # TODO: Use slugify2.
+  username = username.replace(/[^A-Za-z0-9]/g, '.').replace(/\.+/g, '.').replace(/(^\.)|(\.$)/g, '')
+  usernameParts = username.split('.')
+  if usernameParts.length > 1
+    initials = _.first(usernameParts)[0] + _.last(usernameParts)[0]
+  else
+    initials = username.replace(/[^A-Za-z0-9]/g, '').substr(0, 2)
+  initials = initials.toUpperCase()
+
+  initials ||= "?"
+
+  """
+  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+  <svg xmlns="http://www.w3.org/2000/svg" pointer-events="none" width="50" height="50" style="width: 50px; height: 50px; background-color: #{color};">
+    <text text-anchor="middle" y="50%" x="50%" dy="0.36em" pointer-events="auto" fill="#ffffff" font-family="Helvetica, Arial, Lucida Grande, sans-serif" style="font-weight: 400; font-size: 28px;">
+      #{initials}
+    </text>
+  </svg>
+  """
 
 class User extends share.BaseDocument
   # createdAt: time of document creation
@@ -16,56 +114,14 @@ class User extends share.BaseDocument
   @Meta
     name: 'User'
     collection: Meteor.users
-    fields: (fields) =>
+    fields: =>
       if Meteor.settings?.public?.sandstorm
-        fields.username = @GeneratedField 'self', ['services.sandstorm.preferredHandle'], (fields) =>
-          return [] unless fields.services?.sandstorm?.preferredHandle
-
-          # We start with 1 so that the first number to try is 2.
-          counter = 1
-          username = fields.services.sandstorm.preferredHandle
-
-          loop
-            try
-              # This searches in a case insensitive way.
-              user = Accounts.findUserByUsername username
-
-              if user
-                counter++
-                username = "#{fields.services.sandstorm.preferredHandle}#{counter}"
-                continue
-              else
-                Accounts.setUsername fields._id, username
-
-              # Redundant, because we just set it, but we still return the same values.
-              return [fields._id, username]
-
-            catch error
-              if /Username already exists/.test "#{error}"
-                counter++
-                username = "#{fields.services.sandstorm.preferredHandle}#{counter}"
-                continue
-
-              throw error
-
-      _.extend fields,
-        avatar: @GeneratedField 'self', ['avatar', 'username'], (fields) =>
-          # Do not do anything if a custom avatar (no "i" suffix) is set.
-          return [] if fields.avatar and not AVATAR_INITIALS_REGEX.test fields.avatar
-
-          # "i" is a suffix for automatically generated initials.
-          avatarFilename = "avatar/#{fields._id}-i.svg"
-          avatarContent = @generateAvatar fields.username
-
-          sha256 = new Crypto.SHA256
-            size: avatarContent.length
-          sha256.update avatarContent
-          avatarHash = sha256.finalize()
-
-          Storage.save avatarFilename, avatarContent
-
-          # Attach a query string to force reactive client-side update when the content changes.
-          [fields._id, "#{avatarFilename}?#{avatarHash.substr 0, 16}"]
+        username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
+        # We include "avatar" field so the if it gets deleted it gets regenerated.
+        avatar: @GeneratedField 'self', ['avatar', 'services.sandstorm.id', 'services.sandstorm.picture'], generateSandstormAvatar
+      else
+        # We include "avatar" field so the if it gets deleted it gets regenerated.
+        avatar: @GeneratedField 'self', ['avatar', 'username'], generateAvatar
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
       lastActivity: share.LastActivityTrigger ['services']
@@ -79,7 +135,7 @@ class User extends share.BaseDocument
     if Meteor.settings?.public?.sandstorm
       _id: 1
       avatar: 1
-      'services.sandstorm': 1
+      'services.sandstorm.permissions': 1
     else
       _id: 1
       avatar: 1
@@ -218,40 +274,14 @@ class User extends share.BaseDocument
 
       Roles.getUsersInRole roles[0]
 
-  # Copied from: https://github.com/RocketChat/Rocket.Chat/blob/master/server/startup/avatar.coffee
-  @generateAvatar: (username="") ->
-    colors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B']
-
-    position = username.length % colors.length
-    color = colors[position]
-    # TODO: Use slugify2.
-    username = username.replace(/[^A-Za-z0-9]/g, '.').replace(/\.+/g, '.').replace(/(^\.)|(\.$)/g, '')
-    usernameParts = username.split('.')
-    if usernameParts.length > 1
-      initials = _.first(usernameParts)[0] + _.last(usernameParts)[0]
-    else
-      initials = username.replace(/[^A-Za-z0-9]/g, '').substr(0, 2)
-    initials = initials.toUpperCase()
-
-    initials ||= "?"
-
-    """
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <svg xmlns="http://www.w3.org/2000/svg" pointer-events="none" width="50" height="50" style="width: 50px; height: 50px; background-color: #{color};">
-      <text text-anchor="middle" y="50%" x="50%" dy="0.36em" pointer-events="auto" fill="#ffffff" font-family="Helvetica, Arial, Lucida Grande, sans-serif" style="font-weight: 400; font-size: 28px;">
-        #{initials}
-      </text>
-    </svg>
-    """
-
   getReference: ->
     _.pick @, _.keys @constructor.REFERENCE_FIELDS()
 
   avatarUrl: ->
-    if Meteor.settings?.public?.sandstorm and @services?.sandstorm?.picture
-      @services?.sandstorm?.picture
-    else
+    if @avatar and AVATAR_REGEX.test @avatar
       Storage.url @avatar
+    else
+      @avatar
 
 if Meteor.isServer
   User.Meta.collection._ensureIndex
