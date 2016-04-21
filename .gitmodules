@@ -13,6 +13,3 @@
 [submodule "packages/alanning:roles"]
 	path = packages/alanning:roles
 	url = https://github.com/mitar/meteor-roles.git
-[submodule "packages/kenton:accounts-sandstorm"]
-	path = packages/kenton:accounts-sandstorm
-	url = https://github.com/mitar/meteor-accounts-sandstorm.git
