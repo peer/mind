@@ -41,13 +41,18 @@ generateSandstormAvatar = (fields) ->
   # See: https://github.com/sandstorm-io/sandstorm/issues/1866
 
   Identicon = Npm.require 'identicon.js'
+  PNG = Npm.require('pngjs').PNG
 
   # Sandstorm ID is required and if it is missing, something strange
   # is happening so it is OK to throw an error.
   avatarContent = new Identicon fields.services.sandstorm.id,
     size: 128
 
-  updateAvatar fields._id, 's', 'png', new Buffer avatarContent.toString(), 'base64'
+  uncompressedPng = new Buffer avatarContent.toString(), 'base64'
+
+  compressedPng = PNG.sync.write PNG.sync.read uncompressedPng
+
+  updateAvatar fields._id, 's', 'png', compressedPng
 
 generateAvatar = (fields) ->
   if fields.avatar and match = AVATAR_REGEX.exec fields.avatar

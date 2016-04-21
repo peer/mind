@@ -4,7 +4,8 @@ Package.describe({
 });
 
 Npm.depends({
-  'identicon.js': 'https://github.com/mitar/identicon.js/archive/f779779335af160740707e2c80f4db559b7b3f5d.tar.gz'
+  'identicon.js': '1.2.1',
+  'pngjs': 'https://github.com/mitar/pngjs/archive/a7185922209b9fbb282e4c98b9505c1e3e28289c.tar.gz'
 });
 
 Package.onUse(function (api) {
