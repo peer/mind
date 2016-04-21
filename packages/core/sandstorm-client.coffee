@@ -1,4 +1,4 @@
-if Meteor.settings?.public?.sandstorm
+if __meteor_runtime_config__.SANDSTORM
   # Meteor.absoluteUrl doesn't work in Sandstorm, since every session has a different URL
   # whereas Meteor computes absoluteUrl based on the ROOT_URL environment variable.
   originalAbsoluteUrl = Meteor.absoluteUrl

@@ -1,4 +1,4 @@
-if Meteor.settings?.public?.sandstorm
+if __meteor_runtime_config__.SANDSTORM
   # Since the Sandstorm grain is displayed in an iframe of the Sandstorm shell,
   # we need to explicitly expose meta data like the page title or the URL path
   # so that they could appear in the browser window.

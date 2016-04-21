@@ -341,10 +341,10 @@ const myCommand :Spk.Manifest.Command = (
   environ = [
     # Note that this defines the *entire* environment seen by your app.
     (key = "PATH", value = "/usr/local/bin:/usr/bin:/bin"),
-    (key = "METEOR_SETTINGS", value = "{\"public\": {\"sandstorm\": true}}"),
-    # Configure Meteor settings so that the Meteor app running within Sandstorm
-    # can detect if running inside Sandstorm at runtime, switching UI and/or backend
-    # to use the app's Sandstorm-specific integration code.
+    (key = "SANDSTORM", value = "1"),
+    # Export SANDSTORM=1 into the environment, so that apps running within Sandstorm
+    # can detect if $SANDSTORM="1" at runtime, switching UI and/or backend to use
+    # the app's Sandstorm-specific integration code.
     (key = "STORAGE_DIRECTORY", value = "/var/storage"),
     # Storage directory for content uploaded by users.
   ]

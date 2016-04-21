@@ -115,7 +115,7 @@ class User extends share.BaseDocument
     name: 'User'
     collection: Meteor.users
     fields: =>
-      if Meteor.settings?.public?.sandstorm
+      if __meteor_runtime_config__.SANDSTORM
         username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
         # We include "avatar" field so the if it gets deleted it gets regenerated.
         avatar: @GeneratedField 'self', ['avatar', 'services.sandstorm.id', 'services.sandstorm.picture'], generateSandstormAvatar
@@ -132,7 +132,7 @@ class User extends share.BaseDocument
     avatar: 1
 
   @EXTRA_PUBLISH_FIELDS: ->
-    if Meteor.settings?.public?.sandstorm
+    if __meteor_runtime_config__.SANDSTORM
       _id: 1
       avatar: 1
       'services.sandstorm.permissions': 1
@@ -237,7 +237,7 @@ class User extends share.BaseDocument
     roles
 
   @hasPermission: (permissions) ->
-    if Meteor.settings?.public?.sandstorm
+    if __meteor_runtime_config__.SANDSTORM
       permissions = @_checkPermissions permissions
 
       # We are using the peerlibrary:user-extra package to make this work everywhere.
@@ -259,7 +259,7 @@ class User extends share.BaseDocument
       Roles.userIsInRole userId, roles
 
   @withPermission: (permissions) ->
-    if Meteor.settings?.public?.sandstorm
+    if __meteor_runtime_config__.SANDSTORM
       permissions = @_checkPermissions permissions
 
       @documents.find
@@ -296,6 +296,6 @@ if Meteor.isServer
   User.Meta.collection._ensureIndex
     roles: 1
 
-  if Meteor.settings?.public?.sandstorm
+  if __meteor_runtime_config__.SANDSTORM
     User.Meta.collection._ensureIndex
       'services.sandstorm.permissions': 1

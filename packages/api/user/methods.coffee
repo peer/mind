@@ -1,4 +1,4 @@
-unless Meteor.settings?.public?.sandstorm
+unless __meteor_runtime_config__.SANDSTORM
   Meteor.methods
     # TODO: Temporary, to invite users.
     'User.invite': (email, username) ->

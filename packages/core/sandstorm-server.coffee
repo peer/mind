@@ -1,4 +1,4 @@
-if Meteor.settings?.public?.sandstorm
+if __meteor_runtime_config__.SANDSTORM
   # Override the publish function so that we can get the current connection.
   publishCurrentContext = new Meteor.EnvironmentVariable()
 

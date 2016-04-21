@@ -3,6 +3,6 @@ class UIComponent extends CommonComponent
     Storage.url filename
 
   isSandstorm: ->
-    !!Meteor.settings?.public?.sandstorm
+    !!__meteor_runtime_config__.SANDSTORM
 
 class UIMixin extends CommonMixin

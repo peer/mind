@@ -1,4 +1,4 @@
-if Meteor.settings?.public?.sandstorm
+if __meteor_runtime_config__.SANDSTORM
   AccountsTemplates.configure
     forbidClientAccountCreation: true
 

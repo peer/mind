@@ -4,7 +4,7 @@ Accounts.onCreateUser (options, user) ->
   user
 
 Accounts.validateNewUser (user) ->
-  if Meteor.settings?.public?.sandstorm
+  if __meteor_runtime_config__.SANDSTORM
     # When Sandstorm is enabled, we require Sandstorm service.
     return !!user?.services?.sandstorm
 
@@ -16,7 +16,7 @@ Accounts.validateLoginAttempt (attempt) ->
   unless attempt.allowed
     return false
 
-  if Meteor.settings?.public?.sandstorm
+  if __meteor_runtime_config__.SANDSTORM
     # When Sandstorm is enabled, we allow only Sandstorm login.
     return attempt.type is 'sandstorm'
 
