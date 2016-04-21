@@ -31,7 +31,7 @@ Package.onUse(function (api) {
     'alanning:roles@1.2.14',
     'peerlibrary:classy-job@0.2.0',
     'peerlibrary:user-extra@0.1.0',
-    'kenton:accounts-sandstorm@0.2.1'
+    'kenton:accounts-sandstorm@0.3.0'
   ]);
 
   api.use([
