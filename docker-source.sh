@@ -1,2 +1,2 @@
 apt-get update -q -q
-apt-get install --yes --force-yes build-deps
+apt-get install --yes --force-yes build-essential
