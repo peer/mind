@@ -5,7 +5,7 @@ Package.describe({
 
 Npm.depends({
   'identicon.js': '1.2.1',
-  'pngjs': 'https://github.com/lukeapage/pngjs/archive/e1c10221621e7500cb43fbc97f95b2cc2f87645d.tar.gz'
+  'pngjs': '2.3.0'
 });
 
 Package.onUse(function (api) {
