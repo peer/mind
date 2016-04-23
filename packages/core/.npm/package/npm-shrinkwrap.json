@@ -4,7 +4,7 @@
       "version": "1.2.1"
     },
     "pngjs": {
-      "version": "https://github.com/mitar/pngjs/archive/a7185922209b9fbb282e4c98b9505c1e3e28289c.tar.gz",
+      "version": "2.3.0",
       "dependencies": {
         "node-zlib-backport": {
           "version": "0.11.15"
