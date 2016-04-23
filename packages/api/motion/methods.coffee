@@ -294,7 +294,11 @@ Meteor.methods
       return 1
     catch error
       # If there is already a document (we have an index) then we have to update it instead.
-      throw error unless /E11000 duplicate key error index:.*Votes\.\$author\._id_1_motion\._id_1/.test error.err
+      # We cannot use and upsert with $setOnInsert because we are have additional
+      # value: $ne: document.value condition in the update. This means that if the update condition
+      # would be false it would go into the insertion of the document, which would then fail
+      # instead of just not doing anything, as it should if the value has not really changed.
+      throw error unless /E11000 duplicate key error.*(index.*Votes|Votes.*index)/.test(error.err or error.errmsg)
 
     Vote.documents.update
       'author._id': user._id
