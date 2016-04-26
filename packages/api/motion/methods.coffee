@@ -276,8 +276,14 @@ Meteor.methods
     throw new Meteor.Error 'bad-request', "Motion '#{document.motion._id}' is not open." unless motion.isOpen()
 
     createdAt = new Date()
-    try
-      voteId = Vote.documents.insert
+
+    # We use upsert with $setOnInsert to insert a vote document only
+    # if it does not yet exist for the for this user and motion.
+    {numberAffected, insertedId} = Vote.documents.upsert
+      'author._id': user._id
+      'motion._id': motion._id
+    ,
+      $setOnInsert:
         createdAt: createdAt
         updatedAt: createdAt
         author: user.getReference()
@@ -290,16 +296,16 @@ Meteor.methods
           updatedAt: createdAt
           value: document.value
         ]
-      assert voteId
-      return 1
-    catch error
-      # If there is already a document (we have an index) then we have to update it instead.
-      # We cannot use and upsert with $setOnInsert because we are have additional
-      # value: $ne: document.value condition in the update. This means that if the update condition
-      # would be false it would go into the insertion of the document, which would then fail
-      # instead of just not doing anything, as it should if the value has not really changed.
-      throw error unless /E11000 duplicate key error.*(index.*Votes|Votes.*index)/.test(error.err or error.errmsg)
 
+    # One document modified (that is, inserted).
+    return 1 if insertedId
+
+    # Vote document already exists, then let us just update the vote, if the vote is different.
+    # It could happen that document would be just removed between upsert and this update, but
+    # we do not really support vote deletion, so this should not really be a concern. And even
+    # if somebody is voting and deleting a vote at the same time, there is not really any reason
+    # why update would not happen first, and then deletion, which would have the same effect
+    # as first deletion and then update without match. The result is the same.
     Vote.documents.update
       'author._id': user._id
       'motion._id': motion._id
