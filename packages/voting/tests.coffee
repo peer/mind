@@ -141,4 +141,13 @@ class VotingTestCase extends ClassyTestCase
       confidenceIntervalUpperBound: -0.21052631578947367
       result: -0.5
 
+    @assertEqual VotingEngine.computeTally(VotingEngine.MAJORITY.SIMPLE, [1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 'abstain', 1.0, 1.0, 1.0, 1.0], 143),
+      populationSize: 143
+      votesCount: 19
+      abstentionsCount: 1
+      confidenceLevel: 0.9220827379421381
+      confidenceIntervalLowerBound: -0.04929577464788737
+      confidenceIntervalUpperBound: 0.232394366197183
+      result: 0.6842105263157894
+
 ClassyTestCase.addTest new VotingTestCase()
