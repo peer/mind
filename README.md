@@ -59,6 +59,16 @@ Invited users initally do not belong to any group. Currently this means that eff
 in the app without being added to at least one group. To add them to a group, you can use an admin interface at
 [http://localhost:3000/admin/accounts](http://localhost:3000/admin/accounts).
 
+### Used technologies ###
+
+The application is built on top of many other technologies and Meteor packages:
+
+* [Blaze](https://guide.meteor.com/blaze.html) for rendering HTML through [Blaze Components](http://components.meteorapp.com/) abstraction.
+* [MongoDB](https://www.mongodb.com/) through [PeerDB](https://github.com/peerlibrary/meteor-peerdb) abstraction.
+* [CoffeeScript](http://coffeescript.org/).
+* [Material Design](https://material.google.com/) through [Materialize](http://materializecss.com/).
+* [job-collection](https://github.com/vsivsi/meteor-job-collection/) for background tasks through [Classy Job](https://github.com/peerlibrary/meteor-classy-job) abstraction.
+
 ## Running ##
 
 To run the application in production you can use [Docker](https://www.docker.com/).
