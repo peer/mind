@@ -42,11 +42,19 @@ sleep 1
 docker rm "${NAME}_mongodb" || true
 sleep 1
 # Mounted volume "/srv/var/hosts:/etc/hosts:ro" is used by tozd/docker-hosts service discovery and can be removed.
-docker run --detach=true --restart=always --name "${NAME}_mongodb" --hostname "${NAME}_mongodb" --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/mongod/run.config" --volume "${MONGODB_LOG}:/var/log/mongod" --volume "${MONGODB_DATA}:/var/lib/mongodb" tozd/meteor-mongodb:2.6
+docker run --detach=true --restart=always --name "${NAME}_mongodb" --hostname "${NAME}_mongodb" \
+ --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/mongod/run.config" \
+ --volume "${MONGODB_LOG}:/var/log/mongod" --volume "${MONGODB_DATA}:/var/lib/mongodb" \
+ tozd/meteor-mongodb:2.6
 
 docker stop "${NAME}" || true
 sleep 1
 docker rm "${NAME}" || true
 sleep 1
 # Mounted volume "/srv/var/hosts:/etc/hosts:ro" is used by tozd/docker-hosts service discovery and can be removed.
-docker run --detach=true --restart=always --name "${NAME}" --hostname "${NAME}" --env ROOT_URL=http://council.cloyne.org --env MAIL_URL=smtp://mail.cloyne.net --env STORAGE_DIRECTORY=/storage --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/meteor/run.config" --volume "${METEOR_LOG}:/var/log/meteor" --volume "${METEOR_STORAGE}:/storage" mitar/council-app
+docker run --detach=true --restart=always --name "${NAME}" --hostname "${NAME}" \
+ --env VIRTUAL_HOST=council.cloyne.org --env VIRTUAL_URL=/ --env VIRTUAL_LETSENCRYPT=true \
+ --env ROOT_URL=http://council.cloyne.org --env MAIL_URL=smtp://mail.cloyne.net --env STORAGE_DIRECTORY=/storage \
+ --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/meteor/run.config" \
+ --volume "${METEOR_LOG}:/var/log/meteor" --volume "${METEOR_STORAGE}:/storage" \
+ mitar/council-app

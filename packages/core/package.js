@@ -5,7 +5,9 @@ Package.describe({
 
 Npm.depends({
   'identicon.js': '1.2.1',
-  'pngjs': '2.3.0'
+  'pngjs': '2.3.0',
+  // To make pngjs work on node.js 0.10.
+  'node-zlib-backport': '0.11.15'
 });
 
 Package.onUse(function (api) {

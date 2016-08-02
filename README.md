@@ -1,5 +1,4 @@
-# Council app #
-(Searching for a better name)
+# PeerMind #
 
 The goal of this application is to improve how we do group decision making in our communities.
 Instead of just digitizing current voting practices and moving them online, without much added value,
@@ -24,7 +23,7 @@ curl https://install.meteor.com/ | sh
 Clone the repository:
 
 ```bash
-git clone --recursive https://github.com/mitar/council-app.git
+git clone --recursive https://github.com/peer/mind.git
 ```
 
 Run it:
@@ -69,10 +68,12 @@ It is based on [tozd/meteor](https://hub.docker.com/r/tozd/meteor/) image for Me
 [tozd/meteor-mongodb](https://hub.docker.com/r/tozd/meteor-mongodb/) image is recommended for MongoDB because
 it creates necessary Meteor MongoDB database configuration automatically.
 
-You can see [`run.sh`](https://github.com/mitar/council-app/blob/master/run.sh) file for an example how to run it.
+You can see [`run.sh`](https://github.com/peer/mind/blob/master/run.sh) file for an example how to run it.
 **You have to adapt the script for your installation.** It contains hard-coded values for another installation.
 
 ## Related projects ##
 
 * https://www.loomio.org/
 * http://democracyos.org/ 
+* https://airesis.eu/
+* https://www.vilfredo.org/
