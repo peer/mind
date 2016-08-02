@@ -2,9 +2,13 @@
   "dependencies": {
     "mime-types": {
       "version": "2.1.6",
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.6.tgz",
+      "from": "mime-types@2.1.6",
       "dependencies": {
         "mime-db": {
-          "version": "1.18.0"
+          "version": "1.18.0",
+          "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.18.0.tgz",
+          "from": "mime-db@1.18.0"
         }
       }
     }

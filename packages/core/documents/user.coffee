@@ -35,24 +35,13 @@ generateSandstormUsername = (fields) ->
       throw error
 
 generateSandstormAvatar = (fields) ->
+  # Sandstorm should always provide an avatar in newer versions.
+  # See: https://github.com/sandstorm-io/sandstorm/issues/1866
   return [fields._id, fields.services.sandstorm.picture] if fields.services?.sandstorm?.picture
 
-  # We have to generate Sandstorm default avatar on our own.
-  # See: https://github.com/sandstorm-io/sandstorm/issues/1866
-
-  Identicon = Npm.require 'identicon.js'
-  PNG = Npm.require('pngjs').PNG
-
-  # Sandstorm ID is required and if it is missing, something strange
-  # is happening so it is OK to throw an error.
-  avatarContent = new Identicon fields.services.sandstorm.id,
-    size: 128
-
-  uncompressedPng = new Buffer avatarContent.toString(), 'base64'
-
-  compressedPng = PNG.sync.write PNG.sync.read uncompressedPng
-
-  updateAvatar fields._id, 's', 'png', compressedPng
+  # There is no avatar provided by Sandstorm. We do not support that.
+  # TODO: Provide some better fallback avatar than null (which does not even exist)?
+  return [fields._id, null]
 
 generateAvatar = (fields) ->
   if fields.avatar and match = AVATAR_REGEX.exec fields.avatar
@@ -123,7 +112,7 @@ class User extends share.BaseDocument
       if __meteor_runtime_config__.SANDSTORM
         username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
         # We include "avatar" field so the if it gets deleted it gets regenerated.
-        avatar: @GeneratedField 'self', ['avatar', 'services.sandstorm.id', 'services.sandstorm.picture'], generateSandstormAvatar
+        avatar: @GeneratedField 'self', ['avatar', 'services.sandstorm.picture'], generateSandstormAvatar
       else
         # We include "avatar" field so the if it gets deleted it gets regenerated.
         avatar: @GeneratedField 'self', ['avatar', 'username'], generateAvatar

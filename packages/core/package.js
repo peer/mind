@@ -3,15 +3,8 @@ Package.describe({
   version: '0.1.0'
 });
 
-Npm.depends({
-  'identicon.js': '1.2.1',
-  'pngjs': '2.3.0',
-  // To make pngjs work on node.js 0.10.
-  'node-zlib-backport': '0.11.15'
-});
-
 Package.onUse(function (api) {
-  api.versionsFrom('1.2.0.2');
+  api.versionsFrom('1.4.0.1');
 
   // Core dependencies.
   api.use([
