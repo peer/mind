@@ -20,19 +20,19 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:flow-router@2.10.0_2',
+    'peerlibrary:flow-router@2.12.1_1',
     'kadira:blaze-layout@2.3.0',
-    'peerlibrary:computed-field@0.3.0',
+    'peerlibrary:computed-field@0.3.1',
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:assert@0.2.5',
-    'materialize:materialize@0.97.1',
-    'useraccounts:materialize@1.12.4',
-    'useraccounts:flow-routing@1.13.1',
+    'materialize:materialize@0.97.7',
+    'useraccounts:materialize@1.14.2',
+    'useraccounts:flow-routing@1.14.2',
     'velocityjs:velocityjs@1.2.1',
-    'mfpierre:chartist-js@1.6.0',
-    'cunneen:accounts-admin-materializecss@0.2.19',
-    'peerlibrary:blaze-layout-component@0.1.0',
-    'momentjs:moment@2.10.6'
+    'mfpierre:chartist-js@1.6.2',
+    'cunneen:accounts-admin-materializecss@0.3.0',
+    'peerlibrary:blaze-layout-component@0.1.1',
+    'momentjs:moment@2.14.4'
   ]);
 
   // Internal dependencies.

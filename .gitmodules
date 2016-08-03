@@ -1,6 +1,3 @@
-[submodule "packages/materialize:materialize"]
-	path = packages/materialize:materialize
-	url = https://github.com/mitar/materialize.git
 [submodule "packages/mfpierre:chartist-js"]
 	path = packages/mfpierre:chartist-js
 	url = https://github.com/mitar/meteor-chartist-js.git

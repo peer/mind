@@ -1,6 +1,6 @@
 accounts-base@1.2.9
 accounts-password@1.2.12
-alanning:roles@1.2.14
+alanning:roles@1.2.15
 allow-deny@1.0.5
 api@0.1.0
 audit-argument-checks@1.0.7
@@ -18,9 +18,8 @@ callback-hook@1.0.9
 check@1.2.3
 coffeescript@1.2.3
 core@0.1.0
-cosmos:browserify@0.10.0
 council@0.1.0
-cunneen:accounts-admin-materializecss@0.2.24
+cunneen:accounts-admin-materializecss@0.3.0
 ddp@1.2.5
 ddp-client@1.3.0
 ddp-common@1.2.6
@@ -45,16 +44,16 @@ id-map@1.0.8
 jobs@0.1.0
 jquery@1.11.9
 kadira:blaze-layout@2.3.0
-kadira:flow-router@2.10.1
+kadira:flow-router@2.12.1
 kenton:accounts-sandstorm@0.5.1
 launch-screen@1.0.12
 livedata@1.0.18
 localstorage@1.0.11
 logging@1.1.14
-materialize:materialize@0.97.2
+materialize:materialize@0.97.7
 meteor@1.2.16
 meteor-base@1.0.4
-mfpierre:chartist-js@1.6.0
+mfpierre:chartist-js@1.6.2
 minifier-css@1.2.13
 minifier-js@1.2.13
 minimongo@1.0.17
@@ -78,7 +77,7 @@ peerlibrary:blaze-components@0.18.0
 peerlibrary:blaze-layout-component@0.1.1
 peerlibrary:blocking@0.5.2
 peerlibrary:check-extension@0.2.1
-peerlibrary:classy-job@0.3.0
+peerlibrary:classy-job@0.4.0
 peerlibrary:computed-field@0.3.1
 peerlibrary:connect@2.28.1_1
 peerlibrary:crypto@0.2.1
@@ -86,7 +85,7 @@ peerlibrary:data-lookup@0.1.0
 peerlibrary:directcollection@0.5.0
 peerlibrary:ecmascript-compiler@0.5.7
 peerlibrary:fiber-utils@0.6.0
-peerlibrary:flow-router@2.10.1_1
+peerlibrary:flow-router@2.12.1_1
 peerlibrary:meteor-file@0.2.1
 peerlibrary:middleware@0.1.1
 peerlibrary:peerdb@0.21.0
@@ -131,7 +130,7 @@ underscore-extra@0.1.0
 url@1.0.10
 useraccounts:core@1.14.2
 useraccounts:flow-routing@1.14.2
-useraccounts:materialize@1.13.1
+useraccounts:materialize@1.14.2
 velocityjs:velocityjs@1.2.1
 voting@0.1.0
 vsivsi:job-collection@1.4.0

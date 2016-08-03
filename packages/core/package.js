@@ -18,16 +18,17 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:peerdb@0.19.3',
-    'peerlibrary:peerdb-migrations@0.1.1',
+    'peerlibrary:peerdb@0.21.0',
+    'peerlibrary:peerdb-migrations@0.2.1',
     'peerlibrary:meteor-file@0.2.1',
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:assert@0.2.5',
+    // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
-    'alanning:roles@1.2.14',
-    'peerlibrary:classy-job@0.2.0',
+    'alanning:roles@1.2.15',
+    'peerlibrary:classy-job@0.4.0',
     'peerlibrary:user-extra@0.1.0',
-    'kenton:accounts-sandstorm@0.3.0'
+    'kenton:accounts-sandstorm@0.5.1'
   ]);
 
   api.use([
