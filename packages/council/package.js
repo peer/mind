@@ -15,7 +15,8 @@ Package.onUse(function (api) {
     'jquery',
     'random',
     'ejson',
-    'tracker'
+    'tracker',
+    'webapp'
   ]);
 
   // 3rd party dependencies.
@@ -49,7 +50,8 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'account/templates.coffee'
+    'account/templates.coffee',
+    'flow-router/fonts.coffee'
   ], 'server');
 
   api.addFiles([
