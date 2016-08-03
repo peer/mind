@@ -6,8 +6,12 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.4.0.1');
 
+  api.export('Trix', 'client');
+
   api.addFiles([
+    'before.js',
     'vendor/dist/trix.js',
+    'after.js',
     'vendor/dist/trix.css'
   ], 'client');
 });
