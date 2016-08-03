@@ -38,7 +38,7 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'upvotable.coffee',
+    'base/upvotable.coffee',
     'meeting/methods.coffee',
     'discussion/methods.coffee',
     'comment/methods.coffee',
