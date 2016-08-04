@@ -83,7 +83,7 @@ peerlibrary:connect@2.28.1_1
 peerlibrary:crypto@0.2.1
 peerlibrary:data-lookup@0.1.0
 peerlibrary:directcollection@0.5.0
-peerlibrary:ecmascript-compiler@0.5.7
+peerlibrary:ecmascript-compiler@0.5.7_2
 peerlibrary:fiber-utils@0.6.0
 peerlibrary:flow-router@2.12.1_1
 peerlibrary:meteor-file@0.2.1
