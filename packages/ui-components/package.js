@@ -13,7 +13,7 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:blaze-components@0.18.0',
+    'peerlibrary:blaze-components@0.19.0',
     'peerlibrary:blaze-common-component@0.2.0'
   ]);
 
