@@ -6,8 +6,15 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.4.0.1');
 
+  // Core dependencies.
+  api.use([
+    'modules'
+  ]);
+
+  api.export('Trix', 'client');
+
   api.addFiles([
-    'vendor/dist/trix.js',
+    'index.js',
     'vendor/dist/trix.css'
   ], 'client');
 });
