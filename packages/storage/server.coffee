@@ -28,13 +28,13 @@ class Storage extends Storage
       @options.storageDirectory = process.env.STORAGE_DIRECTORY
     else
       # Find .meteor directory.
-      directoryPath = process.mainModule.filename.split pathModule.sep
+      directoryPath = __meteor_bootstrap__.serverDir.split pathModule.sep
       while directoryPath.length > 0
-        if directoryPath[directoryPath.length - 1] == '.meteor'
+        if directoryPath[directoryPath.length - 1] is '.meteor'
           break
         directoryPath.pop()
 
-      assert directoryPath.length > 0
+      throw new Error "Unable to find .meteor directory. In production you have to use STORAGE_DIRECTORY environment variable to configure where to store files." unless directoryPath.length > 0
 
       directoryPath.push 'storage'
       @options.storageDirectory = directoryPath.join pathModule.sep
