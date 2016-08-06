@@ -135,7 +135,7 @@ class Motion.VoteComponent extends UIComponent
 
     vote = @currentVote()
 
-    return 'checked' if vote?.value is Vote.VALUE.ABSTAIN
+    'checked' if vote?.value is Vote.VALUE.ABSTAIN
 
   defaultChecked: ->
     return unless @subscriptionsReady()
