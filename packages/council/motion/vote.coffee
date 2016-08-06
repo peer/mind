@@ -15,6 +15,7 @@ class Motion.VoteComponent extends UIComponent
 
     @rangeDeselected = new ReactiveField 'deselected'
     @voteValueChange = new ReactiveField null
+    @sliderDeactivated = new ReactiveField null
     @_voteValueChangeByUser = false
 
     @autorun (computation) =>
@@ -64,6 +65,7 @@ class Motion.VoteComponent extends UIComponent
 
   deselectRange: ->
     @rangeDeselected 'deselected'
+    @sliderDeactivated 'deactivated'
 
   selectRange: ->
     @rangeDeselected null
@@ -90,10 +92,10 @@ class Motion.VoteComponent extends UIComponent
     @voteValueChangeByUser @$('[name="other-vote"]:checked').val()
 
   onOpposeVote: (event) ->
-    @$('[name="vote"]').val(-1)
+    @$('[name="vote"]').slider( "option", "value", -1 );
 
   onSupportVote: (event) ->
-    @$('[name="vote"]').val(1)
+    @$('[name="vote"]').slider( "option", "value", 1 );
 
   currentVote: ->
     Vote.documents.findOne
@@ -107,7 +109,7 @@ class Motion.VoteComponent extends UIComponent
 
     vote = @currentVote()
 
-    'checked' if vote?.value is Vote.VALUE.ABSTAIN
+    return 'checked' if vote?.value is Vote.VALUE.ABSTAIN
 
   defaultChecked: ->
     return unless @subscriptionsReady()
@@ -124,8 +126,27 @@ class Motion.VoteComponent extends UIComponent
 
     vote = @currentVote()
 
+
     if _.isNumber(vote?.value) and -1 <= vote.value <= 1
       value: vote.value
     else
       # We have to return the current value back, otherwise value is reset.
       value: @$('[name="vote"]').val() if @isRendered()
+
+  onRendered: ->
+    super
+
+    @$('[name="voteSlider"]').slider
+      range: "min"
+      min: -1
+      max: 1
+      step: 0.25
+      value: 0
+      animate: 300
+      slide: (e, ui) ->
+        $(this).parent().find(".cntr").removeClass('deactivated')
+        $(this).find(".ui-slider-handle").html ui.value
+        # Deselect 'abstain' and 'nothing'
+        return
+
+    @$(".ui-slider-handle").html "0"

@@ -109,3 +109,50 @@ Other style.
   content ""
   display table
   clear both
+
+/*
+Alt Slider
+*/
+.vote-range-slider
+  height: 60px
+
+.range
+  width 452px
+  height 8px
+  border 0
+  border-radius 100px
+  background rgba(#000,.2)
+  outline none
+  .ui-slider-handle
+    position absolute
+    margin -4px 0 0 -17px
+    border-radius 100px
+    background #26a69a
+    color #fff
+    border 2px solid #26a69a
+    height 20px
+    line-height 16px
+    text-align center
+    width 34px
+    outline none
+    cursor pointer
+    font-size 8px
+    font-weight 800
+    text-decoration none
+    transition transform .1s ease
+    &:hover
+    &:focus
+      transform scale(1.2)
+  .ui-slider-range
+    background transparent
+
+.cntr
+  position absolute
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+
+.deactivated
+  .ui-slider-handle
+    background: #fff
+    border 2px solid black
