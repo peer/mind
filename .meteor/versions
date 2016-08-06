@@ -57,6 +57,8 @@ mfpierre:chartist-js@1.6.2
 minifier-css@1.2.13
 minifier-js@1.2.13
 minimongo@1.0.17
+mizzao:build-fetcher@0.2.0
+mizzao:jquery-ui@1.11.4
 mobile-experience@1.0.4
 mobile-status-bar@1.0.12
 modules@0.7.5
