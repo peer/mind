@@ -15,7 +15,6 @@ class Motion.VoteComponent extends UIComponent
 
     @rangeDeselected = new ReactiveField 'deselected'
     @voteValueChange = new ReactiveField null
-    @sliderDeactivated = new ReactiveField null
     @_voteValueChangeByUser = false
 
     @autorun (computation) =>
@@ -34,6 +33,35 @@ class Motion.VoteComponent extends UIComponent
 
       Tracker.nonreactive =>
         @observeVoteValueChange()
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      # We wait until subscriptions are ready. We run this computation only once.
+      return unless @subscriptionsReady()
+      computation.stop()
+
+      @$('.range').slider
+        range: 'min'
+        min: -1.0
+        max: 1.0
+        step: 0.25
+        value: @voteValue() ? 0.0
+        slide: (event, ui) =>
+          @$('.ui-slider-handle').text(ui.value)
+          return
+        change: (event, ui) =>
+          @$('.ui-slider-handle').text(ui.value)
+          return
+
+      # We are stopping outside computation, but we want this one to continue.
+      # We initialize this computation only after jQuery slider has been created.
+      Tracker.nonreactive =>
+        @autorun (computation) =>
+          value = @voteValue()
+
+          @$('.range').slider('value', value) if value?
 
   observeVoteValueChange: ->
     @autorun (computation) =>
@@ -65,16 +93,13 @@ class Motion.VoteComponent extends UIComponent
 
   deselectRange: ->
     @rangeDeselected 'deselected'
-    @sliderDeactivated 'deactivated'
 
   selectRange: ->
     @rangeDeselected null
 
   events: ->
     super.concat
-      # We listen to mouseup as well because otherwise if user moves the mouse over the thumb
-      # after the start of the click and releases it, interaction is not detected.
-      'change [name="vote"], click [name="vote"], mouseup [name="vote"]': @onRangeInteraction
+      'slidechange .range, click .range': @onRangeInteraction
       'change [name="other-vote"], click [name="other-vote"]': @onRadioInteraction
       'click .oppose-vote': @onOpposeVote
       'click .support-vote': @onSupportVote
@@ -84,7 +109,7 @@ class Motion.VoteComponent extends UIComponent
 
     @$('[name="other-vote"]').prop('checked', false)
 
-    @voteValueChangeByUser parseFloat(@$('[name="vote"]').val())
+    @voteValueChangeByUser parseFloat(@$('.range').slider('value'))
 
   onRadioInteraction: (event) ->
     @deselectRange()
@@ -92,10 +117,10 @@ class Motion.VoteComponent extends UIComponent
     @voteValueChangeByUser @$('[name="other-vote"]:checked').val()
 
   onOpposeVote: (event) ->
-    @$('[name="vote"]').slider( "option", "value", -1 );
+    @$('.range').slider('value', -1.0)
 
   onSupportVote: (event) ->
-    @$('[name="vote"]').slider( "option", "value", 1 );
+    @$('.range').slider('value', 1.0)
 
   currentVote: ->
     Vote.documents.findOne
@@ -126,27 +151,7 @@ class Motion.VoteComponent extends UIComponent
 
     vote = @currentVote()
 
-
     if _.isNumber(vote?.value) and -1 <= vote.value <= 1
-      value: vote.value
+      vote.value
     else
-      # We have to return the current value back, otherwise value is reset.
-      value: @$('[name="vote"]').val() if @isRendered()
-
-  onRendered: ->
-    super
-
-    @$('[name="voteSlider"]').slider
-      range: "min"
-      min: -1
-      max: 1
-      step: 0.25
-      value: 0
-      animate: 300
-      slide: (e, ui) ->
-        $(this).parent().find(".cntr").removeClass('deactivated')
-        $(this).find(".ui-slider-handle").html ui.value
-        # Deselect 'abstain' and 'nothing'
-        return
-
-    @$(".ui-slider-handle").html "0"
+      null
