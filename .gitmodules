@@ -10,6 +10,3 @@
 [submodule "packages/alanning:roles"]
 	path = packages/alanning:roles
 	url = https://github.com/mitar/meteor-roles.git
-[submodule "packages/mizzao:jquery-ui"]
-	path = packages/mizzao:jquery-ui
-	url = https://github.com/mizzao/meteor-jqueryui.git
