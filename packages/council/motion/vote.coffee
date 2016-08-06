@@ -38,7 +38,8 @@ class Motion.VoteComponent extends UIComponent
     super
 
     @autorun (computation) =>
-      # We wait until subscriptions are ready. We run this computation only once.
+      # We wait until subscriptions are ready. We run this computation only once
+      # after subscriptions become ready, to initialize the jQuery UI slider.
       return unless @subscriptionsReady()
       computation.stop()
 
