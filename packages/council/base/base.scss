@@ -1,0 +1,8 @@
+// To get color function and constants.
+@import "{materialize:materialize}/sass/components/color";
+
+// We can define our own values which override default variables.
+// TODO: Change color scheme. See: https://github.com/peer/mind/issues/121
+
+// Import Materialize with our values for variables.
+@import "{materialize:materialize}/sass/materialize";
