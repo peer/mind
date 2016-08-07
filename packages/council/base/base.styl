@@ -1,3 +1,4 @@
+// TODO: Maybe it is not needed. See: https://github.com/peer/mind/issues/134
 @import 'nib'
 
 @import './colors'
@@ -6,6 +7,11 @@
 // Keep them in sync with base.scss.
 // TODO: Change color scheme. See: https://github.com/peer/mind/issues/121
 
+$primary-color = $materialize-red.lighten-2
+$primary-color-light = lighten($primary-color, 15%)
+$primary-color-dark = darken($primary-color, 15%)
+
+$secondary-color = $teal.lighten-1
 $secondary-color-light = $teal.lighten-4
 
 $roboto-font-path = '/packages/materialize_materialize/dist/fonts/roboto/';
