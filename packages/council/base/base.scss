@@ -7,5 +7,7 @@
 
 $secondary-color-light: color("teal", "lighten-4");
 
+$roboto-font-path: "/packages/materialize_materialize/dist/fonts/roboto/";
+
 // Import Materialize with our values for variables.
 @import "{materialize:materialize}/sass/materialize";

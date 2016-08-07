@@ -52,8 +52,7 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'account/templates.coffee',
-    'layout/fonts.coffee'
+    'account/templates.coffee'
   ], 'server');
 
   api.addFiles([
