@@ -13,3 +13,9 @@
 [submodule "packages/materialize:materialize"]
 	path = packages/materialize:materialize
 	url = https://github.com/mitar/materialize.git
+[submodule "tests/authors"]
+	path = tests/authors
+	url = https://github.com/tozd/git-check-authors.git
+[submodule "tests/test-runner"]
+	path = tests/test-runner
+	url = https://github.com/tozd/meteor-test-runner.git

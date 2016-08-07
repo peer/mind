@@ -1,0 +1,17 @@
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init --recursive
+machine:
+  node:
+    version: 4.4.7
+  pre:
+    - curl https://install.meteor.com | /bin/sh
+dependencies:
+  override:
+    - npm install selenium-webdriver@2.47.0 mkdirp
+    - meteor list
+test:
+  override:
+    - tests/authors/check-authors.sh
+    - tests/test-runner/test-all.sh
