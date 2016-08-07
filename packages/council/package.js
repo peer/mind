@@ -56,6 +56,11 @@ Package.onUse(function (api) {
   ], 'server');
 
   api.addFiles([
+    'base/base.styl',
+    'base/colors.styl'
+  ], 'client', {isImport: true});
+
+  api.addFiles([
     'base/upvoteable.html',
     'base/upvoteable.coffee',
     'base/upvoteable.styl',
