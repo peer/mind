@@ -1,3 +1,12 @@
 @import 'nib'
 
 @import './colors'
+
+// We can define our own values which override default variables.
+// Keep them in sync with base.scss.
+// TODO: Change color scheme. See: https://github.com/peer/mind/issues/121
+
+$secondary-color-light = $teal.lighten-4
+
+// Import default Materialize values for variables, for variables we have not defined.
+@import './variables'

@@ -57,8 +57,9 @@ Package.onUse(function (api) {
   ], 'server');
 
   api.addFiles([
-    'base/base.styl',
-    'base/colors.styl'
+    'base/colors.styl',
+    'base/variables.styl',
+    'base/base.styl'
   ], 'client', {isImport: true});
 
   api.addFiles([

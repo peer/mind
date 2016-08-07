@@ -10,20 +10,17 @@ nav ul .account img
 
 nav ul .static
   font-size 1rem
-  // TODO: Use $navbar-font-color here.
-  color #fff
+  color $navbar-font-color
   display block
   padding 0 15px
 
-// TODO: Use $medium-and-up or $small-screen-up here.
-@media only screen and (min-width: 601px)
+@media $medium-and-up
   nav ul .account img
     margin-top 16px
 
 nav .side-nav
   li.signed-in-menu-item
-    // TODO: Use $secondary-color here.
-    background-color #26a69a
+    background-color $secondary-color
 
   .static
     color #444
@@ -31,5 +28,4 @@ nav .side-nav
     font-size 1rem
     height 64px
     line-height 64px
-    // TODO: Use $sidenav-padding-right here.
-    padding 0 15px
+    padding 0 $sidenav-padding

@@ -40,9 +40,8 @@ input[type=range]::-moz-range-thumb
   transition .28s ease
   z-index 0
   border-radius 50%
-  // TODO: Use $radio-fill-color here.
-  border 2px solid #26a69a
-  background-color #26a69a
+  border 2px solid $radio-fill-color
+  background-color $radio-fill-color
 
 input[type=range]::-ms-thumb
   width 16px
@@ -51,14 +50,12 @@ input[type=range]::-ms-thumb
   transition .28s ease
   z-index 0
   border-radius 50%
-  // TODO: Use $radio-fill-color here.
-  border 2px solid #26a69a
-  background-color #26a69a
+  border 2px solid $radio-fill-color
+  background-color $radio-fill-color
 
 input[type=range].deselected::-webkit-slider-thumb
   background-color white
-  // TODO: Use $radio-empty-color here.
-  border 2px solid #5a5a5a
+  border 2px solid $radio-empty-color
 
 input[type=range]:not(.deselected)::-webkit-slider-thumb
   background-color transparent
@@ -66,27 +63,23 @@ input[type=range]:not(.deselected)::-webkit-slider-thumb
 
 input[type=range].deselected::-webkit-slider-thumb:after
   border-radius 50%
-  // TODO: Use $radio-empty-color here.
-  border 2px solid #5a5a5a
+  border 2px solid $radio-empty-color
   z-index -1
   transform scale(0)
 
 input[type=range]:not(.deselected)::-webkit-slider-thumb:after
-  // TODO: Use $radio-fill-color here.
-  border 2px solid #26a69a
-  background-color #26a69a
+  border 2px solid $radio-fill-color
+  background-color $radio-fill-color
   z-index 0
   transform scale(1.02)
 
 input[type=range].deselected::-moz-range-thumb
   background-color white
-  // TODO: Use $radio-empty-color here.
-  border 2px solid #5a5a5a
+  border 2px solid $radio-empty-color
 
 input[type=range].deselected::-ms-thumb
   background white
-  // TODO: Use $radio-empty-color here.
-  border 2px solid #5a5a5a
+  border 2px solid $radio-empty-color
 
 /*
 We want to allow users to click on range labels and move the value.

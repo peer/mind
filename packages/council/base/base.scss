@@ -2,7 +2,10 @@
 @import "{materialize:materialize}/sass/components/color";
 
 // We can define our own values which override default variables.
+// Keep them in sync with base.styl.
 // TODO: Change color scheme. See: https://github.com/peer/mind/issues/121
+
+$secondary-color-light: color("teal", "lighten-4");
 
 // Import Materialize with our values for variables.
 @import "{materialize:materialize}/sass/materialize";
