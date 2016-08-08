@@ -8,15 +8,14 @@ nav ul .account img
   width 32px
   border-radius 50%
 
+  @media $medium-and-up
+    margin-top (($navbar-height - @height) / 2)
+
 nav ul .static
   font-size 1rem
   color $navbar-font-color
   display block
   padding 0 15px
-
-@media $medium-and-up
-  nav ul .account img
-    margin-top 16px
 
 nav .side-nav
   li.signed-in-menu-item
