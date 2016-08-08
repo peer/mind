@@ -326,8 +326,9 @@ class Motion.TallyChartComponent extends UIComponent
 
   drawCrosshair: (x) ->
     linesY = for line in @$('.tally-chart .ct-grid.ct-vertical')
-      $(line).attr('y1')
-    linesY.sort()
+      parseFloat $(line).attr('y1')
+    linesY.sort (a, b) =>
+      b - a
 
     @chart?.svg.querySelector('.ct-grids').elem('line',
       x1: x

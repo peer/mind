@@ -1,9 +1,8 @@
-@import 'nib'
+@import '../base/base'
 
 .upvoteable
   user-select none
-  // TODO: Use $button-color-disabled here.
-  color #9f9f9f
+  color $button-disabled-color
 
   .material-icons
     position relative
@@ -14,20 +13,16 @@
   &.upvote
   &.remove-upvote
     cursor pointer
-    // TODO: Use $secondary-color here.
-    color #26a69a
+    color $secondary-color
 
   &.upvote .material-icons
-    // TODO: Use $teal.lighten-4 here.
-    color #b2dfdb
+    color $secondary-color-light
 
   &.upvote:hover .material-icons
-    // TODO: Use $secondary-color here.
-    color #26a69a
+    color $secondary-color
 
   &.remove-upvote .material-icons
-    // TODO: Use $secondary-color here.
-    color #26a69a
+    color $secondary-color
 
 .collection .collection-item.avatar .secondary-content.upvoteable
   position initial

@@ -34,7 +34,8 @@ Package.onUse(function (api) {
     'cunneen:accounts-admin-materializecss@0.3.0',
     'peerlibrary:blaze-layout-component@0.1.1',
     'momentjs:moment@2.14.4',
-    'mizzao:jquery-ui@1.11.4'
+    'mizzao:jquery-ui@1.11.4',
+    'fourseven:scss@3.8.0_1'
   ]);
 
   // Internal dependencies.
@@ -51,11 +52,17 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'account/templates.coffee',
-    'layout/fonts.coffee'
+    'account/templates.coffee'
   ], 'server');
 
   api.addFiles([
+    'base/colors.styl',
+    'base/variables.styl',
+    'base/base.styl'
+  ], 'client', {isImport: true});
+
+  api.addFiles([
+    'base/base.scss',
     'base/upvoteable.html',
     'base/upvoteable.coffee',
     'base/upvoteable.styl',

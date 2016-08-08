@@ -1,4 +1,4 @@
-@import 'nib'
+@import '../base/base'
 
 /*
 We want to allow users to click on range labels and move the value.
@@ -29,6 +29,8 @@ Slider.
 .vote-range-slider
   height: 60px
 
+// TODO: There is also $radio-empty-color (#5a5a5a). See variables.styl for other possible variables, or define your own.
+
 .range
   width 452px
   height 8px
@@ -40,9 +42,9 @@ Slider.
     position absolute
     margin -4px 0 0 -17px
     border-radius 100px
-    background #26a69a
+    background $radio-fill-color
     color #fff
-    border 2px solid #26a69a
+    border $radio-border
     height 20px
     line-height 16px
     text-align center
@@ -67,5 +69,5 @@ Slider.
 
 .deselected
   .ui-slider-handle
-    background: #fff
+    background #fff
     border 2px solid black
