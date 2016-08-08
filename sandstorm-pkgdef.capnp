@@ -17,7 +17,7 @@ const pkgdef :Spk.PackageDefinition = (
     # This manifest is included in your app package to tell Sandstorm
     # about your app.
 
-    appTitle = (defaultText = "Council App"),
+    appTitle = (defaultText = "PeerMind"),
 
     appVersion = 0,  # Increment this for every release.
 
@@ -48,16 +48,15 @@ const pkgdef :Spk.PackageDefinition = (
       # https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/package.capnp
       icons = (
         # Various icons to represent the app in various contexts.
-        #appGrid = (svg = embed "path/to/appgrid-128x128.svg"),
-        #grain = (svg = embed "path/to/grain-24x24.svg"),
-        #market = (svg = embed "path/to/market-150x150.svg"),
-        #marketBig = (svg = embed "path/to/market-big-300x300.svg"),
+        appGrid = (svg = embed ".sandstorm/appgrid.svg"),
+        grain = (svg = embed ".sandstorm/grain.svg"),
+        market = (svg = embed ".sandstorm/market.svg"),
       ),
 
-      website = "https://github.com/mitar/council-app",
+      website = "http://peermind.org",
       # This should be the app's main website url.
 
-      codeUrl = "https://github.com/mitar/council-app",
+      codeUrl = "https://github.com/peer/mind",
       # URL of the app's source code repository, e.g. a GitHub URL.
       # Required if you specify a license requiring redistributing code, but optional otherwise.
 
@@ -114,7 +113,7 @@ const pkgdef :Spk.PackageDefinition = (
       # in an app store. Note that the Markdown is not permitted to contain HTML nor image tags (but
       # you can include a list of screenshots separately).
 
-      shortDescription = (defaultText = "Group decission making"),
+      shortDescription = (defaultText = "Group decision making"),
       # A very short (one-to-three words) description of what the app does. For example,
       # "Document editor", or "Notetaking", or "Email client". This will be displayed under the app
       # title in the grid view in the app market.
