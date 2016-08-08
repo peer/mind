@@ -2,3 +2,4 @@
 .idea
 .meteor/storage
 .meteor-spk
+node_modules
