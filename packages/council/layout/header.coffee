@@ -35,6 +35,9 @@ class HeaderComponent extends UIComponent
 
     AccountsTemplates.logout()
 
+  title: ->
+    share.PageTitle()
+
 class AccountItemsComponent extends UIComponent
   @register 'AccountItemsComponent'
 

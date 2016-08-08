@@ -2,9 +2,9 @@
   <header>
     <nav>
       <div class="nav-wrapper">
-        <span class="brand-logo">{{! TODO: Decide on the name and logo. }}</span>
+        <h1 class="brand-logo">{{title}}</h1>
         <a href="" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
-        <ul class="right hide-on-med-and-down">
+        <ul class="hide-on-med-and-down">
           {{> NavItemsComponent}}
           {{#unless currentUser}}
             {{#if isSandstorm}}
