@@ -32,9 +32,22 @@ nav .side-nav
 nav .nav-wrapper
   display flex
 
+  .logo
+    margin 0
+    padding 0 15px
+    transition background-color 0.3s
+
+    &:hover
+      background-color rgba(0, 0, 0, 0.1)
+
+    img
+      width $navbar-height
+      height $navbar-height
+
   ul
-    // We do not want menu entries to shrink at all (but title, .brand-logo,
-    // should shrink as necessary, and use ellipsis to hide too long text).
+  .logo
+    // We do not want menu entries and logo to shrink at all. But title (.brand-logo)
+    // should shrink as necessary, and use ellipsis to hide too long text.
     flex-shrink 0
 
   .brand-logo

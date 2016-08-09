@@ -134,4 +134,8 @@ Package.onUse(function (api) {
     'admin/accounts.html',
     'admin/accounts.coffee'
   ], 'client');
+
+  api.addAssets([
+    'layout/logo.svg'
+  ], 'client');
 });
