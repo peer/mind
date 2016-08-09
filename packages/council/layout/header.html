@@ -20,12 +20,12 @@
           {{else}}
             <li class="signed-in-menu-item">
               {{#if isSandstorm}}
-                <span class="account static">
+                <span class="static">
                   <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
                   {{currentUser.username}}
                 </span>
               {{else}}
-                <a href="" class="account" data-activates="account-menu">
+                <a href="" data-activates="account-menu">
                   <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
                   {{currentUser.username}}
                 </a>
@@ -39,10 +39,8 @@
         <ul class="side-nav" id="mobile-menu">
           {{#if currentUser}}
             <li class="signed-in-menu-item">
-              <div class="account">
-                <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
-                {{currentUser.username}}
-              </div>
+              <div class="username">{{currentUser.username}}</div>
+              <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
             </li>
           {{/if}}
           {{> NavItemsComponent}}
@@ -55,6 +53,7 @@
             {{/if}}
           {{else}}
             {{#unless isSandstorm}}
+              <li class="divider"></li>
               {{> AccountItemsComponent args isDropdown=false}}
             {{/unless}}
           {{/unless}}

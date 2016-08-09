@@ -1,6 +1,6 @@
 @import '../base/base'
 
-nav ul .account img
+nav ul .signed-in-menu-item img
   float right
   margin-left 8px
   margin-top 12px
@@ -18,8 +18,28 @@ nav ul .static
   padding 0 15px
 
 nav .side-nav
+  .divider
+    margin 0
+
   li.signed-in-menu-item
     background-color $secondary-color
+    height $navbar-height-mobile
+    line-height $navbar-height-mobile
+    padding 0 $sidenav-padding
+    display flex
+
+    .username
+      overflow hidden
+      text-overflow ellipsis
+      white-space nowrap
+
+    img
+      float none
+      flex-shrink 0
+
+    @media $medium-and-up
+      height $navbar-height
+      line-height $navbar-height
 
   .static
     color $sidenav-font-color-no-action
@@ -71,4 +91,3 @@ nav .nav-wrapper
   // The menu button should be on the left.
   .button-collapse
     order -1
-
