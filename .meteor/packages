@@ -19,3 +19,4 @@ ecmascript@0.5.7              # Enable ECMAScript2015+ syntax in app code
 audit-argument-checks@1.0.7
 
 council
+ui-components
