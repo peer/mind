@@ -19,3 +19,6 @@
 [submodule "tests/test-runner"]
 	path = tests/test-runner
 	url = https://github.com/tozd/meteor-test-runner.git
+[submodule "packages/useraccounts:materialize"]
+	path = packages/useraccounts:materialize
+	url = https://github.com/meteor-useraccounts/materialize.git
