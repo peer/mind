@@ -48,9 +48,9 @@ const pkgdef :Spk.PackageDefinition = (
       # https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/package.capnp
       icons = (
         # Various icons to represent the app in various contexts.
-        appGrid = (svg = embed ".sandstorm/icon.svg"),
-        grain = (svg = embed ".sandstorm/icon.svg"),
-        market = (svg = embed ".sandstorm/icon.svg"),
+        appGrid = (svg = embed "packages/council/layout/logo.svg"),
+        grain = (svg = embed "packages/council/layout/logo.svg"),
+        market = (svg = embed "packages/council/layout/logo.svg"),
       ),
 
       website = "http://peermind.org",

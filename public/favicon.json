@@ -1,5 +1,5 @@
 {
-	"masterPicture": "icon.svg",
+	"masterPicture": "../packages/council/layout/logo.svg",
 	"iconsPath": "/",
 	"design": {
 		"ios": {
