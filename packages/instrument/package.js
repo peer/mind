@@ -9,7 +9,8 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore-extra'
+    'underscore-extra',
+    'accounts-base'
   ]);
 
   // 3rd party dependencies.
@@ -29,6 +30,7 @@ Package.onUse(function (api) {
 
   api.addFiles([
     'api.coffee',
-    'connections.coffee'
+    'connections.coffee',
+    'accounts.coffee'
   ], 'server');
 });
