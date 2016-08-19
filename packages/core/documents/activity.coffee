@@ -6,7 +6,7 @@ class Activity extends share.BaseDocument
   #   username
   #   avatar
   # type: type of activity
-  # visibility: one of "internal", "private", and "public"
+  # level: one of "debug", "admin", "user", and "public"
   # data: custom data for this activity
 
   @Meta
@@ -15,9 +15,10 @@ class Activity extends share.BaseDocument
     fields: =>
       user: @ReferenceField User, User.REFERENCE_FIELDS(), false
 
-  @VISIBILITY:
-    INTERNAL: 'internal'
-    PRIVATE: 'private'
+  @LEVEL:
+    DEBUG: 'debug'
+    ADMIN: 'admin'
+    USER: 'user'
     PUBLIC: 'public'
 
   @PUBLISH_FIELDS: ->

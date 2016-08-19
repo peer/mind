@@ -18,7 +18,7 @@ Meteor.methods
       connection: @connection.id
       user: user
       type: 'route'
-      visibility: Activity.VISIBILITY.INTERNAL
+      level: Activity.LEVEL.DEBUG
       data: {
         routeName
         params
