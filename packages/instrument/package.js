@@ -16,7 +16,8 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:flow-router@2.12.1_1',
-    'peerlibrary:check-extension@0.2.0'
+    'peerlibrary:check-extension@0.2.0',
+    'doctorpangloss:method-hooks@2.0.2'
   ]);
 
   // Internal dependencies.

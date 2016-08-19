@@ -39,3 +39,32 @@ Accounts.onLogout (attempt) ->
     type: 'logout'
     level: Activity.LEVEL.ADMIN
     data: null
+
+MethodHooks.after 'changePassword', (options) ->
+  if @userId
+    user =
+      _id: @userId
+  else
+    user = null
+
+  if options.error
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'changePasswordFailure'
+      level: Activity.LEVEL.ADMIN
+      data:
+        error: "#{options.error}"
+        clientAddress: @connection.clientAddress
+        userAgent: @connection.httpHeaders['user-agent'] or null
+  else
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'changePassword'
+      level: Activity.LEVEL.ADMIN
+      data:
+        clientAddress: @connection.clientAddress
+        userAgent: @connection.httpHeaders['user-agent'] or null
