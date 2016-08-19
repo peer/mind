@@ -41,6 +41,7 @@ html-tools@1.0.10
 htmljs@1.0.10
 http@1.2.8
 id-map@1.0.8
+instrument@0.1.0
 jobs@0.1.0
 jquery@1.11.9
 kadira:blaze-layout@2.3.0

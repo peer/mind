@@ -53,6 +53,7 @@ Package.onUse(function (api) {
   api.export('Tally');
   api.export('JobQueue');
   api.export('StorageFile');
+  api.export('Activity');
   api.export('Admin');
 
   api.addFiles([
@@ -82,6 +83,7 @@ Package.onUse(function (api) {
     'documents/tally.coffee',
     'documents/jobqueue.coffee',
     'documents/storagefile.coffee',
+    'documents/activity.coffee',
     'finalize-documents.coffee'
   ]);
 });
