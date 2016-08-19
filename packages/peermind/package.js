@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'council',
+  name: 'peermind',
   version: '0.1.0'
 });
 

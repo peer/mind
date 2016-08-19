@@ -18,7 +18,6 @@ callback-hook@1.0.9
 check@1.2.3
 coffeescript@1.2.4
 core@0.1.0
-council@0.1.0
 cunneen:accounts-admin-materializecss@0.3.0
 ddp@1.2.5
 ddp-client@1.3.1
@@ -102,6 +101,7 @@ peerlibrary:stacktrace@0.2.0
 peerlibrary:url-utils@0.4.0_3
 peerlibrary:user-extra@0.1.0
 peerlibrary:util@0.5.0
+peermind@0.1.0
 promise@0.8.4
 random@1.0.10
 rate-limit@1.0.5
