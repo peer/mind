@@ -5,6 +5,7 @@ class Comment extends share.UpvotableDocument
   # author:
   #   _id
   #   username
+  #   avatar
   # discussion:
   #   _id
   # body: the latest version of the body
@@ -16,6 +17,7 @@ class Comment extends share.UpvotableDocument
   #   author: author of the change
   #     _id
   #     username
+  #     avatar
   #   body
   # upvotes: list of
   #   createdAt: timestamp of the upvote
