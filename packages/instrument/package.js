@@ -28,6 +28,7 @@ Package.onUse(function (api) {
   ], 'client');
 
   api.addFiles([
-    'api.coffee'
+    'api.coffee',
+    'connections.coffee'
   ], 'server');
 });
