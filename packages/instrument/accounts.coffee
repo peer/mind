@@ -8,6 +8,8 @@ Accounts.onLogin (attempt) ->
     level: Activity.LEVEL.ADMIN
     data:
       type: attempt.type
+      clientAddress: attempt.connection.clientAddress
+      userAgent: attempt.connection.httpHeaders['user-agent'] or null
 
 Accounts.onLoginFailure (attempt) ->
   if attempt.user
@@ -25,6 +27,8 @@ Accounts.onLoginFailure (attempt) ->
     data:
       type: attempt.type
       error: "#{attempt.error}"
+      clientAddress: attempt.connection.clientAddress
+      userAgent: attempt.connection.httpHeaders['user-agent'] or null
 
 Accounts.onLogout (attempt) ->
   Activity.documents.insert
