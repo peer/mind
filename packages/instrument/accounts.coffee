@@ -8,6 +8,7 @@ Accounts.onLogin (attempt) ->
     level: Activity.LEVEL.ADMIN
     data:
       type: attempt.type
+      methodName: attempt.methodName
       clientAddress: attempt.connection.clientAddress
       userAgent: attempt.connection.httpHeaders['user-agent'] or null
 
@@ -26,6 +27,7 @@ Accounts.onLoginFailure (attempt) ->
     level: Activity.LEVEL.ADMIN
     data:
       type: attempt.type
+      methodName: attempt.methodName
       error: "#{attempt.error}"
       clientAddress: attempt.connection.clientAddress
       userAgent: attempt.connection.httpHeaders['user-agent'] or null
@@ -52,7 +54,7 @@ MethodHooks.after 'changePassword', (options) ->
       timestamp: new Date()
       connection: @connection.id
       user: user
-      type: 'changePasswordFailure'
+      type: 'passwordChangeFailure'
       level: Activity.LEVEL.ADMIN
       data:
         error: "#{options.error}"
@@ -63,7 +65,7 @@ MethodHooks.after 'changePassword', (options) ->
       timestamp: new Date()
       connection: @connection.id
       user: user
-      type: 'changePassword'
+      type: 'passwordChange'
       level: Activity.LEVEL.ADMIN
       data:
         clientAddress: @connection.clientAddress
