@@ -15,7 +15,7 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:assert@0.2.5',
     'alanning:roles@1.2.15',
-    'peerlibrary:classy-job@0.4.0'
+    'peerlibrary:classy-job@0.5.0'
   ]);
 
   // Internal dependencies.

@@ -10,14 +10,18 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'underscore-extra',
-    'accounts-base'
+    'accounts-base',
+    'jquery',
+    'promise',
+    'modules'
   ]);
 
   // 3rd party dependencies.
   api.use([
     'peerlibrary:flow-router@2.12.1_1',
     'peerlibrary:check-extension@0.2.0',
-    'doctorpangloss:method-hooks@2.0.2'
+    'doctorpangloss:method-hooks@2.0.2',
+    'peerlibrary:stacktrace@1.3.1_2'
   ]);
 
   // Internal dependencies.
@@ -26,7 +30,8 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'router.coffee'
+    'router.coffee',
+    'errors.coffee'
   ], 'client');
 
   api.addFiles([
