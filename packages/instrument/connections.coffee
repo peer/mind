@@ -18,3 +18,5 @@ Meteor.onConnection (connection) ->
       clientAddress: connection.clientAddress
       userAgent: connection.httpHeaders['user-agent'] or null
       acceptLanguage: connection.httpHeaders['accept-language'] or null
+      release: Meteor.release
+      version: __meteor_runtime_config__.VERSION
