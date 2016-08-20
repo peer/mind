@@ -6,3 +6,5 @@ class UIComponent extends CommonComponent
     !!__meteor_runtime_config__.SANDSTORM
 
 class UIMixin extends CommonMixin
+  getFirstWith: (args...) ->
+    @component().getFirstWith args...
