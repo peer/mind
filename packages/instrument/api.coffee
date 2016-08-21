@@ -76,3 +76,21 @@ Meteor.methods
       data:
         type: type
         data: data
+
+  'Activity.visibility': (hidden) ->
+    check hidden, Boolean
+
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'visibility'
+      level: Activity.LEVEL.DEBUG
+      data:
+        hidden: hidden

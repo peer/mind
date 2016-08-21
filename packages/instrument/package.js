@@ -32,7 +32,8 @@ Package.onUse(function (api) {
   api.addFiles([
     'router.coffee',
     'errors.coffee',
-    'ui.coffee'
+    'ui.coffee',
+    'visibility.coffee'
   ], 'client');
 
   api.addFiles([
