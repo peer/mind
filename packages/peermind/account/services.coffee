@@ -1,46 +1,34 @@
+SERVICES =
+  facebook: [
+    'appId'
+    'secret'
+  ]
+  google: [
+    'clientId'
+    'secret'
+  ]
+  twitter: [
+    'consumerKey'
+    'secret'
+  ]
+
 Meteor.startup ->
-  if Meteor.settings.services?.facebook?.appId and Meteor.settings.services?.facebook?.secret
-    # Add a Facebook configuration entry.
-    ServiceConfiguration.configurations.upsert
-      service: 'facebook'
-    ,
-      $set:
-        appId: Meteor.settings.services.facebook.appId
-        secret: Meteor.settings.services.facebook.secret
-  else
-    # Remove a potential Facebook configuration entry.
-    ServiceConfiguration.configurations.remove
-      service: 'facebook'
-
-  if Meteor.settings.services?.google?.clientId and Meteor.settings.services?.google?.secret
-    # Add a Google configuration entry.
-    ServiceConfiguration.configurations.upsert
-      service: 'google'
-    ,
-      $set:
-        clientId: Meteor.settings.services.google.clientId
-        secret: Meteor.settings.services.google.secret
-  else
-    # Remove a potential Google configuration entry.
-    ServiceConfiguration.configurations.remove
-      service: 'google'
-
-  if Meteor.settings.services?.twitter?.consumerKey and Meteor.settings.services?.twitter?.secret
-    # Add a Twitter configuration entry.
-    ServiceConfiguration.configurations.upsert
-      service: 'twitter'
-    ,
-      $set:
-        consumerKey: Meteor.settings.services.twitter.consumerKey
-        secret: Meteor.settings.services.twitter.secret
-  else
-    # Remove a potential Twitter configuration entry.
-    ServiceConfiguration.configurations.remove
-      service: 'twitter'
+  for serviceName, keys of SERVICES
+    values = _.pick Meteor.settings.services[serviceName], keys
+    if _.keys(values).length is keys.length
+      # Add a configuration entry.
+      ServiceConfiguration.configurations.upsert
+        service: serviceName
+      ,
+        $set: values
+    else
+      # Remove a potential configuration entry.
+      ServiceConfiguration.configurations.remove
+        service: serviceName
 
 origUpdateOrCreateUserFromExternalService = Accounts.updateOrCreateUserFromExternalService
 Accounts.updateOrCreateUserFromExternalService = (serviceName, serviceData, options) ->
-  return origUpdateOrCreateUserFromExternalService.apply this, arguments unless serviceName in ['facebook', 'google', 'twitter']
+  return origUpdateOrCreateUserFromExternalService.apply this, arguments unless serviceName in _.keys SERVICES
 
   if User.documents.exists("services.#{serviceName}.id": serviceData.id)
     # Or the current user is the same as the user being signed in (then we continue to update
