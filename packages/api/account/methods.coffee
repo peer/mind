@@ -12,7 +12,7 @@ Meteor.methods
   'Settings.unlinkAccount': (serviceName) ->
     check serviceName, Match.Where (x) ->
       check x, Match.NonEmptyString
-      x in ['facebook']
+      x in ['facebook', 'google']
 
     userId = Meteor.userId()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId

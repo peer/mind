@@ -136,6 +136,9 @@ class User extends share.BaseDocument
       'services.facebook.id': 1
       'services.facebook.name': 1
       'services.facebook.link': 1
+      'services.google.id': 1
+      'services.google.name': 1
+      'services.google.picture': 1
 
   @PERMISSIONS:
     UPVOTE: 'UPVOTE'
@@ -277,6 +280,8 @@ class User extends share.BaseDocument
   avatarUrl: (service) ->
     if service is 'facebook'
      "https://graph.facebook.com/#{@services.facebook?.id}/picture"
+    else if service is 'google'
+     @services.google?.picture
     else
       if @avatar and AVATAR_REGEX.test @avatar
         Storage.url @avatar

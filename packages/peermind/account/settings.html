@@ -123,5 +123,18 @@
         <button type="submit" class="btn waves-effect waves-light link-facebook" onClick="{{onFacebook}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
       </li>
     {{/if}}
+    {{#if currentUser.services.google.id}}
+      <li class="collection-item avatar">
+        <a href="https://plus.google.com/{{currentUser.services.google.id}}"><img src="{{currentUser.avatarUrl 'google'}}" alt="" class="circle"></a>
+        <span class="title"><a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></span>
+        {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
+        <p>Google</p>
+        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlinkGoogle}}">Unlink</button>
+      </li>
+    {{else}}
+      <li class="collection-item center-align input-field">
+        <button type="submit" class="btn waves-effect waves-light link-google" onClick="{{onGoogle}}"><i class="fa fa-google left"></i> Link your Google account</button>
+      </li>
+    {{/if}}
   </ul>
 </template>

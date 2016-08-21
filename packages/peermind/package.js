@@ -11,6 +11,7 @@ Package.onUse(function (api) {
     'coffeescript',
     'accounts-password',
     'accounts-facebook',
+    'accounts-google',
     'service-configuration',
     'stylus',
     'jquery',

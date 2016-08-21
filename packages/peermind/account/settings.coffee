@@ -153,6 +153,27 @@ class Settings.AccountsComponent extends UIComponent
         alert "Unlinking from Facebook error: #{error.reason or error}"
         return
 
+  onGoogle: (event) ->
+    event.preventDefault()
+
+    Meteor.loginWithGoogle
+      requestPermissions: Accounts.ui._options.requestPermissions.google
+    ,
+      (error) =>
+        if error
+          console.error "Linking with Google error", error
+          alert "Linking with Google error: #{error.reason or error}"
+          return
+
+  onUnlinkGoogle: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Settings.unlinkAccount', 'google', (error, result) =>
+      if error
+        console.error "Unlinking from Google error", error
+        alert "Unlinking from Google error: #{error.reason or error}"
+        return
+
 FlowRouter.route '/account/settings',
   name: 'Settings.display'
   action: (params, queryParams) ->

@@ -10,7 +10,8 @@ else
     requestOfflineToken: {}
     forceApprovalPrompt: {}
 
-  Accounts.ui._options.requestPermissions.facebook = ['user_friends', 'public_profile', 'email']
+  Accounts.ui._options.requestPermissions.facebook = ['public_profile', 'email', 'user_friends']
+  Accounts.ui._options.requestPermissions.google = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/contacts.readonly', 'https://www.googleapis.com/auth/plus.circles.members.read']
 
   AccountsTemplates.configure
     confirmPassword: true

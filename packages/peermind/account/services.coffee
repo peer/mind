@@ -12,9 +12,22 @@ Meteor.startup ->
     ServiceConfiguration.configurations.remove
       service: 'facebook'
 
+  if Meteor.settings.services?.google?.clientId and Meteor.settings.services?.google?.secret
+    # Add a Google configuration entry.
+    ServiceConfiguration.configurations.upsert
+      service: 'google'
+    ,
+      $set:
+        clientId: Meteor.settings.services.google.clientId
+        secret: Meteor.settings.services.google.secret
+  else
+    # Remove a potential Google configuration entry.
+    ServiceConfiguration.configurations.remove
+      service: 'google'
+
 origUpdateOrCreateUserFromExternalService = Accounts.updateOrCreateUserFromExternalService
 Accounts.updateOrCreateUserFromExternalService = (serviceName, serviceData, options) ->
-  return origUpdateOrCreateUserFromExternalService.apply this, arguments unless serviceName in ['facebook']
+  return origUpdateOrCreateUserFromExternalService.apply this, arguments unless serviceName in ['facebook', 'google']
 
   if User.documents.exists("services.#{serviceName}.id": serviceData.id)
     # Or the current user is the same as the user being signed in (then we continue to update
