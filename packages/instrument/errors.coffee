@@ -31,7 +31,6 @@ $(window).on 'error', (event) ->
       stack: stack
       userAgent: navigator.userAgent or null
       languages: languages
-      doNotTrack: (navigator.msDoNotTrack or navigator.doNotTrack or window.doNotTrack) in ['1', 'yes', 'true', 1, true]
       clientTime: new Date()
       windowWidth: window.innerWidth or null
       windowHeight: window.innerHeight or null
