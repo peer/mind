@@ -21,6 +21,7 @@
 
           <div id="password" class="section scrollspy">
             <h4>Password</h4>
+            {{> Settings.PasswordComponent}}
           </div>
 
           <div id="username" class="section scrollspy">
@@ -65,4 +66,34 @@
   </div>
 
   {{!-- TODO: Add a warning that this will invalidate any existing mentions in comments, once we have them. --}}
+</template>
+
+<template name="Settings.PasswordComponent">
+  <div class="row">
+    <form class="col s12 change-password">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="old-password" name="old-password" type="password" class="validate" required>
+          <label for="old-password">Old password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="new-password" name="new-password" type="password" class="validate" required>
+          <label for="new-password">New password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="confirm-new-password" name="confirm-new-password" type="password" class="validate" required>
+          <label for="confirm-new-password" data-error="Passwords do not match.">Confirm new password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 center-align">
+          <button type="submit" name="change-password" class="btn waves-effect waves-light"><i class="material-icons left">done</i>Change password</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
