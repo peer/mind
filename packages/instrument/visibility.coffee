@@ -33,7 +33,7 @@ Meteor.startup ->
     return if hidden is document[hiddenPropertyName]
     hidden = document[hiddenPropertyName]
 
-    Meteor.call 'Activity.visibility', hidden, (error, result) ->
+    Meteor.call 'Activity.visibility', !hidden, (error, result) ->
       # We are ignoring errors.
 
   $(document).on visibilityEventName, _.debounce visibilityChange, 5000 # ms

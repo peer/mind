@@ -77,8 +77,8 @@ Meteor.methods
         type: type
         data: data
 
-  'Activity.visibility': (hidden) ->
-    check hidden, Boolean
+  'Activity.visibility': (visible) ->
+    check visible, Boolean
 
     if @userId
       user =
@@ -93,4 +93,4 @@ Meteor.methods
       type: 'visibility'
       level: Activity.LEVEL.DEBUG
       data:
-        hidden: hidden
+        visible: visible
