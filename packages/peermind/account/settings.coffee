@@ -4,11 +4,15 @@ class Settings.DisplayComponent extends UIComponent
   onRendered: ->
     super
 
-    @$('.scrollspy').scrollSpy
-      scrollOffset: 100
+    @autorun (computation) =>
+      return unless @hasAccess()
 
-    @$('.table-of-contents').pushpin
-      top: @$('.table-of-contents').position().top
+      Tracker.afterFlush =>
+        @$('.scrollspy').scrollSpy
+          scrollOffset: 100
+
+        @$('.table-of-contents').pushpin
+          top: @$('.table-of-contents').position().top
 
   hasAccess: ->
     !!@currentUserId()
