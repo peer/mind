@@ -7,6 +7,11 @@ class Discussion.NewComponent extends UIComponent
     @canNew = new ComputedField =>
       User.hasPermission User.PERMISSIONS.DISCUSSION_NEW
 
+  onRendered: ->
+    super
+
+    Materialize.updateTextFields()
+
   events: ->
     super.concat
       'submit .discussion-new': @onSubmit

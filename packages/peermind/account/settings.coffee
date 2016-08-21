@@ -16,6 +16,11 @@ class Settings.DisplayComponent extends UIComponent
 class Settings.UsernameComponent extends UIComponent
   @register 'Settings.UsernameComponent'
 
+  onRendered: ->
+    super
+
+    Materialize.updateTextFields()
+
   events: ->
     super.concat
       'submit .change-username': @onSubmit

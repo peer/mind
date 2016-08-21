@@ -14,6 +14,8 @@ class Discussion.EditFormComponent extends UIComponent
   onRendered: ->
     super
 
+    Materialize.updateTextFields()
+
     Tracker.afterFlush =>
       # A bit of mangling to get cursor to focus at the end of the text.
       $title = @$('[name="title"]')

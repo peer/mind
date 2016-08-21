@@ -8,6 +8,8 @@ class Meeting.NewComponent extends UIComponent
       User.hasPermission User.PERMISSIONS.MEETING_NEW
 
   onRendered: ->
+    Materialize.updateTextFields()
+
     # TODO: Check why it does not enable every time?
     # TODO: Enable when know how to get the value.
     #@$('.datepicker').pickadate()
