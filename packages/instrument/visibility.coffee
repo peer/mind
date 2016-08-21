@@ -27,7 +27,7 @@ Meteor.startup ->
   # Maybe it is not supported.
   return unless hiddenPropertyName of document
 
-  hidden = document[hiddenPropertyName]
+  hidden = null
 
   visibilityChange = (event) ->
     return if hidden is document[hiddenPropertyName]
@@ -39,3 +39,6 @@ Meteor.startup ->
   debouncedVisibilityChange = _.debounce visibilityChange, 5000 # ms
 
   $(document).on visibilityEventName, debouncedVisibilityChange
+
+  # Log initial value.
+  visibilityChange()

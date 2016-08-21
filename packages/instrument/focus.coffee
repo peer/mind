@@ -1,5 +1,5 @@
 Meteor.startup ->
-  focused = document.hasFocus()
+  focused = null
 
   focusChange = (event) ->
     return if focused is document.hasFocus()
@@ -15,3 +15,6 @@ Meteor.startup ->
 
   $(window).on 'focus', debouncedFocusChange
   $(window).on 'blur', debouncedFocusChange
+
+  # Log initial value.
+  focusChange()
