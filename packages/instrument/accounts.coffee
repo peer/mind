@@ -111,3 +111,33 @@ MethodHooks.after 'changePassword', (options) ->
       data:
         clientAddress: @connection.clientAddress
         userAgent: @connection.httpHeaders['user-agent'] or null
+
+MethodHooks.after 'Settings.unlinkAccount', (options) ->
+  if @userId
+    user =
+      _id: @userId
+  else
+    user = null
+
+  if options.error
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'accountUnlinkFailure'
+      level: Activity.LEVEL.ADMIN
+      data:
+        error: "#{options.error}"
+        clientAddress: @connection.clientAddress
+        userAgent: @connection.httpHeaders['user-agent'] or null
+  else
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'accountUnlink'
+      level: Activity.LEVEL.ADMIN
+      data:
+        serviceName: options.arguments[0]
+        clientAddress: @connection.clientAddress
+        userAgent: @connection.httpHeaders['user-agent'] or null
