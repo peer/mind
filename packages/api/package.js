@@ -14,6 +14,7 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'accounts-base',
+    'accounts-password',
     'underscore-extra',
     'random',
     'jquery'
@@ -54,6 +55,7 @@ Package.onUse(function (api) {
     'motion/publish.coffee',
     'storagefile/methods.coffee',
     'user/publish.coffee',
-    'user/methods.coffee'
+    'user/methods.coffee',
+    'account/methods.coffee'
   ], 'server');
 });

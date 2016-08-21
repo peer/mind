@@ -13,6 +13,27 @@ class Settings.DisplayComponent extends UIComponent
   hasAccess: ->
     !!@currentUserId()
 
+class Settings.UsernameComponent extends UIComponent
+  @register 'Settings.UsernameComponent'
+
+  events: ->
+    super.concat
+      'submit .change-username': @onSubmit
+
+  onSubmit: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Settings.changeUsername', @$('[name="username"]').val(), (error, documentId) =>
+      if error
+        console.error "Change username error", error
+        alert "Change username error: #{error.reason or error}"
+        return
+
+      event.target.reset()
+
+  USERNAME_REGEX: ->
+    Settings.USERNAME_REGEX
+
 FlowRouter.route '/account/settings',
   name: 'Settings.display'
   action: (params, queryParams) ->

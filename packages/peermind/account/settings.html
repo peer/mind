@@ -25,6 +25,7 @@
 
           <div id="username" class="section scrollspy">
             <h4>Username</h4>
+            {{> Settings.UsernameComponent}}
           </div>
         </div>
         <div class="col hide-on-small-only m3 l3">
@@ -42,4 +43,26 @@
   {{else}}
     {{> AccessDeniedComponent}}
   {{/if}}
+</template>
+
+<template name="Settings.UsernameComponent">
+  <p>Your current username: <strong>{{currentUser.username}}</strong></p>
+
+  <div class="row">
+    <form class="col s12 change-username">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="username" name="username" type="text" pattern="{{USERNAME_REGEX}}" class="validate">
+          <label for="username" data-error="Username can contain only A-Z, a-z, 0-9, and _ characters.">New username</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 center-align">
+          <button type="submit" name="change-username" class="btn waves-effect waves-light"><i class="material-icons left">done</i>Change username</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {{!-- TODO: Add a warning that this will invalidate any existing mentions in comments, once we have them. --}}
 </template>
