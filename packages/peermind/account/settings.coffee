@@ -136,7 +136,7 @@ class Settings.AccountsComponent extends UIComponent
     event.preventDefault()
 
     Meteor.loginWithFacebook
-      requestPermissions: ['user_friends', 'public_profile', 'email']
+      requestPermissions: Accounts.ui._options.requestPermissions.facebook
     ,
       (error) =>
         if error

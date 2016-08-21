@@ -3,6 +3,15 @@ if __meteor_runtime_config__.SANDSTORM
     forbidClientAccountCreation: true
 
 else
+  # We do not use accounts-ui package, but we have to use its options to configure useraccounts package.
+  Accounts.ui ?= {}
+  Accounts.ui._options ?=
+    requestPermissions: {}
+    requestOfflineToken: {}
+    forceApprovalPrompt: {}
+
+  Accounts.ui._options.requestPermissions.facebook = ['user_friends', 'public_profile', 'email']
+
   AccountsTemplates.configure
     confirmPassword: true
     enablePasswordChange: true
