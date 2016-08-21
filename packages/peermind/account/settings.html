@@ -1,0 +1,45 @@
+<template name="Settings.DisplayComponent">
+  {{#if hasAccess}}
+    <div class="section">
+      <div class="row">
+        <div class="col s12 m9 l9">
+          <div id="avatar" class="section scrollspy">
+            <h4>Avatar</h4>
+          </div>
+
+          <div id="accounts" class="section scrollspy">
+            <h4>Linked accounts</h4>
+          </div>
+
+          <div id="delegations" class="section scrollspy">
+            <h4>Delegations</h4>
+          </div>
+
+          <div id="research" class="section scrollspy">
+            <h4>Research data</h4>
+          </div>
+
+          <div id="password" class="section scrollspy">
+            <h4>Password</h4>
+          </div>
+
+          <div id="username" class="section scrollspy">
+            <h4>Username</h4>
+          </div>
+        </div>
+        <div class="col hide-on-small-only m3 l3">
+          <ul class="section table-of-contents">
+            <li><a href="#avatar">Avatar</a></li>
+            <li><a href="#accounts">Linked accounts</a></li>
+            <li><a href="#delegations">Delegations</a></li>
+            <li><a href="#research">Research data</a></li>
+            <li><a href="#password">Password</a></li>
+            <li><a href="#username">Username</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    {{> AccessDeniedComponent}}
+  {{/if}}
+</template>

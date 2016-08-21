@@ -56,6 +56,7 @@ Package.onUse(function (api) {
   api.export('StorageFile');
   api.export('Activity');
   api.export('Admin');
+  api.export('Settings');
 
   api.addFiles([
     'worker.coffee',
@@ -75,6 +76,7 @@ Package.onUse(function (api) {
     'triggers.coffee',
     'storage.coffee',
     'admin.coffee',
+    'settings.coffee',
     'documents/user.coffee',
     'documents/discussion.coffee',
     'documents/meeting.coffee',

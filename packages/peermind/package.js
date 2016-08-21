@@ -79,6 +79,8 @@ Package.onUse(function (api) {
     'base/editor.coffee',
     'base/editor.styl',
     'account/form.coffee',
+    'account/settings.html',
+    'account/settings.coffee',
     'layout/title.coffee',
     'layout/layout.html',
     'layout/layout.coffee',

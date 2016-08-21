@@ -26,10 +26,6 @@ else
     name: 'Account.signIn'
     path: '/account/signin'
 
-  AccountsTemplates.configureRoute 'changePwd',
-    name: 'Account.changePassword'
-    path: '/account/password/change'
-
   AccountsTemplates.configureRoute 'enrollAccount',
     name: 'Account.enrollAccount'
     path: '/account/enroll'
