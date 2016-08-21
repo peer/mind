@@ -22,7 +22,7 @@ $(window).on 'error', (event) ->
     languages = []
 
   getStack(event.originalEvent.error).then (stack) ->
-    Meteor.call 'Activity.error',
+    Meteor.apply 'Activity.error', [
       message: event.originalEvent.message or ''
       filename: event.originalEvent.filename or ''
       lineNumber: parseInt(event.originalEvent.lineno) or null
@@ -43,6 +43,8 @@ $(window).on 'error', (event) ->
       settings: Meteor.settings
       release: Meteor.release
       version: __meteor_runtime_config__.VERSION
+    ],
+      noRetry: true
     ,
       (error, result) ->
         # We are ignoring errors.

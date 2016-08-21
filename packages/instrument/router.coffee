@@ -1,5 +1,5 @@
 {routeObject} = require './lib.coffee'
 
 FlowRouter.triggers.enter (context, redirect, stop) ->
-  Meteor.call 'Activity.route', routeObject(context), (error, result) ->
+  Meteor.apply 'Activity.route', [routeObject(context)], {noRetry: true}, (error, result) ->
     # We are ignoring errors.

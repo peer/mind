@@ -3,5 +3,5 @@ Meteor.startup ->
     # We store only when a feature is expanded.
     return unless expanding
 
-    Meteor.call 'Activity.ui', 'expandable', data, (error, result) ->
+    Meteor.apply 'Activity.ui', ['expandable', data], {noRetry: true}, (error, result) ->
       # We are ignoring errors.

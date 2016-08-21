@@ -5,7 +5,7 @@ Meteor.startup ->
     return if focused is document.hasFocus()
     focused = document.hasFocus()
 
-    Meteor.call 'Activity.focus', focused, (error, result) ->
+    Meteor.apply 'Activity.focus', [focused], {noRetry: true}, (error, result) ->
       # We are ignoring errors.
 
   debouncedFocusChange = _.debounce focusChange, 5000 # ms
