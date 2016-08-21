@@ -47,7 +47,9 @@ else
     type: 'text'
     displayName: 'username'
     required: true
-    minLength: 5
+    minLength: 4
+    re: new RegExp "^#{Settings.USERNAME_REGEX}$"
+    errStr: "Username can contain only A-Z, a-z, 0-9, and _ characters"
   ,
     _id: 'email'
     type: 'email'
@@ -55,7 +57,7 @@ else
     displayName: 'email'
     # TODO: Better regex.
     re: /.+@(.+){2,}\.(.+){2,}/
-    errStr: 'Invalid email'
+    errStr: "Invalid email"
   ,
     passwordField
   ]
