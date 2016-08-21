@@ -9,7 +9,6 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore-extra',
     'accounts-password',
     'stylus',
     'jquery',
@@ -40,6 +39,7 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
+    'underscore-extra',
     'core',
     'api',
     'ui-components',

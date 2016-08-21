@@ -9,7 +9,6 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore-extra',
     'accounts-base',
     'jquery',
     'promise',
@@ -26,6 +25,7 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
+    'underscore-extra',
     'core'
   ]);
 

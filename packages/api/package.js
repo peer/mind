@@ -15,7 +15,6 @@ Package.onUse(function (api) {
     'coffeescript',
     'accounts-base',
     'accounts-password',
-    'underscore-extra',
     'random',
     'jquery'
   ]);
@@ -33,6 +32,7 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
+    'underscore-extra',
     'core',
     'voting',
     'storage'

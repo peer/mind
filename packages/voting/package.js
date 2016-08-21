@@ -8,13 +8,17 @@ Package.onUse(function (api) {
 
   // Core dependencies.
   api.use([
-    'coffeescript',
-    'underscore-extra'
+    'coffeescript'
   ]);
 
   // 3rd party dependencies.
   api.use([
     'peerlibrary:assert@0.2.5'
+  ]);
+
+  // Internal dependencies.
+  api.use([
+    'underscore-extra'
   ]);
 
   api.export('VotingEngine');
