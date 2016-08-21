@@ -28,7 +28,6 @@ Meteor.methods
       stack: [Match.NonEmptyString]
       userAgent: Match.OneOf Match.NonEmptyString, null
       languages: [Match.NonEmptyString]
-      doNotTrack: Boolean
       clientTime: Date
       windowWidth: Match.OneOf Match.Integer, null
       windowHeight: Match.OneOf Match.Integer, null
