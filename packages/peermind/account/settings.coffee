@@ -174,6 +174,27 @@ class Settings.AccountsComponent extends UIComponent
         alert "Unlinking from Google error: #{error.reason or error}"
         return
 
+  onTwitter: (event) ->
+    event.preventDefault()
+
+    Meteor.loginWithTwitter
+      requestPermissions: Accounts.ui._options.requestPermissions.twitter
+    ,
+      (error) =>
+        if error
+          console.error "Linking with Twitter error", error
+          alert "Linking with Twitter error: #{error.reason or error}"
+          return
+
+  onUnlinkTwitter: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Settings.unlinkAccount', 'twitter', (error, result) =>
+      if error
+        console.error "Unlinking from Twitter error", error
+        alert "Unlinking from Twitter error: #{error.reason or error}"
+        return
+
 FlowRouter.route '/account/settings',
   name: 'Settings.display'
   action: (params, queryParams) ->

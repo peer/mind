@@ -25,9 +25,22 @@ Meteor.startup ->
     ServiceConfiguration.configurations.remove
       service: 'google'
 
+  if Meteor.settings.services?.twitter?.consumerKey and Meteor.settings.services?.twitter?.secret
+    # Add a Twitter configuration entry.
+    ServiceConfiguration.configurations.upsert
+      service: 'twitter'
+    ,
+      $set:
+        consumerKey: Meteor.settings.services.twitter.consumerKey
+        secret: Meteor.settings.services.twitter.secret
+  else
+    # Remove a potential Twitter configuration entry.
+    ServiceConfiguration.configurations.remove
+      service: 'twitter'
+
 origUpdateOrCreateUserFromExternalService = Accounts.updateOrCreateUserFromExternalService
 Accounts.updateOrCreateUserFromExternalService = (serviceName, serviceData, options) ->
-  return origUpdateOrCreateUserFromExternalService.apply this, arguments unless serviceName in ['facebook', 'google']
+  return origUpdateOrCreateUserFromExternalService.apply this, arguments unless serviceName in ['facebook', 'google', 'twitter']
 
   if User.documents.exists("services.#{serviceName}.id": serviceData.id)
     # Or the current user is the same as the user being signed in (then we continue to update

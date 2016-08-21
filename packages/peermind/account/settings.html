@@ -136,5 +136,18 @@
         <button type="submit" class="btn waves-effect waves-light google-button" onClick="{{onGoogle}}"><i class="fa fa-google left"></i> Link your Google account</button>
       </li>
     {{/if}}
+    {{#if currentUser.services.twitter.id}}
+      <li class="collection-item avatar">
+        <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}"><img src="{{currentUser.avatarUrl 'twitter'}}" alt="" class="circle"></a>
+        <span class="title"><a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></span>
+        {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
+        <p>Twitter</p>
+        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlinkTwitter}}">Unlink</button>
+      </li>
+    {{else}}
+      <li class="collection-item center-align input-field">
+        <button type="submit" class="btn waves-effect waves-light twitter-button" onClick="{{onTwitter}}"><i class="fa fa-twitter left"></i> Link your Twitter account</button>
+      </li>
+    {{/if}}
   </ul>
 </template>

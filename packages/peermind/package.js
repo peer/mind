@@ -12,6 +12,7 @@ Package.onUse(function (api) {
     'accounts-password',
     'accounts-facebook',
     'accounts-google',
+    'accounts-twitter',
     'service-configuration',
     'stylus',
     'jquery',
