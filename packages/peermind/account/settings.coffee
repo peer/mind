@@ -132,67 +132,25 @@ class Settings.PasswordComponent extends UIComponent
 class Settings.AccountsComponent extends UIComponent
   @register 'Settings.AccountsComponent'
 
-  onFacebook: (event) ->
+  onLink: (event, serviceName) ->
     event.preventDefault()
 
-    Meteor.loginWithFacebook
-      requestPermissions: Accounts.ui._options.requestPermissions.facebook
+    Meteor["loginWith#{_.capitalize serviceName}"]
+      requestPermissions: Accounts.ui._options.requestPermissions[serviceName]
     ,
       (error) =>
         if error
-          console.error "Linking with Facebook error", error
-          alert "Linking with Facebook error: #{error.reason or error}"
+          console.error "Linking with #{_.capitalize serviceName} error", error
+          alert "Linking with #{_.capitalize serviceName} error: #{error.reason or error}"
           return
 
-  onUnlinkFacebook: (event) ->
+  onUnlink: (event, serviceName) ->
     event.preventDefault()
 
-    Meteor.call 'Settings.unlinkAccount', 'facebook', (error, result) =>
+    Meteor.call 'Settings.unlinkAccount', serviceName, (error, result) =>
       if error
-        console.error "Unlinking from Facebook error", error
-        alert "Unlinking from Facebook error: #{error.reason or error}"
-        return
-
-  onGoogle: (event) ->
-    event.preventDefault()
-
-    Meteor.loginWithGoogle
-      requestPermissions: Accounts.ui._options.requestPermissions.google
-    ,
-      (error) =>
-        if error
-          console.error "Linking with Google error", error
-          alert "Linking with Google error: #{error.reason or error}"
-          return
-
-  onUnlinkGoogle: (event) ->
-    event.preventDefault()
-
-    Meteor.call 'Settings.unlinkAccount', 'google', (error, result) =>
-      if error
-        console.error "Unlinking from Google error", error
-        alert "Unlinking from Google error: #{error.reason or error}"
-        return
-
-  onTwitter: (event) ->
-    event.preventDefault()
-
-    Meteor.loginWithTwitter
-      requestPermissions: Accounts.ui._options.requestPermissions.twitter
-    ,
-      (error) =>
-        if error
-          console.error "Linking with Twitter error", error
-          alert "Linking with Twitter error: #{error.reason or error}"
-          return
-
-  onUnlinkTwitter: (event) ->
-    event.preventDefault()
-
-    Meteor.call 'Settings.unlinkAccount', 'twitter', (error, result) =>
-      if error
-        console.error "Unlinking from Twitter error", error
-        alert "Unlinking from Twitter error: #{error.reason or error}"
+        console.error "Unlinking from #{_.capitalize serviceName} error", error
+        alert "Unlinking from #{_.capitalize serviceName} error: #{error.reason or error}"
         return
 
 FlowRouter.route '/account/settings',
