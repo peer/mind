@@ -33,11 +33,16 @@ Accounts.onLoginFailure (attempt) ->
       userAgent: attempt.connection.httpHeaders['user-agent'] or null
 
 Accounts.onLogout (attempt) ->
+  if attempt.user
+    user =
+      _id: attempt.user._id
+  else
+    user = null
+
   Activity.documents.insert
     timestamp: new Date()
     connection: attempt.connection.id
-    user:
-      _id: attempt.user._id
+    user: user
     type: 'logout'
     level: Activity.LEVEL.ADMIN
     data: null
