@@ -1,4 +1,4 @@
-# <img src="https://cdn.rawgit.com/peer/mind/master/packages/council/layout/logo.svg" width="24" height="24" /> PeerMind #
+# <img src="https://cdn.rawgit.com/peer/mind/master/packages/peermind/layout/logo.svg" width="24" height="24" /> PeerMind #
 
 The goal of this application is to improve how we do group decision making in our communities.
 Instead of just digitizing current voting practices and moving them online, without much added value,
