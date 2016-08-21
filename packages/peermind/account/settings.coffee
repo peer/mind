@@ -28,7 +28,7 @@ class Settings.UsernameComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
-    Meteor.call 'Settings.changeUsername', @$('[name="username"]').val(), (error, documentId) =>
+    Meteor.call 'Settings.changeUsername', @$('[name="username"]').val(), (error) =>
       if error
         console.error "Change username error", error
         alert "Change username error: #{error.reason or error}"
