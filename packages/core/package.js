@@ -61,7 +61,7 @@ Package.onUse(function (api) {
   api.addFiles([
     'worker.coffee',
     'roles.coffee',
-    'accounts.coffee',
+    'account.coffee',
     'sandstorm-server.coffee',
     'version.coffee'
   ], 'server');
