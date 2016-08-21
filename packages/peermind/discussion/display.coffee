@@ -4,6 +4,12 @@ class Discussion.DisplayComponent extends Discussion.OneComponent
   mixins: ->
     super.concat share.ExpandableMixin
 
+  expandableEventData: ->
+    data = @discussion()
+
+    _id: data._id
+    _type: data.constructor.Meta._name
+
 class Discussion.EditButton extends UIComponent
   @register 'Discussion.EditButton'
 

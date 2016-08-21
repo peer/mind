@@ -54,3 +54,25 @@ Meteor.methods
       type: 'error'
       level: Activity.LEVEL.ERROR
       data: error
+
+  'Activity.ui': (type, data) ->
+    check type, Match.NonEmptyString
+    check data,
+      _id: Match.DocumentId
+      _type: Match.NonEmptyString
+
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'ui'
+      level: Activity.LEVEL.DEBUG
+      data:
+        type: type
+        data: data

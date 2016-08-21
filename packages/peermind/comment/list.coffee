@@ -65,3 +65,9 @@ class Comment.ListItemComponent extends UIComponent
     # We require body to have at least some text content or a figure.
     $body = $($.parseHTML(@$('[name="body"]').val()))
     $body.text() or $body.has('figure').length
+
+  expandableEventData: ->
+    data = @data()
+
+    _id: data._id
+    _type: data.constructor.Meta._name

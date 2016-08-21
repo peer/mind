@@ -18,11 +18,19 @@ class share.ExpandableMixin extends UIMixin
     @_expandWithAnimation = false
 
   expandWithAnimation: (value) ->
+    value = !!value
+
     @isExpanded value
 
     @_expandWithAnimation = true
     Tracker.afterFlush =>
       @_expandWithAnimation = false
+
+    expandableEventData = @callFirstWith null, 'expandableEventData'
+
+    return unless expandableEventData
+
+    $(@firstNode()).trigger 'expandable.peermind', [value, expandableEventData]
 
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>

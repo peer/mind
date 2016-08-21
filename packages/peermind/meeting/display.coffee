@@ -40,6 +40,12 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
 
     cursor
 
+  expandableEventData: ->
+    data = @meeting()
+
+    _id: data._id
+    _type: data.constructor.Meta._name
+
 class Meeting.EditButton extends UIComponent
   @register 'Meeting.EditButton'
 

@@ -98,3 +98,9 @@ class Point.ListItemComponent extends UIComponent
 
   categoryChecked: ->
     'checked' if @currentData().category is @data().category
+
+  expandableEventData: ->
+    data = @data()
+
+    _id: data._id
+    _type: data.constructor.Meta._name

@@ -94,6 +94,12 @@ class Motion.ListItemComponent extends UIComponent
 
     tally?.result > 0 && tally?.confidence >= 0.90
 
+  expandableEventData: ->
+    data = @data()
+
+    _id: data._id
+    _type: data.constructor.Meta._name
+
 class Motion.WithdrawComponent extends UIComponent
   @register 'Motion.WithdrawComponent'
 
