@@ -120,7 +120,7 @@
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
-        <button type="submit" class="btn waves-effect waves-light link-facebook" onClick="{{onFacebook}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
+        <button type="submit" class="btn waves-effect waves-light facebook-button" onClick="{{onFacebook}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
       </li>
     {{/if}}
     {{#if currentUser.services.google.id}}
@@ -133,7 +133,7 @@
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
-        <button type="submit" class="btn waves-effect waves-light link-google" onClick="{{onGoogle}}"><i class="fa fa-google left"></i> Link your Google account</button>
+        <button type="submit" class="btn waves-effect waves-light google-button" onClick="{{onGoogle}}"><i class="fa fa-google left"></i> Link your Google account</button>
       </li>
     {{/if}}
   </ul>
