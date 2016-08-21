@@ -50,7 +50,7 @@ Accounts.onLogout (attempt) ->
 MethodHooks.before 'Settings.changeUsername', (options) ->
   if @userId
     # We store current username away so that we can log it.
-    @_oldUsername = Meteor.users.findOne(@userId, fields: username: 1)?.username or null
+    @_oldUsername = User.documents.findOne(@userId, fields: username: 1)?.username or null
 
 MethodHooks.after 'Settings.changeUsername', (options) ->
   if @userId
