@@ -94,3 +94,21 @@ Meteor.methods
       level: Activity.LEVEL.DEBUG
       data:
         visible: visible
+
+  'Activity.focus': (focused) ->
+    check focused, Boolean
+
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'focus'
+      level: Activity.LEVEL.DEBUG
+      data:
+        focused: focused

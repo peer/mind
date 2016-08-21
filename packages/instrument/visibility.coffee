@@ -36,4 +36,6 @@ Meteor.startup ->
     Meteor.call 'Activity.visibility', !hidden, (error, result) ->
       # We are ignoring errors.
 
-  $(document).on visibilityEventName, _.debounce visibilityChange, 5000 # ms
+  debouncedVisibilityChange = _.debounce visibilityChange, 5000 # ms
+
+  $(document).on visibilityEventName, debouncedVisibilityChange

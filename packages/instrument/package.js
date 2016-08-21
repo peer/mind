@@ -33,7 +33,8 @@ Package.onUse(function (api) {
     'router.coffee',
     'errors.coffee',
     'ui.coffee',
-    'visibility.coffee'
+    'visibility.coffee',
+    'focus.coffee'
   ], 'client');
 
   api.addFiles([
