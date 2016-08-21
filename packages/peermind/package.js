@@ -10,6 +10,8 @@ Package.onUse(function (api) {
   api.use([
     'coffeescript',
     'accounts-password',
+    'accounts-facebook',
+    'service-configuration',
     'stylus',
     'jquery',
     'random',
@@ -52,7 +54,8 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'account/templates.coffee'
+    'account/templates.coffee',
+    'account/services.coffee'
   ], 'server');
 
   api.addFiles([
@@ -81,6 +84,7 @@ Package.onUse(function (api) {
     'account/form.coffee',
     'account/settings.html',
     'account/settings.coffee',
+    'account/settings.styl',
     'layout/title.coffee',
     'layout/layout.html',
     'layout/layout.coffee',

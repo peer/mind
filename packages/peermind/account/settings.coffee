@@ -5,7 +5,8 @@ class Settings.DisplayComponent extends UIComponent
     super
 
     @autorun (computation) =>
-      return unless @hasAccess()
+      return unless @hasAccess() and Accounts._loginServicesHandle.ready()
+      computation.stop()
 
       Tracker.afterFlush =>
         @$('.scrollspy').scrollSpy
@@ -16,6 +17,9 @@ class Settings.DisplayComponent extends UIComponent
 
   hasAccess: ->
     !!@currentUserId()
+
+  anyServiceConfiguration: ->
+    ServiceConfiguration.configurations.find().exists()
 
 class Settings.UsernameComponent extends UIComponent
   @register 'Settings.UsernameComponent'
@@ -124,6 +128,30 @@ class Settings.PasswordComponent extends UIComponent
         return
 
       event.target.reset()
+
+class Settings.AccountsComponent extends UIComponent
+  @register 'Settings.AccountsComponent'
+
+  onFacebook: (event) ->
+    event.preventDefault()
+
+    Meteor.loginWithFacebook
+      requestPermissions: ['user_friends', 'public_profile', 'email']
+    ,
+      (error) =>
+        if error
+          console.error "Linking with Facebook error", error
+          alert "Linking with Facebook error: #{error.reason or error}"
+          return
+
+  onUnlinkFacebook: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Settings.unlinkAccount', 'facebook', (error, result) =>
+      if error
+        console.error "Unlinking from Facebook error", error
+        alert "Unlinking from Facebook error: #{error.reason or error}"
+        return
 
 FlowRouter.route '/account/settings',
   name: 'Settings.display'

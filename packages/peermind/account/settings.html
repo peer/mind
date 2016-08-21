@@ -7,9 +7,12 @@
             <h4>Profile</h4>
           </div>
 
-          <div id="accounts" class="section scrollspy">
-            <h4>Linked accounts</h4>
-          </div>
+          {{#if anyServiceConfiguration}}
+            <div id="accounts" class="section scrollspy">
+              <h4>Linked accounts</h4>
+              {{> Settings.AccountsComponent}}
+            </div>
+          {{/if}}
 
           <div id="delegations" class="section scrollspy">
             <h4>Delegations</h4>
@@ -31,8 +34,10 @@
         </div>
         <div class="col hide-on-small-only m3 l3">
           <ul class="section table-of-contents">
-            <li><a href="#accounts">Linked accounts</a></li>
             <li><a href="#profile">Profile</a></li>
+            {{#if anyServiceConfiguration}}
+              <li><a href="#accounts">Linked accounts</a></li>
+            {{/if}}
             <li><a href="#delegations">Delegations</a></li>
             <li><a href="#research">Research data</a></li>
             <li><a href="#password">Password</a></li>
@@ -96,4 +101,27 @@
       </div>
     </form>
   </div>
+</template>
+
+<template name="Settings.AccountsComponent">
+  <p>
+    By linking your accounts on other sites you will be able to use them to sign in.
+    Moreover, PeerMind might be able to better suggest potential delegates to you.
+  </p>
+
+  <ul class="collection z-depth-1">
+    {{#if currentUser.services.facebook.id}}
+      <li class="collection-item avatar">
+        <a href="{{currentUser.services.facebook.link}}"><img src="{{currentUser.avatarUrl 'facebook'}}" alt="" class="circle"></a>
+        <span class="title"><a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></span>
+        {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
+        <p>Facebook</p>
+        <button type="submit" class="btn waves-effect waves-light unlink-facebook secondary-content" onClick="{{onUnlinkFacebook}}">Unlink</button>
+      </li>
+    {{else}}
+      <li class="collection-item center-align input-field">
+        <button type="submit" class="btn waves-effect waves-light link-facebook" onClick="{{onFacebook}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
+      </li>
+    {{/if}}
+  </ul>
 </template>

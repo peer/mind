@@ -4,3 +4,4 @@
 .meteor-spk
 node_modules
 packages/core/gitversion.coffee
+settings.json

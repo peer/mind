@@ -25,3 +25,6 @@
 [submodule "packages/doctorpangloss:method-hooks"]
 	path = packages/doctorpangloss:method-hooks
 	url = https://github.com/mitar/meteor-method-hooks.git
+[submodule "packages/useraccounts:core"]
+	path = packages/useraccounts:core
+	url = https://github.com/mitar/meteor-useraccounts-core.git
