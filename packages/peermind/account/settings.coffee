@@ -9,6 +9,9 @@ class Settings.DisplayComponent extends UIComponent
       computation.stop()
 
       Tracker.afterFlush =>
+        # TODO: We should reinitialize scrollSpy when position of elements changes.
+        #       We could simply have an autorun observing any change to @currentUser() and reinitializing (maybe with debounce).
+        #       See: https://github.com/Dogfalo/materialize/issues/3557
         @$('.scrollspy').scrollSpy
           scrollOffset: 100
 
