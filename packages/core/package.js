@@ -93,6 +93,8 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'migrations/0001-user-uploadedavatar.coffee'
+    'migrations/0001-user-uploadedavatar.coffee',
+    'migrations/0002-user-avatars.coffee',
+    'migrations/0003-user-avatar.coffee'
   ], 'server');
 });
