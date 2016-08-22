@@ -20,7 +20,7 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:peerdb@0.22.1',
-    'peerlibrary:peerdb-migrations@0.2.1',
+    'peerlibrary:peerdb-migrations@0.3.0',
     'peerlibrary:meteor-file@0.2.1',
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:assert@0.2.5',
@@ -91,4 +91,8 @@ Package.onUse(function (api) {
     'documents/activity.coffee',
     'finalize-documents.coffee'
   ]);
+
+  api.addFiles([
+    'migrations/0001-user-uploadedavatar.coffee'
+  ], 'server');
 });
