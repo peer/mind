@@ -145,7 +145,6 @@ class Settings.AccountsComponent extends UIComponent
         if error
           console.error "Linking with #{_.capitalize serviceName} error", error
           alert "Linking with #{_.capitalize serviceName} error: #{error.reason or error}"
-          return
 
   onUnlink: (event, serviceName) ->
     event.preventDefault()
@@ -154,7 +153,6 @@ class Settings.AccountsComponent extends UIComponent
       if error
         console.error "Unlinking from #{_.capitalize serviceName} error", error
         alert "Unlinking from #{_.capitalize serviceName} error: #{error.reason or error}"
-        return
 
 class Settings.AvatarComponent extends UIComponent
   @register 'Settings.AvatarComponent'
