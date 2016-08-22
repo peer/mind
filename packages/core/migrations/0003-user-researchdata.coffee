@@ -1,5 +1,5 @@
 class Migration extends Document.AddOptionalFieldsMigration
-  name: "Adding uploadedAvatar field"
-  fields: ['uploadedAvatar']
+  name: "Adding researchData field"
+  fields: ['researchData']
 
 User.addMigration new Migration()

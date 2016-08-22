@@ -168,13 +168,6 @@ generateAvatars = (fields) ->
       location: fields.services.twitter.profile_image_url_https
       selected: selectedAvatar?.name is 'twitter'
 
-  if fields.uploadedAvatar
-    avatars.push
-      name: 'uploaded'
-      argument: null
-      location: fields.uploadedAvatar
-      selected: selectedAvatar?.name is 'uploaded'
-
   # If no other is selected, select the default avatar.
   avatars[0].selected = true unless _.findWhere avatars, selected: true
 
@@ -191,7 +184,6 @@ class User extends share.BaseDocument
   # services: list of authentication/linked services
   # roles: list of roles names (strings) this user is part of
   # avatar: avatar filename or URL
-  # uploadedAvatar: filename of the uploaded avatar
   # avatars: list of available avatars
   #   name: name of the avatar (does not have to be unique, Gravatar can have multiple entries for example for each e-mail address)
   #   argument: any optional argument for generation of this avatar (like e-mail address for Gravatar)
@@ -212,7 +204,7 @@ class User extends share.BaseDocument
           avatars: [@GeneratedField 'self', ['services.sandstorm.picture'], generateSandstormAvatars]
       else
         _.extend fields,
-          avatars: [@GeneratedField 'self', ['username', 'emails', 'services.facebook.id', 'services.google.picture', 'services.twitter.profile_image_url_https', 'uploadedAvatar'], generateAvatars]
+          avatars: [@GeneratedField 'self', ['username', 'emails', 'services.facebook.id', 'services.google.picture', 'services.twitter.profile_image_url_https'], generateAvatars]
       fields
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
