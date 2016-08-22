@@ -13,7 +13,7 @@ SERVICES =
   ]
 
 Meteor.startup ->
-  for serviceName, keys of SERVICES
+  for serviceName, keys of SERVICES when Meteor.settings.services?[serviceName]
     values = _.pick Meteor.settings.services[serviceName], keys
     if _.keys(values).length is keys.length
       # Add a configuration entry.
