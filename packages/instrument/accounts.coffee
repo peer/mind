@@ -77,6 +77,32 @@ MethodHooks.after 'Account.unlinkAccount', (options) ->
         clientAddress: @connection.clientAddress
         userAgent: @connection.httpHeaders['user-agent'] or null
 
+MethodHooks.after 'Account.researchData', (options) ->
+  if @userId
+    user =
+      _id: @userId
+  else
+    user = null
+
+  if options.error
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'researchDataFailure'
+      level: Activity.LEVEL.DEBUG
+      data:
+        error: "#{options.error}"
+  else
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'researchData'
+      level: Activity.LEVEL.DEBUG
+      data:
+        consent: options.arguments[0]
+
 unless __meteor_runtime_config__.SANDSTORM
   MethodHooks.before 'Account.changeUsername', (options) ->
     if @userId
