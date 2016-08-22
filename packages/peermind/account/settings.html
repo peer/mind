@@ -204,7 +204,7 @@
           <p>For <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></p>
         {{/if}}
         {{#if avatar.selected}}
-          <button type="submit" class="btn waves-effect waves-light secondary-content" disabled>Selected</button>
+          <button type="submit" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
         {{else}}
           <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
         {{/if}}
