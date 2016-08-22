@@ -1,0 +1,75 @@
+<template name="HeaderComponent">
+  <header>
+    <nav>
+      <div class="nav-wrapper">
+        {{! TODO: Programmatically resolve the root URL. }}
+        <a href="/" class="logo hide-on-med-and-down">
+          {{! TODO: Programmatically resolve the full image URL. }}
+          <img src="/packages/peermind/layout/logo.svg" alt="Logo" />
+        </a>
+        <h1 class="brand-logo">{{title}}</h1>
+        <a href="" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="hide-on-med-and-down">
+          {{> NavItemsComponent}}
+          {{#unless currentUser}}
+            {{#if isSandstorm}}
+              <li class="static">Sign in through Sandstorm</li>
+            {{else}}
+              <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+            {{/if}}
+          {{else}}
+            <li class="signed-in-menu-item">
+              {{#if isSandstorm}}
+                <span class="static">
+                  <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
+                  {{currentUser.username}}
+                </span>
+              {{else}}
+                <a href="" data-activates="account-menu">
+                  <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
+                  {{currentUser.username}}
+                </a>
+                <ul id="account-menu" class="dropdown-content">
+                  {{> AccountItemsComponent args isDropdown=true}}
+                </ul>
+              {{/if}}
+            </li>
+          {{/unless}}
+        </ul>
+        <ul class="side-nav" id="mobile-menu">
+          {{#if currentUser}}
+            <li class="signed-in-menu-item">
+              <div class="username">{{currentUser.username}}</div>
+              <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
+            </li>
+          {{/if}}
+          {{> NavItemsComponent}}
+          {{#unless currentUser}}
+            <li class="divider"></li>
+            {{#if isSandstorm}}
+              <li><span class="static">Sign in through Sandstorm</span></li>
+            {{else}}
+              <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+            {{/if}}
+          {{else}}
+            {{#unless isSandstorm}}
+              <li class="divider"></li>
+              {{> AccountItemsComponent args isDropdown=false}}
+            {{/unless}}
+          {{/unless}}
+        </ul>
+      </div>
+    </nav>
+  </header>
+</template>
+
+<template name="NavItemsComponent">
+  <li><a href="{{pathFor 'Discussion.list'}}">Discussions</a></li>
+  <li><a href="{{pathFor 'Meeting.list'}}">Meetings</a></li>
+</template>
+
+<template name="AccountItemsComponent">
+  <li><a href="{{pathFor 'Settings.display'}}">Settings</a></li>
+  <li class="divider"></li>
+  <li><a href="" class="sign-out">Sign out</a></li>
+</template>

@@ -8,13 +8,13 @@ Npm.depends({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.0.1');
+  api.versionsFrom('1.4.1');
 
   // Core dependencies.
   api.use([
     'coffeescript',
     'accounts-base',
-    'underscore-extra',
+    'accounts-password',
     'random',
     'jquery'
   ]);
@@ -32,6 +32,7 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
+    'underscore-extra',
     'core',
     'voting',
     'storage'
@@ -54,6 +55,7 @@ Package.onUse(function (api) {
     'motion/publish.coffee',
     'storagefile/methods.coffee',
     'user/publish.coffee',
-    'user/methods.coffee'
+    'user/methods.coffee',
+    'account/methods.coffee'
   ], 'server');
 });

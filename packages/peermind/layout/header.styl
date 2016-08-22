@@ -1,0 +1,92 @@
+@import '../base/base'
+
+nav .nav-wrapper
+  display flex
+
+  .logo
+    margin 0
+    padding 0 15px
+    transition background-color 0.3s
+
+    &:hover
+      background-color rgba(0, 0, 0, 0.1)
+
+    img
+      width $navbar-height
+      height $navbar-height
+
+  ul
+  .logo
+    // We do not want menu entries and logo to shrink at all. But title (.brand-logo)
+    // should shrink as necessary, and use ellipsis to hide too long text.
+    flex-shrink 0
+
+  .brand-logo
+    line-height $navbar-height-mobile
+    margin 0
+    padding 0 15px
+    overflow hidden
+    text-overflow ellipsis
+    position static
+    // We want title to be expanded as much as possible.
+    flex-grow 1
+
+    // We do not want title to be centered on smaller media.
+    @media $medium-and-down
+      left auto
+      transform none
+
+    @media $medium-and-up
+      line-height $navbar-height
+
+  // The menu button should be on the left.
+  .button-collapse
+    order -1
+
+  ul
+    .signed-in-menu-item img
+      float right
+      margin-left 8px
+      margin-top 12px
+      height 32px
+      width 32px
+      border-radius 50%
+
+      @media $medium-and-up
+        margin-top (($navbar-height - @height) / 2)
+
+    .static
+      font-size 1rem
+      color $navbar-font-color
+      display block
+      padding 0 15px
+
+  .side-nav
+    .divider
+      margin 0
+
+    li.signed-in-menu-item
+      background-color $secondary-color
+      height $navbar-height-mobile
+      line-height $navbar-height-mobile
+      padding 0 $sidenav-padding
+      display flex
+
+      .username
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+
+      img
+        float none
+        flex-shrink 0
+
+      @media $medium-and-up
+        height $navbar-height
+        line-height $navbar-height
+
+    .static
+      color $sidenav-font-color-no-action
+      height $sidenav-item-height
+      line-height $sidenav-item-height
+      padding 0 $sidenav-padding

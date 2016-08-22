@@ -1,0 +1,153 @@
+<template name="Settings.DisplayComponent">
+  {{#if hasAccess}}
+    <div class="section">
+      <div class="row">
+        <div class="col s12 m9 l9">
+          <div id="avatar" class="section scrollspy">
+            <h4>Avatar</h4>
+          </div>
+
+          {{#if anyServiceConfiguration}}
+            <div id="accounts" class="section scrollspy">
+              <h4>Linked accounts</h4>
+              {{> Settings.AccountsComponent}}
+            </div>
+          {{/if}}
+
+          <div id="delegations" class="section scrollspy">
+            <h4>Delegations</h4>
+          </div>
+
+          <div id="research" class="section scrollspy">
+            <h4>Research data</h4>
+          </div>
+
+          <div id="password" class="section scrollspy">
+            <h4>Password</h4>
+            {{> Settings.PasswordComponent}}
+          </div>
+
+          <div id="username" class="section scrollspy">
+            <h4>Username</h4>
+            {{> Settings.UsernameComponent}}
+          </div>
+        </div>
+        <div class="col hide-on-small-only m3 l3">
+          <ul class="section table-of-contents">
+            <li><a href="#avatar">Avatar</a></li>
+            {{#if anyServiceConfiguration}}
+              <li><a href="#accounts">Linked accounts</a></li>
+            {{/if}}
+            <li><a href="#delegations">Delegations</a></li>
+            <li><a href="#research">Research data</a></li>
+            <li><a href="#password">Password</a></li>
+            <li><a href="#username">Username</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    {{> AccessDeniedComponent}}
+  {{/if}}
+</template>
+
+<template name="Settings.UsernameComponent">
+  <p>Your current username: <strong>{{currentUser.username}}</strong></p>
+
+  <div class="row">
+    <form class="col s12 change-username">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="username" name="username" type="text" pattern="{{USERNAME_REGEX}}" class="validate" required>
+          <label for="username" data-error="Username can contain only A-Z, a-z, 0-9, and _ characters.">New username</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 center-align">
+          <button type="submit" name="change-username" class="btn waves-effect waves-light"><i class="material-icons left">done</i>Change username</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {{!-- TODO: Add a warning that this will invalidate any existing mentions in comments, once we have them. --}}
+</template>
+
+<template name="Settings.PasswordComponent">
+  <div class="row">
+    <form class="col s12 change-password">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="old-password" name="old-password" type="password" class="validate" required>
+          <label for="old-password">Old password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="new-password" name="new-password" type="password" class="validate" required>
+          <label for="new-password">New password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="confirm-new-password" name="confirm-new-password" type="password" class="validate" required>
+          <label for="confirm-new-password" data-error="Passwords do not match.">Confirm new password</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 center-align">
+          <button type="submit" name="change-password" class="btn waves-effect waves-light"><i class="material-icons left">done</i>Change password</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</template>
+
+<template name="Settings.AccountsComponent">
+  <p>
+    By linking your accounts on other sites you will be able to use them to sign in.
+    Moreover, PeerMind might be able to better suggest potential delegates to you.
+  </p>
+
+  <ul class="collection z-depth-1">
+    {{#if currentUser.services.facebook.id}}
+      <li class="collection-item avatar">
+        <a href="{{currentUser.services.facebook.link}}"><img src="{{currentUser.avatarUrl 'facebook'}}" alt="" class="circle"></a>
+        <span class="title"><a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></span>
+        {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
+        <p>Facebook</p>
+        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'facebook'}}">Unlink</button>
+      </li>
+    {{else}}
+      <li class="collection-item center-align input-field">
+        <button type="submit" class="btn waves-effect waves-light facebook-button" onClick="{{onLink 'facebook'}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
+      </li>
+    {{/if}}
+    {{#if currentUser.services.google.id}}
+      <li class="collection-item avatar">
+        <a href="https://plus.google.com/{{currentUser.services.google.id}}"><img src="{{currentUser.avatarUrl 'google'}}" alt="" class="circle"></a>
+        <span class="title"><a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></span>
+        {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
+        <p>Google</p>
+        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'google'}}">Unlink</button>
+      </li>
+    {{else}}
+      <li class="collection-item center-align input-field">
+        <button type="submit" class="btn waves-effect waves-light google-button" onClick="{{onLink 'google'}}"><i class="fa fa-google left"></i> Link your Google account</button>
+      </li>
+    {{/if}}
+    {{#if currentUser.services.twitter.id}}
+      <li class="collection-item avatar">
+        <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}"><img src="{{currentUser.avatarUrl 'twitter'}}" alt="" class="circle"></a>
+        <span class="title"><a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></span>
+        {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
+        <p>Twitter</p>
+        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'twitter'}}">Unlink</button>
+      </li>
+    {{else}}
+      <li class="collection-item center-align input-field">
+        <button type="submit" class="btn waves-effect waves-light twitter-button" onClick="{{onLink 'twitter'}}"><i class="fa fa-twitter left"></i> Link your Twitter account</button>
+      </li>
+    {{/if}}
+  </ul>
+</template>

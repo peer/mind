@@ -19,3 +19,12 @@
 [submodule "tests/test-runner"]
 	path = tests/test-runner
 	url = https://github.com/tozd/meteor-test-runner.git
+[submodule "packages/useraccounts:materialize"]
+	path = packages/useraccounts:materialize
+	url = https://github.com/meteor-useraccounts/materialize.git
+[submodule "packages/doctorpangloss:method-hooks"]
+	path = packages/doctorpangloss:method-hooks
+	url = https://github.com/mitar/meteor-method-hooks.git
+[submodule "packages/useraccounts:core"]
+	path = packages/useraccounts:core
+	url = https://github.com/mitar/meteor-useraccounts-core.git

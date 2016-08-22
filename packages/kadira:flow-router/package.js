@@ -5,4 +5,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.imply('peerlibrary:flow-router@2.12.1_1');
+  api.use('peerlibrary:flow-router@2.12.1_1');
+
+  api.export('FlowRouter');
 });

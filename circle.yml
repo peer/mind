@@ -10,8 +10,11 @@ machine:
 dependencies:
   override:
     - npm install selenium-webdriver@2.47.0 mkdirp
+    - npm install -g cli-real-favicon
     - meteor list
+    - meteor npm install
 test:
   override:
     - tests/authors/check-authors.sh
     - tests/test-runner/test-all.sh
+    - real-favicon check-for-update --fail-on-update public/version.json

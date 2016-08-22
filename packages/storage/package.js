@@ -4,13 +4,12 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.0.1');
+  api.versionsFrom('1.4.1');
 
   // Core dependencies.
   api.use([
     'coffeescript',
-    'webapp',
-    'underscore-extra'
+    'webapp'
   ]);
 
   // 3rd party dependencies.
@@ -24,6 +23,11 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:flow-router@2.10.0_2'
   ], {weak: true});
+
+  // Internal dependencies.
+  api.use([
+    'underscore-extra'
+  ]);
 
   api.export('Storage');
 

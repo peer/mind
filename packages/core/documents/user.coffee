@@ -133,6 +133,15 @@ class User extends share.BaseDocument
     else
       _id: 1
       avatar: 1
+      'services.facebook.id': 1
+      'services.facebook.name': 1
+      'services.facebook.link': 1
+      'services.google.id': 1
+      'services.google.name': 1
+      'services.google.picture': 1
+      'services.twitter.id': 1
+      'services.twitter.screenName': 1
+      'services.twitter.profile_image_url_https': 1
 
   @PERMISSIONS:
     UPVOTE: 'UPVOTE'
@@ -271,11 +280,18 @@ class User extends share.BaseDocument
   getReference: ->
     _.pick @, _.keys @constructor.REFERENCE_FIELDS()
 
-  avatarUrl: ->
-    if @avatar and AVATAR_REGEX.test @avatar
-      Storage.url @avatar
+  avatarUrl: (service) ->
+    if service is 'facebook'
+     "https://graph.facebook.com/#{@services.facebook?.id}/picture"
+    else if service is 'google'
+     @services.google?.picture
+    else if service is 'twitter'
+     @services.twitter?.profile_image_url_https
     else
-      @avatar
+      if @avatar and AVATAR_REGEX.test @avatar
+        Storage.url @avatar
+      else
+        @avatar
 
 if Meteor.isServer
   User.Meta.collection._ensureIndex

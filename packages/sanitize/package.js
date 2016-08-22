@@ -4,12 +4,11 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.0.1');
+  api.versionsFrom('1.4.1');
 
   // Core dependencies.
   api.use([
     'coffeescript',
-    'underscore-extra',
     'jquery'
   ]);
 
@@ -20,6 +19,11 @@ Package.onUse(function (api) {
     'peerlibrary:url-utils@0.4.0_3'
   ]);
 
+  // Internal dependencies.
+  api.use([
+    'underscore-extra'
+  ]);
+
   api.export('Sanitize');
 
   api.addFiles([
@@ -28,7 +32,7 @@ Package.onUse(function (api) {
 });
 
 Package.onTest(function (api) {
-  api.versionsFrom('1.4.0.1');
+  api.versionsFrom('1.4.1');
 
   // Core dependencies.
   api.use([
