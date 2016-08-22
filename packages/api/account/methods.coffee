@@ -1,14 +1,4 @@
 Meteor.methods
-  'Account.changeUsername': (newUsername) ->
-    check newUsername, Match.Where (x) ->
-      check x, String
-      new RegExp("^#{Settings.USERNAME_REGEX}$").test x
-
-    userId = Meteor.userId()
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
-
-    Accounts.setUsername userId, newUsername
-
   'Account.unlinkAccount': (serviceName) ->
     check serviceName, Match.Where (x) ->
       check x, Match.NonEmptyString
@@ -27,6 +17,16 @@ Meteor.methods
 
 unless __meteor_runtime_config__.SANDSTORM
   Meteor.methods
+    'Account.changeUsername': (newUsername) ->
+      check newUsername, Match.Where (x) ->
+        check x, String
+        new RegExp("^#{Settings.USERNAME_REGEX}$").test x
+
+      userId = Meteor.userId()
+      throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+      Accounts.setUsername userId, newUsername
+
     'Account.selectAvatar': (name, argument) ->
       check name, Match.NonEmptyString
       check argument, Match.OptionalOrNull Match.NonEmptyString

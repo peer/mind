@@ -5,7 +5,11 @@
         <div class="col s12 m9 l9">
           <div id="avatar" class="section scrollspy">
             <h4>Avatar</h4>
-            {{> Settings.AvatarComponent}}
+            {{#if isSandstorm}}
+              <p>Avatar is manged through Sandstorm. Consult Sandstorm account settings to select an avatar.</p>
+            {{else}}
+              {{> Settings.AvatarComponent}}
+            {{/if}}
           </div>
 
           {{#if anyServiceConfiguration}}
@@ -23,14 +27,23 @@
             <h4>Research data</h4>
           </div>
 
-          <div id="password" class="section scrollspy">
-            <h4>Password</h4>
-            {{> Settings.PasswordComponent}}
-          </div>
+          {{#unless isSandstorm}}
+            <div id="password" class="section scrollspy">
+              <h4>Password</h4>
+              {{> Settings.PasswordComponent}}
+            </div>
+          {{/unless}}
 
           <div id="username" class="section scrollspy">
             <h4>Username</h4>
-            {{> Settings.UsernameComponent}}
+            {{#if isSandstorm}}
+              <p>
+                Username is based on Sandstorm's preferred handle, but made unique.
+                Consult Sandstorm account settings to change the preferred handle and username will be changed accordingly.
+              </p>
+            {{else}}
+              {{> Settings.UsernameComponent}}
+            {{/if}}
           </div>
         </div>
         <div class="col hide-on-small-only m3 l3">
@@ -41,7 +54,9 @@
             {{/if}}
             <li><a href="#delegations">Delegations</a></li>
             <li><a href="#research">Research data</a></li>
-            <li><a href="#password">Password</a></li>
+            {{#unless isSandstorm}}
+              <li><a href="#password">Password</a></li>
+            {{/unless}}
             <li><a href="#username">Username</a></li>
           </ul>
         </div>
@@ -105,10 +120,17 @@
 </template>
 
 <template name="Settings.AccountsComponent">
-  <p>
-    By linking your accounts on other sites you will be able to use them to sign in.
-    Moreover, PeerMind might be able to better suggest potential delegates to you.
-  </p>
+  {{#if isSandstorm}}
+    {{!-- TODO: It is unclear if linking of accounts can work inside Sandstorm. See: https://github.com/sandstorm-io/sandstorm/issues/2433 --}}
+    <p>
+      By linking your accounts on other sites PeerMind might be able to better suggest potential delegates to you.
+    </p>
+  {{else}}
+    <p>
+      By linking your accounts on other sites you will be able to use them to sign in.
+      Moreover, PeerMind might be able to better suggest potential delegates to you.
+    </p>
+  {{/if}}
 
   <ul class="collection z-depth-1">
     {{#if currentUser.services.facebook.id}}
