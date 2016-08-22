@@ -1,5 +1,5 @@
 class AccountFormComponent extends UIComponent
   @register 'AccountFormComponent'
 
-  template: ->
-    'fullPageAtForm'
+  isSignIn: ->
+    AccountsTemplates.getState() is 'signIn'

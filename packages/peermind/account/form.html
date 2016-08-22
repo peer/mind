@@ -1,0 +1,15 @@
+<template name="AccountFormComponent">
+  <div class="row">
+    <div class="col s12 m6 offset-m3 offset-l3 l6 z-depth-1">
+      {{> atForm}}
+      {{#if isSignIn}}
+        <p class="hint">
+          To be able to sign in you have to accept an invitation sent to your e-mail.
+          Search for subject with <strong>PeerMind</strong> and check spam.
+          If you still have issues signing in, contact Cloyne network manager at
+          <a href="mailto:clonm@bsc.coop">clonm@bsc.coop</a>.
+        </p>
+      {{/if}}
+    </div>
+  </div>
+</template>
