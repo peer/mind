@@ -24,3 +24,34 @@ Meteor.methods
       _id: userId
     ,
       $unset: unset
+
+  'Account.selectAvatar': (name, argument) ->
+    check name, Match.NonEmptyString
+    check argument, Match.OptionalOrNull Match.NonEmptyString
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    currentAvatars = User.documents.findOne(userId, fields: avatars: 1)?.avatars
+
+    return 0 unless currentAvatars
+
+    avatars = EJSON.clone currentAvatars
+
+    for avatar, i in avatars
+      avatar.selected = false
+
+    found = false
+    for avatar in avatars when avatar.name is name and (avatar.argument or null) is (argument or null)
+      avatar.selected = true
+      found = true
+      break
+
+    return 0 unless found
+
+    User.documents.update
+      _id: userId
+      avatars: currentAvatars
+    ,
+      $set:
+        avatars: avatars

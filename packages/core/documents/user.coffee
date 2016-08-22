@@ -1,8 +1,10 @@
+if Meteor.isServer
+  crypto = Npm.require 'crypto'
+
 # Suffix can be:
 #  i - for automatically generated initials
-#  s - for generated default avatar for Sandstorm
 #  u - for avatar uploaded by user
-AVATAR_REGEX = ///^avatar/\w+-([isu])\.///
+AVATAR_REGEX = ///^avatar/\w+-([iu])\.///
 
 generateSandstormUsername = (fields) ->
   return [] unless fields.services?.sandstorm?.preferredHandle
@@ -34,24 +36,15 @@ generateSandstormUsername = (fields) ->
 
       throw error
 
-generateSandstormAvatar = (fields) ->
-  # Sandstorm should always provide an avatar in newer versions.
-  # See: https://github.com/sandstorm-io/sandstorm/issues/1866
-  return [fields._id, fields.services.sandstorm.picture] if fields.services?.sandstorm?.picture
+generateSandstormAvatars = (fields) ->
+  return [] unless fields.services?.sandstorm?.picture
 
-  # There is no avatar provided by Sandstorm. We do not support that.
-  # TODO: Provide some better fallback avatar than null (which does not even exist)?
-  return [fields._id, null]
-
-generateAvatar = (fields) ->
-  if fields.avatar and match = AVATAR_REGEX.exec fields.avatar
-    # Do not do anything if a custom avatar (no "i" suffix) is set.
-    return [] unless match[1] is 'i'
-
-  # It is OK if fields.username does not exist.
-  avatarContent = initialsAvatar fields.username
-
-  updateAvatar fields._id, 'i', 'svg', avatarContent
+  [fields._id, [
+    name: 'sandstorm'
+    argument: null
+    location: fields.services.sandstorm.picture
+    selected: true
+  ]]
 
 updateAvatar = (usedId, type, extension, avatarContent) ->
   avatarFilename = "avatar/#{usedId}-#{type}.#{extension}"
@@ -65,7 +58,7 @@ updateAvatar = (usedId, type, extension, avatarContent) ->
   Storage.save avatarFilename, avatarContent
 
   # Attach a query string to force reactive client-side update when the content changes.
-  [usedId, "#{avatarFilename}?#{avatarHash.substr 0, 16}"]
+  "#{avatarFilename}?#{avatarHash.substr 0, 16}"
 
 # Copied from: https://github.com/RocketChat/Rocket.Chat/blob/master/server/startup/avatar.coffee
 initialsAvatar = (username="") ->
@@ -93,6 +86,100 @@ initialsAvatar = (username="") ->
   </svg>
   """
 
+generateAvatar = (fields) ->
+  # Return selected avatar location.
+  for avatar in fields.avatars or [] when avatar.selected
+    return [fields._id, avatar.location]
+
+  if __meteor_runtime_config__.SANDSTORM
+    defaultAvatar = 'sandstorm'
+  else
+    defaultAvatar = 'default'
+
+  # If no avatar is selected, return default avatar.
+  for avatar in fields.avatars or [] when avatar.name is defaultAvatar
+    return [fields._id, avatar.location]
+
+  # Otherwise, do not do anything. The generateAvatars generator will update
+  # this field with at least default avatar and this generator will run again.
+  # (It generates a default avatar even if there is no username.)
+
+  return []
+
+currentlySelectedAvatar = (userId) =>
+  user = User.documents.findOne
+    _id: userId
+    'avatars.selected': true
+  ,
+    fields:
+      'avatars.$': 1
+
+  return null unless user
+
+  # Mongo query limited items in the array only to selected.
+  # So we just pick the first item.
+  user.avatars[0]
+
+gravatarHash = (address) ->
+  hash = crypto.createHash 'md5'
+  hash.update address.trim().toLowerCase()
+  hash.digest 'hex'
+
+generateAvatars = (fields) ->
+  avatars = []
+  selectedAvatar = currentlySelectedAvatar fields._id
+
+  # It is OK if fields.username does not exist.
+  defaultAvatarContent = initialsAvatar fields.username
+
+  defaultAvatarLocation = updateAvatar fields._id, 'i', 'svg', defaultAvatarContent
+
+  avatars.push
+    name: 'default'
+    argument: null
+    location: defaultAvatarLocation
+    selected: selectedAvatar?.name is 'default'
+
+  for email in fields.emails or [] when email.verified and email.address
+    avatars.push
+      name: 'gravatar'
+      argument: email.address
+      location: "https://www.gravatar.com/avatar/#{gravatarHash email.address}?d=identicon"
+      selected: selectedAvatar?.name is 'gravatar'
+
+  if fields.services?.facebook?.id
+    avatars.push
+      name: 'facebook'
+      argument: null
+      location: "https://graph.facebook.com/#{fields.services.facebook.id}/picture"
+      selected: selectedAvatar?.name is 'facebook'
+
+  if fields.services?.google?.picture
+    avatars.push
+      name: 'google'
+      argument: null
+      location: fields.services.google.picture
+      selected: selectedAvatar?.name is 'google'
+
+  if fields.services?.twitter?.profile_image_url_https
+    avatars.push
+      name: 'twitter'
+      argument: null
+      location: fields.services.twitter.profile_image_url_https
+      selected: selectedAvatar?.name is 'twitter'
+
+  if fields.uploadedAvatar
+    avatars.push
+      name: 'uploaded'
+      argument: null
+      location: fields.uploadedAvatar
+      selected: selectedAvatar?.name is 'uploaded'
+
+  # If no other is selected, select the default avatar.
+  avatars[0].selected = true unless _.findWhere avatars, selected: true
+
+  [fields._id, avatars]
+
 class User extends share.BaseDocument
   # createdAt: time of document creation
   # updatedAt: time of the last change
@@ -103,19 +190,29 @@ class User extends share.BaseDocument
   #   verified: is e-mail address verified
   # services: list of authentication/linked services
   # roles: list of roles names (strings) this user is part of
-  # avatar: avatar filename
+  # avatar: avatar filename or URL
+  # uploadedAvatar: filename of the uploaded avatar
+  # avatars: list of available avatars
+  #   name: name of the avatar (does not have to be unique, Gravatar can have multiple entries for example for each e-mail address)
+  #   argument: any optional argument for generation of this avatar (like e-mail address for Gravatar)
+  #   location: filename or URL
+  #   selected: boolean if this is the preferred avatar
 
   @Meta
     name: 'User'
     collection: Meteor.users
     fields: =>
+      # We include "avatar" field so the if it gets deleted it gets regenerated.
+      fields =
+        avatar: @GeneratedField 'self', ['avatar', 'avatars'], generateAvatar
       if __meteor_runtime_config__.SANDSTORM
-        username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
-        # We include "avatar" field so the if it gets deleted it gets regenerated.
-        avatar: @GeneratedField 'self', ['avatar', 'services.sandstorm.picture'], generateSandstormAvatar
+        _.extend fields,
+          username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
+          avatars: [@GeneratedField 'self', ['services.sandstorm.picture'], generateSandstormAvatars]
       else
-        # We include "avatar" field so the if it gets deleted it gets regenerated.
-        avatar: @GeneratedField 'self', ['avatar', 'username'], generateAvatar
+        _.extend fields,
+          avatars: [@GeneratedField 'self', ['username', 'emails', 'services.facebook.id', 'services.google.picture', 'services.twitter.profile_image_url_https', 'uploadedAvatar'], generateAvatars]
+      fields
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
       lastActivity: share.LastActivityTrigger ['services']
@@ -133,15 +230,14 @@ class User extends share.BaseDocument
     else
       _id: 1
       avatar: 1
+      avatars: 1
       'services.facebook.id': 1
       'services.facebook.name': 1
       'services.facebook.link': 1
       'services.google.id': 1
       'services.google.name': 1
-      'services.google.picture': 1
       'services.twitter.id': 1
       'services.twitter.screenName': 1
-      'services.twitter.profile_image_url_https': 1
 
   @PERMISSIONS:
     UPVOTE: 'UPVOTE'
@@ -280,18 +376,28 @@ class User extends share.BaseDocument
   getReference: ->
     _.pick @, _.keys @constructor.REFERENCE_FIELDS()
 
-  avatarUrl: (service) ->
-    if service is 'facebook'
-     "https://graph.facebook.com/#{@services.facebook?.id}/picture"
-    else if service is 'google'
-     @services.google?.picture
-    else if service is 'twitter'
-     @services.twitter?.profile_image_url_https
-    else
-      if @avatar and AVATAR_REGEX.test @avatar
-        Storage.url @avatar
+  avatarUrl: (service, argument) ->
+    service = null if service instanceof Spacebars.kw
+    argument = null if argument instanceof Spacebars.kw
+
+    if service
+      if argument
+        avatarObject = _.findWhere @avatars,
+          name: service
+          argument: argument
       else
-        @avatar
+        avatarObject = _.findWhere @avatars,
+          name: service
+
+      avatar = avatarObject?.location
+
+    else
+      avatar = @avatar
+
+    if avatar and AVATAR_REGEX.test avatar
+      Storage.url avatar
+    else
+      avatar
 
 if Meteor.isServer
   User.Meta.collection._ensureIndex

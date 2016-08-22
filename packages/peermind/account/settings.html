@@ -5,6 +5,7 @@
         <div class="col s12 m9 l9">
           <div id="avatar" class="section scrollspy">
             <h4>Avatar</h4>
+            {{> Settings.AvatarComponent}}
           </div>
 
           {{#if anyServiceConfiguration}}
@@ -149,5 +150,43 @@
         <button type="submit" class="btn waves-effect waves-light twitter-button" onClick="{{onLink 'twitter'}}"><i class="fa fa-twitter left"></i> Link your Twitter account</button>
       </li>
     {{/if}}
+  </ul>
+</template>
+
+<template name="Settings.AvatarComponent">
+  <ul class="collection z-depth-1">
+    {{#each avatar in currentUser.avatars}}
+      <li class="collection-item avatar">
+        <img src="{{currentUser.avatarUrl avatar.name avatar.argument}}" alt="" class="circle">
+        {{#if $eq avatar.name 'default'}}
+          <span class="title">Default</span>
+          <p>For username {{currentUser.username}}</p>
+        {{/if}}
+        {{#if $eq avatar.name 'gravatar'}}
+          <span class="title">Gravatar</span>
+          <p>For e-mail address {{avatar.argument}}</p>
+        {{/if}}
+        {{#if $eq avatar.name 'facebook'}}
+          {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
+          <span class="title">Facebook</span>
+          <p>For <a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></p>
+        {{/if}}
+        {{#if $eq avatar.name 'google'}}
+          {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
+          <span class="title">Google</span>
+          <p>For <a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></p>
+        {{/if}}
+        {{#if $eq avatar.name 'twitter'}}
+          {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
+          <span class="title">Twitter</span>
+          <p>For <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></p>
+        {{/if}}
+        {{#if avatar.selected}}
+          <button type="submit" class="btn waves-effect waves-light secondary-content" disabled>Selected</button>
+        {{else}}
+          <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
+        {{/if}}
+      </li>
+    {{/each}}
   </ul>
 </template>

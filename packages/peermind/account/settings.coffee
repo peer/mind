@@ -153,6 +153,18 @@ class Settings.AccountsComponent extends UIComponent
         alert "Unlinking from #{_.capitalize serviceName} error: #{error.reason or error}"
         return
 
+class Settings.AvatarComponent extends UIComponent
+  @register 'Settings.AvatarComponent'
+
+  onSelect: (event, name, argument) ->
+    event.preventDefault()
+
+    Meteor.call 'Account.selectAvatar', name, (argument or null), (error, result) =>
+      if error
+        console.error "Selecting avatar error", error
+        alert "Selecting avatar error: #{error.reason or error}"
+        return
+
 FlowRouter.route '/account/settings',
   name: 'Settings.display'
   action: (params, queryParams) ->

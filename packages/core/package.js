@@ -13,7 +13,8 @@ Package.onUse(function (api) {
     'jquery',
     'random',
     'ddp',
-    'modules'
+    'modules',
+    'spacebars'
   ]);
 
   // 3rd party dependencies.

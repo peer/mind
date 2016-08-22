@@ -16,7 +16,8 @@ Package.onUse(function (api) {
     'accounts-base',
     'accounts-password',
     'random',
-    'jquery'
+    'jquery',
+    'ejson'
   ]);
 
   // 3rd party dependencies.
