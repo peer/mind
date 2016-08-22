@@ -1,5 +1,5 @@
 Meteor.methods
-  'Settings.changeUsername': (newUsername) ->
+  'Account.changeUsername': (newUsername) ->
     check newUsername, Match.Where (x) ->
       check x, String
       new RegExp("^#{Settings.USERNAME_REGEX}$").test x
@@ -9,7 +9,7 @@ Meteor.methods
 
     Accounts.setUsername userId, newUsername
 
-  'Settings.unlinkAccount': (serviceName) ->
+  'Account.unlinkAccount': (serviceName) ->
     check serviceName, Match.Where (x) ->
       check x, Match.NonEmptyString
       x in ['facebook', 'google', 'twitter']

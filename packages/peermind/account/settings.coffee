@@ -36,7 +36,7 @@ class Settings.UsernameComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
-    Meteor.call 'Settings.changeUsername', @$('[name="username"]').val(), (error) =>
+    Meteor.call 'Account.changeUsername', @$('[name="username"]').val(), (error) =>
       if error
         console.error "Change username error", error
         alert "Change username error: #{error.reason or error}"
@@ -147,7 +147,7 @@ class Settings.AccountsComponent extends UIComponent
   onUnlink: (event, serviceName) ->
     event.preventDefault()
 
-    Meteor.call 'Settings.unlinkAccount', serviceName, (error, result) =>
+    Meteor.call 'Account.unlinkAccount', serviceName, (error, result) =>
       if error
         console.error "Unlinking from #{_.capitalize serviceName} error", error
         alert "Unlinking from #{_.capitalize serviceName} error: #{error.reason or error}"

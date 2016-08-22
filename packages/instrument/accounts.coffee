@@ -47,12 +47,12 @@ Accounts.onLogout (attempt) ->
     level: Activity.LEVEL.ADMIN
     data: null
 
-MethodHooks.before 'Settings.changeUsername', (options) ->
+MethodHooks.before 'Account.changeUsername', (options) ->
   if @userId
     # We store current username away so that we can log it.
     @_oldUsername = User.documents.findOne(@userId, fields: username: 1)?.username or null
 
-MethodHooks.after 'Settings.changeUsername', (options) ->
+MethodHooks.after 'Account.changeUsername', (options) ->
   if @userId
     user =
       _id: @userId
@@ -112,7 +112,7 @@ MethodHooks.after 'changePassword', (options) ->
         clientAddress: @connection.clientAddress
         userAgent: @connection.httpHeaders['user-agent'] or null
 
-MethodHooks.after 'Settings.unlinkAccount', (options) ->
+MethodHooks.after 'Account.unlinkAccount', (options) ->
   if @userId
     user =
       _id: @userId
