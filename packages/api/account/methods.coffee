@@ -25,37 +25,39 @@ Meteor.methods
     ,
       $unset: unset
 
-  'Account.selectAvatar': (name, argument) ->
-    check name, Match.NonEmptyString
-    check argument, Match.OptionalOrNull Match.NonEmptyString
+unless __meteor_runtime_config__.SANDSTORM
+  Meteor.methods
+    'Account.selectAvatar': (name, argument) ->
+      check name, Match.NonEmptyString
+      check argument, Match.OptionalOrNull Match.NonEmptyString
 
-    userId = Meteor.userId()
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+      userId = Meteor.userId()
+      throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
 
-    # We fetch whole array and modify it here and set it back because it seems
-    # there is no better way to do this directly through Mongo queries.
-    currentAvatars = User.documents.findOne(userId, fields: avatars: 1)?.avatars
+      # We fetch whole array and modify it here and set it back because it seems
+      # there is no better way to do this directly through Mongo queries.
+      currentAvatars = User.documents.findOne(userId, fields: avatars: 1)?.avatars
 
-    return 0 unless currentAvatars
+      return 0 unless currentAvatars
 
-    avatars = EJSON.clone currentAvatars
+      avatars = EJSON.clone currentAvatars
 
-    for avatar, i in avatars
-      avatar.selected = false
+      for avatar, i in avatars
+        avatar.selected = false
 
-    found = false
-    for avatar in avatars when avatar.name is name and (avatar.argument or null) is (argument or null)
-      avatar.selected = true
-      found = true
-      break
+      found = false
+      for avatar in avatars when avatar.name is name and (avatar.argument or null) is (argument or null)
+        avatar.selected = true
+        found = true
+        break
 
-    return 0 unless found
+      return 0 unless found
 
-    User.documents.update
-      _id: userId
-      # We make sure nothing changed in meantime. If so, update does not change
-      # anything and user will have to re-select an avatar they want.
-      avatars: currentAvatars
-    ,
-      $set:
-        avatars: avatars
+      User.documents.update
+        _id: userId
+        # We make sure nothing changed in meantime. If so, update does not change
+        # anything and user will have to re-select an avatar they want.
+        avatars: currentAvatars
+      ,
+        $set:
+          avatars: avatars
