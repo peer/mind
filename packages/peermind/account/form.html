@@ -13,3 +13,19 @@
     </div>
   </div>
 </template>
+
+<template name="PasswordFieldsComponent">
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="new-password" name="new-password" type="password" class="validate" required>
+      <label for="new-password">{{#if isChange}}New password{{else}}Password{{/if}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="confirm-new-password" name="confirm-new-password" type="password" class="validate" required>
+      <label for="confirm-new-password" data-error="Passwords do not match.">Confirm {{#if isChange}}new {{/if}}password</label>
+    </div>
+  </div>
+</template>
+</template>

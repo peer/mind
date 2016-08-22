@@ -99,18 +99,7 @@
           <label for="old-password">Old password</label>
         </div>
       </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="new-password" name="new-password" type="password" class="validate" required>
-          <label for="new-password">New password</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="confirm-new-password" name="confirm-new-password" type="password" class="validate" required>
-          <label for="confirm-new-password" data-error="Passwords do not match.">Confirm new password</label>
-        </div>
-      </div>
+      {{> PasswordFieldsComponent args isChange=true}}
       <div class="row">
         <div class="input-field col s12 center-align">
           <button type="submit" name="change-password" class="btn waves-effect waves-light"><i class="material-icons left">done</i>Change password</button>
