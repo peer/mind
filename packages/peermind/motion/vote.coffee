@@ -49,6 +49,7 @@ class Motion.VoteComponent extends UIComponent
         max: 1.0
         step: 0.25
         value: @voteValue() ? 0.0
+        ticks: true
         slide: (event, ui) =>
           @$('.ui-slider-handle').text(ui.value)
           return
@@ -104,6 +105,7 @@ class Motion.VoteComponent extends UIComponent
       'change [name="other-vote"], click [name="other-vote"]': @onRadioInteraction
       'click .oppose-vote': @onOpposeVote
       'click .support-vote': @onSupportVote
+      'click .neutral-vote': @onNeutralVote
 
   onRangeInteraction: (event) ->
     @selectRange()
@@ -122,6 +124,9 @@ class Motion.VoteComponent extends UIComponent
 
   onSupportVote: (event) ->
     @$('.range').slider('value', 1.0)
+
+  onNeutralVote: (event) ->
+    @$('.range').slider('value', 0)
 
   currentVote: ->
     Vote.documents.findOne

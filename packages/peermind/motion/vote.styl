@@ -32,15 +32,15 @@ Slider.
 // TODO: There is also $radio-empty-color (#5a5a5a). See variables.styl for other possible variables, or define your own.
 
 .range
-  width 452px
-  height 8px
+  width 80%
+  height 3px
   border 0
   border-radius 100px
   background rgba(#000,.2)
   outline none
   .ui-slider-handle
     position absolute
-    margin -4px 0 0 -17px
+    margin -6px 0 0 -17px
     border-radius 100px
     background $radio-fill-color
     color #fff
@@ -71,3 +71,27 @@ Slider.
   .ui-slider-handle
     background #fff
     border 2px solid black
+
+.steps
+	border 1px solid transparent
+	width 800px
+	position relative
+	height 30px
+
+.ui-slider-tick
+  position absolute
+  width 3px
+  height 3px
+  border-radius 3px
+  z-index 0
+  background #505050
+
+.oppose-vote, .support-vote
+  display block
+  width 100px
+
+.support-vote
+  text-align right
+
+.neutral-vote
+  width auto
