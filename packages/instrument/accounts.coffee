@@ -142,3 +142,34 @@ unless __meteor_runtime_config__.SANDSTORM
         data:
           clientAddress: @connection.clientAddress
           userAgent: @connection.httpHeaders['user-agent'] or null
+
+  MethodHooks.after 'Account.selectAvatar', (options) ->
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    if options.error
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'avatarSelectionFailure'
+        level: Activity.LEVEL.ADMIN
+        data:
+          error: "#{options.error}"
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
+    else
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'avatarSelection'
+        level: Activity.LEVEL.ADMIN
+        data:
+          name: options.arguments[0]
+          argument: options.arguments[1] or null
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
