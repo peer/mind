@@ -17,14 +17,16 @@ class Point.NewComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
+    category = @$('[name="category"]:checked').val()
+
     # TODO: We cannot use required for category input with Materialize.
     #       See https://github.com/Dogfalo/materialize/issues/2187
     # TODO: Make a warning or something?
-    return unless @$('[name="category"]:checked').val()
+    return unless category
 
     Meteor.call 'Point.new',
       body: @$('[name="body"]').val()
-      category: @$('[name="category"]:checked').val()
+      category: category
       discussion:
         _id: @currentDiscussionId()
     ,
