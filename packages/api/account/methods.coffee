@@ -32,6 +32,8 @@ Meteor.methods
     userId = Meteor.userId()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
 
+    # We fetch whole array and modify it here and set it back because it seems
+    # there is no better way to do this directly through Mongo queries.
     currentAvatars = User.documents.findOne(userId, fields: avatars: 1)?.avatars
 
     return 0 unless currentAvatars
@@ -51,6 +53,8 @@ Meteor.methods
 
     User.documents.update
       _id: userId
+      # We make sure nothing changed in meantime. If so, update does not change
+      # anything and user will have to re-select an avatar they want.
       avatars: currentAvatars
     ,
       $set:
