@@ -197,6 +197,7 @@ class User extends share.BaseDocument
   #   argument: any optional argument for generation of this avatar (like e-mail address for Gravatar)
   #   location: filename or URL
   #   selected: boolean if this is the preferred avatar
+  # researchData: boolean if user consents to contributing data to a dataset
 
   @Meta
     name: 'User'
@@ -230,14 +231,6 @@ class User extends share.BaseDocument
     else
       _id: 1
       avatar: 1
-      avatars: 1
-      'services.facebook.id': 1
-      'services.facebook.name': 1
-      'services.facebook.link': 1
-      'services.google.id': 1
-      'services.google.name': 1
-      'services.twitter.id': 1
-      'services.twitter.screenName': 1
 
   @PERMISSIONS:
     UPVOTE: 'UPVOTE'

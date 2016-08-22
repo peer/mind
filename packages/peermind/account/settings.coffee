@@ -1,11 +1,16 @@
 class Settings.DisplayComponent extends UIComponent
   @register 'Settings.DisplayComponent'
 
+  onCreated: ->
+    super
+
+    @subscribe 'User.settings'
+
   onRendered: ->
     super
 
     @autorun (computation) =>
-      return unless @hasAccess() and Accounts._loginServicesHandle.ready()
+      return unless @hasAccess() and Accounts._loginServicesHandle.ready() and @subscriptionsReady()
       computation.stop()
 
       Tracker.afterFlush =>
@@ -165,6 +170,34 @@ class Settings.AvatarComponent extends UIComponent
         console.error "Selecting avatar error", error
         alert "Selecting avatar error: #{error.reason or error}"
         return
+
+class Settings.ResearchDataComponent extends UIComponent
+  @register 'Settings.ResearchDataComponent'
+
+  constructor: (kwargs) ->
+    super
+
+    @isSettings = !!kwargs?.hash?.isSettings
+
+  checked: (value) ->
+    if @currentUser()?.researchData
+      return checked: true if value is 'yes'
+    else if @currentUser()?.researchData?
+      return checked: true if value is 'no'
+
+  onChange: (event) ->
+    event.preventDefault()
+
+    consent = @$('[name="research-data"]:checked').val()
+
+    return unless consent
+
+    Meteor.call 'Account.researchData', consent is 'yes', (error) =>
+      if error
+        console.error "Setting research data error", error
+        alert "Setting research data error: #{error.reason or error}"
+
+        @$('[name="research-data"]').prop('checked', false)
 
 FlowRouter.route '/account/settings',
   name: 'Settings.display'

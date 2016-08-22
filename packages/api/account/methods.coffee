@@ -15,6 +15,18 @@ Meteor.methods
     ,
       $unset: unset
 
+  'Account.researchData': (consent) ->
+    check consent, Boolean
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    User.documents.update
+      _id: userId
+    ,
+      $set:
+        researchData: consent
+
 unless __meteor_runtime_config__.SANDSTORM
   Meteor.methods
     'Account.changeUsername': (newUsername) ->
