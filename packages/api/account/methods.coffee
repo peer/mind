@@ -74,6 +74,11 @@ unless __meteor_runtime_config__.SANDSTORM
         $set:
           avatars: avatars
 
+  # Because both enroll form and reset password form are using the same method, we
+  # had to make consent argument optional. But this means that somebody can instead
+  # accepting invitation request new reset password and then register through that,
+  # bypassing consent form.
+  # TODO: Do something about allowing consent form to be shown also for first reset password.
   MethodHooks.before 'resetPassword', (options) ->
     # We have additional optional argument for consent.
     # It is passed by the enroll form.
