@@ -73,7 +73,7 @@ The application is built on top of many other technologies and Meteor packages:
 
 To run the application in production you can use [Docker](https://www.docker.com/).
 
-The application is provided as [mitar/council-app](https://hub.docker.com/r/mitar/council-app/) Docker image.
+The application is provided as [peermind/peermind](https://hub.docker.com/r/peermind/peermind/) Docker image.
 It is based on [tozd/meteor](https://hub.docker.com/r/tozd/meteor/) image for Meteor applications.
 [tozd/meteor-mongodb](https://hub.docker.com/r/tozd/meteor-mongodb/) image is recommended for MongoDB because
 it creates necessary Meteor MongoDB database configuration automatically.
