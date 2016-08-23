@@ -53,6 +53,7 @@ class Discussion extends share.BaseDocument
     author: 1
     title: 1
     descriptionDisplay: 1
+    meetings: 1
 
 if Meteor.isServer
   Discussion.Meta.collection._ensureIndex
