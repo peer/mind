@@ -17,6 +17,12 @@ class Point.NewComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
+    # TODO: We cannot use required for body input with trix.
+    unless @hasBody()
+      # TODO: Use flash messages.
+      alert "Point is required."
+      return
+
     category = @$('[name="category"]:checked').val()
 
     unless category
@@ -48,3 +54,8 @@ class Point.NewComponent extends UIComponent
 
   categoryColumns: ->
     "s#{Math.floor(12 / _.size(Point.CATEGORY))}"
+
+  hasBody: ->
+    # We require body to have at least some text content or a figure.
+    $body = $($.parseHTML(@$('[name="body"]').val()))
+    $body.text() or $body.has('figure').length

@@ -95,6 +95,8 @@ Package.onUse(function (api) {
   api.addFiles([
     'migrations/0001-user-avatars.coffee',
     'migrations/0002-user-avatar.coffee',
-    'migrations/0003-user-researchdata.coffee'
+    'migrations/0003-user-researchdata.coffee',
+    'migrations/0004-point-body.coffee',
+    'migrations/0005-point-bodydisplay.coffee'
   ], 'server');
 });

@@ -59,16 +59,23 @@ class Point.ListItemComponent extends UIComponent
     @canEdit = new ComputedField =>
       @data() and (User.hasPermission(User.PERMISSIONS.POINT_UPDATE) or (User.hasPermission(User.PERMISSIONS.POINT_UPDATE_OWN) and (Meteor.userId() is @data().author._id)))
 
+  editingSubscriptions: ->
+    @subscribe 'Point.forEdit', @data()._id
+
   onBeingEdited: ->
     @callFirstWith @, 'isExpanded', false
 
     Tracker.afterFlush =>
-      # A bit of mangling to get cursor to focus at the end of the text.
-      $textarea = @$('[name="body"]')
-      body = $textarea.val()
-      $textarea.focus().val('').val(body).trigger('autoresize')
+      # TODO: Move the cursor to the end of the content.
+      #@$('trix-editor').get(0).editor.setSelectedRange(-1)
 
   onSaveEdit: (event, onSuccess) ->
+    # TODO: We cannot use required for body input with trix.
+    unless @hasBody()
+      # TODO: Use flash messages.
+      alert "Point is required."
+      return
+
     category = @$('[name="category"]:checked').val()
 
     unless category
@@ -102,6 +109,11 @@ class Point.ListItemComponent extends UIComponent
 
   categoryChecked: ->
     'checked' if @currentData().category is @data().category
+
+  hasBody: ->
+    # We require body to have at least some text content or a figure.
+    $body = $($.parseHTML(@$('[name="body"]').val()))
+    $body.text() or $body.has('figure').length
 
   expandableEventData: ->
     data = @data()
