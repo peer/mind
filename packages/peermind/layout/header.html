@@ -19,20 +19,13 @@
             {{/if}}
           {{else}}
             <li class="signed-in-menu-item">
-              {{#if isSandstorm}}
-                <span class="static">
-                  <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
-                  {{currentUser.username}}
-                </span>
-              {{else}}
-                <a href="" data-activates="account-menu">
-                  <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
-                  {{currentUser.username}}
-                </a>
-                <ul id="account-menu" class="dropdown-content">
-                  {{> AccountItemsComponent args isDropdown=true}}
-                </ul>
-              {{/if}}
+              <a href="" data-activates="account-menu">
+                <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
+                {{currentUser.username}}
+              </a>
+              <ul id="account-menu" class="dropdown-content">
+                {{> AccountItemsComponent args isDropdown=true}}
+              </ul>
             </li>
           {{/unless}}
         </ul>
@@ -52,10 +45,8 @@
               <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
             {{/if}}
           {{else}}
-            {{#unless isSandstorm}}
-              <li class="divider"></li>
-              {{> AccountItemsComponent args isDropdown=false}}
-            {{/unless}}
+            <li class="divider"></li>
+            {{> AccountItemsComponent args isDropdown=false}}
           {{/unless}}
         </ul>
       </div>
@@ -70,6 +61,8 @@
 
 <template name="AccountItemsComponent">
   <li><a href="{{pathFor 'Settings.display'}}">Settings</a></li>
-  <li class="divider"></li>
-  <li><a href="" class="sign-out">Sign out</a></li>
+  {{#unless isSandstorm}}
+    <li class="divider"></li>
+    <li><a href="" class="sign-out">Sign out</a></li>
+  {{/unless}}
 </template>

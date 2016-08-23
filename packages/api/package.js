@@ -16,7 +16,8 @@ Package.onUse(function (api) {
     'accounts-base',
     'accounts-password',
     'random',
-    'jquery'
+    'jquery',
+    'ejson'
   ]);
 
   // 3rd party dependencies.
@@ -27,7 +28,8 @@ Package.onUse(function (api) {
     'peerlibrary:assert@0.2.5',
     // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
-    'peerlibrary:meteor-file@0.2.1'
+    'peerlibrary:meteor-file@0.2.1',
+    'doctorpangloss:method-hooks@2.0.2'
   ]);
 
   // Internal dependencies.

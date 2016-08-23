@@ -61,8 +61,10 @@ class Motion.ListItemComponent extends UIComponent
 
   onSaveEdit: (event, onSuccess) ->
     # TODO: We cannot use required for body input with trix.
-    # TODO: Make a warning or something?
-    return unless @hasBody()
+    unless @hasBody()
+      # TODO: Use flash messages.
+      alert "Motion is required."
+      return
 
     Meteor.call 'Motion.update',
       _id: @data()._id

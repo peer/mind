@@ -39,7 +39,7 @@ es5-shim@4.6.14
 facebook@1.2.9
 fastclick@1.0.12
 fermuch:cheerio@0.19.0
-fourseven:scss@3.8.1
+fourseven:scss@3.9.0
 geojson-utils@1.0.9
 google@1.1.14
 hot-code-push@1.0.4
@@ -94,14 +94,14 @@ peerlibrary:computed-field@0.3.1
 peerlibrary:connect@2.28.1_1
 peerlibrary:crypto@0.2.1
 peerlibrary:data-lookup@0.1.0
-peerlibrary:directcollection@0.5.0
+peerlibrary:directcollection@0.6.0
 peerlibrary:ecmascript-compiler@0.5.7_2
 peerlibrary:fiber-utils@0.6.0
 peerlibrary:flow-router@2.12.1_1
 peerlibrary:meteor-file@0.2.1
 peerlibrary:middleware@0.1.1
 peerlibrary:peerdb@0.22.1
-peerlibrary:peerdb-migrations@0.2.1
+peerlibrary:peerdb-migrations@0.3.0
 peerlibrary:punycode@1.3.2_1
 peerlibrary:reactive-field@0.1.0
 peerlibrary:reactive-mongo@0.1.1

@@ -1,0 +1,54 @@
+<template name="AccountFormComponent">
+  <div class="row">
+    <div class="col s12 m6 offset-m3 offset-l3 l6 z-depth-1">
+      {{> atForm}}
+      {{#if isSignIn}}
+        <p class="hint">
+          To be able to sign in you have to accept an invitation sent to your e-mail.
+          Search for subject with <strong>{{siteName}}</strong> and check spam.
+          If you still have issues signing in, contact Cloyne network manager at
+          <a href="mailto:{{from}}">{{from}}</a>.
+        </p>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="PasswordFieldsComponent">
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="new-password" name="new-password" type="password" class="validate" required>
+      <label for="new-password">{{#if isChange}}New password{{else}}Password{{/if}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      <input id="confirm-new-password" name="confirm-new-password" type="password" class="validate" required>
+      <label for="confirm-new-password" data-error="Passwords do not match.">Confirm {{#if isChange}}new {{/if}}password</label>
+    </div>
+  </div>
+</template>
+
+<template name="EnrollFormComponent">
+  <div class="row">
+    {{!-- We use a wider form from login form because of the amount of text. --}}
+    <div class="col s12 m8 offset-m2 offset-l3 l6 z-depth-1">
+      <div class="at-form">
+        <div class="at-title">
+          <h3 class="header">Create an Account</h3>
+        </div>
+        <div class="at-pwd-form">
+          <form onSubmit>
+            {{> PasswordFieldsComponent}}
+            {{> Settings.ResearchDataComponent}}
+            <div class="row">
+              <div class="input-field col s12">
+                <button type="submit" class="btn waves-effect waves-light submit at-btn">Register</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

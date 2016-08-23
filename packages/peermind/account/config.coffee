@@ -1,19 +1,19 @@
+# We do not use accounts-ui package, but we have to use its options to configure useraccounts package.
+Accounts.ui ?= {}
+Accounts.ui._options ?=
+  requestPermissions: {}
+  requestOfflineToken: {}
+  forceApprovalPrompt: {}
+
+Accounts.ui._options.requestPermissions.facebook = ['public_profile', 'email', 'user_friends']
+Accounts.ui._options.requestPermissions.google = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/contacts.readonly', 'https://www.googleapis.com/auth/plus.circles.members.read']
+Accounts.ui._options.requestPermissions.twitter = null
+
 if __meteor_runtime_config__.SANDSTORM
   AccountsTemplates.configure
     forbidClientAccountCreation: true
 
 else
-  # We do not use accounts-ui package, but we have to use its options to configure useraccounts package.
-  Accounts.ui ?= {}
-  Accounts.ui._options ?=
-    requestPermissions: {}
-    requestOfflineToken: {}
-    forceApprovalPrompt: {}
-
-  Accounts.ui._options.requestPermissions.facebook = ['public_profile', 'email', 'user_friends']
-  Accounts.ui._options.requestPermissions.google = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/contacts.readonly', 'https://www.googleapis.com/auth/plus.circles.members.read']
-  Accounts.ui._options.requestPermissions.twitter = null
-
   AccountsTemplates.configure
     confirmPassword: true
     enablePasswordChange: true
@@ -36,10 +36,6 @@ else
   AccountsTemplates.configureRoute 'signIn',
     name: 'Account.signIn'
     path: '/account/signin'
-
-  AccountsTemplates.configureRoute 'enrollAccount',
-    name: 'Account.enrollAccount'
-    path: '/account/enroll'
 
   AccountsTemplates.configureRoute 'forgotPwd',
     name: 'Account.forgotPassword'
@@ -72,3 +68,10 @@ else
   ,
     passwordField
   ]
+
+  if Meteor.isServer
+    Accounts.urls.enrollAccount = (token) ->
+      path = FlowRouter.path 'Account.enrollAccount',
+        token: token
+
+      Meteor.absoluteUrl path.substr 1

@@ -18,8 +18,10 @@ class Motion.NewComponent extends UIComponent
     event.preventDefault()
 
     # TODO: We cannot use required for body input with trix.
-    # TODO: Make a warning or something?
-    return unless @hasBody()
+    unless @hasBody()
+      # TODO: Use flash messages.
+      alert "Motion is required."
+      return
 
     Meteor.call 'Motion.new',
       body: @$('[name="body"]').val()

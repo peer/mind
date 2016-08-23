@@ -5,6 +5,11 @@
         <div class="col s12 m9 l9">
           <div id="avatar" class="section scrollspy">
             <h4>Avatar</h4>
+            {{#if isSandstorm}}
+              <p>Avatar is manged through Sandstorm. Consult Sandstorm account settings to select an avatar.</p>
+            {{else}}
+              {{> Settings.AvatarComponent}}
+            {{/if}}
           </div>
 
           {{#if anyServiceConfiguration}}
@@ -20,16 +25,26 @@
 
           <div id="research" class="section scrollspy">
             <h4>Research data</h4>
+            {{> Settings.ResearchDataComponent args isSettings=true}}
           </div>
 
-          <div id="password" class="section scrollspy">
-            <h4>Password</h4>
-            {{> Settings.PasswordComponent}}
-          </div>
+          {{#unless isSandstorm}}
+            <div id="password" class="section scrollspy">
+              <h4>Password</h4>
+              {{> Settings.PasswordComponent}}
+            </div>
+          {{/unless}}
 
           <div id="username" class="section scrollspy">
             <h4>Username</h4>
-            {{> Settings.UsernameComponent}}
+            {{#if isSandstorm}}
+              <p>
+                Username is based on Sandstorm's preferred handle, but made unique.
+                Consult Sandstorm account settings to change the preferred handle and username will be changed accordingly.
+              </p>
+            {{else}}
+              {{> Settings.UsernameComponent}}
+            {{/if}}
           </div>
         </div>
         <div class="col hide-on-small-only m3 l3">
@@ -40,7 +55,9 @@
             {{/if}}
             <li><a href="#delegations">Delegations</a></li>
             <li><a href="#research">Research data</a></li>
-            <li><a href="#password">Password</a></li>
+            {{#unless isSandstorm}}
+              <li><a href="#password">Password</a></li>
+            {{/unless}}
             <li><a href="#username">Username</a></li>
           </ul>
         </div>
@@ -82,18 +99,7 @@
           <label for="old-password">Old password</label>
         </div>
       </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="new-password" name="new-password" type="password" class="validate" required>
-          <label for="new-password">New password</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="confirm-new-password" name="confirm-new-password" type="password" class="validate" required>
-          <label for="confirm-new-password" data-error="Passwords do not match.">Confirm new password</label>
-        </div>
-      </div>
+      {{> PasswordFieldsComponent args isChange=true}}
       <div class="row">
         <div class="input-field col s12 center-align">
           <button type="submit" name="change-password" class="btn waves-effect waves-light"><i class="material-icons left">done</i>Change password</button>
@@ -104,10 +110,17 @@
 </template>
 
 <template name="Settings.AccountsComponent">
-  <p>
-    By linking your accounts on other sites you will be able to use them to sign in.
-    Moreover, PeerMind might be able to better suggest potential delegates to you.
-  </p>
+  {{#if isSandstorm}}
+    {{!-- TODO: It is unclear if linking of accounts can work inside Sandstorm. See: https://github.com/sandstorm-io/sandstorm/issues/2433 --}}
+    <p>
+      By linking your accounts on other sites PeerMind might be able to better suggest potential delegates to you.
+    </p>
+  {{else}}
+    <p>
+      By linking your accounts on other sites you will be able to use them to sign in and use their avatar.
+      Moreover, PeerMind might be able to better suggest potential delegates to you.
+    </p>
+  {{/if}}
 
   <ul class="collection z-depth-1">
     {{#if currentUser.services.facebook.id}}
@@ -150,4 +163,74 @@
       </li>
     {{/if}}
   </ul>
+</template>
+
+<template name="Settings.AvatarComponent">
+  <ul class="collection z-depth-1">
+    {{#each avatar in currentUser.avatars}}
+      <li class="collection-item avatar">
+        <img src="{{currentUser.avatarUrl avatar.name avatar.argument}}" alt="" class="circle">
+        {{#if $eq avatar.name 'default'}}
+          <span class="title">Default</span>
+          <p>For username {{currentUser.username}}</p>
+        {{/if}}
+        {{#if $eq avatar.name 'gravatar'}}
+          <span class="title">Gravatar</span>
+          <p>For e-mail address {{avatar.argument}}</p>
+        {{/if}}
+        {{#if $eq avatar.name 'facebook'}}
+          {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
+          <span class="title">Facebook</span>
+          <p>For <a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></p>
+        {{/if}}
+        {{#if $eq avatar.name 'google'}}
+          {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
+          <span class="title">Google</span>
+          <p>For <a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></p>
+        {{/if}}
+        {{#if $eq avatar.name 'twitter'}}
+          {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
+          <span class="title">Twitter</span>
+          <p>For <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></p>
+        {{/if}}
+        {{#if avatar.selected}}
+          <button type="submit" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
+        {{else}}
+          <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="Settings.ResearchDataComponent">
+  <p class="justify" lang="en">
+    The experiment of using this online system for councils in Cloyne is potentially valuable also from the
+    research perspective into collective decision making and improvements to democracy. We are considering creating
+    a public dataset with <strong>completely anonymized and abstracted data</strong> of users interacting with the
+    system, including their anonymized votes. All information about what was voted on and who voted would be removed,
+    replaced with abstract identifiers. Only metadata about interactions with the system would be used, without any
+    original content (e.g., content of comments, motions). Such dataset will help researchers, including us, to be
+    able to analyze and design better ways to make democracy work. It would be the first "made in Cloyne" research dataset.
+  </p>
+  <p class="justify" lang="en">
+    Your decision will not influence functionality of this system for you in any way. You can change your decision
+    at any time in the future{{#unless isSettings}} through settings{{/unless}}.
+  </p>
+  <p class="justify" lang="en">
+    <strong>Do you consent to contributing data of your anonymized interactions with this system, including your
+    anonymized votes, to a public dataset?</strong>
+  </p>
+  <div class="row">
+    <div class="input-field col s4 offset-s2 center-align">
+      {{! TODO: We cannot use required here with Materialize. See https://github.com/Dogfalo/materialize/issues/2187 }}
+      <input type="radio" name="research-data" value="yes" id="research-data-yes" onChange {{checked 'yes'}} />
+      <label for="research-data-yes">Yes</label>
+    </div>
+    <div class="input-field col s4 center-align">
+      {{! TODO: We cannot use required here with Materialize. See https://github.com/Dogfalo/materialize/issues/2187 }}
+      <input type="radio" name="research-data" value="no" id="research-data-no" onChange {{checked 'no'}} />
+      <label for="research-data-no">No</label>
+    </div>
+  </div>
 </template>

@@ -47,72 +47,7 @@ Accounts.onLogout (attempt) ->
     level: Activity.LEVEL.ADMIN
     data: null
 
-MethodHooks.before 'Settings.changeUsername', (options) ->
-  if @userId
-    # We store current username away so that we can log it.
-    @_oldUsername = User.documents.findOne(@userId, fields: username: 1)?.username or null
-
-MethodHooks.after 'Settings.changeUsername', (options) ->
-  if @userId
-    user =
-      _id: @userId
-  else
-    user = null
-
-  if options.error
-    Activity.documents.insert
-      timestamp: new Date()
-      connection: @connection.id
-      user: user
-      type: 'usernameChangeFailure'
-      level: Activity.LEVEL.ADMIN
-      data:
-        error: "#{options.error}"
-        clientAddress: @connection.clientAddress
-        userAgent: @connection.httpHeaders['user-agent'] or null
-  else
-    Activity.documents.insert
-      timestamp: new Date()
-      connection: @connection.id
-      user: user
-      type: 'usernameChange'
-      level: Activity.LEVEL.ADMIN
-      data:
-        oldUsername: @_oldUsername
-        newUsername: options.arguments[0]
-        clientAddress: @connection.clientAddress
-        userAgent: @connection.httpHeaders['user-agent'] or null
-
-MethodHooks.after 'changePassword', (options) ->
-  if @userId
-    user =
-      _id: @userId
-  else
-    user = null
-
-  if options.error
-    Activity.documents.insert
-      timestamp: new Date()
-      connection: @connection.id
-      user: user
-      type: 'passwordChangeFailure'
-      level: Activity.LEVEL.ADMIN
-      data:
-        error: "#{options.error}"
-        clientAddress: @connection.clientAddress
-        userAgent: @connection.httpHeaders['user-agent'] or null
-  else
-    Activity.documents.insert
-      timestamp: new Date()
-      connection: @connection.id
-      user: user
-      type: 'passwordChange'
-      level: Activity.LEVEL.ADMIN
-      data:
-        clientAddress: @connection.clientAddress
-        userAgent: @connection.httpHeaders['user-agent'] or null
-
-MethodHooks.after 'Settings.unlinkAccount', (options) ->
+MethodHooks.after 'Account.unlinkAccount', (options) ->
   if @userId
     user =
       _id: @userId
@@ -141,3 +76,136 @@ MethodHooks.after 'Settings.unlinkAccount', (options) ->
         serviceName: options.arguments[0]
         clientAddress: @connection.clientAddress
         userAgent: @connection.httpHeaders['user-agent'] or null
+
+  options.result
+
+MethodHooks.after 'Account.researchData', (options) ->
+  if @userId
+    user =
+      _id: @userId
+  else
+    user = null
+
+  if options.error
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'researchDataFailure'
+      level: Activity.LEVEL.DEBUG
+      data:
+        error: "#{options.error}"
+  else
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      user: user
+      type: 'researchData'
+      level: Activity.LEVEL.DEBUG
+      data:
+        consent: options.arguments[0]
+
+  options.result
+
+unless __meteor_runtime_config__.SANDSTORM
+  MethodHooks.before 'Account.changeUsername', (options) ->
+    if @userId
+      # We store current username away so that we can log it.
+      @_oldUsername = User.documents.findOne(@userId, fields: username: 1)?.username or null
+
+  MethodHooks.after 'Account.changeUsername', (options) ->
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    if options.error
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'usernameChangeFailure'
+        level: Activity.LEVEL.ADMIN
+        data:
+          error: "#{options.error}"
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
+    else
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'usernameChange'
+        level: Activity.LEVEL.ADMIN
+        data:
+          oldUsername: @_oldUsername
+          newUsername: options.arguments[0]
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
+
+    options.result
+
+  MethodHooks.after 'changePassword', (options) ->
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    if options.error
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'passwordChangeFailure'
+        level: Activity.LEVEL.ADMIN
+        data:
+          error: "#{options.error}"
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
+    else
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'passwordChange'
+        level: Activity.LEVEL.ADMIN
+        data:
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
+
+    options.result
+
+  MethodHooks.after 'Account.selectAvatar', (options) ->
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    if options.error
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'avatarSelectionFailure'
+        level: Activity.LEVEL.ADMIN
+        data:
+          error: "#{options.error}"
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
+    else
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        user: user
+        type: 'avatarSelection'
+        level: Activity.LEVEL.ADMIN
+        data:
+          name: options.arguments[0]
+          argument: options.arguments[1] or null
+          clientAddress: @connection.clientAddress
+          userAgent: @connection.httpHeaders['user-agent'] or null
+
+    options.result

@@ -38,7 +38,7 @@ Package.onUse(function (api) {
     'peerlibrary:blaze-layout-component@0.1.1',
     'momentjs:moment@2.14.4',
     'mizzao:jquery-ui@1.11.4',
-    'fourseven:scss@3.8.0_1'
+    'fourseven:scss@3.9.0'
   ]);
 
   // Internal dependencies.
@@ -52,7 +52,10 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'account/config.coffee'
+    'account/config.coffee',
+    'account/form.html',
+    'account/form.coffee',
+    'account/form.styl'
   ]);
 
   api.addFiles([
@@ -83,7 +86,6 @@ Package.onUse(function (api) {
     'base/editor.html',
     'base/editor.coffee',
     'base/editor.styl',
-    'account/form.coffee',
     'account/settings.html',
     'account/settings.coffee',
     'account/settings.styl',
