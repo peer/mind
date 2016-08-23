@@ -4,11 +4,13 @@
   {{else}}
     {{#if canEdit}}
       <div class="section">
-        <ul class="collection z-depth-1">
-          {{#each discussions}}
-            {{> Meeting.ListDiscussionsItemComponent}}
-          {{/each}}
-        </ul>
+        {{#if discussions.exists}}
+          <ul class="collection z-depth-1">
+            {{#each discussions}}
+              {{> Meeting.ListDiscussionsItemComponent}}
+            {{/each}}
+          </ul>
+        {{/if}}
       </div>
     {{else}}
       {{> AccessDeniedComponent}}
