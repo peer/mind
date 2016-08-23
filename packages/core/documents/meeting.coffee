@@ -13,8 +13,11 @@ class Meeting extends share.BaseDocument
   # descriptionDisplay: HTML content of the description without tags needed for editing
   # descriptionAttachments: list of
   #   _id
-  # discussions: list of (order matters)
-  #   _id
+  # discussions: list of
+  #   discussion:
+  #     _id
+  #   order: floating number of order
+  #   time: allocated time in minutes
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
@@ -25,16 +28,16 @@ class Meeting extends share.BaseDocument
   #   startAt
   #   endAt
   #   description
+  #   discussions: list of
+  #     discussion:
+  #       _id
+  #     order
+  #     time
 
   @Meta
     name: 'Meeting'
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
-      # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
-      title: @GeneratedField 'self', ['changes'], (fields) =>
-        [fields._id, fields.changes?[fields.changes?.length - 1]?.title or '']
-      description: @GeneratedField 'self', ['changes'], (fields) =>
-        [fields._id, fields.changes?[fields.changes?.length - 1]?.description or '']
       descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
         [fields._id, fields.description and @sanitizeForDisplay.sanitizeHTML fields.description]
       descriptionAttachments: [
@@ -43,7 +46,9 @@ class Meeting extends share.BaseDocument
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
-      discussions: [@ReferenceField Discussion, [], true, 'meetings']
+      discussions: [
+        discussion: @ReferenceField Discussion, [], true, 'meetings'
+      ]
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
         # TODO: PeerDB does not support reference fields inside a nested array.

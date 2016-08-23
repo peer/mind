@@ -19,7 +19,7 @@ class Discussion extends share.BaseDocument
   #     avatar
   #   title
   #   description
-  # meetings: list, if a discussion is associated with a meeting (or meetings) (reverse field from Meeting.discussions)
+  # meetings: list, if a discussion is associated with a meeting (or meetings) (reverse field from Meeting.discussions.discussion)
   #   _id
 
   @Meta

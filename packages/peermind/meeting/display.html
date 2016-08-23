@@ -2,6 +2,13 @@
   {{#if notFound}}
     {{> NotFoundComponent}}
   {{else}}
+    {{#if canEdit}}
+      <div class="fixed-action-btn">
+        <a href="{{pathFor 'Meeting.discussions' params=meeting}}" class="btn-floating btn-large waves-effect waves-light red">
+          <i class="large material-icons">playlist_add_check</i>
+        </a>
+      </div>
+    {{/if}}
     <div class="section meeting">
       <div class="row">
         <h4 class="col s12">

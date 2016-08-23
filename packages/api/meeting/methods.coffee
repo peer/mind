@@ -46,6 +46,7 @@ Meteor.methods
         startAt: document.startAt
         endAt: document.endAt or null
         description: document.description
+        discussions: []
       ]
 
     assert documentId
@@ -146,3 +147,87 @@ Meteor.methods
         multi: true
 
     changed
+
+  'Meeting.toggleDiscussion': (meetingId, discussionId, selected) ->
+    check meetingId, Match.DocumentId
+    check discussionId, Match.DocumentId
+    check selected, Boolean
+
+    user = Meteor.user User.REFERENCE_FIELDS()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+    # We could just leave to PeerDB to remove a reference to a non-existing
+    # document but this would still dirty the changes field with an entry.
+    return 0 unless Discussion.documents.exists discussionId
+
+    meeting = Meeting.documents.findOne meetingId,
+      fields:
+        discussions: 1
+
+    # We could leave it to the query below to not match anything,
+    # but we can just short circuit here and immediately return.
+    return 0 unless meeting
+
+    if User.hasPermission User.PERMISSIONS.MEETING_UPDATE
+      permissionCheck = {}
+    else if User.hasPermission User.PERMISSIONS.MEETING_UPDATE_OWN
+      permissionCheck =
+        'author._id': user._id
+    else
+      permissionCheck =
+        # TODO: Find a better "no-match" query.
+        $and: [
+          _id: 'a'
+        ,
+          _id: 'b'
+        ]
+
+    updatedAt = new Date()
+    if selected
+      maxOrder = _.max _.pluck meeting.discussions, 'order'
+
+      if _.isFinite maxOrder
+        maxOrder += 1
+      else
+        maxOrder = 0
+
+      Meeting.documents.update _.extend(permissionCheck,
+        _id: meetingId
+        discussions: meeting.discussions
+        'discussions.discussion._id':
+          $ne: discussionId
+      ),
+        $set:
+          updatedAt: updatedAt
+        $push:
+          discussions:
+            discussion:
+              _id: discussionId
+            order: maxOrder
+            time: null
+          changes:
+            updatedAt: updatedAt
+            author: user.getReference()
+            discussions: (meeting.discussions or []).concat
+              discussion:
+                _id: discussionId
+              order: maxOrder
+              time: null
+
+    else
+      Meeting.documents.update _.extend(permissionCheck,
+        _id: meetingId
+        discussions: meeting.discussions
+        'discussions.discussion._id': discussionId
+      ),
+        $set:
+          updatedAt: updatedAt
+        $pull:
+          discussions:
+            'discussion._id': discussionId
+        $push:
+          changes:
+            updatedAt: updatedAt
+            author: user.getReference()
+            discussions: _.reject (meeting.discussions or []), (item) ->
+              item.discussion._id is discussionId

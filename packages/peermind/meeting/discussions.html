@@ -1,0 +1,25 @@
+<template name="Meeting.ListDiscussionsComponent">
+  {{#if notFound}}
+    {{> NotFoundComponent}}
+  {{else}}
+    {{#if canEdit}}
+      <div class="section">
+        <ul class="collection z-depth-1">
+          {{#each discussions}}
+            {{> Meeting.ListDiscussionsItemComponent}}
+          {{/each}}
+        </ul>
+      </div>
+    {{else}}
+      {{> AccessDeniedComponent}}
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="Meeting.ListDiscussionsItemComponent">
+  <li class="collection-item">
+    <input type="checkbox" id="meeting-discussion-{{_id}}" onChange {{checked}} />
+    <label for="meeting-discussion-{{_id}}" class="left"></label>
+    <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>
+  </li>
+</template>
