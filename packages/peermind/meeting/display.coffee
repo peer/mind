@@ -135,11 +135,14 @@ class Meeting.DiscussionsListItemComponent extends UIComponent
       "1 minute"
     else if discussion.length
       "#{discussion.length} minutes"
-    else
+    else if @canEdit()
       "Set length"
 
   currentMeetingId: (args...) ->
     @callAncestorWith 'currentMeetingId', args...
+
+  canEdit: (args...) ->
+    @callAncestorWith 'canEdit', args...
 
   onClick: (event) ->
     event.preventDefault()
