@@ -14,7 +14,7 @@ MONGODB_LOG="${DATA_ROOT}/${NAME}/mongodb/log"
 METEOR_LOG="${DATA_ROOT}/${NAME}/meteor/log"
 METEOR_STORAGE="${DATA_ROOT}/${NAME}/meteor/storage"
 
-# This file is used by both mitar/council-app and tozd/meteor-mongodb images. The latter automatically creates the
+# This file is used by both peermind/peermind and tozd/meteor-mongodb images. The latter automatically creates the
 # database and accounts with provided passwords. The file should look like:
 #
 # MONGODB_ADMIN_PWD='<pass>'
@@ -54,7 +54,7 @@ sleep 1
 # Mounted volume "/srv/var/hosts:/etc/hosts:ro" is used by tozd/docker-hosts service discovery and can be removed.
 docker run --detach=true --restart=always --name "${NAME}" --hostname "${NAME}" \
  --env VIRTUAL_HOST=council.cloyne.org --env VIRTUAL_URL=/ --env VIRTUAL_LETSENCRYPT=true \
- --env ROOT_URL=http://council.cloyne.org --env MAIL_URL=smtp://mail.cloyne.net --env STORAGE_DIRECTORY=/storage \
+ --env ROOT_URL=https://council.cloyne.org --env MAIL_URL=smtp://mail.cloyne.net --env STORAGE_DIRECTORY=/storage \
  --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/meteor/run.config" \
  --volume "${METEOR_LOG}:/var/log/meteor" --volume "${METEOR_STORAGE}:/storage" \
- mitar/council-app
+ peermind/peermind
