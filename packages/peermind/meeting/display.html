@@ -41,11 +41,7 @@
     </div>
     <div class="section">
       {{#if discussions.exists}}
-        <ul class="collection z-depth-1">
-          {{#each discussions}}
-            {{> Meeting.DiscussionsListItemComponent}}
-          {{/each}}
-        </ul>
+        {{> Meeting.DiscussionsListComponent}}
       {{/if}}
     </div>
   {{/if}}
@@ -55,8 +51,17 @@
   <a href="{{pathFor 'Meeting.edit' params=data}}" class="metadata-button waves-effect waves-light btn-flat right" title="Edit"><i class="material-icons tiny">edit</i></a>
 </template>
 
+<template name="Meeting.DiscussionsListComponent">
+  <ul class="collection z-depth-1">
+    {{#each discussions}}
+      {{> Meeting.DiscussionsListItemComponent}}
+    {{/each}}
+  </ul>
+</template>
+
 <template name="Meeting.DiscussionsListItemComponent">
   <li class="collection-item">
+    <i class="material-icons left handle">drag_handle</i>
     <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>
   </li>
 </template>

@@ -133,6 +133,7 @@ Package.onUse(function (api) {
     'meeting/edit.coffee',
     'meeting/display.html',
     'meeting/display.coffee',
+    'meeting/display.styl',
     'meeting/discussions.html',
     'meeting/discussions.coffee',
     'motion/list.html',

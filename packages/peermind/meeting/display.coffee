@@ -11,24 +11,35 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
       meetingId = @currentMeetingId()
       @subscribe 'Meeting.discussion', meetingId if meetingId
 
-    @currentMeetingDiscussionsIds = new ComputedField =>
-      _.pluck _.pluck(Meeting.documents.findOne(@currentMeetingId(),
+    @currentMeetingDiscussions = new ComputedField =>
+      discussions = Meeting.documents.findOne(@currentMeetingId(),
         fields:
-          discussions: 1
+          'discussions.discussion._id': 1
+          'discussions.order': 1
         transform: null
-      )?.discussions or [], 'discussion'), '_id'
+      )?.discussions
+
+      return [] unless discussions
+
+      discussions = _.sortBy discussions, 'order'
+
+      (_id: item.discussion._id, order: item.order for item in discussions)
     ,
       EJSON.equals
 
   discussions: ->
-    ids = @currentMeetingDiscussionsIds()
+    discussions = @currentMeetingDiscussions()
+
+    order = {}
+    for discussion in discussions
+      order[discussion._id] = discussion.order
 
     Discussion.documents.find
       _id:
-        $in: ids
+        $in: _.pluck discussions, '_id'
     ,
-      sort:
-        order: 1
+      sort: (a, b) ->
+        order[a._id] - order[b._id]
 
   expandableEventData: ->
     data = @meeting()
@@ -38,6 +49,67 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
 
 class Meeting.EditButton extends UIComponent
   @register 'Meeting.EditButton'
+
+class Meeting.DiscussionsListComponent extends UIComponent
+  @register 'Meeting.DiscussionsListComponent'
+
+  onRendered: ->
+    super
+
+    @$('.collection').sortable
+      axis: 'y'
+      handle: '.handle'
+      items: '.collection-item'
+      update: (event, ui) =>
+        $currentItem = ui.item
+        $prevItem = $currentItem.prev('.collection-item')
+        $nextItem = $currentItem.next('.collection-item')
+
+        discussions = @currentMeetingDiscussions()
+
+        order = {}
+        for discussion in discussions
+          order[discussion._id] = discussion.order
+
+        if not $prevItem.length and $nextItem.length
+          nextComponent = UIComponent.getComponentForElement $nextItem.get(0)
+          newOrder = order[nextComponent.data()._id] - 1
+        else if not $nextItem.length and $prevItem.length
+          prevComponent = UIComponent.getComponentForElement $prevItem.get(0)
+          newOrder = order[prevComponent.data()._id] + 1
+        else if $nextItem.length and $prevItem.length
+          nextComponent = UIComponent.getComponentForElement $nextItem.get(0)
+          prevComponent = UIComponent.getComponentForElement $prevItem.get(0)
+          newOrder = (order[nextComponent.data()._id] + order[prevComponent.data()._id]) / 2
+        else
+          return
+
+        currentComponent =  UIComponent.getComponentForElement $currentItem.get(0)
+
+        Meteor.call 'Meeting.discussionOrder', @currentMeetingId(), currentComponent.data()._id, newOrder, (error, result) =>
+          if error
+            console.error "Discussion order error", error
+            alert "Discussion order error: #{error.reason or error}"
+            return
+
+          # TODO: If result is 0, then maybe what you see ordered is not really what is stored in the database.
+          #       We should rerender what is shown.
+
+    @autorun (computation) =>
+      # Register dependency.
+      @discussions().fetch()
+
+      Tracker.afterFlush =>
+        @$('.collection').sortable('refresh')
+
+  currentMeetingId: (args...) ->
+    @callAncestorWith 'currentMeetingId', args...
+
+  currentMeetingDiscussions: (args...) ->
+    @callAncestorWith 'currentMeetingDiscussions', args...
+
+  discussions: (args...) ->
+    @callAncestorWith 'discussions', args...
 
 class Meeting.DiscussionsListItemComponent extends UIComponent
   @register 'Meeting.DiscussionsListItemComponent'
