@@ -134,11 +134,11 @@
         <span class="title"><a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></span>
         {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
         <p>Facebook</p>
-        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'facebook'}}">Unlink</button>
+        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'facebook'}}">Unlink</button>
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
-        <button type="submit" class="btn waves-effect waves-light facebook-button" onClick="{{onLink 'facebook'}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
+        <button type="button" class="btn waves-effect waves-light facebook-button" onClick="{{onLink 'facebook'}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
       </li>
     {{/if}}
     {{#if currentUser.services.google.id}}
@@ -147,11 +147,11 @@
         <span class="title"><a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></span>
         {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
         <p>Google</p>
-        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'google'}}">Unlink</button>
+        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'google'}}">Unlink</button>
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
-        <button type="submit" class="btn waves-effect waves-light google-button" onClick="{{onLink 'google'}}"><i class="fa fa-google left"></i> Link your Google account</button>
+        <button type="button" class="btn waves-effect waves-light google-button" onClick="{{onLink 'google'}}"><i class="fa fa-google left"></i> Link your Google account</button>
       </li>
     {{/if}}
     {{#if currentUser.services.twitter.id}}
@@ -160,11 +160,11 @@
         <span class="title"><a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></span>
         {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
         <p>Twitter</p>
-        <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'twitter'}}">Unlink</button>
+        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'twitter'}}">Unlink</button>
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
-        <button type="submit" class="btn waves-effect waves-light twitter-button" onClick="{{onLink 'twitter'}}"><i class="fa fa-twitter left"></i> Link your Twitter account</button>
+        <button type="button" class="btn waves-effect waves-light twitter-button" onClick="{{onLink 'twitter'}}"><i class="fa fa-twitter left"></i> Link your Twitter account</button>
       </li>
     {{/if}}
   </ul>
@@ -199,9 +199,9 @@
           <p>For <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></p>
         {{/if}}
         {{#if avatar.selected}}
-          <button type="submit" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
+          <button type="button" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
         {{else}}
-          <button type="submit" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
+          <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
         {{/if}}
       </li>
     {{/each}}
