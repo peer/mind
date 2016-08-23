@@ -45,7 +45,7 @@ class Meeting extends share.BaseDocument
       ]
       discussions: [@ReferenceField Discussion, [], true, 'meetings']
       changes: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS()
+        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']

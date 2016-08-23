@@ -40,7 +40,7 @@ class Discussion extends share.BaseDocument
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
       changes: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS()
+        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']

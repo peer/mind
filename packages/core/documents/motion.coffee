@@ -52,7 +52,7 @@ class Motion extends share.BaseDocument
           [fields._id, ({_id} for _id in @extractAttachments fields.body)]
       ]
       changes: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS()
+        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
       votingOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
       votingClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false

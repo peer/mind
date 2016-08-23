@@ -31,7 +31,7 @@ class share.UpvotableDocument extends share.BaseDocument
       body: @GeneratedField 'self', ['changes'], (fields) ->
         [fields._id, fields.changes?[fields.changes?.length - 1]?.body or '']
       changes: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS()
+        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
       upvotes: [
         author: @ReferenceField User

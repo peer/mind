@@ -31,7 +31,9 @@ class StorageFile extends share.BaseDocument
   @Meta
     name: 'StorageFile'
     fields: =>
-      author: @ReferenceField User
+      # Files can be reused across content by copying content over, so if author
+      # is deleted we do not want also file document to be deleted.
+      author: @ReferenceField User, [], false
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['status', 'readProgress', 'uploadProgress'], true
       removeFile: @Trigger ['filename'], (document, oldDocument) =>
