@@ -3,6 +3,7 @@
     {{#if canEdit}}
       {{> renderEditButton}}
     {{/if}}
+    {{> renderExtraMetadataButtons}}
     <div class="chip author">
       {{#unless noAvatar}}
         <img src="{{author.avatarUrl}}" alt="{{author.username}}" class="circle" />

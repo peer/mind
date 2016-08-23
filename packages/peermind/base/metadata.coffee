@@ -20,3 +20,8 @@ class MetadataComponent extends UIComponent
       component = @constructor.getComponent 'EditButton'
 
     component.renderComponent parentComponent
+
+  renderExtraMetadataButtons: (parentComponent) ->
+    parentComponent ?= @currentComponent()
+
+    @callAncestorWith('renderExtraMetadataButtons', parentComponent, @component()) or null

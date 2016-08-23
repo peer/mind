@@ -102,6 +102,35 @@ class Motion.ListItemComponent extends UIComponent
     _id: data._id
     _type: data.constructor.Meta._name
 
+  renderExtraMetadataButtons: (parentComponent, metadataComponent) ->
+    Motion.ExtraMetadataButtonsComponent.renderComponent parentComponent
+
+class Motion.ExtraMetadataButtonsComponent extends UIComponent
+  @register 'Motion.ExtraMetadataButtonsComponent'
+
+  onButtonClick: (event) ->
+    event.preventDefault()
+
+    handle = @subscribe 'Motion.forEdit', @data()._id
+
+    @autorun (computation) =>
+      return unless handle.ready()
+      computation.stop()
+
+      editor = $('trix-editor[input="new-motion-description"]').get(0).editor
+
+      # Move the cursor to the end of existing content.
+      originalLastPosition = editor.getDocument().getLength() - 1
+      editor.setSelectedRange originalLastPosition
+
+      # Add it at the end of existing content.
+      editor.insertHTML @data().body
+
+      # Select new content.
+      editor.setSelectedRange [originalLastPosition, editor.getDocument().getLength() - 1]
+
+      handle.stop()
+
 class Motion.WithdrawComponent extends UIComponent
   @register 'Motion.WithdrawComponent'
 

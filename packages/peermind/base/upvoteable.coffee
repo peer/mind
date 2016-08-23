@@ -13,12 +13,12 @@ class UpvoteableButton extends UIComponent
   upvoteTitle: ->
     return if @canUpvote() or @canRemoveUpvote()
 
-    return title: "Sign in to upvote." unless Meteor.userId()
+    return title: "Sign in to upvote" unless Meteor.userId()
 
     if Meteor.userId() is @data().author._id
-      title: "You cannot upvote your #{@data().verboseName()}."
+      title: "You cannot upvote your #{@data().verboseName()}"
     else
-      title: "You cannot upvote this #{@data().verboseName()}."
+      title: "You cannot upvote this #{@data().verboseName()}"
 
   onButtonClick: (event) ->
     event.preventDefault()
