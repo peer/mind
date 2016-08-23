@@ -151,6 +151,7 @@ class Settings.ResearchDataComponent extends UIComponent
         console.error "Setting research data error", error
         alert "Setting research data error: #{error.reason or error}"
 
+        # TODO: This should set it to old value, which is not necessary that no radio button was selected.
         @$('[name="research-data"]').prop('checked', false)
 
 FlowRouter.route '/account/settings',
