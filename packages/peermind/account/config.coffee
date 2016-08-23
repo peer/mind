@@ -37,10 +37,6 @@ else
     name: 'Account.signIn'
     path: '/account/signin'
 
-  AccountsTemplates.configureRoute 'enrollAccount',
-    name: 'Account.enrollAccount'
-    path: '/account/enroll'
-
   AccountsTemplates.configureRoute 'forgotPwd',
     name: 'Account.forgotPassword'
     path: '/account/password/forgot'
@@ -72,3 +68,10 @@ else
   ,
     passwordField
   ]
+
+  if Meteor.isServer
+    Accounts.urls.enrollAccount = (token) ->
+      path = FlowRouter.path 'Account.enrollAccount',
+        token: token
+
+      Meteor.absoluteUrl path.substr 1

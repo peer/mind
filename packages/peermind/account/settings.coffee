@@ -130,12 +130,16 @@ class Settings.ResearchDataComponent extends UIComponent
     @isSettings = !!kwargs?.hash?.isSettings
 
   checked: (value) ->
+    return unless @isSettings
+
     if @currentUser()?.researchData
       return checked: true if value is 'yes'
     else if @currentUser()?.researchData?
       return checked: true if value is 'no'
 
   onChange: (event) ->
+    return unless @isSettings
+
     event.preventDefault()
 
     consent = @$('[name="research-data"]:checked').val()

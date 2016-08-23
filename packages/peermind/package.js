@@ -52,7 +52,10 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'account/config.coffee'
+    'account/config.coffee',
+    'account/form.html',
+    'account/form.coffee',
+    'account/form.styl'
   ]);
 
   api.addFiles([
@@ -83,9 +86,6 @@ Package.onUse(function (api) {
     'base/editor.html',
     'base/editor.coffee',
     'base/editor.styl',
-    'account/form.html',
-    'account/form.coffee',
-    'account/form.styl',
     'account/settings.html',
     'account/settings.coffee',
     'account/settings.styl',

@@ -5,9 +5,9 @@
       {{#if isSignIn}}
         <p class="hint">
           To be able to sign in you have to accept an invitation sent to your e-mail.
-          Search for subject with <strong>PeerMind</strong> and check spam.
+          Search for subject with <strong>{{siteName}}</strong> and check spam.
           If you still have issues signing in, contact Cloyne network manager at
-          <a href="mailto:clonm@bsc.coop">clonm@bsc.coop</a>.
+          <a href="mailto:{{from}}">{{from}}</a>.
         </p>
       {{/if}}
     </div>
@@ -28,4 +28,27 @@
     </div>
   </div>
 </template>
+
+<template name="EnrollFormComponent">
+  <div class="row">
+    {{!-- We use a wider form from login form because of the amount of text. --}}
+    <div class="col s12 m8 offset-m2 offset-l3 l6 z-depth-1">
+      <div class="at-form">
+        <div class="at-title">
+          <h3 class="header">Create an Account</h3>
+        </div>
+        <div class="at-pwd-form">
+          <form onSubmit>
+            {{> PasswordFieldsComponent}}
+            {{> Settings.ResearchDataComponent}}
+            <div class="row">
+              <div class="input-field col s12">
+                <button type="submit" class="btn waves-effect waves-light submit at-btn">Register</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

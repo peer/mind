@@ -73,3 +73,22 @@ unless __meteor_runtime_config__.SANDSTORM
       ,
         $set:
           avatars: avatars
+
+  MethodHooks.before 'resetPassword', (options) ->
+    # We have additional optional argument for consent.
+    # It is passed by the enroll form.
+    check options.arguments[2], Match.OptionalOrNull Boolean
+
+  MethodHooks.after 'resetPassword', (options) ->
+    return options.result if options.error
+
+    # If consent argument was passed.
+    if options.arguments[2]?
+      # After user has successfully reset the password, we set research data.
+      User.documents.update
+        _id: options.result.id
+      ,
+        $set:
+          researchData: options.arguments[2]
+
+    options.result
