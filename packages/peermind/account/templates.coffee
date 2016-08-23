@@ -4,16 +4,16 @@ Accounts.emailTemplates ?= {}
 Accounts.emailTemplates.from = 'clonm@bsc.coop'
 Accounts.emailTemplates.siteName = 'PeerMind'
 
-subject = (user) ->
-  "[#{Accounts.emailTemplates.siteName}] An account has been created for you"
-
 Accounts.emailTemplates.resetPassword ?= {}
 _.extend Accounts.emailTemplates.resetPassword,
-  subject: subject
+  subject: (user) ->
+    "[#{Accounts.emailTemplates.siteName}] How to reset your password"
 
 Accounts.emailTemplates.enrollAccount ?= {}
 _.extend Accounts.emailTemplates.enrollAccount,
-  subject: subject
+  subject: (user) ->
+    "[#{Accounts.emailTemplates.siteName}] An account has been created for you"
+
   text: (user, url) ->
     """
     Hi!
@@ -33,4 +33,5 @@ _.extend Accounts.emailTemplates.enrollAccount,
 
 Accounts.emailTemplates.verifyEmail ?= {}
 _.extend Accounts.emailTemplates.verifyEmail,
-  subject: subject
+  subject: (user) ->
+    "[#{Accounts.emailTemplates.siteName}] How to verify e-mail address"
