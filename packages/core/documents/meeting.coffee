@@ -46,6 +46,10 @@ class Meeting extends share.BaseDocument
       discussions: [@ReferenceField Discussion, [], true, 'meetings']
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
+        # TODO: PeerDB does not support reference fields inside a nested array.
+        #discussions: [
+        #  discussion: @ReferenceField Discussion, [], false
+        #]
       ]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
