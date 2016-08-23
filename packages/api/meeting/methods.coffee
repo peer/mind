@@ -283,3 +283,60 @@ Meteor.methods
           updatedAt: updatedAt
           author: user.getReference()
           discussions: discussions
+
+  'Meeting.discussionLength': (meetingId, discussionId, length) ->
+    check meetingId, Match.DocumentId
+    check discussionId, Match.DocumentId
+    check length, Match.Where (x) ->
+      check x, Match.Integer
+      x >= 0
+
+    # We convert zero to null.
+    length = length or null
+
+    user = Meteor.user User.REFERENCE_FIELDS()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+    meeting = Meeting.documents.findOne meetingId,
+      fields:
+        discussions: 1
+
+    # We could leave it to the query below to not match anything,
+    # but we can just short circuit here and immediately return.
+    return 0 unless meeting
+
+    if User.hasPermission User.PERMISSIONS.MEETING_UPDATE
+      permissionCheck = {}
+    else if User.hasPermission User.PERMISSIONS.MEETING_UPDATE_OWN
+      permissionCheck =
+        'author._id': user._id
+    else
+      permissionCheck =
+        # TODO: Find a better "no-match" query.
+        $and: [
+          _id: 'a'
+        ,
+          _id: 'b'
+        ]
+
+    discussions = for discussion in meeting.discussions or []
+      if discussion.discussion._id is discussionId
+        _.extend {}, discussion,
+          length: length
+      else
+        discussion
+
+    updatedAt = new Date()
+    Meeting.documents.update _.extend(permissionCheck,
+      _id: meetingId
+      discussions: meeting.discussions
+      'discussions.discussion._id': discussionId
+    ),
+      $set:
+        updatedAt: updatedAt
+        'discussions.$.length': length
+      $push:
+        changes:
+          updatedAt: updatedAt
+          author: user.getReference()
+          discussions: discussions

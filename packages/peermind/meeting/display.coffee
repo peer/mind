@@ -114,6 +114,50 @@ class Meeting.DiscussionsListComponent extends UIComponent
 class Meeting.DiscussionsListItemComponent extends UIComponent
   @register 'Meeting.DiscussionsListItemComponent'
 
+  displayLength: ->
+    meeting = Meeting.documents.findOne
+      _id: @currentMeetingId()
+      'discussions.discussion._id': @data()._id
+    ,
+      fields:
+        'discussions.discussion._id': 1
+        'discussions.length': 1
+      transform: null
+
+    discussion = null
+    for d in meeting?.discussions or [] when d.discussion._id is @data()._id
+      discussion = d
+      break
+
+    return unless discussion
+
+    if discussion.length is 1
+      "1 minute"
+    else if discussion.length
+      "#{discussion.length} minutes"
+    else
+      "Set length"
+
+  currentMeetingId: (args...) ->
+    @callAncestorWith 'currentMeetingId', args...
+
+  onClick: (event) ->
+    event.preventDefault()
+
+    length = prompt "Please enter new discussion length in minutes."
+
+    return unless length
+
+    length = parseInt length
+
+    return unless _.isFinite length
+
+    Meteor.call 'Meeting.discussionLength', @currentMeetingId(), @data()._id, length, (error, result) =>
+      if error
+        console.error "Discussion length error", error
+        alert "Discussion length error: #{error.reason or error}"
+        return
+
 FlowRouter.route '/meeting/:_id',
   name: 'Meeting.display'
   action: (params, queryParams) ->
