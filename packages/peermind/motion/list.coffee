@@ -246,6 +246,18 @@ class Motion.TallyComponent extends UIComponent
   round: (value) ->
     value?.toFixed 2
 
+  # A special version of rounding which displays 0.90 only if the value really reached 0.90. We do
+  # this to prevent confusion in people. Simply rounding down would make it less precise elsewhere
+  # and it would be much harder to reach 1.00 (which is maybe also good if it would be harder?)
+  confidenceRound: (value) ->
+    return unless value?
+
+    rounded = value.toFixed 2
+
+    return '0.89' if rounded is '0.90' and value < 0.90
+
+    rounded
+
   displayMajority: ->
     if @data().majority is Motion.MAJORITY.SIMPLE
       "simple majority"
