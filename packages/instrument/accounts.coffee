@@ -77,6 +77,8 @@ MethodHooks.after 'Account.unlinkAccount', (options) ->
         clientAddress: @connection.clientAddress
         userAgent: @connection.httpHeaders['user-agent'] or null
 
+  options.result
+
 MethodHooks.after 'Account.researchData', (options) ->
   if @userId
     user =
@@ -102,6 +104,8 @@ MethodHooks.after 'Account.researchData', (options) ->
       level: Activity.LEVEL.DEBUG
       data:
         consent: options.arguments[0]
+
+  options.result
 
 unless __meteor_runtime_config__.SANDSTORM
   MethodHooks.before 'Account.changeUsername', (options) ->
@@ -140,6 +144,8 @@ unless __meteor_runtime_config__.SANDSTORM
           clientAddress: @connection.clientAddress
           userAgent: @connection.httpHeaders['user-agent'] or null
 
+    options.result
+
   MethodHooks.after 'changePassword', (options) ->
     if @userId
       user =
@@ -168,6 +174,8 @@ unless __meteor_runtime_config__.SANDSTORM
         data:
           clientAddress: @connection.clientAddress
           userAgent: @connection.httpHeaders['user-agent'] or null
+
+    options.result
 
   MethodHooks.after 'Account.selectAvatar', (options) ->
     if @userId
@@ -199,3 +207,5 @@ unless __meteor_runtime_config__.SANDSTORM
           argument: options.arguments[1] or null
           clientAddress: @connection.clientAddress
           userAgent: @connection.httpHeaders['user-agent'] or null
+
+    options.result
