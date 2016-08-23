@@ -55,11 +55,11 @@ Package.onUse(function (api) {
     'account/config.coffee',
     'account/form.html',
     'account/form.coffee',
-    'account/form.styl'
+    'account/form.styl',
+    'account/templates.coffee'
   ]);
 
   api.addFiles([
-    'account/templates.coffee',
     'account/services.coffee'
   ], 'server');
 

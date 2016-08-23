@@ -1,3 +1,5 @@
+Accounts.emailTemplates ?= {}
+
 # TODO: Make it configurable.
 Accounts.emailTemplates.from = 'clonm@bsc.coop'
 Accounts.emailTemplates.siteName = 'PeerMind'
@@ -5,9 +7,11 @@ Accounts.emailTemplates.siteName = 'PeerMind'
 subject = (user) ->
   "[#{Accounts.emailTemplates.siteName}] An account has been created for you"
 
+Accounts.emailTemplates.resetPassword ?= {}
 _.extend Accounts.emailTemplates.resetPassword,
   subject: subject
 
+Accounts.emailTemplates.enrollAccount ?= {}
 _.extend Accounts.emailTemplates.enrollAccount,
   subject: subject
   text: (user, url) ->
@@ -27,5 +31,6 @@ _.extend Accounts.emailTemplates.enrollAccount,
     Mitar
     """
 
+Accounts.emailTemplates.verifyEmail ?= {}
 _.extend Accounts.emailTemplates.verifyEmail,
   subject: subject
