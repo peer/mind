@@ -18,5 +18,5 @@
 </template>
 
 <template name="Meeting.ListItemComponent">
-  <a href="{{pathFor 'Meeting.display' params=data}}" class="collection-item">{{title}}</a>
+  <a href="{{pathFor 'Meeting.display' params=data}}" class="collection-item">{{title}} ({{formatStartEndDate startAt endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}})</a>
 </template>
