@@ -9,9 +9,15 @@ unless __meteor_runtime_config__.SANDSTORM
 
       throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.ACCOUNTS_ADMIN
 
-      userId = Accounts.createUser
-        email: email
-        username: username
+      user = User.documents.findOne
+        'emails.address': email
+
+      if user
+        userId = user._id
+      else
+        userId = Accounts.createUser
+          email: email
+          username: username
 
       Accounts.sendEnrollmentEmail userId
 
