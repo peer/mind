@@ -20,8 +20,10 @@ class Discussion.NewComponent extends UIComponent
     event.preventDefault()
 
     # TODO: We cannot use required for description input with trix.
-    # TODO: Make a warning or something?
-    return unless @hasDescription()
+    unless @hasDescription()
+      # TODO: Use flash messages.
+      alert "Description is required."
+      return
 
     Meteor.call 'Discussion.new',
       title: @$('[name="title"]').val()

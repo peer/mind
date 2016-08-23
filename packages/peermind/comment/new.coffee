@@ -18,8 +18,10 @@ class Comment.NewComponent extends UIComponent
     event.preventDefault()
 
     # TODO: We cannot use required for body input with trix.
-    # TODO: Make a warning or something?
-    return unless @hasBody()
+    unless @hasBody()
+      # TODO: Use flash messages.
+      alert "Comment is required."
+      return
 
     Meteor.call 'Comment.new',
       body: @$('[name="body"]').val()

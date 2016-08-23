@@ -69,15 +69,19 @@ class Point.ListItemComponent extends UIComponent
       $textarea.focus().val('').val(body).trigger('autoresize')
 
   onSaveEdit: (event, onSuccess) ->
-    # TODO: We cannot use required for category input with Materialize.
-    #       See https://github.com/Dogfalo/materialize/issues/2187
-    # TODO: Make a warning or something?
-    return unless @$('[name="category"]:checked').val()
+    category = @$('[name="category"]:checked').val()
+
+    unless category
+      # TODO: We cannot use required for radio input with Materialize.
+      #       See https://github.com/Dogfalo/materialize/issues/2187
+      # TODO: Use flash messages.
+      alert "Category is required."
+      return
 
     Meteor.call 'Point.update',
       _id: @data()._id
       body: @$('[name="body"]').val()
-      category: @$('[name="category"]:checked').val()
+      category: category
     ,
       (error, result) =>
         if error

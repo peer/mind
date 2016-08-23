@@ -74,8 +74,10 @@ class Settings.PasswordComponent extends UIComponent
     confirmNewPassword = @$('[name="confirm-new-password"]').val()
 
     # Just to be sure. Form validation should catch this.
-    # TODO: Make a warning or something?
-    return unless newPassword is confirmNewPassword
+    unless newPassword is confirmNewPassword
+      # TODO: Use flash messages.
+      alert "Password do not match."
+      return
 
     Accounts.changePassword @$('[name="old-password"]').val(), newPassword, (error) =>
       if error

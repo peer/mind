@@ -46,8 +46,10 @@ class Comment.ListItemComponent extends UIComponent
 
   onSaveEdit: (event, onSuccess) ->
     # TODO: We cannot use required for body input with trix.
-    # TODO: Make a warning or something?
-    return unless @hasBody()
+    unless @hasBody()
+      # TODO: Use flash messages.
+      alert "Comment is required."
+      return
 
     Meteor.call 'Comment.update',
       _id: @data()._id
