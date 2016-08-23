@@ -41,11 +41,11 @@
     </div>
     <div class="section">
       {{#if discussions.exists}}
-        <div class="collection z-depth-1">
+        <ul class="collection z-depth-1">
           {{#each discussions}}
             {{> Meeting.DiscussionsListItemComponent}}
           {{/each}}
-        </div>
+        </ul>
       {{/if}}
     </div>
   {{/if}}
@@ -56,5 +56,7 @@
 </template>
 
 <template name="Meeting.DiscussionsListItemComponent">
-  <a href="{{pathFor 'Meeting.display' params=data}}" class="collection-item">{{title}}</a>
+  <li class="collection-item">
+    <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>
+  </li>
 </template>

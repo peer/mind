@@ -11,34 +11,24 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
       meetingId = @currentMeetingId()
       @subscribe 'Meeting.discussion', meetingId if meetingId
 
-    @currentMeetingDiscussions = new ComputedField =>
-      _.pluck Meeting.documents.findOne(@currentMeetingId(),
+    @currentMeetingDiscussionsIds = new ComputedField =>
+      _.pluck _.pluck(Meeting.documents.findOne(@currentMeetingId(),
         fields:
           discussions: 1
         transform: null
-      )?.discussions or [], '_id'
+      )?.discussions or [], 'discussion'), '_id'
     ,
       EJSON.equals
 
   discussions: ->
-    ids = @currentMeetingDiscussions()
+    ids = @currentMeetingDiscussionsIds()
 
-    idToIndex = {}
-    for id, i in ids
-      idToIndex[id] = i
-
-    cursor = Discussion.documents.find
+    Discussion.documents.find
       _id:
         $in: ids
-
-    # TODO: Remove this hack when this pull request is merged in: https://github.com/meteor/meteor/pull/6008
-    cursor.sorter =
-      getComparator: ->
-        (a, b) ->
-          # Sorting in the order in which IDs are listed.
-          idToIndex[a._id] - idToIndex[b._id]
-
-    cursor
+    ,
+      sort:
+        order: 1
 
   expandableEventData: ->
     data = @meeting()
