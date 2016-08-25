@@ -62,13 +62,13 @@
 <template name="Meeting.DiscussionsListItemComponent">
   <li class="collection-item">
     {{#if canEdit}}
-      <i class="material-icons left handle">drag_handle</i>
-    {{/if}}
-    <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>
-    {{#if canEdit}}
       <button type="button" class="btn-flat waves-effect waves-light secondary-content metadata-button" onClick>{{displayLength}}</button>
     {{else}}
       <div class="secondary-content metadata-button">{{displayLength}}</div>
     {{/if}}
+    {{#if canEdit}}
+      <i class="material-icons left handle">drag_handle</i>
+    {{/if}}
+    <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>
   </li>
 </template>

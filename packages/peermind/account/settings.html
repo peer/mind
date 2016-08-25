@@ -130,11 +130,11 @@
   <ul class="collection z-depth-1">
     {{#if currentUser.services.facebook.id}}
       <li class="collection-item avatar">
+        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'facebook'}}">Unlink</button>
         <a href="{{currentUser.services.facebook.link}}"><img src="{{currentUser.avatarUrl 'facebook'}}" alt="" class="circle"></a>
         <span class="title"><a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></span>
         {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
         <p>Facebook</p>
-        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'facebook'}}">Unlink</button>
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
@@ -143,11 +143,11 @@
     {{/if}}
     {{#if currentUser.services.google.id}}
       <li class="collection-item avatar">
+        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'google'}}">Unlink</button>
         <a href="https://plus.google.com/{{currentUser.services.google.id}}"><img src="{{currentUser.avatarUrl 'google'}}" alt="" class="circle"></a>
         <span class="title"><a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></span>
         {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
         <p>Google</p>
-        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'google'}}">Unlink</button>
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
@@ -156,11 +156,11 @@
     {{/if}}
     {{#if currentUser.services.twitter.id}}
       <li class="collection-item avatar">
+        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'twitter'}}">Unlink</button>
         <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}"><img src="{{currentUser.avatarUrl 'twitter'}}" alt="" class="circle"></a>
         <span class="title"><a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></span>
         {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
         <p>Twitter</p>
-        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'twitter'}}">Unlink</button>
       </li>
     {{else}}
       <li class="collection-item center-align input-field">
@@ -175,6 +175,11 @@
     {{#each avatar in currentUser.avatars}}
       <li class="collection-item avatar">
         <img src="{{currentUser.avatarUrl avatar.name avatar.argument}}" alt="" class="circle">
+        {{#if avatar.selected}}
+          <button type="button" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
+        {{else}}
+          <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
+        {{/if}}
         {{#if $eq avatar.name 'default'}}
           <span class="title">Default</span>
           <p>For username {{currentUser.username}}</p>
@@ -197,11 +202,6 @@
           {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
           <span class="title">Twitter</span>
           <p>For <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></p>
-        {{/if}}
-        {{#if avatar.selected}}
-          <button type="button" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
-        {{else}}
-          <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
         {{/if}}
       </li>
     {{/each}}
