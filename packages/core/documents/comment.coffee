@@ -27,20 +27,6 @@ class Comment extends share.UpvotableDocument
 
   @Meta
     name: 'Comment'
-    fields: (fields) =>
-      _.extend fields,
-        bodyDisplay: @GeneratedField 'self', ['body'], (fields) =>
-          [fields._id, fields.body and @sanitizeForDisplay.sanitizeHTML fields.body]
-        bodyAttachments: [
-          # TODO: Make it an array of references to StorageFile as well.
-          @GeneratedField 'self', ['body'], (fields) =>
-            return [fields._id, []] unless fields.body
-            [fields._id, ({_id} for _id in @extractAttachments fields.body)]
-        ]
-
-  @PUBLISH_FIELDS: ->
-    _.extend super,
-      bodyDisplay: 1
 
 if Meteor.isServer
   Comment.Meta.collection._ensureIndex

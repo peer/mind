@@ -34,14 +34,6 @@ class Point extends share.UpvotableDocument
         # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
         category: @GeneratedField 'self', ['changes'], (fields) =>
           [fields._id, fields.changes?[fields.changes?.length - 1]?.category or Point.CATEGORY.OTHER]
-        bodyDisplay: @GeneratedField 'self', ['body'], (fields) =>
-          [fields._id, fields.body and @sanitizeForDisplay.sanitizeHTML fields.body]
-        bodyAttachments: [
-          # TODO: Make it an array of references to StorageFile as well.
-          @GeneratedField 'self', ['body'], (fields) =>
-            return [fields._id, []] unless fields.body
-            [fields._id, ({_id} for _id in @extractAttachments fields.body)]
-        ]
 
   @CATEGORY:
     IN_FAVOR: 'infavor'
@@ -50,7 +42,6 @@ class Point extends share.UpvotableDocument
 
   @PUBLISH_FIELDS: ->
     _.extend super,
-      bodyDisplay: 1
       category: 1
 
 if Meteor.isServer

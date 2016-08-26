@@ -3,7 +3,7 @@ Meteor.methods
     # TODO: Move check into newUpvotable.
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.COMMENT_NEW
 
-    share.newUpvotable Comment, document, true,
+    share.newUpvotable Comment, document,
       body: Match.NonEmptyString
       discussion:
         _id: Match.DocumentId

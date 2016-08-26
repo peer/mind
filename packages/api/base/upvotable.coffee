@@ -1,4 +1,4 @@
-share.newUpvotable = (documentClass, document, richText, match, extend) ->
+share.newUpvotable = (documentClass, document, match, extend) ->
   check document, match
 
   extend ?= (user, doc) -> doc
@@ -12,31 +12,24 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
 
   throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
-  if richText
-    document.body = documentClass.sanitize.sanitizeHTML document.body
+  document.body = documentClass.sanitize.sanitizeHTML document.body
 
-    if Meteor.isServer
-      $root = cheerio.load(document.body).root()
-    else
-      $root = $('<div/>').append($.parseHTML(document.body))
-
-    bodyText = $root.text()
-
-    check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').length
-
-    bodyDisplay = documentClass.sanitizeForDisplay.sanitizeHTML document.body
-
-    attachments = documentClass.extractAttachments document.body
-
-    richTextDocument =
-      bodyDisplay: bodyDisplay
-      bodyAttachments: ({_id} for _id in attachments)
+  if Meteor.isServer
+    $root = cheerio.load(document.body).root()
   else
-    richTextDocument = {}
+    $root = $('<div/>').append($.parseHTML(document.body))
+
+  bodyText = $root.text()
+
+  check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
+    $root.has('figure').length
+
+  bodyDisplay = documentClass.sanitizeForDisplay.sanitizeHTML document.body
+
+  attachments = documentClass.extractAttachments document.body
 
   createdAt = new Date()
-  documentId = documentClass.documents.insert extend user, _.extend richTextDocument,
+  documentId = documentClass.documents.insert extend user,
     createdAt: createdAt
     updatedAt: createdAt
     lastActivity: createdAt
@@ -44,6 +37,8 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
     discussion:
       _id: discussion._id
     body: document.body
+    bodyDisplay: bodyDisplay
+    bodyAttachments: ({_id} for _id in attachments)
     changes: [
       updatedAt: createdAt
       author: user.getReference()
@@ -54,15 +49,14 @@ share.newUpvotable = (documentClass, document, richText, match, extend) ->
 
   assert documentId
 
-  if richText
-    StorageFile.documents.update
-      _id:
-        $in: attachments
-    ,
-      $set:
-        active: true
-    ,
-      multi: true
+  StorageFile.documents.update
+    _id:
+      $in: attachments
+  ,
+    $set:
+      active: true
+  ,
+    multi: true
 
   documentId
 
