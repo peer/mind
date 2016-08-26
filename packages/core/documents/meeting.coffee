@@ -38,6 +38,27 @@ class Meeting extends share.BaseDocument
     name: 'Meeting'
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
+      # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
+      title: @GeneratedField 'self', ['changes'], (fields) =>
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'title' of lastChange
+        [fields._id, lastChange.title or '']
+      startAt: @GeneratedField 'self', ['changes'], (fields) =>
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'startAt' of lastChange
+        [fields._id, lastChange.startAt or '']
+      endAt: @GeneratedField 'self', ['changes'], (fields) =>
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'endAt' of lastChange
+        [fields._id, lastChange.endAt or '']
+      description: @GeneratedField 'self', ['changes'], (fields) =>
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'description' of lastChange
+        [fields._id, lastChange.description or '']
+      discussions: @GeneratedField 'self', ['changes'], (fields) =>
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'discussions' of lastChange
+        [fields._id, lastChange.discussions or []]
       descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
         [fields._id, fields.description and @sanitizeForDisplay.sanitizeHTML fields.description]
       descriptionAttachments: [

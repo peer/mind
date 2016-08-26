@@ -32,7 +32,9 @@ class share.UpvotableDocument extends share.BaseDocument
       discussion: @ReferenceField Discussion
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       body: @GeneratedField 'self', ['changes'], (fields) ->
-        [fields._id, fields.changes?[fields.changes?.length - 1]?.body or '']
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'body' of lastChange
+        [fields._id, lastChange.body or '']
       bodyDisplay: @GeneratedField 'self', ['body'], (fields) =>
         [fields._id, fields.body and @sanitizeForDisplay.sanitizeHTML fields.body]
       bodyAttachments: [

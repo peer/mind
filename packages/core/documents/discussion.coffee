@@ -28,9 +28,13 @@ class Discussion extends share.BaseDocument
       author: @ReferenceField User, User.REFERENCE_FIELDS()
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       title: @GeneratedField 'self', ['changes'], (fields) =>
-        [fields._id, fields.changes?[fields.changes?.length - 1]?.title or '']
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'title' of lastChange
+        [fields._id, lastChange.title or '']
       description: @GeneratedField 'self', ['changes'], (fields) =>
-        [fields._id, fields.changes?[fields.changes?.length - 1]?.description or '']
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'description' of lastChange
+        [fields._id, lastChange.description or '']
       descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
         [fields._id, fields.description and @sanitizeForDisplay.sanitizeHTML fields.description]
       descriptionAttachments: [
