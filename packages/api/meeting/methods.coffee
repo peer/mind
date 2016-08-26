@@ -4,7 +4,7 @@ Meteor.methods
       title: Match.NonEmptyString
       startAt: Date
       endAt: Match.OptionalOrNull Date
-      description: Match.OptionalOrNull String
+      description: String
 
     check document.startAt, Match.Where (value) ->
       _.isFinite value.valueOf()
@@ -12,8 +12,6 @@ Meteor.methods
     if document.endAt
       check document.endAt, Match.Where (value) ->
         _.isFinite value.valueOf()
-
-    document.description or= ''
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
@@ -68,7 +66,7 @@ Meteor.methods
       title: Match.NonEmptyString
       startAt: Date
       endAt: Match.OptionalOrNull Date
-      description: Match.OptionalOrNull String
+      description: String
 
     check document.startAt, Match.Where (value) ->
       _.isFinite value.valueOf()
@@ -76,8 +74,6 @@ Meteor.methods
     if document.endAt
       check document.endAt, Match.Where (value) ->
         _.isFinite value.valueOf()
-
-    document.description or= ''
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user

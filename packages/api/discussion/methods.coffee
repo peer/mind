@@ -2,7 +2,7 @@ Meteor.methods
   'Discussion.new': (document) ->
     check document,
       title: Match.NonEmptyString
-      description: Match.NonEmptyString
+      description: String
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
@@ -10,16 +10,6 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.DISCUSSION_NEW
 
     document.description = Discussion.sanitize.sanitizeHTML document.description
-
-    if Meteor.isServer
-      $root = cheerio.load(document.description).root()
-    else
-      $root = $('<div/>').append($.parseHTML(document.description))
-
-    descriptionText = $root.text()
-
-    check descriptionText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').length
 
     descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
 
@@ -60,22 +50,12 @@ Meteor.methods
     check document,
       _id: Match.DocumentId
       title: Match.NonEmptyString
-      description: Match.NonEmptyString
+      description: String
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     document.description = Discussion.sanitize.sanitizeHTML document.description
-
-    if Meteor.isServer
-      $root = cheerio.load(document.description).root()
-    else
-      $root = $('<div/>').append($.parseHTML(document.description))
-
-    descriptionText = $root.text()
-
-    check descriptionText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').length
 
     descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
 

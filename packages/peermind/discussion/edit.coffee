@@ -29,12 +29,6 @@ class Discussion.EditFormComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
-    # TODO: We cannot use required for description input with trix.
-    unless @hasDescription()
-      # TODO: Use flash messages.
-      alert "Description is required."
-      return
-
     Meteor.call 'Discussion.update',
       _id: @data()._id
       title: @$('[name="title"]').val()
@@ -48,11 +42,6 @@ class Discussion.EditFormComponent extends UIComponent
 
         FlowRouter.go 'Discussion.display',
           _id: @data()._id
-
-  hasDescription: ->
-    # We require description to have at least some text content or a figure.
-    $description = $($.parseHTML(@$('[name="description"]').val()))
-    $description.text() or $description.has('figure').length
 
 FlowRouter.route '/discussion/edit/:_id',
   name: 'Discussion.edit'
