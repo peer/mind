@@ -10,7 +10,6 @@ Accounts.ui._options.requestPermissions.google = ['https://www.googleapis.com/au
 Accounts.ui._options.requestPermissions.twitter = null
 
 Accounts.config
-  forbidClientAccountCreation: true
   passwordResetTokenExpirationInDays: 30
 
 if __meteor_runtime_config__.SANDSTORM
