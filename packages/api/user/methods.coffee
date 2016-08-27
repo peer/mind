@@ -12,6 +12,9 @@ unless __meteor_runtime_config__.SANDSTORM
       user = User.documents.findOne
         'emails.address': email
 
+      # Invite only if e-mail is not already verified (invitation has already been accepted).
+      return null if _.findWhere(user.emails, address: email).verified
+
       if user
         userId = user._id
       else
