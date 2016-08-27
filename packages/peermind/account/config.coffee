@@ -9,6 +9,9 @@ Accounts.ui._options.requestPermissions.facebook = ['public_profile', 'email', '
 Accounts.ui._options.requestPermissions.google = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/contacts.readonly', 'https://www.googleapis.com/auth/plus.circles.members.read']
 Accounts.ui._options.requestPermissions.twitter = null
 
+Accounts.config
+  forbidClientAccountCreation: true
+
 if __meteor_runtime_config__.SANDSTORM
   AccountsTemplates.configure
     forbidClientAccountCreation: true
