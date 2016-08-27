@@ -38,7 +38,8 @@ Package.onUse(function (api) {
     'peerlibrary:blaze-layout-component@0.1.1',
     'momentjs:moment@2.14.4',
     'mizzao:jquery-ui@1.11.4',
-    'fourseven:scss@3.9.0'
+    'fourseven:scss@3.9.0',
+    'softwarerero:accounts-t9n@1.3.3'
   ]);
 
   // Internal dependencies.

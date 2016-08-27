@@ -105,6 +105,11 @@
         </div>
       </div>
       {{> PasswordFieldsComponent args isChange=true}}
+      <div class="at-pwd-link">
+        <p>
+          <a href="" id="at-forgotPwd" class="at-link at-pwd" onClick="{{onForgotPassword}}">{{linkText}}</a>
+        </p>
+      </div>
       <div class="row">
         <div class="input-field col s12 center-align">
           <button type="submit" name="change-password" class="btn waves-effect waves-light"><i class="material-icons left">done</i>Change password</button>

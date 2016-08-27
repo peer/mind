@@ -87,6 +87,28 @@ class Settings.PasswordComponent extends UIComponent
 
       event.target.reset()
 
+  linkText: ->
+    T9n.get AccountsTemplates.texts.pwdLink_link, markIfMissing: false
+
+  onForgotPassword: (event) ->
+    event.preventDefault()
+
+    email = Meteor.user()?.emails[0].address
+    unless email
+      # TODO: Use flash messages.
+      alert "E-mail address missing."
+      return
+
+    # TODO: We should probably first display a submit form button for confirmation.
+    #       The same form as it is for the reset password form, just without the e-mail address input field.
+    Accounts.forgotPassword email: email, (error) =>
+      if error
+        console.error "Forgot password error", error
+        alert "Forgot password error: #{error.reason or error}"
+        return
+
+      alert "Reset password e-mail has been sent to '#{email}'."
+
 class Settings.AccountsComponent extends UIComponent
   @register 'Settings.AccountsComponent'
 
