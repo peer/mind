@@ -36,6 +36,9 @@ class Motion.NewComponent extends UIComponent
 
         event.target.reset()
 
+        for component in @childComponents 'EditorComponent'
+          component.clearStoredState()
+
   hasBody: ->
     # We require body to have at least some text content or a figure.
     $body = $($.parseHTML(@$('[name="body"]').val()))

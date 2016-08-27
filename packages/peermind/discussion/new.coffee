@@ -29,6 +29,9 @@ class Discussion.NewComponent extends UIComponent
           alert "New discussion error: #{error.reason or error}"
           return
 
+        for component in @childComponents 'EditorComponent'
+          component.clearStoredState()
+
         FlowRouter.go 'Discussion.display',
           _id: documentId
 

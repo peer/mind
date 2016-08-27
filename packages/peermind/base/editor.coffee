@@ -6,6 +6,18 @@ class EditorComponent extends UIComponent
 
     _.extend @, _.pick (kwargs?.hash or {}), 'id', 'name', 'label', 'autofocus'
 
+  onRendered: ->
+    super
+
+    return unless @id
+
+    state = localStorage["editor.state.#{@id}"]
+
+    return unless state
+
+    # Restores any stored state.
+    @editor()?.loadJSON JSON.parse state
+
   editor: ->
     @$('trix-editor').get(0)?.editor
 
@@ -14,10 +26,12 @@ class EditorComponent extends UIComponent
       'trix-attachment-add': @onAttachmentAdd
       'click .select-file-link': @onSelectFileClick
       'change .select-file': @onSelectFileChange
+      'trix-change': @onChange
 
   onAttachmentAdd: (event) ->
     attachment = event.originalEvent.attachment
 
+    # Return of an already processes attachment (e.g., this happens on redo).
     if attachment.getAttribute 'documentId'
       return
 
@@ -76,6 +90,21 @@ class EditorComponent extends UIComponent
 
   value: ->
     @data()?[@name] or ''
+
+  clearStoredState: ->
+    return unless @id
+
+    delete localStorage["editor.state.#{@id}"]
+
+  # Store editor state to local storage on every change to support resuming editing if interrupted by any reason.
+  onChange: (event) ->
+    return unless @id
+
+    editor = @editor()
+
+    return unless editor
+
+    localStorage["editor.state.#{@id}"] = JSON.stringify editor
 
 class EditorComponent.Toolbar extends UIComponent
   @register 'EditorComponent.Toolbar'

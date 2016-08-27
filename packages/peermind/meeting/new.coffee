@@ -33,6 +33,9 @@ class Meeting.NewComponent extends UIComponent
           alert "New meeting error: #{error.reason or error}"
           return
 
+        for component in @childComponents 'EditorComponent'
+          component.clearStoredState()
+ 
         FlowRouter.go 'Meeting.display',
           _id: documentId
 

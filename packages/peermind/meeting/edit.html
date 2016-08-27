@@ -48,7 +48,7 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            {{> EditorComponent args name='description' id='edit-meeting-description' label='Description'}}
+            {{> EditorComponent args name='description' id=($join '-' 'edit-meeting-description' _id) label='Description'}}
           </div>
         </div>
         <div class="row">

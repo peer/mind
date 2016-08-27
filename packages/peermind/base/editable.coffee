@@ -50,9 +50,16 @@ class share.EditableMixin extends UIMixin
     event.preventDefault()
 
     @callFirstWith null, 'onSaveEdit', event, =>
-      @_isBeingEdited false
+      @editingEnded()
 
   onCancelEditButton: (event) ->
     event.preventDefault()
 
+    @editingEnded()
+
+  editingEnded: ->
     @_isBeingEdited false
+
+    # TODO: Search all descendant components, not just children.
+    for component in @childComponents 'EditorComponent'
+      component.clearStoredState()

@@ -40,6 +40,9 @@ class Discussion.EditFormComponent extends UIComponent
           alert "Update discussion error: #{error.reason or error}"
           return
 
+        for component in @childComponents 'EditorComponent'
+          component.clearStoredState()
+
         FlowRouter.go 'Discussion.display',
           _id: @data()._id
 

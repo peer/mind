@@ -5,7 +5,7 @@
         <form class="col s12 point-new">
           <div class="row">
             <div class="input-field col s12">
-              {{> EditorComponent args name='body' id='new-point-description' label='Pint'}}
+              {{> EditorComponent args name='body' id=($join '-' 'new-point-description' currentDiscussionId) label='Pint'}}
             </div>
           </div>
           <div class="row">

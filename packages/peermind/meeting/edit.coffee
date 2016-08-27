@@ -46,6 +46,9 @@ class Meeting.EditFormComponent extends UIComponent
           alert "Update meeting error: #{error.reason or error}"
           return
 
+        for component in @childComponents 'EditorComponent'
+          component.clearStoredState()
+
         FlowRouter.go 'Meeting.display',
           _id: @data()._id
 
