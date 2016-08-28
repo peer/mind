@@ -16,6 +16,7 @@ Meteor.methods
           withdrawnBy: null
           withdrawnAt: null
           majority: null
+          status: Motion.STATUS.DRAFT
 
   'Motion.upvote': (pointId) ->
     share.upvoteUpvotable Motion, pointId,
@@ -26,6 +27,7 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
       majority: null
+      status: Motion.STATUS.DRAFT
 
   'Motion.removeUpvote': (pointId) ->
     share.removeUpvoteUpvotable Motion, pointId,
@@ -36,6 +38,7 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
       majority: null
+      status: Motion.STATUS.DRAFT
 
   'Motion.update': (document) ->
     check document,
@@ -85,6 +88,7 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
       majority: null
+      status: Motion.STATUS.DRAFT
       body:
         $ne: document.body
     ),
@@ -139,11 +143,13 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
       majority: null
+      status: Motion.STATUS.DRAFT
     ),
       $set:
         votingOpenedBy: user.getReference()
         votingOpenedAt: openedAt
         majority: majority
+        status: Motion.STATUS.OPEN
 
   'Motion.closeVoting': (motionId) ->
     check motionId, Match.DocumentId
@@ -175,10 +181,12 @@ Meteor.methods
       withdrawnAt: null
       majority:
         $ne: null
+      status: Motion.STATUS.OPEN
     ),
       $set:
         votingClosedBy: user.getReference()
         votingClosedAt: closedAt
+        status: Motion.STATUS.CLOSED
 
   'Motion.withdraw': (motionId) ->
     check motionId, Match.DocumentId
@@ -210,10 +218,12 @@ Meteor.methods
       withdrawnBy: null
       withdrawnAt: null
       majority: null
+      status: Motion.STATUS.DRAFT
     ),
       $set:
         withdrawnBy: user.getReference()
         withdrawnAt: withdrawnAt
+        status: Motion.STATUS.WITHDRAWN
 
   'Motion.vote': (document) ->
     check document,

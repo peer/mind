@@ -40,6 +40,7 @@ class Motion extends share.UpvotableDocument
   #   avatar
   # withdrawnAt
   # majority: one of Motion.MAJORITY values
+  # status: one of Motion.STATUS values
 
   @Meta
     name: 'Motion'
@@ -50,6 +51,16 @@ class Motion extends share.UpvotableDocument
         withdrawnBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
         # We override this field with one with a reverse field.
         discussion: @ReferenceField Discussion, [], true, 'motions', []
+        status: @GeneratedField 'self', ['withdrawnAt', 'withdrawnBy', 'votingOpenedAt', 'votingOpenedBy', 'votingClosedAt', 'votingClosedBy', 'majority'], (fields) ->
+          motion = new Motion fields
+          if motion.isWithdrawn()
+            [fields._id, Motion.STATUS.WITHDRAWN]
+          else if motion.isOpen()
+            [fields._id, Motion.STATUS.OPEN]
+          else if motion.isClosed()
+            [fields._id, Motion.STATUS.CLOSED]
+          else
+            [fields._id, Motion.STATUS.DRAFT]
 
   @PUBLISH_FIELDS: ->
     _.extend super,
@@ -60,17 +71,24 @@ class Motion extends share.UpvotableDocument
       withdrawnBy: 1
       withdrawnAt: 1
       majority: 1
+      status: 1
 
   @MAJORITY: VotingEngine.MAJORITY
 
+  @STATUS:
+    DRAFT: 'draft'
+    OPEN: 'open'
+    CLOSED: 'closed'
+    WITHDRAWN: 'withdrawn'
+
   isWithdrawn: ->
-    !!(@withdrawnAt and @withdrawnBy)
+    !!(@status is @constructor.STATUS.WITHDRAWN and @withdrawnAt and @withdrawnBy)
 
   isOpen: ->
-    !!(@votingOpenedAt and @votingOpenedBy and not @votingClosedAt and not @votingClosedBy and @majority and not @isWithdrawn())
+    !!(@status is @constructor.STATUS.OPEN and @votingOpenedAt and @votingOpenedBy and not @votingClosedAt and not @votingClosedBy and @majority and not @isWithdrawn())
 
   isClosed: ->
-    !!(@votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and @majority and not @isWithdrawn())
+    !!(@status is @constructor.STATUS.CLOSED and @votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and @majority and not @isWithdrawn())
 
 if Meteor.isServer
   Motion.Meta.collection._ensureIndex
@@ -87,3 +105,6 @@ if Meteor.isServer
 
   Motion.Meta.collection._ensureIndex
     votingClosedAt: 1
+
+  Motion.Meta.collection._ensureIndex
+    status: 1
