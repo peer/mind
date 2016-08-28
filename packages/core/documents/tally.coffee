@@ -27,15 +27,16 @@ class Tally extends share.BaseDocument
       job: @ReferenceField JobQueue
 
   @PUBLISH_FIELDS: ->
-    createdAt: 1
-    motion: 1
-    votesCount: 1
-    population: 1
-    abstentions: 1
-    confidence: 1
-    confidenceLower: 1
-    confidenceUpper: 1
-    result: 1
+    _.extend super,
+      createdAt: 1
+      motion: 1
+      votesCount: 1
+      population: 1
+      abstentions: 1
+      confidence: 1
+      confidenceLower: 1
+      confidenceUpper: 1
+      result: 1
 
 if Meteor.isServer
   Tally.Meta.collection._ensureIndex

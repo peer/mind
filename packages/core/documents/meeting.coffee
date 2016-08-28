@@ -81,16 +81,17 @@ class Meeting extends share.BaseDocument
       updatedAt: share.UpdatedAtTrigger ['changes']
 
   @PUBLISH_FIELDS: ->
-    _id: 1
-    createdAt: 1
-    updatedAt: 1
-    lastActivity: 1
-    author: 1
-    title: 1
-    startAt: 1
-    endAt: 1
-    descriptionDisplay: 1
-    discussions: 1
+    _.extend super,
+      _id: 1
+      createdAt: 1
+      updatedAt: 1
+      lastActivity: 1
+      author: 1
+      title: 1
+      startAt: 1
+      endAt: 1
+      descriptionDisplay: 1
+      discussions: 1
 
 if Meteor.isServer
   Meeting.Meta.collection._ensureIndex

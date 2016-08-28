@@ -32,12 +32,13 @@ class Vote extends share.BaseDocument
 
   # Vote should be published only to its author.
   @PUBLISH_FIELDS: ->
-    _id: 1
-    createdAt: 1
-    updatedAt: 1
-    author: 1
-    motion: 1
-    value: 1
+    _.extend super,
+      _id: 1
+      createdAt: 1
+      updatedAt: 1
+      author: 1
+      motion: 1
+      value: 1
 
   @VALUE: VotingEngine.VALUE
 

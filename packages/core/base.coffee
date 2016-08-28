@@ -145,3 +145,6 @@ class share.BaseDocument extends Document
 
   methodPrefix: ->
     @constructor.methodPrefix()
+
+  @PUBLISH_FIELDS: ->
+    {}

@@ -56,15 +56,16 @@ class share.UpvotableDocument extends share.BaseDocument
       lastActivity: share.LastActivityTrigger ['upvotes']
 
   @PUBLISH_FIELDS: ->
-    _id: 1
-    createdAt: 1
-    updatedAt: 1
-    lastActivity: 1
-    author: 1
-    discussion: 1
-    bodyDisplay: 1
-    upvotesCount: 1
-    upvotes:
-      # We publish only an entry associated with the current user.
-      $elemMatch:
-        'author._id': Meteor.userId()
+    _.extend super,
+      _id: 1
+      createdAt: 1
+      updatedAt: 1
+      lastActivity: 1
+      author: 1
+      discussion: 1
+      bodyDisplay: 1
+      upvotesCount: 1
+      upvotes:
+        # We publish only an entry associated with the current user.
+        $elemMatch:
+          'author._id': Meteor.userId()
