@@ -285,6 +285,16 @@ const pkgdef :Spk.PackageDefinition = (
           name = "ACCOUNTS_ADMIN",
           title = (defaultText = "administer accounts"),
           description = (defaultText = "can administer accounts"),
+        ),
+        (
+          name = "DISCUSSION_OPEN",
+          title = (defaultText = "open discussions"),
+          description = (defaultText = "can open discussions"),
+        ),
+        (
+          name = "DISCUSSION_CLOSE",
+          title = (defaultText = "close discussions"),
+          description = (defaultText = "can close discussions"),
         )
       ],
       roles = [
@@ -294,7 +304,7 @@ const pkgdef :Spk.PackageDefinition = (
           title = (defaultText = "member"),
           # Name of the role.  Shown in the Sandstorm UI to indicate which users have which roles.
 
-          permissions  = [true, true, false, true, true, false, true, false, false, false, true, false, true, false, false, false, true, true, false, false, false, false],
+          permissions  = [true, true, false, true, true, false, true, false, false, false, true, false, true, false, false, false, true, true, false, false, false, false, false, false],
           # An array indicating which permissions this role carries.
           # It should be the same length as the permissions array in
           # viewInfo, and the order of the lists must match.
@@ -308,19 +318,19 @@ const pkgdef :Spk.PackageDefinition = (
         ),
         (
           title = (defaultText = "manager"),
-          permissions  = [false, true, false, true, true, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false],
+          permissions  = [false, true, false, true, true, false, true, false, false, false, true, false, true, false, false, false, true, false, false, false, false, false, false, false],
           verbPhrase = (defaultText = "can add discussion items, comment, and propose motions"),
           description = (defaultText = "managers propose content, but cannot vote"),
         ),
         (
           title = (defaultText = "moderator"),
-          permissions  = [false, false, true, false, false, true, false, true, true, false, false, true, false, true, true, true, false, false, true, true, false, false],
+          permissions  = [false, false, true, false, false, true, false, true, true, false, false, true, false, true, true, true, false, false, true, true, false, false, true, true],
           verbPhrase = (defaultText = "can make points, and edit content of others"),
           description = (defaultText = "moderators make points and edit content"),
         ),
         (
           title = (defaultText = "admin"),
-          permissions  = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true],
+          permissions  = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false],
           verbPhrase = (defaultText = "can manage user accounts"),
           description = (defaultText = "admins manage the grain"),
         ),
