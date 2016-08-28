@@ -96,10 +96,13 @@ class Discussion extends share.BaseDocument
         [fields._id, fields.comments?.length or 0]
       pointsCount: @GeneratedField 'self', ['points'], (fields) ->
         [fields._id, fields.points?.length or 0]
-      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'closingMotions', 'closingNoteDisplay', 'motions'], (fields) ->
+      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'closingMotions', 'closingNoteDisplay', 'motions', 'closingMotions'], (fields) ->
         discussion = new Discussion fields
         if discussion.isClosed()
-          return [fields._id, Discussion.STATUS.CLOSED]
+          if fields.closingMotions?.length
+            return [fields._id, Discussion.STATUS.PASSED]
+          else
+            return [fields._id, Discussion.STATUS.CLOSED]
         else if discussion.isOpen()
           # If any motion is open for voting, discussion is open for voting as well.
           if _.some discussion.motions, ((motion) -> motion.status is Motion.STATUS.OPEN)
@@ -138,9 +141,12 @@ class Discussion extends share.BaseDocument
   @STATUS:
     DRAFT: 'draft'
     OPEN: 'open'
+    # Motions are being drafted.
     MOTIONS: 'motions'
+    # Motions are being voted on (at least one is open).
     VOTING: 'voting'
     CLOSED: 'closed'
+    PASSED: 'passed'
 
   isOpen: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @closingMotions or @closingMotions.length is 0) and not @closingNoteDisplay)
