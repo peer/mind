@@ -47,6 +47,7 @@ class Discussion extends share.BaseDocument
   # closingNoteDisplay: HTML content of the closing note without tags needed for editing
   # closingNoteAttachments: list of
   #   _id
+  # status: one of Discussion.STATUS values
 
   @Meta
     name: 'Discussion'
@@ -95,6 +96,21 @@ class Discussion extends share.BaseDocument
         [fields._id, fields.comments?.length or 0]
       pointsCount: @GeneratedField 'self', ['points'], (fields) ->
         [fields._id, fields.points?.length or 0]
+      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'closingMotions', 'closingNoteDisplay', 'motions'], (fields) ->
+        discussion = new Discussion fields
+        if discussion.isClosed()
+          return [fields._id, Discussion.STATUS.CLOSED]
+        else if discussion.isOpen()
+          # If any motion is open for voting, discussion is open for voting as well.
+          if _.some discussion.motions, ((motion) -> motion.status is Motion.STATUS.OPEN)
+            return [fields._id, Discussion.STATUS.VOTING]
+          # If any motion is being drafted, discussion's motions are being drafted.
+          else if _.some discussion.motions, ((motion) -> motion.status is Motion.STATUS.DRAFT)
+            return [fields._id, Discussion.STATUS.MOTIONS]
+          else
+            return [fields._id, Discussion.STATUS.OPEN]
+        else
+          return [fields._id, Discussion.STATUS.DRAFT]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
 
@@ -108,9 +124,29 @@ class Discussion extends share.BaseDocument
       title: 1
       descriptionDisplay: 1
       meetings: 1
+      discussionOpenedBy: 1
+      discussionOpenedAt: 1
+      discussionClosedBy: 1
+      discussionClosedAt: 1
+      closingMotions: 1
+      closingNoteDisplay: 1
       motionsCount: 1
       commentsCount: 1
       pointsCount: 1
+      status: 1
+
+  @STATUS:
+    DRAFT: 'draft'
+    OPEN: 'open'
+    MOTIONS: 'motions'
+    VOTING: 'voting'
+    CLOSED: 'closed'
+
+  isOpen: ->
+    !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @closingMotions or @closingMotions.length is 0) and not @closingNoteDisplay)
+
+  isClosed: ->
+    !!(@discussionOpenedAt and @discussionOpenedBy and @discussionClosedAt and @discussionClosedBy)
 
 if Meteor.isServer
   Discussion.Meta.collection._ensureIndex
@@ -121,3 +157,6 @@ if Meteor.isServer
 
   Discussion.Meta.collection._ensureIndex
     lastActivity: 1
+
+  Discussion.Meta.collection._ensureIndex
+    status: 1
