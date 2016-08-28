@@ -33,7 +33,9 @@ class Point extends share.UpvotableDocument
       _.extend fields,
         # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
         category: @GeneratedField 'self', ['changes'], (fields) =>
-          [fields._id, fields.changes?[fields.changes?.length - 1]?.category or Point.CATEGORY.OTHER]
+          lastChange = fields.changes?[fields.changes?.length - 1]
+          return [] unless lastChange and 'category' of lastChange
+          [fields._id, lastChange.category or Point.CATEGORY.OTHER]
 
   @CATEGORY:
     IN_FAVOR: 'infavor'

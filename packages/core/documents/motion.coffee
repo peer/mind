@@ -43,10 +43,11 @@ class Motion extends share.UpvotableDocument
 
   @Meta
     name: 'Motion'
-    fields: =>
-      votingOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
-      votingClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
-      withdrawnBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
+    fields: (fields) =>
+      _.extend fields,
+        votingOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
+        votingClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
+        withdrawnBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
 
   @PUBLISH_FIELDS: ->
     _.extend super,
