@@ -22,10 +22,6 @@ class Discussion.EditFormComponent extends UIComponent
       title = $title.val()
       $title.focus().val('').val(title)
 
-  events: ->
-    super.concat
-      'submit .discussion-edit': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 
