@@ -36,7 +36,7 @@ Meteor.methods
       discussionOpenedAt: createdAt
       discussionClosedBy: null
       discussionClosedAt: null
-      closingMotions: []
+      passingMotions: []
       closingNote: ''
       closingNoteDisplay: ''
       motions: []

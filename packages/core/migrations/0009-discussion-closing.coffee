@@ -3,7 +3,7 @@ class Migration extends Document.AddRequiredFieldsMigration
   fields:
     discussionClosedBy: null
     discussionClosedAt: null
-    closingMotions: []
+    passingMotions: []
     closingNote: ''
     closingNoteDisplay: ''
 
