@@ -37,6 +37,12 @@ class UIComponent extends CommonComponent
 
     "#{@formatDate start, datetimeFormat} – #{@formatDate end, endFormat}"
 
+  pluralize: (count, word) ->
+    if count is 1
+      "1 #{word}"
+    else
+      "#{count} #{word}s"
+
 class UIMixin extends CommonMixin
   getFirstWith: (args...) ->
     @component().getFirstWith args...

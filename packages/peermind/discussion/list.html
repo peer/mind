@@ -8,16 +8,19 @@
   {{/if}}
   <div class="section">
     {{#if discussionsWithoutMeeting.exists}}
-      <div class="collection z-depth-1">
+      <ul class="collection z-depth-1">
         {{#each discussionsWithoutMeeting}}
           {{> Discussion.ListItemComponent}}
         {{/each}}
-      </div>
+      </ul>
     {{/if}}
     {{! TODO: Add lists for each meeting, collections with header. }}
   </div>
 </template>
 
 <template name="Discussion.ListItemComponent">
-  <a href="{{pathFor 'Discussion.display' params=data}}" class="collection-item">{{title}}</a>
+  <li class="collection-item">
+    <a href="{{pathFor 'Discussion.display' params=data}}" class="title">{{title}}</a>
+    <p>{{pluralize commentsCount 'comment'}}&nbsp;&nbsp;•&nbsp;&nbsp;{{pluralize pointsCount 'point'}}&nbsp;&nbsp;•&nbsp;&nbsp;{{pluralize motionsCount 'motion'}}</p>
+  </li>
 </template>

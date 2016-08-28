@@ -108,6 +108,7 @@ Package.onUse(function (api) {
     'discussion/base.coffee',
     'discussion/list.html',
     'discussion/list.coffee',
+    'discussion/list.styl',
     'discussion/new.html',
     'discussion/new.coffee',
     'discussion/edit.html',

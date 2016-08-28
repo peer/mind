@@ -131,10 +131,8 @@ class Meeting.DiscussionsListItemComponent extends UIComponent
 
     return unless discussion
 
-    if discussion.length is 1
-      "1 minute"
-    else if discussion.length
-      "#{discussion.length} minutes"
+    if discussion.length
+      @pluralize discussion.length, "minute"
     else if @canEdit()
       "Set length"
 
