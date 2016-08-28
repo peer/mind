@@ -19,7 +19,24 @@ class Discussion extends share.BaseDocument
   #     avatar
   #   title
   #   description
+  #   closingMotions
+  #   closingNote
   # meetings: list, if a discussion is associated with a meeting (or meetings) (reverse field from Meeting.discussions.discussion)
+  #   _id
+  # discussionOpenedBy:
+  #   _id
+  #   username
+  #   avatar
+  # discussionOpenedAt: time when discussion started
+  # discussionClosedBy:
+  #   _id
+  #   username
+  #   avatar
+  # discussionClosedAt: time when discussion ended
+  # closingMotions: list of motions which were selected to close
+  # closingNote: the latest version of the closing note
+  # closingNoteDisplay: HTML content of the closing note without tags needed for editing
+  # closingNoteAttachments: list of
   #   _id
 
   @Meta
@@ -35,6 +52,14 @@ class Discussion extends share.BaseDocument
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'description' of lastChange
         [fields._id, lastChange.description or '']
+      closingMotions: @GeneratedField 'self', ['changes'], (fields) =>
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'closingMotions' of lastChange
+        [fields._id, lastChange.closingMotions or []]
+      closingNote: @GeneratedField 'self', ['changes'], (fields) =>
+        lastChange = fields.changes?[fields.changes?.length - 1]
+        return [] unless lastChange and 'closingNote' of lastChange
+        [fields._id, lastChange.closingNote or []]
       descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
         [fields._id, fields.description and @sanitizeForDisplay.sanitizeHTML fields.description]
       descriptionAttachments: [
@@ -43,6 +68,15 @@ class Discussion extends share.BaseDocument
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
+      closingNoteDisplay: @GeneratedField 'self', ['closingNote'], (fields) =>
+        [fields._id, fields.closingNote and @sanitizeForDisplay.sanitizeHTML fields.closingNote]
+      closingNoteAttachments: [
+        # TODO: Make it an array of references to StorageFile as well.
+        @GeneratedField 'self', ['closingNote'], (fields) =>
+          return [fields._id, []] unless fields.closingNote
+          [fields._id, ({_id} for _id in @extractAttachments fields.closingNote)]
+      ]
+      closingMotions: [@ReferenceField Motion]
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]

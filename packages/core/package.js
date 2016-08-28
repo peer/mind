@@ -100,6 +100,9 @@ Package.onUse(function (api) {
     'migrations/0005-point-bodydisplay.coffee',
     'migrations/0006-discussion-meetings.coffee',
     'migrations/0007-motion-upvotes.coffee',
-    'migrations/0008-motion-upvotescount.coffee'
+    'migrations/0008-motion-upvotescount.coffee',
+    'migrations/0009-discussion-closing.coffee',
+    'migrations/0010-discussion-opened.coffee',
+    'migrations/0011-discussion-generated.coffee'
   ], 'server');
 });
