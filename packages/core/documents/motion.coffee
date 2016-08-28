@@ -82,13 +82,13 @@ class Motion extends share.UpvotableDocument
     WITHDRAWN: 'withdrawn'
 
   isWithdrawn: ->
-    !!(@status is @constructor.STATUS.WITHDRAWN and @withdrawnAt and @withdrawnBy)
+    !!(@withdrawnAt and @withdrawnBy)
 
   isOpen: ->
-    !!(@status is @constructor.STATUS.OPEN and @votingOpenedAt and @votingOpenedBy and not @votingClosedAt and not @votingClosedBy and @majority and not @isWithdrawn())
+    !!(@votingOpenedAt and @votingOpenedBy and not @votingClosedAt and not @votingClosedBy and @majority and not @isWithdrawn())
 
   isClosed: ->
-    !!(@status is @constructor.STATUS.CLOSED and @votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and @majority and not @isWithdrawn())
+    !!(@votingOpenedAt and @votingOpenedBy and @votingClosedAt and @votingClosedBy and @majority and not @isWithdrawn())
 
 if Meteor.isServer
   Motion.Meta.collection._ensureIndex
