@@ -103,6 +103,7 @@ Package.onUse(function (api) {
     'migrations/0008-motion-upvotescount.coffee',
     'migrations/0009-discussion-closing.coffee',
     'migrations/0010-discussion-opened.coffee',
-    'migrations/0011-discussion-generated.coffee'
+    'migrations/0011-discussion-generated.coffee',
+    'migrations/0012-discussion-counts.coffee'
   ], 'server');
 });

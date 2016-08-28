@@ -36,6 +36,8 @@ class Point extends share.UpvotableDocument
           lastChange = fields.changes?[fields.changes?.length - 1]
           return [] unless lastChange and 'category' of lastChange
           [fields._id, lastChange.category or Point.CATEGORY.OTHER]
+        # We override this field with one with a reverse field.
+        discussion: @ReferenceField Discussion, [], true, 'points', []
 
   @CATEGORY:
     IN_FAVOR: 'infavor'

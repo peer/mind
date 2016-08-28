@@ -48,6 +48,8 @@ class Motion extends share.UpvotableDocument
         votingOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
         votingClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
         withdrawnBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
+        # We override this field with one with a reverse field.
+        discussion: @ReferenceField Discussion, [], true, 'motions', []
 
   @PUBLISH_FIELDS: ->
     _.extend super,

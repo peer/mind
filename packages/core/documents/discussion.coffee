@@ -23,6 +23,15 @@ class Discussion extends share.BaseDocument
   #   closingNote
   # meetings: list, if a discussion is associated with a meeting (or meetings) (reverse field from Meeting.discussions.discussion)
   #   _id
+  # motions: list, associated motion (or motions) (reverse field from Motion.discussion)
+  #   _id
+  # motionsCount
+  # comments: list, associated comment (or comments) (reverse field from Comment.discussion)
+  #   _id
+  # commentsCount
+  # points: list, associated point (or points) (reverse field from Point.discussion)
+  #   _id
+  # pointsCount
   # discussionOpenedBy:
   #   _id
   #   username
@@ -80,6 +89,12 @@ class Discussion extends share.BaseDocument
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
+      motionsCount: @GeneratedField 'self', ['motions'], (fields) ->
+        [fields._id, fields.motions?.length or 0]
+      commentsCount: @GeneratedField 'self', ['comments'], (fields) ->
+        [fields._id, fields.comments?.length or 0]
+      pointsCount: @GeneratedField 'self', ['points'], (fields) ->
+        [fields._id, fields.points?.length or 0]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
 

@@ -27,6 +27,10 @@ class Comment extends share.UpvotableDocument
 
   @Meta
     name: 'Comment'
+    fields: (fields) =>
+      _.extend fields,
+        # We override this field with one with a reverse field.
+        discussion: @ReferenceField Discussion, [], true, 'comments', []
 
 if Meteor.isServer
   Comment.Meta.collection._ensureIndex
