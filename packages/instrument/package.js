@@ -40,6 +40,7 @@ Package.onUse(function (api) {
   api.addFiles([
     'api.coffee',
     'connections.coffee',
-    'accounts.coffee'
+    'accounts.coffee',
+    'upvoting.coffee'
   ], 'server');
 });
