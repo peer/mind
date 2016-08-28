@@ -26,7 +26,12 @@ class StorageFile extends share.BaseDocument
   # mimeType: user's provided MIME type
   # size: user's provided size
   # done: true or false, has the file been successfully uploaded
-  # active: true or false
+  # active: true or false, once we set a file to active, we should never set it back to false
+  #         because it means that it is used somewhere; even if user removes it from content
+  #         the file is needed for history/old version of the content; as a consequence
+  #         files which were once set to active should not be removed ever (or at least very
+  #         careful check should be done that they are really not referenced anywhere, even
+  #         not in old versions of content)
 
   @Meta
     name: 'StorageFile'
