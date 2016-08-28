@@ -12,10 +12,6 @@ class Discussion.NewComponent extends UIComponent
 
     Materialize.updateTextFields()
 
-  events: ->
-    super.concat
-      'submit .discussion-new': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 

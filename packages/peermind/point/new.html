@@ -2,7 +2,7 @@
   {{#if canNew}}
     <div class="section">
       <div class="row">
-        <form class="col s12 point-new">
+        <form class="col s12" onSubmit>
           <div class="row">
             <div class="input-field col s12">
               {{> EditorComponent args name='body' id=($join '-' 'new-point-description' currentDiscussionId) label='Pint'}}
@@ -19,7 +19,7 @@
           </div>
           <div class="row">
             <div class="input-field col s12 center-align">
-              <button type="submit" name="new" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Make a point</button>
+              <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Make a point</button>
             </div>
           </div>
         </form>

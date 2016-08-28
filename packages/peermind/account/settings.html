@@ -77,7 +77,7 @@
   <p>Your current username: <strong>{{currentUser.username}}</strong></p>
 
   <div class="row">
-    <form class="col s12 change-username">
+    <form class="col s12" onSubmit>
       <div class="row">
         <div class="input-field col s12">
           <input id="username" name="username" type="text" pattern="{{USERNAME_REGEX}}" class="validate" required>
@@ -86,7 +86,7 @@
       </div>
       <div class="row">
         <div class="input-field col s12 center-align">
-          <button type="submit" name="change-username" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Change username</button>
+          <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Change username</button>
         </div>
       </div>
     </form>
@@ -97,7 +97,7 @@
 
 <template name="Settings.PasswordComponent">
   <div class="row">
-    <form class="col s12 change-password">
+    <form class="col s12" onSubmit>
       <div class="row">
         <div class="input-field col s12">
           <input id="old-password" name="old-password" type="password" class="validate" required>
@@ -112,7 +112,7 @@
       </div>
       <div class="row">
         <div class="input-field col s12 center-align">
-          <button type="submit" name="change-password" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Change password</button>
+          <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Change password</button>
         </div>
       </div>
     </form>

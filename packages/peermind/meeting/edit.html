@@ -17,7 +17,7 @@
 <template name="Meeting.EditFormComponent">
   <div class="section">
     <div class="row">
-      <form class="col s12 meeting-edit">
+      <form class="col s12" onSubmit>
         <div class="row">
           <div class="input-field col s12">
             <input type="text" name="title" id="edit-meeting-title" required value="{{title}}" />
@@ -53,7 +53,7 @@
         </div>
         <div class="row">
           <div class="input-field col s12 center-align">
-            <button type="submit" name="edit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Edit meeting</button>
+            <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Edit meeting</button>
           </div>
         </div>
       </form>

@@ -2,7 +2,7 @@
   {{#if canNew}}
     <div class="section">
       <div class="row">
-        <form class="col s12 motion-new">
+        <form class="col s12" onSubmit>
           <div class="row">
             <div class="input-field col s12">
               {{> EditorComponent args name='body' id=($join '-' 'new-motion-description' currentDiscussionId) label='Motion'}}
@@ -10,7 +10,7 @@
           </div>
           <div class="row">
             <div class="input-field col s12 center-align">
-              <button type="submit" name="new" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Propose a motion</button>
+              <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Propose a motion</button>
             </div>
           </div>
         </form>

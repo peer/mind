@@ -10,10 +10,6 @@ class Point.NewComponent extends UIComponent
   currentDiscussionId: ->
     @ancestorComponent(Point.ListComponent)?.currentDiscussionId()
 
-  events: ->
-    super.concat
-      'submit .point-new': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 

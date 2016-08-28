@@ -37,10 +37,6 @@ class Settings.UsernameComponent extends UIComponent
 
     Materialize.updateTextFields()
 
-  events: ->
-    super.concat
-      'submit .change-username': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 
@@ -62,10 +58,6 @@ class Settings.PasswordComponent extends UIComponent
     super
 
     Materialize.updateTextFields()
-
-  events: ->
-    super.concat
-      'submit .change-password': @onSubmit
 
   onSubmit: (event) ->
     event.preventDefault()

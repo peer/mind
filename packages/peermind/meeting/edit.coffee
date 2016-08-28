@@ -26,10 +26,6 @@ class Meeting.EditFormComponent extends UIComponent
     # TODO: Enable when know how to get the value.
     #@$('.datepicker').pickadate()
 
-  events: ->
-    super.concat
-      'submit .meeting-edit': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 

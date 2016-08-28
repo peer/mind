@@ -14,10 +14,6 @@ class Meeting.NewComponent extends UIComponent
     # TODO: Enable when know how to get the value.
     #@$('.datepicker').pickadate()
 
-  events: ->
-    super.concat
-      'submit .meeting-new': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 

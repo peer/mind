@@ -10,10 +10,6 @@ class Motion.NewComponent extends UIComponent
   currentDiscussionId: ->
     @ancestorComponent(Motion.ListComponent)?.currentDiscussionId()
 
-  events: ->
-    super.concat
-      'submit .motion-new': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 

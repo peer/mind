@@ -10,10 +10,6 @@ class Comment.NewComponent extends UIComponent
   currentDiscussionId: ->
     @ancestorComponent(Comment.ListComponent)?.currentDiscussionId()
 
-  events: ->
-    super.concat
-      'submit .comment-new': @onSubmit
-
   onSubmit: (event) ->
     event.preventDefault()
 
