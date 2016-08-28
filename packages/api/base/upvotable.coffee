@@ -60,8 +60,10 @@ share.newUpvotable = (documentClass, document, match, extend) ->
 
   documentId
 
-share.upvoteUpvotable = (documentClass, documentId) ->
+share.upvoteUpvotable = (documentClass, documentId, permissionCheck) ->
   check documentId, Match.DocumentId
+
+  permissionCheck ?= {}
 
   userId = Meteor.userId()
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
@@ -69,7 +71,7 @@ share.upvoteUpvotable = (documentClass, documentId) ->
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.UPVOTE
 
   createdAt = new Date()
-  documentClass.documents.update
+  documentClass.documents.update _.extend(permissionCheck,
     _id: documentId
     # User has not upvoted already.
     'upvotes.author._id':
@@ -77,7 +79,7 @@ share.upvoteUpvotable = (documentClass, documentId) ->
     # User cannot upvote their documents.
     'author._id':
       $ne: userId
-  ,
+  ),
     $addToSet:
       upvotes:
         createdAt: createdAt
@@ -88,8 +90,10 @@ share.upvoteUpvotable = (documentClass, documentId) ->
     $inc:
       upvotesCount: 1
 
-share.removeUpvoteUpvotable = (documentClass, documentId) ->
+share.removeUpvoteUpvotable = (documentClass, documentId, permissionCheck) ->
   check documentId, Match.DocumentId
+
+  permissionCheck ?= {}
 
   userId = Meteor.userId()
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
@@ -97,10 +101,10 @@ share.removeUpvoteUpvotable = (documentClass, documentId) ->
   # We allow anyone to remove their own upvote.
 
   lastActivity = new Date()
-  documentClass.documents.update
+  documentClass.documents.update _.extend(permissionCheck,
     _id: documentId
     'upvotes.author._id': userId
-  ,
+  ),
     $pull:
       upvotes:
         'author._id': userId

@@ -1,53 +1,24 @@
 Meteor.methods
   'Motion.new': (document) ->
-    check document,
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.MOTION_NEW
+
+    share.newUpvotable Motion, document,
       body: Match.NonEmptyString
       discussion:
         _id: Match.DocumentId
+    ,
+      (user, doc) ->
+        _.extend doc,
+          votingOpenedBy: null
+          votingOpenedAt: null
+          votingClosedBy: null
+          votingClosedAt: null
+          withdrawnBy: null
+          withdrawnAt: null
+          majority: null
 
-    user = Meteor.user User.REFERENCE_FIELDS()
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
-
-    throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.MOTION_NEW
-
-    discussion = Discussion.documents.findOne document.discussion._id,
-      fields:
-        _id: 1
-
-    throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
-
-    document.body = Motion.sanitize.sanitizeHTML document.body
-
-    if Meteor.isServer
-      $root = cheerio.load(document.body).root()
-    else
-      $root = $('<div/>').append($.parseHTML(document.body))
-
-    bodyText = $root.text()
-
-    check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
-      $root.has('figure').length
-
-    bodyDisplay = Motion.sanitizeForDisplay.sanitizeHTML document.body
-
-    attachments = Motion.extractAttachments document.body
-
-    createdAt = new Date()
-    documentId = Motion.documents.insert
-      createdAt: createdAt
-      updatedAt: createdAt
-      lastActivity: createdAt
-      author: user.getReference()
-      discussion:
-        _id: discussion._id
-      body: document.body
-      bodyDisplay: bodyDisplay
-      bodyAttachments: ({_id} for _id in attachments)
-      changes: [
-        updatedAt: createdAt
-        author: user.getReference()
-        body: document.body
-      ]
+  'Motion.upvote': (pointId) ->
+    share.upvoteUpvotable Motion, pointId,
       votingOpenedBy: null
       votingOpenedAt: null
       votingClosedBy: null
@@ -56,18 +27,15 @@ Meteor.methods
       withdrawnAt: null
       majority: null
 
-    assert documentId
-
-    StorageFile.documents.update
-      _id:
-        $in: attachments
-    ,
-      $set:
-        active: true
-    ,
-      multi: true
-
-    documentId
+  'Motion.removeUpvote': (pointId) ->
+    share.removeUpvoteUpvotable Motion, pointId,
+      votingOpenedBy: null
+      votingOpenedAt: null
+      votingClosedBy: null
+      votingClosedAt: null
+      withdrawnBy: null
+      withdrawnAt: null
+      majority: null
 
   'Motion.update': (document) ->
     check document,
