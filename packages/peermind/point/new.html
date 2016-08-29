@@ -10,7 +10,7 @@
           </div>
           <div class="row">
             {{#each categories}}
-              <div class="input-field col {{categoryColumns}} center-align">
+              <div {{class 'input-field' 'col' categoryColumns 'center-align'}}>
                 {{! TODO: We cannot use required here with Materialize. See https://github.com/Dogfalo/materialize/issues/2187 }}
                 <input type="radio" name="category" value="{{category}}" id="new-point-category-{{category}}" />
                 <label for="new-point-category-{{category}}" class="point-category">{{label}}</label>

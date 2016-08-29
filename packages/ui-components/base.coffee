@@ -43,6 +43,16 @@ class UIComponent extends CommonComponent
     else
       "#{count} #{word}s"
 
+  # Converts an array of style classes into a class attribute. It doesn't return anything
+  # if the array is empty (or null) so that class attribute is not unnecessarily created.
+  # All input arrays are flattened and multiple input arrays can be passed. Everything
+  # besides strings is filtered out.
+  class: (styleClassesArrays...) ->
+    styleClassesArrays = _.uniq _.filter _.flatten(styleClassesArrays), (item) =>
+      _.isString item
+    if styleClassesArrays?.length
+      class: styleClassesArrays.join ' '
+
 class UIMixin extends CommonMixin
   getFirstWith: (args...) ->
     @component().getFirstWith args...

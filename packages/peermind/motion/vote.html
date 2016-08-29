@@ -1,7 +1,7 @@
 <template name="Motion.VoteComponent">
   <form>
     <div class="vote-range-slider row">
-      <div class="cntr range {{rangeDeselected}}" id="motion-vote-range-{{currentMotionId}}">
+      <div {{class 'cntr' 'range' rangeDeselected}} id="motion-vote-range-{{currentMotionId}}">
         <div class="ui-slider-tick" style="left: 0%;"></div>
         <div class="ui-slider-tick" style="left: 12.5%;"></div>
         <div class="ui-slider-tick" style="left: 25%;"></div>

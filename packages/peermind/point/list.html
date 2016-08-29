@@ -46,7 +46,7 @@
         </div>
         <div class="row">
           {{#each categories}}
-            <div class="input-field col {{categoryColumns}} center-align">
+            <div {{class 'input-field' 'col' categoryColumns 'center-align'}}>
               {{! TODO: We cannot use required here with Materialize. See https://github.com/Dogfalo/materialize/issues/2187 }}
               <input type="radio" name="category" value="{{category}}" id="edit-point-category-{{_id}}-{{category}}" {{categoryChecked}} />
               <label for="edit-point-category-{{_id}}-{{category}}" class="point-category">{{label}}</label>
