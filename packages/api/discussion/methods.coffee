@@ -164,8 +164,21 @@ Meteor.methods
       discussionClosedBy: null
       passingMotions:
         $in: [null, []]
-      status:
-        $in: [Discussion.STATUS.OPEN, Discussion.STATUS.MOTIONS, Discussion.STATUS.VOTING]
+      # All motions should have voting closed or motions should be withdrawn.
+      # This also assures that all the motions provided passingMotions are of
+      # the right status (there might be a race condition here though).
+      status: Discussion.STATUS.OPEN
+      motions:
+        # We make sure that all motions passed through passingMotions are really
+        # associated with this discussion.
+        $all: ($elemMatch: {_id} for _id in passingMotions)
+        # Additionally, we check that all associated motions are or closed or
+        # withdrawn. This is also a potential race condition, but hopefully
+        # at least one of this or the status check above will work.
+        $not:
+          $elemMatch:
+            status:
+              $nin: [Motion.STATUS.CLOSED, Motion.STATUS.WITHDRAWN]
     ),
       $set:
         updatedAt: closedAt
