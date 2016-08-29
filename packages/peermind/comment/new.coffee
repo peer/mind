@@ -7,7 +7,7 @@ class Comment.NewComponent extends UIComponent
     @canNew = new ComputedField =>
       # In contrast with points and motions, we allow comments to be made for closed
       # discussions, but we display a message warning an user that they should consider
-      # opening a new discussion instead.
+      # opening a new discussion instead. Only for drafts we do not allow commenting.
       User.hasPermission(User.PERMISSIONS.COMMENT_NEW) and (@discussionIsOpen() or @discussionIsClosed())
 
   currentDiscussionId: ->
