@@ -10,7 +10,11 @@
       {{else}}
         <div class="row">
           <div class="col s12 center-align grey-text">
-            No comment has been made yet.
+            {{#if discussionIsClosed}}
+              No comment has been made.
+            {{else}}
+              No comment has been made yet.
+            {{/if}}
           </div>
         </div>
       {{/if}}
