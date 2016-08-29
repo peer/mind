@@ -8,7 +8,7 @@ class Comment.NewComponent extends UIComponent
       # In contrast with points and motions, we allow comments to be made for closed
       # discussions, but we display a message warning an user that they should consider
       # opening a new discussion instead.
-      User.hasPermission(User.PERMISSIONS.COMMENT_NEW) and @discussionIsOpen()
+      User.hasPermission(User.PERMISSIONS.COMMENT_NEW) and (@discussionIsOpen() or @discussionIsClosed())
 
   currentDiscussionId: ->
     @ancestorComponent(Comment.ListComponent)?.currentDiscussionId()
