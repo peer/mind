@@ -25,6 +25,8 @@ class EditorComponent extends UIComponent
     # Restores any stored state.
     @editor()?.loadJSON JSON.parse state
 
+    @active true if @hasContent()
+
   editor: ->
     @$('trix-editor').get(0)?.editor
 
