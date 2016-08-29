@@ -35,6 +35,8 @@ class Discussion.ListItemComponent extends UIComponent
       "voting open"
     else if data?.status is Discussion.STATUS.CLOSED
       "closed"
+    else if data?.status is Discussion.STATUS.PASSED
+      "passed"
 
 FlowRouter.route '/',
   name: 'Discussion.list'

@@ -25,6 +25,9 @@ class Discussion.OneComponent extends UIComponent
     @canEdit = new ComputedField =>
       @discussion() and (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE) or (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE_OWN) and (Meteor.userId() is @discussion().author._id)))
 
+    @canClose = new ComputedField =>
+      @discussion() and @discussion().isOpen() and not @discussion().isClosed() and User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)
+
   discussion: ->
     Discussion.documents.findOne @currentDiscussionId()
 

@@ -28,6 +28,11 @@ class Motion.ListItemComponent extends UIComponent
   mixins: ->
     super.concat share.ExpandableMixin, share.EditableMixin
 
+  constructor: (kwargs) ->
+    super
+
+    _.extend @, _.pick (kwargs?.hash or {}), 'noExtraMetadataButtons'
+
   onCreated: ->
     super
 
@@ -105,6 +110,8 @@ class Motion.ListItemComponent extends UIComponent
     _type: data.constructor.Meta._name
 
   renderExtraMetadataButtons: (parentComponent, metadataComponent) ->
+    return null if @noExtraMetadataButtons
+
     Motion.ExtraMetadataButtonsComponent.renderComponent parentComponent
 
 class Motion.ExtraMetadataButtonsComponent extends UIComponent
