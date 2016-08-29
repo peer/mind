@@ -3,6 +3,12 @@ Package.describe({
   version: '0.1.0'
 });
 
+var options = {
+  autoprefixer: {
+    browsers: ['last 3 Chrome versions', 'Firefox >= 7', 'Explorer >= 8', 'last 2 versions', '> 1%', 'Firefox ESR', 'Safari >= 4']
+  }
+};
+
 Package.onUse(function (api) {
   api.versionsFrom('1.4.1');
 
@@ -58,7 +64,7 @@ Package.onUse(function (api) {
     'account/form.coffee',
     'account/form.styl',
     'account/templates.coffee'
-  ]);
+  ], ['client', 'server'], options);
 
   api.addFiles([
     'account/services.coffee'
@@ -148,7 +154,7 @@ Package.onUse(function (api) {
     'motion/vote.styl',
     'admin/accounts.html',
     'admin/accounts.coffee'
-  ], 'client');
+  ], 'client', options);
 
   api.addAssets([
     'layout/logo.svg'
