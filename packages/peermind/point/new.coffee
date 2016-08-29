@@ -11,10 +11,10 @@ class Point.NewComponent extends UIComponent
     @ancestorComponent(Point.ListComponent)?.currentDiscussionId()
 
   discussionIsOpen: ->
-    @ancestorComponent(Motion.ListComponent)?.discussionIsOpen()
+    @ancestorComponent(Point.ListComponent)?.discussionIsOpen()
 
   discussionIsClosed: ->
-    @ancestorComponent(Motion.ListComponent)?.discussionIsClosed()
+    @ancestorComponent(Point.ListComponent)?.discussionIsClosed()
 
   onSubmit: (event) ->
     event.preventDefault()

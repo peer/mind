@@ -14,10 +14,10 @@ class Comment.NewComponent extends UIComponent
     @ancestorComponent(Comment.ListComponent)?.currentDiscussionId()
 
   discussionIsOpen: ->
-    @ancestorComponent(Motion.ListComponent)?.discussionIsOpen()
+    @ancestorComponent(Comment.ListComponent)?.discussionIsOpen()
 
   discussionIsClosed: ->
-    @ancestorComponent(Motion.ListComponent)?.discussionIsClosed()
+    @ancestorComponent(Comment.ListComponent)?.discussionIsClosed()
 
   onSubmit: (event) ->
     event.preventDefault()
