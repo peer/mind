@@ -20,6 +20,9 @@ $collection-item-avatar-min-height: 62px;
 
 $collection-closed-bg-color: color("grey", "lighten-3");
 
+// Used also in useraccounts:materialie at_error.html.
+$error-color: color("red", "lighten-2");
+
 $roboto-font-path: "/packages/materialize_materialize/dist/fonts/roboto/";
 
 // Import Materialize with our values for variables.
