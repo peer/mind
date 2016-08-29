@@ -5,7 +5,7 @@ getStack = (error) ->
     StackTrace.fromError(error).then (stackframes) ->
       (stackframe.toString() for stackframe in stackframes)
   else
-    Promise.resolve null
+    Promise.resolve []
 
 $(window).on 'error', (event) ->
   currentRoute = FlowRouter.current()
