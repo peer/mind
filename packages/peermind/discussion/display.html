@@ -33,6 +33,11 @@
           </div>
         </div>
       {{/if}}
+      {{#if discussion.isClosed}}
+        <div class="center-align success card-panel">
+          This discussion is closed.
+        </div>
+      {{/if}}
     </div>
   {{/if}}
 </template>

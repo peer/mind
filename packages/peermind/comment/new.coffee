@@ -5,10 +5,19 @@ class Comment.NewComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      User.hasPermission User.PERMISSIONS.COMMENT_NEW
+      # In contrast with points and motions, we allow comments to be made for closed
+      # discussions, but we display a message warning an user that they should consider
+      # opening a new discussion instead.
+      User.hasPermission(User.PERMISSIONS.COMMENT_NEW) and @discussionIsOpen()
 
   currentDiscussionId: ->
     @ancestorComponent(Comment.ListComponent)?.currentDiscussionId()
+
+  discussionIsOpen: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsOpen()
+
+  discussionIsClosed: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsClosed()
 
   onSubmit: (event) ->
     event.preventDefault()

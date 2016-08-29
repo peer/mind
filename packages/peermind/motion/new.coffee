@@ -5,10 +5,16 @@ class Motion.NewComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      User.hasPermission User.PERMISSIONS.MOTION_NEW
+      User.hasPermission(User.PERMISSIONS.MOTION_NEW) and @discussionIsOpen() and not @discussionIsClosed()
 
   currentDiscussionId: ->
     @ancestorComponent(Motion.ListComponent)?.currentDiscussionId()
+
+  discussionIsOpen: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsOpen()
+
+  discussionIsClosed: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsClosed()
 
   onSubmit: (event) ->
     event.preventDefault()

@@ -74,15 +74,17 @@
   {{else}}
     <div class="section">
       <div class="row">
-        <div class="col s12 center-align error">
-          {{!-- Other combinations are not possible because the form is displayed only if canClose is true. --}}
-          {{#if $eq status STATUS.MOTIONS}}
-            Discussion cannot be closed because there are motions still being drafted.
-            Withdraw them or conclude voting on them.
-          {{/if}}
-          {{#if $eq status STATUS.VOTING}}
-            Discussion cannot be closed because there are motions which are still open for voting.
-          {{/if}}
+        <div class="col s12">
+          <div class="center-align error card-panel">
+            {{!-- Other combinations are not possible because the form is displayed only if canClose is true. --}}
+            {{#if $eq status STATUS.MOTIONS}}
+              Discussion cannot be closed because there are motions still being drafted.
+              Withdraw them or conclude voting on them.
+            {{/if}}
+            {{#if $eq status STATUS.VOTING}}
+              Discussion cannot be closed because there are motions which are still open for voting.
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>

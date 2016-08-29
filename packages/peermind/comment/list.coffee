@@ -7,6 +7,12 @@ class Comment.ListComponent extends UIComponent
     @currentDiscussionId = new ComputedField =>
       FlowRouter.getParam '_id'
 
+    @discussionIsOpen = new ComputedField =>
+      Discussion.documents.findOne(@currentDiscussionId())?.isOpen()
+
+    @discussionIsClosed = new ComputedField =>
+      Discussion.documents.findOne(@currentDiscussionId())?.isClosed()
+
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
       @subscribe 'Comment.list', discussionId if discussionId

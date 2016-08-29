@@ -5,10 +5,16 @@ class Point.NewComponent extends UIComponent
     super
 
     @canNew = new ComputedField =>
-      User.hasPermission User.PERMISSIONS.POINT_NEW
+      User.hasPermission(User.PERMISSIONS.POINT_NEW) and @discussionIsOpen() and not @discussionIsClosed()
 
   currentDiscussionId: ->
     @ancestorComponent(Point.ListComponent)?.currentDiscussionId()
+
+  discussionIsOpen: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsOpen()
+
+  discussionIsClosed: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsClosed()
 
   onSubmit: (event) ->
     event.preventDefault()
