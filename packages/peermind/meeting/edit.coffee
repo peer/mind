@@ -42,6 +42,8 @@ class Meeting.EditFormComponent extends UIComponent
           alert "Update meeting error: #{error.reason or error}"
           return
 
+        # TODO: Should we check the result and if it is not expected show an error instead?
+
         for component in @childComponents 'EditorComponent'
           component.reset()
 

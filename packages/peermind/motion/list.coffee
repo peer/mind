@@ -84,6 +84,8 @@ class Motion.ListItemComponent extends UIComponent
           alert "Update motion error: #{error.reason or error}"
           return
 
+        # TODO: Should we check the result and if it is not expected show an error instead?
+
         onSuccess()
 
   hasBody: ->
@@ -166,6 +168,8 @@ class Motion.WithdrawComponent extends UIComponent
         alert "Motion withdraw error: #{error.reason or error}"
         return
 
+      # TODO: Should we check the result and if it is not expected show an error instead?
+
 class Motion.OpenVotingComponent extends UIComponent
   @register 'Motion.OpenVotingComponent'
 
@@ -201,6 +205,8 @@ class Motion.OpenVotingComponent extends UIComponent
         alert "Open voting error: #{error.reason or error}"
         return
 
+      # TODO: Should we check the result and if it is not expected show an error instead?
+
 class Motion.CloseVotingComponent extends UIComponent
   @register 'Motion.CloseVotingComponent'
 
@@ -226,6 +232,8 @@ class Motion.CloseVotingComponent extends UIComponent
         console.error "Close voting error", error
         alert "Close voting error: #{error.reason or error}"
         return
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
 
 class Motion.TallyComponent extends UIComponent
   @register 'Motion.TallyComponent'

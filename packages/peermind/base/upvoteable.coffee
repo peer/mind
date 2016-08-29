@@ -35,9 +35,13 @@ class UpvoteableButton extends UIComponent
         alert "Upvote error: #{error.reason or error}"
         return
 
+      # TODO: Should we check the result and if it is not expected show an error instead?
+
   removeUpvote: ->
     Meteor.call "#{@data().methodPrefix()}.removeUpvote", @data()._id, (error, result) =>
       if error
         console.error "Remove upvote error", error
         alert "Remove upvote error: #{error.reason or error}"
         return
+
+      # TODO: Should we check the result and if it is not expected show an error instead?

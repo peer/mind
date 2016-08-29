@@ -36,9 +36,12 @@ class Discussion.EditFormComponent extends UIComponent
           alert "Update discussion error: #{error.reason or error}"
           return
 
+        # TODO: Should we check the result and if it is not expected show an error instead?
+
         for component in @childComponents 'EditorComponent'
           component.reset()
 
+        # TODO: If we came here from closing discussion view, we should go back to that.
         FlowRouter.go 'Discussion.display',
           _id: @data()._id
 

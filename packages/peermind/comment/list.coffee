@@ -61,6 +61,8 @@ class Comment.ListItemComponent extends UIComponent
           alert "Update comment error: #{error.reason or error}"
           return
 
+        # TODO: Should we check the result and if it is not expected show an error instead?
+
         onSuccess()
 
   hasBody: ->

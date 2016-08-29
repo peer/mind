@@ -159,6 +159,8 @@ class Meeting.DiscussionsListItemComponent extends UIComponent
         alert "Discussion length error: #{error.reason or error}"
         return
 
+      # TODO: Should we check the result and if it is not expected show an error instead?
+
 FlowRouter.route '/meeting/:_id',
   name: 'Meeting.display'
   action: (params, queryParams) ->

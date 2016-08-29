@@ -96,6 +96,8 @@ class Point.ListItemComponent extends UIComponent
           alert "Update point error: #{error.reason or error}"
           return
 
+        # TODO: Should we check the result and if it is not expected show an error instead?
+
         onSuccess()
 
   categories: ->

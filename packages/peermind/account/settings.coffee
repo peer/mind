@@ -123,6 +123,8 @@ class Settings.AccountsComponent extends UIComponent
         console.error "Unlinking from #{_.capitalize serviceName} error", error
         alert "Unlinking from #{_.capitalize serviceName} error: #{error.reason or error}"
 
+      # TODO: Should we check the result and if it is not expected show an error instead?
+
 class Settings.AvatarComponent extends UIComponent
   @register 'Settings.AvatarComponent'
 
@@ -134,6 +136,8 @@ class Settings.AvatarComponent extends UIComponent
         console.error "Selecting avatar error", error
         alert "Selecting avatar error: #{error.reason or error}"
         return
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
 
 class Settings.ResearchDataComponent extends UIComponent
   @register 'Settings.ResearchDataComponent'
@@ -160,13 +164,15 @@ class Settings.ResearchDataComponent extends UIComponent
 
     return unless consent
 
-    Meteor.call 'Account.researchData', consent is 'yes', (error) =>
+    Meteor.call 'Account.researchData', consent is 'yes', (error, result) =>
       if error
         console.error "Setting research data error", error
         alert "Setting research data error: #{error.reason or error}"
 
         # TODO: This should set it to old value, which is not necessary that no radio button was selected.
         @$('[name="research-data"]').prop('checked', false)
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
 
 FlowRouter.route '/account/settings',
   name: 'Settings.display'

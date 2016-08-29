@@ -86,6 +86,8 @@ class Motion.VoteComponent extends UIComponent
               alert "Vote error: #{error.reason or error}"
               return
 
+          # TODO: Should we check the result and if it is not expected show an error instead?
+
   voteValueChangeByUser: (value) ->
     @voteValueChange value
 

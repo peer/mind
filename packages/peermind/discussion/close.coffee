@@ -44,11 +44,13 @@ class Discussion.CloseFormComponent extends UIComponent
       $(el).val()
     ).get()
 
-    Meteor.call 'Discussion.close', discussionId, passingMotions, @$('[name="closingNote"]').val(), (error, documentId) =>
+    Meteor.call 'Discussion.close', discussionId, passingMotions, @$('[name="closingNote"]').val(), (error, result) =>
       if error
         console.error "Closing discussion error", error
         alert "Closing discussion error: #{error.reason or error}"
         return
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
 
       FlowRouter.go 'Discussion.display',
         _id: discussionId
