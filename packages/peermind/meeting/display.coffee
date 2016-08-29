@@ -161,6 +161,9 @@ class Meeting.DiscussionsListItemComponent extends UIComponent
 
       # TODO: Should we check the result and if it is not expected show an error instead?
 
+  closed: ->
+    'closed' if @data()?.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+
 FlowRouter.route '/meeting/:_id',
   name: 'Meeting.display'
   action: (params, queryParams) ->

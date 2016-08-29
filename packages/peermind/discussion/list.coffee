@@ -38,6 +38,9 @@ class Discussion.ListItemComponent extends UIComponent
     else if data?.status is Discussion.STATUS.PASSED
       "passed"
 
+  closed: ->
+    'closed' if @data()?.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+
 FlowRouter.route '/',
   name: 'Discussion.list'
   action: (params, queryParams) ->

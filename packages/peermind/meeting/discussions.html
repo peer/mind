@@ -24,7 +24,7 @@
 </template>
 
 <template name="Meeting.ListDiscussionsItemComponent">
-  <li class="collection-item">
+  <li {{class 'collection-item' closed}}>
     <input type="checkbox" id="meeting-discussion-{{_id}}" onChange {{checked}} />
     <label for="meeting-discussion-{{_id}}" class="left"></label>
     <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>

@@ -60,7 +60,7 @@
 </template>
 
 <template name="Meeting.DiscussionsListItemComponent">
-  <li class="collection-item">
+  <li {{class 'collection-item' closed}}>
     {{#if canEdit}}
       <button type="button" class="btn-flat waves-effect waves-light secondary-content metadata-button" onClick>{{displayLength}}</button>
     {{else}}

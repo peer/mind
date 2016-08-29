@@ -19,7 +19,7 @@
 </template>
 
 <template name="Discussion.ListItemComponent">
-  <li class="collection-item">
+  <li {{class 'collection-item' closed}}>
     <div class="secondary-content metadata-button">{{displayStatus}}</div>
     <a href="{{pathFor 'Discussion.display' params=data}}" class="title">{{title}}</a>
     <p>{{pluralize commentsCount 'comment'}}&nbsp;&nbsp;•&nbsp;&nbsp;{{pluralize pointsCount 'point'}}&nbsp;&nbsp;•&nbsp;&nbsp;{{pluralize motionsCount 'motion'}}</p>

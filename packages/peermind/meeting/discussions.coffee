@@ -35,6 +35,9 @@ class Meeting.ListDiscussionsItemComponent extends UIComponent
       # TODO: If result is 0, then maybe what you see checked is not really what is stored in the database.
       #       We should rerender what is shown.
 
+  closed: ->
+    'closed' if @data()?.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+
 FlowRouter.route '/meeting/discussions/:_id',
   name: 'Meeting.discussions'
   action: (params, queryParams) ->
