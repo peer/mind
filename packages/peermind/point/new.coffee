@@ -43,7 +43,7 @@ class Point.NewComponent extends UIComponent
         event.target.reset()
 
         for component in @childComponents 'EditorComponent'
-          component.clearStoredState()
+          component.reset()
 
   categories: ->
     for category, value of Point.CATEGORY

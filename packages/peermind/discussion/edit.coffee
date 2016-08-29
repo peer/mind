@@ -37,7 +37,7 @@ class Discussion.EditFormComponent extends UIComponent
           return
 
         for component in @childComponents 'EditorComponent'
-          component.clearStoredState()
+          component.reset()
 
         FlowRouter.go 'Discussion.display',
           _id: @data()._id

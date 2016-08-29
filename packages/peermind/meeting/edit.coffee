@@ -43,7 +43,7 @@ class Meeting.EditFormComponent extends UIComponent
           return
 
         for component in @childComponents 'EditorComponent'
-          component.clearStoredState()
+          component.reset()
 
         FlowRouter.go 'Meeting.display',
           _id: @data()._id

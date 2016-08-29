@@ -33,7 +33,7 @@ class Comment.NewComponent extends UIComponent
         event.target.reset()
 
         for component in @childComponents 'EditorComponent'
-          component.clearStoredState()
+          component.reset()
 
   hasBody: ->
     # TODO: Search all descendant components, not just children.

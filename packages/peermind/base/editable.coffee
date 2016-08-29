@@ -62,4 +62,4 @@ class share.EditableMixin extends UIMixin
 
     # TODO: Search all descendant components, not just children.
     for component in @childComponents 'EditorComponent'
-      component.clearStoredState()
+      component.reset()

@@ -102,8 +102,9 @@ class EditorComponent extends UIComponent
   value: ->
     @data()?[@name] or ''
 
-  clearStoredState: ->
+  reset: ->
     delete localStorage["editor.state.#{@id}"]
+    @active false
 
   # Store editor state to local storage on every change to support resuming editing if interrupted by any reason.
   onChange: (event) ->

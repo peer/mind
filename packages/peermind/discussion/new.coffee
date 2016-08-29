@@ -26,7 +26,7 @@ class Discussion.NewComponent extends UIComponent
           return
 
         for component in @childComponents 'EditorComponent'
-          component.clearStoredState()
+          component.reset()
 
         FlowRouter.go 'Discussion.display',
           _id: documentId
