@@ -6,10 +6,17 @@ class EditorComponent extends UIComponent
 
     _.extend @, _.pick (kwargs?.hash or {}), 'id', 'name', 'label', 'autofocus'
 
-  onRendered: ->
+    throw new Error "Missing 'id'." unless @id
+    throw new Error "Missing 'name'." unless @name
+
+  onCreated: ->
     super
 
-    return unless @id
+    @active = new ReactiveField false
+    @focused = new ReactiveField false
+
+  onRendered: ->
+    super
 
     state = localStorage["editor.state.#{@id}"]
 
@@ -27,6 +34,8 @@ class EditorComponent extends UIComponent
       'click .select-file-link': @onSelectFileClick
       'change .select-file': @onSelectFileChange
       'trix-change': @onChange
+      'trix-focus': @onFocus
+      'trix-blur': @onBlur
 
   onAttachmentAdd: (event) ->
     attachment = event.originalEvent.attachment
@@ -92,19 +101,34 @@ class EditorComponent extends UIComponent
     @data()?[@name] or ''
 
   clearStoredState: ->
-    return unless @id
-
     delete localStorage["editor.state.#{@id}"]
 
   # Store editor state to local storage on every change to support resuming editing if interrupted by any reason.
   onChange: (event) ->
-    return unless @id
-
     editor = @editor()
 
     return unless editor
 
     localStorage["editor.state.#{@id}"] = JSON.stringify editor
+
+  onFocus: (event) ->
+    @focused true
+    @active true
+
+  onBlur: (event) ->
+    @focused false
+    @active false unless @hasContent()
+
+  classes: ->
+    classes = []
+    classes.push 'focused' if @focused()
+    classes.push 'active' if @active()
+    classes
+
+  hasContent: ->
+    # Does editor has at least some text content or a figure?
+    $body = $($.parseHTML(@$("##{@id}").val()))
+    $body.text() or $body.has('figure').length
 
 class EditorComponent.Toolbar extends UIComponent
   @register 'EditorComponent.Toolbar'

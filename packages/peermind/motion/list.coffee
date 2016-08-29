@@ -82,9 +82,8 @@ class Motion.ListItemComponent extends UIComponent
         onSuccess()
 
   hasBody: ->
-    # We require body to have at least some text content or a figure.
-    $body = $($.parseHTML(@$('[name="body"]').val()))
-    $body.text() or $body.has('figure').length
+    # TODO: Search all descendant components, not just children.
+    _.every(component.hasContent() for component in @childComponents 'EditorComponent')
 
   motionPassed: ->
     tally = Tally.documents.findOne

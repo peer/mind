@@ -2,6 +2,9 @@
 
 .drop-file-hint
   color $input-border-color
+  margin $input-margin
+  // Because we have an editor above the hint.
+  margin-top 5px
 
   .select-file
     display none
@@ -28,3 +31,32 @@
   img
     max-width 100%
     height auto
+
+.input-field
+  trix-editor
+    background-color transparent
+    border none
+    border-bottom $input-border
+    border-radius 0
+    outline none
+    margin $input-margin
+    // Because we have a hint for attachments below the editor.
+    margin-bottom 0
+    padding $input-padding
+    box-shadow none
+    box-sizing content-box
+    transition $input-transition
+
+  label.editor
+    top 2.65rem
+
+  .active label.editor
+    transform translateY(-300%)
+
+  .focused
+    label.editor
+      color $input-focus-color
+
+    trix-editor
+      border-color $input-focus-color
+      box-shadow 0 1px 0 0 $input-focus-color

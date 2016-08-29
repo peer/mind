@@ -36,6 +36,5 @@ class Motion.NewComponent extends UIComponent
           component.clearStoredState()
 
   hasBody: ->
-    # We require body to have at least some text content or a figure.
-    $body = $($.parseHTML(@$('[name="body"]').val()))
-    $body.text() or $body.has('figure').length
+    # TODO: Search all descendant components, not just children.
+    _.every(component.hasContent() for component in @childComponents 'EditorComponent')
