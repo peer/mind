@@ -2,7 +2,7 @@
   {{#if notFound}}
     {{> NotFoundComponent}}
   {{else}}
-    {{#if canEdit}}
+    {{#if canClose}}
       <div class="fixed-action-btn">
         <a href="{{pathFor 'Discussion.close' params=discussion}}" class="btn-floating btn-large waves-effect waves-light red">
           <i class="large material-icons">stop</i>
