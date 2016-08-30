@@ -25,8 +25,10 @@ class Discussion.EditFormComponent extends UIComponent
   onSubmit: (event) ->
     event.preventDefault()
 
+    discussionId = @data()._id
+
     Meteor.call 'Discussion.update',
-      _id: @data()._id
+      _id: discussionId
       title: @$('[name="title"]').val()
       description: @$('[name="description"]').val()
     ,
@@ -43,7 +45,7 @@ class Discussion.EditFormComponent extends UIComponent
 
         # TODO: If we came here from closing discussion view, we should go back to that.
         FlowRouter.go 'Discussion.display',
-          _id: @data()._id
+          _id: discussionId
 
 FlowRouter.route '/discussion/edit/:_id',
   name: 'Discussion.edit'
