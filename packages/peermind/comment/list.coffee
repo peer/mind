@@ -88,5 +88,5 @@ class Comment.ListItemComponent extends UIComponent
     @ancestorComponent(Comment.ListComponent)?.discussionIsClosed()
 
   upvotingDisabled: ->
-    # TODO: We disable voting once discussion is closed even if we allow users to still post comments. Could we do something else?
+    # TODO: We disable upvoting once discussion is closed even if we allow users to still post comments. Could we do something else?
     not (@discussionIsOpen() and not @discussionIsClosed())
