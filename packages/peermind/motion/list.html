@@ -1,9 +1,7 @@
 <template name="Motion.ListComponent">
   {{#if discussionExists}}
     <div class="section">
-      {{#each motions}}
-        {{> Motion.ListItemComponent}}
-      {{else}}
+      {{#unless motions.exists}}
         <div class="row">
           <div class="col s12 center-align grey-text balance-text">
             {{#if discussionIsClosed}}
@@ -13,7 +11,36 @@
             {{/if}}
           </div>
         </div>
-      {{/each}}
+      {{else}}
+        {{#if discussionIsClosed}}
+          <div class="row">
+            <div class="col s12">
+              <h5>Passing motions</h5>
+              {{#each passingMotions}}
+                {{> Motion.ListItemComponent}}
+              {{else}}
+                <p class="grey-text">
+                  No motion has passed.
+                </p>
+              {{/each}}
+            </div>
+          </div>
+          {{#if otherMotions.exists}}
+            <div class="row">
+              <div class="col s12">
+                <h5>Other motions</h5>
+                {{#each otherMotions}}
+                  {{> Motion.ListItemComponent}}
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
+        {{else}}
+          {{#each motions}}
+            {{> Motion.ListItemComponent}}
+          {{/each}}
+        {{/if}}
+      {{/unless}}
     </div>
     {{> Motion.NewComponent}}
   {{/if}}

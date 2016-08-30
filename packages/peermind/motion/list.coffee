@@ -25,6 +25,30 @@ class Motion.ListComponent extends UIComponent
         # The oldest first.
         createdAt: 1
 
+  passingMotions: ->
+    passingMotions = _.pluck Discussion.documents.findOne(@currentDiscussionId(), fields: passingMotions: 1)?.passingMotions or [], '_id'
+
+    Motion.documents.find
+      _id:
+        $in: passingMotions
+      'discussion._id': @currentDiscussionId()
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
+
+  otherMotions: ->
+    passingMotions = _.pluck Discussion.documents.findOne(@currentDiscussionId(), fields: passingMotions: 1)?.passingMotions or [], '_id'
+
+    Motion.documents.find
+      _id:
+        $nin: passingMotions
+      'discussion._id': @currentDiscussionId()
+    ,
+      sort:
+        # The oldest first.
+        createdAt: 1
+
   discussionExists: ->
     Discussion.documents.exists @currentDiscussionId()
 
