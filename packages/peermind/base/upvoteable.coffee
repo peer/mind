@@ -5,10 +5,10 @@ class UpvoteableButton extends UIComponent
     super
 
     @canUpvote = new ComputedField =>
-      'upvote' if @data() and User.hasPermission(User.PERMISSIONS.UPVOTE) and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id') and @upvotingDisabled()
+      'upvote' if @data() and User.hasPermission(User.PERMISSIONS.UPVOTE) and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id') and not @upvotingDisabled()
 
     @canRemoveUpvote = new ComputedField =>
-      'remove-upvote' if @data() and Meteor.userId() and Meteor.userId() isnt @data().author._id and Meteor.userId() in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id') and @upvotingDisabled()
+      'remove-upvote' if @data() and Meteor.userId() and Meteor.userId() isnt @data().author._id and Meteor.userId() in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id') and not @upvotingDisabled()
 
   upvoteTitle: ->
     return if @canUpvote() or @canRemoveUpvote()
