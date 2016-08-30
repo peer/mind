@@ -120,6 +120,8 @@ class Motion.ListItemComponent extends UIComponent
   renderExtraMetadataButtons: (parentComponent, metadataComponent) ->
     return null if @noExtraMetadataButtons
 
+    return null if not (@discussionIsOpen() and not @discussionIsClosed())
+
     Motion.ExtraMetadataButtonsComponent.renderComponent parentComponent
 
   discussionIsOpen: ->
