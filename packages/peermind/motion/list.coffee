@@ -1,3 +1,9 @@
+STATUS_ORDER = {}
+STATUS_ORDER[Motion.STATUS.DRAFT] = 0
+STATUS_ORDER[Motion.STATUS.OPEN] = 1
+STATUS_ORDER[Motion.STATUS.CLOSED] = 2
+STATUS_ORDER[Motion.STATUS.WITHDRAWN] = 3
+
 class Motion.ListComponent extends UIComponent
   @register 'Motion.ListComponent'
 
@@ -21,9 +27,13 @@ class Motion.ListComponent extends UIComponent
     Motion.documents.find
       'discussion._id': @currentDiscussionId()
     ,
-      sort:
+      sort: (a, b) =>
+        # In ascending order.
+        diff = STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
+        return diff if diff isnt 0
+
         # The oldest first.
-        createdAt: 1
+        a.createdAt.valueOf() - b.createdAt.valueOf()
 
   passingMotions: ->
     passingMotions = _.pluck Discussion.documents.findOne(@currentDiscussionId(), fields: passingMotions: 1)?.passingMotions or [], '_id'
