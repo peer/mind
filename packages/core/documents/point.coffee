@@ -8,6 +8,7 @@ class Point extends share.UpvotableDocument
   #   avatar
   # discussion:
   #   _id
+  #   status
   # body: the latest version of the body
   # bodyDisplay: HTML content of the body without tags needed for editing
   # bodyAttachments: list of
@@ -37,7 +38,7 @@ class Point extends share.UpvotableDocument
           return [] unless lastChange and 'category' of lastChange
           [fields._id, lastChange.category or Point.CATEGORY.OTHER]
         # We override this field with one with a reverse field.
-        discussion: @ReferenceField Discussion, [], true, 'points', []
+        discussion: @ReferenceField Discussion, ['status'], true, 'points', []
 
   @CATEGORY:
     IN_FAVOR: 'infavor'

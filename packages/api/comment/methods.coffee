@@ -3,10 +3,18 @@ Meteor.methods
     # TODO: Move check into newUpvotable.
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.COMMENT_NEW
 
-    share.newUpvotable Comment, document,
-      body: Match.NonEmptyString
-      discussion:
-        _id: Match.DocumentId
+    share.newUpvotable
+      documentClass: Comment
+      document: document
+      match:
+        body: Match.NonEmptyString
+        discussion:
+          _id: Match.DocumentId
+      extraChecks: (user, discussion) ->
+        throw new Meteor.Error 'invalid-request', "Discussion is not open." if discussion.status is Discussion.STATUS.DRAFT
+        # In contrast with points and motions, we allow comments to be made for closed
+        # discussions, but we display a message warning an user that they should consider
+        # opening a new discussion instead. Only for drafts we do not allow commenting.
 
   'Comment.upvote': (commentId) ->
     share.upvoteUpvotable Comment, commentId

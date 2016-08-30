@@ -2,12 +2,14 @@ Meteor.methods
   'Motion.new': (document) ->
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.MOTION_NEW
 
-    share.newUpvotable Motion, document,
-      body: Match.NonEmptyString
-      discussion:
-        _id: Match.DocumentId
-    ,
-      (user, doc) ->
+    share.newUpvotable
+      documentClass: Motion
+      document: document
+      match:
+        body: Match.NonEmptyString
+        discussion:
+          _id: Match.DocumentId
+      extend: (user, doc) ->
         _.extend doc,
           votingOpenedBy: null
           votingOpenedAt: null
@@ -17,6 +19,9 @@ Meteor.methods
           withdrawnAt: null
           majority: null
           status: Motion.STATUS.DRAFT
+      extraChecks: (user, discussion) ->
+        throw new Meteor.Error 'invalid-request', "Discussion is not open." if discussion.status is Discussion.STATUS.DRAFT
+        throw new Meteor.Error 'invalid-request', "Discussion is closed." if discussion.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Motion.upvote': (pointId) ->
     share.upvoteUpvotable Motion, pointId,

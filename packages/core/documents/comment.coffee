@@ -8,6 +8,7 @@ class Comment extends share.UpvotableDocument
   #   avatar
   # discussion:
   #   _id
+  #   status
   # body: the latest version of the body
   # bodyDisplay: HTML content of the body without tags needed for editing
   # bodyAttachments: list of
@@ -30,7 +31,7 @@ class Comment extends share.UpvotableDocument
     fields: (fields) =>
       _.extend fields,
         # We override this field with one with a reverse field.
-        discussion: @ReferenceField Discussion, [], true, 'comments', []
+        discussion: @ReferenceField Discussion, ['status'], true, 'comments', []
 
 if Meteor.isServer
   Comment.Meta.collection._ensureIndex

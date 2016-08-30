@@ -3,16 +3,21 @@ Meteor.methods
     # TODO: Move check into newUpvotable.
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.POINT_NEW
 
-    share.newUpvotable Point, document,
-      body: Match.NonEmptyString
-      discussion:
-        _id: Match.DocumentId
-      category: Match.Enumeration String, Point.CATEGORY
-    ,
-      (user, doc) ->
+    share.newUpvotable
+      documentClass: Point
+      document: document
+      match:
+        body: Match.NonEmptyString
+        discussion:
+          _id: Match.DocumentId
+        category: Match.Enumeration String, Point.CATEGORY
+      extend: (user, doc) ->
         doc.category = document.category
         doc.changes[0].category = document.category
         doc
+      extraChecks: (user, discussion) ->
+        throw new Meteor.Error 'invalid-request', "Discussion is not open." if discussion.status is Discussion.STATUS.DRAFT
+        throw new Meteor.Error 'invalid-request', "Discussion is closed." if discussion.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Point.upvote': (pointId) ->
     share.upvoteUpvotable Point, pointId

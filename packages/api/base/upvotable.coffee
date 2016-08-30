@@ -1,16 +1,17 @@
-share.newUpvotable = (documentClass, document, match, extend) ->
+share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
   check document, match
 
   extend ?= (user, doc) -> doc
+  extraChecks ?= (user, discussion) ->
 
   user = Meteor.user User.REFERENCE_FIELDS()
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-  discussion = Discussion.documents.findOne document.discussion._id,
-    fields:
-      _id: 1
+  discussion = Discussion.documents.findOne document.discussion._id
 
   throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
+
+  extraChecks user, discussion
 
   document.body = documentClass.sanitize.sanitizeHTML document.body
 
