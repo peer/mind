@@ -3,7 +3,7 @@
     <div class="section">
       {{#if inFavorPoints.exists}}
         <ul class="collection with-header z-depth-1">
-          <li class="collection-header"><h4>In favor</h4></li>
+          <li class="collection-header"><h5>In favor</h5></li>
           {{#each inFavorPoints}}
             {{> Point.ListItemComponent}}
           {{/each}}
@@ -11,7 +11,7 @@
       {{/if}}
       {{#if againstPoints.exists}}
         <ul class="collection with-header z-depth-1">
-          <li class="collection-header"><h4>Against</h4></li>
+          <li class="collection-header"><h5>Against</h5></li>
           {{#each againstPoints}}
             {{> Point.ListItemComponent}}
           {{/each}}
@@ -19,7 +19,7 @@
       {{/if}}
       {{#if otherPoints.exists}}
         <ul class="collection with-header z-depth-1">
-          <li class="collection-header"><h4>Other</h4></li>
+          <li class="collection-header"><h5>Other</h5></li>
           {{#each otherPoints}}
             {{> Point.ListItemComponent}}
           {{/each}}
