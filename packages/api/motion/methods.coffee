@@ -45,6 +45,10 @@ Meteor.methods
       majority: null
       status: Motion.STATUS.DRAFT
 
+  # A discussion cannot be closed without all motions be closed (closed voting or withdrawn) first.
+  # But we do not allow editing of motions after voting has been started or motion withdrawn,
+  # so we effectively already do not allow editing of motions for closed discussions.
+  # Similar reasoning holds for other methods for motions.
   'Motion.update': (document) ->
     check document,
       _id: Match.DocumentId

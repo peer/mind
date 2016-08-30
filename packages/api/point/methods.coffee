@@ -25,6 +25,8 @@ Meteor.methods
   'Point.removeUpvote': (pointId) ->
     share.removeUpvoteUpvotable Point, pointId
 
+  # We allow changing points for closed discussions (one should be able to edit the record to correct it).
+  # TODO: What to do if non-moderators will be able to create points themselves?
   'Point.update': (document) ->
     check document,
       _id: Match.DocumentId

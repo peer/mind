@@ -61,6 +61,8 @@ Meteor.methods
 
     documentId
 
+  # We allow changing discussions even after they have been closed (one should be able to edit the record to correct it).
+  # TODO: Should only moderators be able to do edit once a discussion is closed and not also the author of the discussion?
   'Discussion.update': (document) ->
     check document,
       _id: Match.DocumentId

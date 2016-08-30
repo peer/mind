@@ -22,6 +22,8 @@ Meteor.methods
   'Comment.removeUpvote': (commentId) ->
     share.removeUpvoteUpvotable Comment, commentId
 
+  # We allow changing comments for closed discussions (one should be able to edit the record to correct it).
+  # TODO: Should we allow editing for closed discussions only for comments made in the name of an user? Or just by moderators?
   'Comment.update': (document) ->
     check document,
       _id: Match.DocumentId
