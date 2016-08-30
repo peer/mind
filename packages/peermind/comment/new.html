@@ -8,6 +8,15 @@
               {{> EditorComponent args name='body' id=($join '-' 'new-comment-description' currentDiscussionId) label='Comment'}}
             </div>
           </div>
+          {{#if discussionIsClosed}}
+            <div class="center-align success card-panel">
+              {{#if canNewDiscussion}}
+                This discussion is closed. Consider opening a <a href="{{pathFor 'Discussion.new'}}">new discussion</a> instead of commenting here.
+              {{else}}
+                Before commenting consider that this discussion is closed.
+              {{/if}}
+            </div>
+          {{/if}}
           <div class="row">
             <div class="input-field col s12 center-align">
               <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Make a comment</button>
