@@ -20,10 +20,14 @@ Meteor.methods
         throw new Meteor.Error 'invalid-request', "Discussion is closed." if discussion.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Point.upvote': (pointId) ->
-    share.upvoteUpvotable Point, pointId
+    share.upvoteUpvotable Point, pointId,
+      'discussion.status':
+        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Point.removeUpvote': (pointId) ->
-    share.removeUpvoteUpvotable Point, pointId
+    share.removeUpvoteUpvotable Point, pointId,
+      'discussion.status':
+        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   # We allow changing points for closed discussions (one should be able to edit the record to correct it).
   # TODO: What to do if non-moderators will be able to create points themselves?

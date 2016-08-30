@@ -33,6 +33,10 @@ Meteor.methods
       withdrawnAt: null
       majority: null
       status: Motion.STATUS.DRAFT
+      # Not really needed because motions can be made only on non-draft discussions, and while
+      # a motion is in draft status, discussions cannot be closed anyway.
+      'discussion.status':
+        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Motion.removeUpvote': (pointId) ->
     share.removeUpvoteUpvotable Motion, pointId,
@@ -44,6 +48,10 @@ Meteor.methods
       withdrawnAt: null
       majority: null
       status: Motion.STATUS.DRAFT
+      # Not really needed because motions can be made only on non-draft discussions, and while
+      # a motion is in draft status, discussions cannot be closed anyway.
+      'discussion.status':
+        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   # A discussion cannot be closed without all motions be closed (closed voting or withdrawn) first.
   # But we do not allow editing of motions after voting has been started or motion withdrawn,
