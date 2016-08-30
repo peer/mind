@@ -80,3 +80,13 @@ class Comment.ListItemComponent extends UIComponent
 
     _id: data._id
     _type: data.constructor.Meta._name
+
+  discussionIsOpen: ->
+    @ancestorComponent(Comment.ListComponent)?.discussionIsOpen()
+
+  discussionIsClosed: ->
+    @ancestorComponent(Comment.ListComponent)?.discussionIsClosed()
+
+  upvotingDisabled: ->
+    # TODO: We disable voting once discussion is closed even if we allow users to still post comments. Could we do something else?
+    not (@discussionIsOpen() and not @discussionIsClosed())

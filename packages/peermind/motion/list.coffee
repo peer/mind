@@ -122,6 +122,15 @@ class Motion.ListItemComponent extends UIComponent
 
     Motion.ExtraMetadataButtonsComponent.renderComponent parentComponent
 
+  discussionIsOpen: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsOpen()
+
+  discussionIsClosed: ->
+    @ancestorComponent(Motion.ListComponent)?.discussionIsClosed()
+
+  upvotingDisabled: ->
+    not (@discussionIsOpen() and not @discussionIsClosed())
+
 class Motion.ExtraMetadataButtonsComponent extends UIComponent
   @register 'Motion.ExtraMetadataButtonsComponent'
 

@@ -5,13 +5,15 @@ class UpvoteableButton extends UIComponent
     super
 
     @canUpvote = new ComputedField =>
-      'upvote' if @data() and User.hasPermission(User.PERMISSIONS.UPVOTE) and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
+      'upvote' if @data() and User.hasPermission(User.PERMISSIONS.UPVOTE) and Meteor.userId() isnt @data().author._id and Meteor.userId() not in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id') and @upvotingDisabled()
 
     @canRemoveUpvote = new ComputedField =>
-      'remove-upvote' if @data() and Meteor.userId() and Meteor.userId() isnt @data().author._id and Meteor.userId() in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id')
+      'remove-upvote' if @data() and Meteor.userId() and Meteor.userId() isnt @data().author._id and Meteor.userId() in _.pluck(_.pluck(@data().upvotes or [], 'author'), '_id') and @upvotingDisabled()
 
   upvoteTitle: ->
     return if @canUpvote() or @canRemoveUpvote()
+
+    return title: "Upvoting is disabled for this #{@data().verboseName()}" if @upvotingDisabled()
 
     return title: "Sign in to upvote" unless Meteor.userId()
 
@@ -45,3 +47,6 @@ class UpvoteableButton extends UIComponent
         return
 
       # TODO: Should we check the result and if it is not expected show an error instead?
+
+  upvotingDisabled: ->
+    @callAncestorWith('upvotingDisabled') or false

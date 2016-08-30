@@ -127,3 +127,12 @@ class Point.ListItemComponent extends UIComponent
 
     _id: data._id
     _type: data.constructor.Meta._name
+
+  discussionIsOpen: ->
+    @ancestorComponent(Point.ListComponent)?.discussionIsOpen()
+
+  discussionIsClosed: ->
+    @ancestorComponent(Point.ListComponent)?.discussionIsClosed()
+
+  upvotingDisabled: ->
+    not (@discussionIsOpen() and not @discussionIsClosed())
