@@ -8,15 +8,18 @@
   {{/if}}
   <div class="section">
     {{#if meetings.exists}}
-      <div class="collection z-depth-1">
+      <ul class="collection z-depth-1">
         {{#each meetings}}
           {{> Meeting.ListItemComponent}}
         {{/each}}
-      </div>
+      </ul>
     {{/if}}
   </div>
 </template>
 
 <template name="Meeting.ListItemComponent">
-  <a href="{{pathFor 'Meeting.display' params=data}}" class="collection-item">{{title}} ({{formatStartEndDate startAt endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}})</a>
+  <li class="collection-item">
+    <a href="{{pathFor 'Meeting.display' params=data}}" class="title">{{title}}</a>
+    <p>{{formatStartEndDate startAt endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}</p>
+  </li>
 </template>
