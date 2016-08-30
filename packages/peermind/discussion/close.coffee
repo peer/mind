@@ -37,6 +37,11 @@ class Discussion.CloseFormComponent extends UIComponent
 
       # TODO: Should we check the result and if it is not expected show an error instead?
 
+      # TODO: We should just search for EditorComponent among descendants.
+      for rows in @childComponents 'Discussion.CloseFormRowsComponent'
+        for component in rows.childComponents 'EditorComponent'
+          component.reset()
+
       FlowRouter.go 'Discussion.display',
         _id: discussionId
 
