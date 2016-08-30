@@ -9,7 +9,8 @@ Package.onUse(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'ejson'
+    'ejson',
+    'tracker'
   ]);
 
   // 3rd party dependencies.
@@ -21,7 +22,8 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
-    'storage'
+    'storage',
+    'balancetext'
   ]);
 
   api.imply([

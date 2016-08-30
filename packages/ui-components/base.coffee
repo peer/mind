@@ -1,4 +1,13 @@
 class UIComponent extends CommonComponent
+  onRendered: ->
+    super
+
+    Tracker.afterFlush =>
+      # This does not handle all cases, for example, if text changes reactively after
+      # the component has been rendered, but "balance-text" class should be used on
+      # simple text segments anyway, so it should work in practice.
+      $.fn.balanceTextUpdate()
+
   storageUrl: (filename, kwargs) ->
     Storage.url filename
 
