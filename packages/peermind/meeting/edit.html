@@ -4,9 +4,7 @@
   {{else}}
     {{#if canEdit}}
       {{#if subscriptionsReady}}
-        {{#with meeting}}
-          {{> Meeting.EditFormComponent}}
-        {{/with}}
+        {{> Meeting.EditFormComponent meeting}}
       {{/if}}
     {{else}}
       {{> AccessDeniedComponent}}

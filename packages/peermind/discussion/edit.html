@@ -4,9 +4,7 @@
   {{else}}
     {{#if canEdit}}
       {{#if subscriptionsReady}}
-        {{#with discussion}}
-          {{> Discussion.EditFormComponent}}
-        {{/with}}
+        {{> Discussion.EditFormComponent discussion}}
       {{/if}}
     {{else}}
       {{> AccessDeniedComponent}}

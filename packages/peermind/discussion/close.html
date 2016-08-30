@@ -29,9 +29,7 @@
         {{/if}}
       </div>
       {{#if subscriptionsReady}}
-        {{#with discussion}}
-          {{> Discussion.CloseFormComponent}}
-        {{/with}}
+        {{> Discussion.CloseFormComponent discussion}}
       {{/if}}
     {{else}}
       {{> AccessDeniedComponent}}
