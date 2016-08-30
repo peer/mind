@@ -45,3 +45,14 @@
 <template name="Discussion.EditButton">
   <a href="{{pathFor 'Discussion.edit' params=data}}" class="metadata-button waves-effect waves-light btn-flat right" title="Edit"><i class="material-icons tiny">edit</i></a>
 </template>
+
+<template name="Discussion.MetadataTimestampComponent">
+  {{#if discussionOpenedAt}}
+    <span class="timestamp" title="{{formatDate discussionOpenedAt DEFAULT_DATETIME_FORMAT}}">opened {{fromNow discussionOpenedAt}}</span>
+    {{#if discussionClosedAt}}
+      <span class="timestamp" title="{{formatDate discussionClosedAt DEFAULT_DATETIME_FORMAT}}">closed {{fromNow discussionClosedAt}}</span>
+    {{/if}}
+  {{else}}
+    <span class="timestamp" title="{{formatDate createdAt DEFAULT_DATETIME_FORMAT}}">created {{fromNow createdAt}}</span>
+  {{/if}}
+</template>

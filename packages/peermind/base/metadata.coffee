@@ -25,3 +25,11 @@ class MetadataComponent extends UIComponent
     parentComponent ?= @currentComponent()
 
     @callAncestorWith('renderExtraMetadataButtons', parentComponent, @component()) or null
+
+  renderMetadataTimestamp: (parentComponent) ->
+    parentComponent ?= @currentComponent()
+
+    @callAncestorWith('renderMetadataTimestamp', parentComponent, @component()) or MetadataDefaultTimestampComponent.renderComponent parentComponent
+
+class MetadataDefaultTimestampComponent extends UIComponent
+  @register 'MetadataDefaultTimestampComponent'

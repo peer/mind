@@ -10,6 +10,10 @@
       {{/unless}}
       {{author.username}}
     </div>
-    <span class="timestamp" title="{{formatDate createdAt DEFAULT_DATETIME_FORMAT}}">{{fromNow createdAt}}</span>
+    {{> renderMetadataTimestamp}}
   </div>
+</template>
+
+<template name="MetadataDefaultTimestampComponent">
+  <span class="timestamp" title="{{formatDate createdAt DEFAULT_DATETIME_FORMAT}}">{{fromNow createdAt}}</span>
 </template>

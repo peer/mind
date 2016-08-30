@@ -10,8 +10,14 @@ class Discussion.DisplayComponent extends Discussion.OneComponent
     _id: data._id
     _type: data.constructor.Meta._name
 
+  renderMetadataTimestamp: (parentComponent, metadataComponent) ->
+    Discussion.MetadataTimestampComponent.renderComponent parentComponent
+
 class Discussion.EditButton extends UIComponent
   @register 'Discussion.EditButton'
+
+class Discussion.MetadataTimestampComponent extends UIComponent
+  @register 'Discussion.MetadataTimestampComponent'
 
 FlowRouter.route '/discussion/:_id',
   name: 'Discussion.display'
