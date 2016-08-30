@@ -38,7 +38,7 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
       _id:
         $in: _.pluck discussions, '_id'
     ,
-      sort: (a, b) ->
+      sort: (a, b) =>
         order[a._id] - order[b._id]
 
   expandableEventData: ->
