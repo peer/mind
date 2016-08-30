@@ -62,10 +62,10 @@ Meteor.methods
 
     throw new Meteor.Error 'not-found', "Storage file '#{options.documentId}' cannot be found." unless storageFile
 
-    throw new Meteor.Error 'invalid', "Invalid file." unless file.size is storageFile.size
-    throw new Meteor.Error 'invalid', "Invalid file." unless file.start + file.data.length is file.end
-    throw new Meteor.Error 'invalid', "Invalid file." unless file.start + file.data.length <= file.size
-    throw new Meteor.Error 'invalid', "Invalid file." unless file.data.length is StorageFile.UPLOAD_CHUNK_SIZE or (file.data.length < StorageFile.UPLOAD_CHUNK_SIZE and file.start + StorageFile.UPLOAD_CHUNK_SIZE > file.size)
+    throw new Meteor.Error 'invalid-request', "Invalid file." unless file.size is storageFile.size
+    throw new Meteor.Error 'invalid-request', "Invalid file." unless file.start + file.data.length is file.end
+    throw new Meteor.Error 'invalid-request', "Invalid file." unless file.start + file.data.length <= file.size
+    throw new Meteor.Error 'invalid-request', "Invalid file." unless file.data.length is StorageFile.UPLOAD_CHUNK_SIZE or (file.data.length < StorageFile.UPLOAD_CHUNK_SIZE and file.start + StorageFile.UPLOAD_CHUNK_SIZE > file.size)
 
     Storage.saveMeteorFile file, storageFile.filename
 
