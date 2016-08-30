@@ -37,6 +37,14 @@
         <div class="center-align success card-panel balance-text">
           This discussion is closed.
         </div>
+        {{#if discussion.closingNoteDisplay}}
+          <div class="row">
+            <div class="col s12 trix-content">
+              {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+              {{{discussion.closingNoteDisplay}}}
+            </div>
+          </div>
+        {{/if}}
       {{/if}}
     </div>
   {{/if}}
