@@ -20,10 +20,8 @@ class EditorComponent extends UIComponent
 
     state = localStorage["editor.state.#{@id}"]
 
-    return unless state
-
     # Restores any stored state.
-    @editor()?.loadJSON JSON.parse state
+    @editor()?.loadJSON JSON.parse state if state
 
     @active true if @hasContent()
 
