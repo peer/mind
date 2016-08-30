@@ -8,13 +8,33 @@
   {{/if}}
   <div class="section">
     {{#if discussionsWithoutMeeting.exists}}
-      <ul class="collection z-depth-1">
-        {{#each discussionsWithoutMeeting}}
-          {{> Discussion.ListItemComponent}}
-        {{/each}}
-      </ul>
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            {{#each discussionsWithoutMeeting}}
+              {{> Discussion.ListItemComponent}}
+            {{/each}}
+          </ul>
+        </div>
+      </div>
     {{/if}}
-    {{! TODO: Add lists for each meeting, collections with header. }}
+    {{#each meeting in meetings}}
+      {{#let discussions=(discussionsForMeeting meeting)}}
+        {{#if discussions.exists}}
+          <div class="row">
+            <div class="col s12">
+              <h4><a href="{{pathFor 'Meeting.display' params=meeting}}" class="title">{{meeting.title}}</a></h4>
+              <p>{{formatStartEndDate meeting.startAt meeting.endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}</p>
+              <ul class="collection z-depth-1">
+                {{#each discussions}}
+                  {{> Discussion.ListItemComponent}}
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        {{/if}}
+      {{/let}}
+    {{/each}}
   </div>
 </template>
 

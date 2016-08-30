@@ -20,6 +20,30 @@ class Discussion.ListComponent extends UIComponent
         # The newest first.
         createdAt: -1
 
+  discussionsForMeeting: (meeting) ->
+    meeting = null if meeting instanceof Spacebars.kw
+
+    discussions = meeting?.discussions or []
+    discussions = _.sortBy discussions, 'order'
+    discussions = (_id: item.discussion._id, order: item.order for item in discussions)
+
+    order = {}
+    for discussion in discussions
+      order[discussion._id] = discussion.order
+
+    Discussion.documents.find
+      _id:
+        $in: _.pluck discussions, '_id'
+    ,
+      sort: (a, b) =>
+        order[a._id] - order[b._id]
+
+  meetings: ->
+    Meeting.documents.find {},
+      sort:
+        # The newest first.
+        startAt: -1
+
 class Discussion.ListItemComponent extends UIComponent
   @register 'Discussion.ListItemComponent'
 
