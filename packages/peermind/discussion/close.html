@@ -39,28 +39,10 @@
 
 <template name="Discussion.CloseFormComponent">
   {{#if canBeClosed}}
-    <div class="section close-motions">
+    <div class="section">
       <div class="row">
         <form class="col s12" onSubmit>
-          <div class="row">
-            <div class="input-field col s12">
-              {{> EditorComponent args name='closingNote' id=($join '-' 'close-discussion-closing-note' _id) label='Closing note'}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <label class="active">Passing motions</label>
-              {{#each motions}}
-                <input type="checkbox" id="discussion-close-{{_id}}" name="passingMotions" value="{{_id}}" />
-                <label for="discussion-close-{{_id}}" class="left"></label>
-                {{> Motion.ListItemComponent args noExtraMetadataButtons=true}}
-              {{else}}
-                <p>
-                  No motion has been proposed.
-                </p>
-              {{/each}}
-            </div>
-          </div>
+          {{> Discussion.CloseFormRowsComponent}}
           <div class="row">
             <div class="input-field col s12 center-align">
               <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Close discussion</button>
@@ -87,4 +69,26 @@
       </div>
     </div>
   {{/if}}
+</template>
+
+<template name="Discussion.CloseFormRowsComponent">
+  <div class="row">
+    <div class="input-field col s12">
+      {{> EditorComponent args name='closingNote' id=($join '-' 'close-discussion-closing-note' _id) label='Closing note'}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12 close-motions">
+      <label class="active">Passing motions</label>
+      {{#each motions}}
+        <input type="checkbox" id="discussion-close-{{_id}}" name="passingMotions" value="{{_id}}" />
+        <label for="discussion-close-{{_id}}" class="left"></label>
+        {{> Motion.ListItemComponent args noExtraMetadataButtons=true}}
+      {{else}}
+        <p>
+          No motion has been proposed.
+        </p>
+      {{/each}}
+    </div>
+  </div>
 </template>

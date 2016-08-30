@@ -13,21 +13,6 @@ class Discussion.CloseComponent extends Discussion.OneComponent
 class Discussion.CloseFormComponent extends UIComponent
   @register 'Discussion.CloseFormComponent'
 
-  onCreated: ->
-    super
-
-    @autorun (computation) =>
-      discussionId = @data()?._id
-      @subscribe 'Motion.list', discussionId if discussionId
-
-  motions: ->
-    Motion.documents.find
-      'discussion._id': @data()?._id
-    ,
-      sort:
-        # The newest first.
-        createdAt: -1
-
   STATUS: ->
     Discussion.STATUS
 
@@ -54,6 +39,24 @@ class Discussion.CloseFormComponent extends UIComponent
 
       FlowRouter.go 'Discussion.display',
         _id: discussionId
+
+class Discussion.CloseFormRowsComponent extends UIComponent
+  @register 'Discussion.CloseFormRowsComponent'
+
+  onCreated: ->
+    super
+
+    @autorun (computation) =>
+      discussionId = @data()?._id
+      @subscribe 'Motion.list', discussionId if discussionId
+
+  motions: ->
+    Motion.documents.find
+      'discussion._id': @data()?._id
+    ,
+      sort:
+        # The newest first.
+        createdAt: -1
 
 FlowRouter.route '/discussion/close/:_id',
   name: 'Discussion.close'
