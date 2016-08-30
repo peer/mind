@@ -45,7 +45,7 @@ Meteor.methods
       motionsCount: 0
       commentsCount: 0
       pointsCount: 0
-      # For now we are always starting a discussion already in an open state.
+      # TODO: For now we are always starting a discussion already in an open state.
       status: Discussion.STATUS.OPEN
 
     assert documentId
