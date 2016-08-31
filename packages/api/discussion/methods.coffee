@@ -63,6 +63,12 @@ Meteor.methods
 
   # We allow changing discussions even after they have been closed (one should be able to edit the record to correct it).
   # TODO: Should only moderators be able to do edit once a discussion is closed and not also the author of the discussion?
+  # There is a question how many fields should be in each a changes entry. If only one field has changed, should only that
+  # field be in a changes entry? But we cannot make a query which based on state at the time of the query populates
+  # new changes entry to have only changed fields and not all fields we are potentially changing. On the other hand,
+  # we could always have each change entry have only one changed field, and then add multiple changes entries for all
+  # changes happened at once. Currently, code adds up to two entries per this method call, with multiple fields being
+  # always added for each entry.
   'Discussion.update': (document, passingMotions, closingNote) ->
     check document,
       _id: Match.DocumentId
