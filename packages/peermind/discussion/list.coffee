@@ -14,9 +14,9 @@ class Discussion.ListComponent extends UIComponent
 
   discussionsWithoutMeeting: ->
     Discussion.documents.find _.extend(@showClosedDiscussionsQuery(),
-      # Discussions which do not have even the first meeting list item.
-      'meetings.0':
-        $exists: false
+      # Or discussions which are not part of any meeting which is being shown.
+      'meetings._id':
+        $nin: @meetings().map((meeting, i, cursor) => meeting._id)
     ),
       sort:
         # The newest first.
@@ -41,7 +41,7 @@ class Discussion.ListComponent extends UIComponent
         order[a._id] - order[b._id]
 
   meetings: ->
-    Meeting.documents.find {},
+    Meeting.documents.find @showPastMeetingsQuery(),
       sort:
         # The newest first.
         startAt: -1
@@ -57,6 +57,13 @@ class Discussion.ListComponent extends UIComponent
     else
       status:
         $in: [Discussion.STATUS.OPEN, Discussion.STATUS.MOTIONS, Discussion.STATUS.VOTING]
+
+  showPastMeetingsQuery: ->
+    if @showClosedDiscussions()
+      {}
+    else
+      endAt:
+        $gte: new Date()
 
 class Discussion.ListItemComponent extends UIComponent
   @register 'Discussion.ListItemComponent'
