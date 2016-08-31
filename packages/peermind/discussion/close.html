@@ -81,7 +81,7 @@
     <div class="input-field col s12 close-motions">
       <label class="active">Passing motions</label>
       {{#each motions}}
-        <input type="checkbox" id="discussion-close-{{_id}}" name="passingMotions" value="{{_id}}" />
+        <input type="checkbox" id="discussion-close-{{_id}}" name="passingMotions" value="{{_id}}" {{checked}} />
         <label for="discussion-close-{{_id}}" class="left"></label>
         {{> Motion.ListItemComponent args noExtraMetadataButtons=true}}
       {{else}}

@@ -11,6 +11,12 @@ class Discussion.EditComponent extends Discussion.OneComponent
 class Discussion.EditFormComponent extends UIComponent
   @register 'Discussion.EditFormComponent'
 
+  onCreated: ->
+    super
+
+    @canEditClose = new ComputedField =>
+      User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)
+
   onRendered: ->
     super
 
@@ -27,10 +33,20 @@ class Discussion.EditFormComponent extends UIComponent
 
     discussionId = @data()._id
 
+    passingMotions = @$('[name="passingMotions"]:checked').map((i, el) =>
+      $(el).val()
+    ).get()
+
+    closingNote = @$('[name="closingNote"]').val() or ''
+
     Meteor.call 'Discussion.update',
       _id: discussionId
       title: @$('[name="title"]').val()
       description: @$('[name="description"]').val()
+    ,
+      passingMotions
+    ,
+      closingNote
     ,
       (error, result) =>
         if error
@@ -39,6 +55,7 @@ class Discussion.EditFormComponent extends UIComponent
           return
 
         # TODO: Should we check the result and if it is not expected show an error instead?
+        #       For this method, the result is an array [changedUpdate, changedClosing].
 
         for component in @childComponents 'EditorComponent'
           component.reset()

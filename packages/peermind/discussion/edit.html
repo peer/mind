@@ -27,6 +27,17 @@
             {{> EditorComponent args name='description' id=($join '-' 'edit-discussion-description' _id) label='Description'}}
           </div>
         </div>
+        {{!-- If a discussion is closed those who can close it can edit closing information. --}}
+        {{#if $and isClosed canEditClose}}
+          <div class="row">
+            <div class="col s12">
+              <div class="center-align success card-panel balance-text">
+                This discussion is closed.
+              </div>
+            </div>
+          </div>
+          {{> Discussion.CloseFormRowsComponent}}
+        {{/if}}
         <div class="row">
           <div class="input-field col s12 center-align">
             <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Edit discussion</button>

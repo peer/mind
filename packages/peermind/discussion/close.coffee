@@ -29,7 +29,9 @@ class Discussion.CloseFormComponent extends UIComponent
       $(el).val()
     ).get()
 
-    Meteor.call 'Discussion.close', discussionId, passingMotions, @$('[name="closingNote"]').val(), (error, result) =>
+    closingNote = @$('[name="closingNote"]').val() or ''
+
+    Meteor.call 'Discussion.close', discussionId, passingMotions, closingNote, (error, result) =>
       if error
         console.error "Closing discussion error", error
         alert "Closing discussion error: #{error.reason or error}"
@@ -62,6 +64,9 @@ class Discussion.CloseFormRowsComponent extends UIComponent
       sort:
         # The newest first.
         createdAt: -1
+
+  checked: ->
+    checked: true if @currentData()?._id in _.pluck @data()?.passingMotions, '_id'
 
 FlowRouter.route '/discussion/close/:_id',
   name: 'Discussion.close'

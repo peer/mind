@@ -63,11 +63,13 @@ Meteor.methods
 
   # We allow changing discussions even after they have been closed (one should be able to edit the record to correct it).
   # TODO: Should only moderators be able to do edit once a discussion is closed and not also the author of the discussion?
-  'Discussion.update': (document) ->
+  'Discussion.update': (document, passingMotions, closingNote) ->
     check document,
       _id: Match.DocumentId
       title: Match.NonEmptyString
       description: String
+    check passingMotions, [Match.DocumentId]
+    check closingNote, String
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
@@ -76,7 +78,7 @@ Meteor.methods
 
     descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
 
-    attachments = Discussion.extractAttachments document.description
+    descriptionAttachments = Discussion.extractAttachments document.description
 
     if User.hasPermission User.PERMISSIONS.DISCUSSION_UPDATE
       permissionCheck = {}
@@ -93,7 +95,7 @@ Meteor.methods
         ]
 
     updatedAt = new Date()
-    changed = Discussion.documents.update _.extend(permissionCheck,
+    changedUpdate = Discussion.documents.update _.extend(permissionCheck,
       _id: document._id
       $or: [
         title:
@@ -108,7 +110,7 @@ Meteor.methods
         title: document.title
         description: document.description
         descriptionDisplay: descriptionDisplay
-        descriptionAttachments: ({_id} for _id in attachments)
+        descriptionAttachments: ({_id} for _id in descriptionAttachments)
       $push:
         changes:
           updatedAt: updatedAt
@@ -116,17 +118,101 @@ Meteor.methods
           title: document.title
           description: document.description
 
-    if changed
+    if changedUpdate
       StorageFile.documents.update
         _id:
-          $in: attachments
+          $in: descriptionAttachments
       ,
         $set:
           active: true
       ,
         multi: true
 
-    changed
+    closingNote = Discussion.sanitize.sanitizeHTML closingNote
+
+    closingNoteDisplay = Discussion.sanitizeForDisplay.sanitizeHTML closingNote
+
+    closingNoteAttachments = Discussion.extractAttachments closingNote
+
+    # For closed discussions users with DISCUSSION_CLOSE permission can edit information about closing state.
+    if User.hasPermission User.PERMISSIONS.DISCUSSION_CLOSE
+      permissionCheck = {}
+    else
+      permissionCheck =
+        # TODO: Find a better "no-match" query.
+        $and: [
+          _id: 'a'
+        ,
+          _id: 'b'
+        ]
+
+    query = [
+      passingMotions:
+        $not:
+          $size: passingMotions.length
+    ]
+
+    for i, passingMotionId in passingMotions
+      condition = {}
+      condition["passingMotions.#{i}._id"] =
+        $ne: passingMotionId
+      query.push condition
+
+    query.push
+      closingNote:
+        $ne: closingNote
+
+    # See comments in the Discussion.close method.
+    if Meteor.isServer and passingMotions.length
+      allCondition =
+        $all: ($elemMatch: {_id} for _id in passingMotions)
+    else
+      allCondition = {}
+
+    changedClosing = Discussion.documents.update _.extend(permissionCheck,
+      _id: document._id
+      discussionOpenedAt:
+        $ne: null
+      discussionOpenedBy:
+        $ne: null
+      discussionClosedAt:
+        $ne: null
+      discussionClosedBy:
+        $ne: null
+      status:
+        $in: [Discussion.STATUS.PASSED, Discussion.STATUS.CLOSED]
+      motions: _.extend allCondition,
+        $not:
+          $elemMatch:
+            status:
+              $nin: [Motion.STATUS.CLOSED, Motion.STATUS.WITHDRAWN]
+      $or: query
+    ),
+      $set:
+        updatedAt: updatedAt
+        passingMotions: ({_id} for _id in passingMotions)
+        closingNote: closingNote
+        closingNoteDisplay: closingNoteDisplay
+        closingNoteAttachments: ({_id} for _id in closingNoteAttachments)
+        status: if passingMotions.length then Discussion.STATUS.PASSED else Discussion.STATUS.CLOSED
+      $push:
+        changes:
+          updatedAt: updatedAt
+          author: user.getReference()
+          passingMotions: ({_id} for _id in passingMotions)
+          closingNote: closingNote
+
+    if changedClosing
+      StorageFile.documents.update
+        _id:
+          $in: closingNoteAttachments
+      ,
+        $set:
+          active: true
+      ,
+        multi: true
+
+    [changedUpdate, changedClosing]
 
   # TODO: Implement Discussion.open. For now we open discussions by default.
 
