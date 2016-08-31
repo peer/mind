@@ -4,6 +4,8 @@ class Discussion.ListComponent extends UIComponent
   onCreated: ->
     super
 
+    @showClosedDiscussions = new ReactiveField false
+
     @canNew = new ComputedField =>
       User.hasPermission User.PERMISSIONS.DISCUSSION_NEW
 
@@ -11,11 +13,11 @@ class Discussion.ListComponent extends UIComponent
     @subscribe 'Discussion.list'
 
   discussionsWithoutMeeting: ->
-    Discussion.documents.find
+    Discussion.documents.find _.extend(@showClosedDiscussionsQuery(),
       # Discussions which do not have even the first meeting list item.
       'meetings.0':
         $exists: false
-    ,
+    ),
       sort:
         # The newest first.
         createdAt: -1
@@ -31,10 +33,10 @@ class Discussion.ListComponent extends UIComponent
     for discussion in discussions
       order[discussion._id] = discussion.order
 
-    Discussion.documents.find
+    Discussion.documents.find _.extend(@showClosedDiscussionsQuery(),
       _id:
         $in: _.pluck discussions, '_id'
-    ,
+    ),
       sort: (a, b) =>
         order[a._id] - order[b._id]
 
@@ -43,6 +45,18 @@ class Discussion.ListComponent extends UIComponent
       sort:
         # The newest first.
         startAt: -1
+
+  onShowClosedDiscussions: (event) ->
+    event.preventDefault()
+
+    @showClosedDiscussions @$('[name="show-discussions"]').is(':checked')
+
+  showClosedDiscussionsQuery: ->
+    if @showClosedDiscussions()
+      {}
+    else
+      status:
+        $in: [Discussion.STATUS.OPEN, Discussion.STATUS.MOTIONS, Discussion.STATUS.VOTING]
 
 class Discussion.ListItemComponent extends UIComponent
   @register 'Discussion.ListItemComponent'

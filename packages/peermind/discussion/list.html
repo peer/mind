@@ -7,6 +7,17 @@
     </div>
   {{/if}}
   <div class="section">
+    <div class="row">
+      <div class="col s12">
+        <div class="switch right">
+          <label>
+            Show closed discussions
+            <input name="show-discussions" type="checkbox" onChange="{{onShowClosedDiscussions}}">
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div>
+    </div>
     {{#if discussionsWithoutMeeting.exists}}
       <div class="row">
         <div class="col s12">
