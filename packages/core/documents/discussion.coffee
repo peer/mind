@@ -69,7 +69,7 @@ class Discussion extends share.BaseDocument
       closingNote: @GeneratedField 'self', ['changes'], (fields) =>
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'closingNote' of lastChange
-        [fields._id, lastChange.closingNote or []]
+        [fields._id, lastChange.closingNote or '']
       descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
         [fields._id, fields.description and @sanitizeForDisplay.sanitizeHTML fields.description]
       descriptionAttachments: [
