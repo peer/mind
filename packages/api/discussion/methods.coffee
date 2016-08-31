@@ -155,6 +155,16 @@ Meteor.methods
           _id: 'b'
         ]
 
+    # This is a special case. If passingMotions is empty, $all would not match anything
+    # if we use $all: []. Moreover, Minimongo does not support $all/$elemMatch queries.
+    if Meteor.isServer and passingMotions.length
+      # We make sure that all motions passed through passingMotions are really
+      # associated with this discussion.
+      allCondition =
+        $all: ($elemMatch: {_id} for _id in passingMotions)
+    else
+      allCondition = {}
+
     closedAt = new Date()
     changed = Discussion.documents.update _.extend(permissionCheck,
       _id: discussionID
@@ -170,10 +180,7 @@ Meteor.methods
       # This also assures that all the motions provided passingMotions are of
       # the right status (there might be a race condition here though).
       status: Discussion.STATUS.OPEN
-      motions:
-        # We make sure that all motions passed through passingMotions are really
-        # associated with this discussion.
-        $all: ($elemMatch: {_id} for _id in passingMotions)
+      motions: _.extend allCondition,
         # Additionally, we check that all associated motions are or closed or
         # withdrawn. This is also a potential race condition, but hopefully
         # at least one of this or the status check above will work.
