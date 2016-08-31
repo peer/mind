@@ -10,7 +10,11 @@ this project aims to explore and improve technologies we use for decision making
 * vote delegation
 * visual feedback on decision making process and progress
 
-The project is in very early stages. Any feedback is welcome.
+The project is in early stages. Consider it a beta/prototype. Any feedback is welcome.
+
+You can use it but keep in mind that it has not yet been security audited so you should
+probably not use it for sensitive or critical decisions and where privacy of data and votes is
+important.
 
 ## Development ##
 
