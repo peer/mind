@@ -14,8 +14,11 @@ class Discussion.EditFormComponent extends UIComponent
   onCreated: ->
     super
 
-    @canEditClose = new ComputedField =>
-      User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)
+    @canOnlyEdit = new ComputedField =>
+      @data() and (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE) or (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE_OWN) and (Meteor.userId() is @data().author._id)))
+
+    @canEditClosed = new ComputedField =>
+      @data() and not @data().isOpen() and @data().isClosed() and User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)
 
   onRendered: ->
     super
@@ -33,6 +36,18 @@ class Discussion.EditFormComponent extends UIComponent
 
     discussionId = @data()._id
 
+    if @canOnlyEdit()
+      title = @$('[name="title"]').val()
+      description = @$('[name="description"]').val()
+    else
+      # If user does not have edit permissions, we pass values as they are.
+      # The server side will not update documents anyway.
+      title = @data().title
+      description = @data().description
+
+    # Similarly, if an user does not have permissions to closing data of closed discussions,
+    # that part of the form will not be rendered and these values will be blank, but it does
+    # not matter, because the server side will not update documents.
     passingMotions = @$('[name="passingMotions"]:checked').map((i, el) =>
       $(el).val()
     ).get()
@@ -41,8 +56,8 @@ class Discussion.EditFormComponent extends UIComponent
 
     Meteor.call 'Discussion.update',
       _id: discussionId
-      title: @$('[name="title"]').val()
-      description: @$('[name="description"]').val()
+      title: title
+      description: description
     ,
       passingMotions
     ,

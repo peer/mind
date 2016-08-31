@@ -23,7 +23,8 @@ class Discussion.OneComponent extends UIComponent
         share.PageTitle "Not found"
 
     @canEdit = new ComputedField =>
-      @discussion() and (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE) or (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE_OWN) and (Meteor.userId() is @discussion().author._id)))
+      # We display the same edit form if user can edit it, or if it is closed and user can close it, which we use as a permission for editing closed discussions, too.
+      @discussion() and (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE) or (User.hasPermission(User.PERMISSIONS.DISCUSSION_UPDATE_OWN) and (Meteor.userId() is @discussion().author._id)) or (not @discussion().isOpen() and @discussion().isClosed() and User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)))
 
     @canClose = new ComputedField =>
       @discussion() and @discussion().isOpen() and not @discussion().isClosed() and User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)
