@@ -78,3 +78,9 @@ else
         token: token
 
       Meteor.absoluteUrl path.substr 1
+
+if Meteor.isServer
+  # We disable all service configurations from the client. We do not use this feature.
+  # See: https://github.com/meteor/meteor/issues/7745
+  MethodHooks.before 'configureLoginService', (options) ->
+    throw new Meteor.Error 'invalid-request', "Disabled."
