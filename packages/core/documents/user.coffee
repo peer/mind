@@ -190,6 +190,23 @@ class User extends share.BaseDocument
   #   location: filename or URL
   #   selected: boolean if this is the preferred avatar
   # researchData: boolean if user consents to contributing data to a dataset
+  # profile: the latest version of the profile
+  # profileDisplay: HTML content of the profile without tags needed for editing
+  # profileAttachments: list of
+  #   _id
+  # changes: list (the last list item is the most recent one) of changes
+  #   updatedAt: timestamp of the change
+  #   author: author of the change
+  #     _id
+  #     username
+  #     avatar
+  #   profile
+
+  # We have it before @Meta because we are referencing it inside @Meta.
+  @REFERENCE_FIELDS: ->
+    _id: 1
+    username: 1
+    avatar: 1
 
   @Meta
     name: 'User'
@@ -198,6 +215,21 @@ class User extends share.BaseDocument
       # We include "avatar" field so the if it gets deleted it gets regenerated.
       fields =
         avatar: @GeneratedField 'self', ['avatar', 'avatars'], generateAvatar
+        profile: @GeneratedField 'self', ['changes'], (fields) =>
+          lastChange = fields.changes?[fields.changes?.length - 1]
+          return [] unless lastChange and 'profile' of lastChange
+          [fields._id, lastChange.profile or '']
+        profileDisplay: @GeneratedField 'self', ['profile'], (fields) =>
+          [fields._id, fields.profile and @sanitizeForDisplay.sanitizeHTML fields.profile]
+        profileAttachments: [
+          # TODO: Make it an array of references to StorageFile as well.
+          @GeneratedField 'self', ['profile'], (fields) =>
+            return [fields._id, []] unless fields.profile
+            [fields._id, ({_id} for _id in @extractAttachments fields.profile)]
+        ]
+        changes: [
+          author: @ReferenceField 'self', User.REFERENCE_FIELDS(), false
+        ]
       if __meteor_runtime_config__.SANDSTORM
         _.extend fields,
           username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
@@ -209,11 +241,6 @@ class User extends share.BaseDocument
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
       lastActivity: share.LastActivityTrigger ['services']
-
-  @REFERENCE_FIELDS: ->
-    _id: 1
-    username: 1
-    avatar: 1
 
   @EXTRA_PUBLISH_FIELDS: ->
     if __meteor_runtime_config__.SANDSTORM

@@ -18,3 +18,27 @@ new PublishEndpoint 'User.settings', ->
       'services.twitter.id': 1
       'services.twitter.screenName': 1
       researchData: 1
+
+new PublishEndpoint 'User.profile', (userId) ->
+  check userId, Match.DocumentId
+
+  User.documents.find
+    _id: userId
+  ,
+    fields: _.extend User.EXTRA_PUBLISH_FIELDS(),
+      # Fields published by Meteor for logged-in users.
+      username: 1,
+      emails: 1
+      # Our fields for profile.
+      profileDisplay: 1
+
+new PublishEndpoint 'User.profileForEdit', (userId) ->
+  check userId, Match.DocumentId
+
+  # TODO: Allow only for those who can edit the profile?
+
+  User.documents.find
+    _id: userId
+  ,
+    fields:
+      profile: 1

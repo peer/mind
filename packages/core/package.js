@@ -105,6 +105,8 @@ Package.onUse(function (api) {
     'migrations/0010-discussion-opened.coffee',
     'migrations/0011-motion-status.coffee',
     'migrations/0012-discussion-generated.coffee',
-    'migrations/0013-upvotable-status.coffee'
+    'migrations/0013-upvotable-status.coffee',
+    'migrations/0014-user-changes.coffee',
+    'migrations/0015-user-profile.coffee'
   ], 'server');
 });

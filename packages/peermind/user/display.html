@@ -1,0 +1,40 @@
+<template name="User.DisplayComponent">
+  {{#if notFound}}
+    {{> NotFoundComponent}}
+  {{else}}
+    <div class="section user">
+      <div class="row">
+        <h4 class="col s12">
+          <img src="{{user.avatarUrl}}" alt="{{user.username}}" class="circle avatar" />{{user.username}}
+        </h4>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          {{#if $and canEdit isBeingEdited}}
+            <form class="editable-form">
+              <div class="input-field">
+                {{#with user}}
+                  {{> EditorComponent args name='profile' id=($join '-' 'edit-user-profile' _id) label='Profile' autofocus=''}}
+                {{/with}}
+              </div>
+              <div class="buttons">
+                <button class="save-edit-button waves-effect waves-light btn-flat" type="submit"><i class="material-icons left">done</i>Save</button>
+                <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+              </div>
+            </form>
+          {{else}}
+            {{#if canEdit}}
+              {{> EditButton}}
+            {{/if}}
+            {{#if user.profileDisplay}}
+              {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+              <div class="trix-content">{{{user.profileDisplay}}}</div>
+            {{else}}
+              <p class="grey-text">User has an empty profile.</p>
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</template>

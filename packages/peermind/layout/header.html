@@ -60,6 +60,7 @@
 </template>
 
 <template name="AccountItemsComponent">
+  <li><a href="{{pathFor 'User.display' params=currentUser}}">Profile</a></li>
   <li><a href="{{pathFor 'Settings.display'}}">Settings</a></li>
   {{#unless isSandstorm}}
     <li class="divider"></li>

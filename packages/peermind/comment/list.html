@@ -25,7 +25,7 @@
 
 <template name="Comment.ListItemComponent">
   <li class="collection-item avatar">
-    <img src="{{author.avatarUrl}}" alt="{{author.username}}" class="circle" />
+    <a href="{{pathFor 'User.display' params=author}}"><img src="{{author.avatarUrl}}" alt="{{author.username}}" class="circle" /></a>
     {{#if $and canEdit isBeingEdited}}
       <form class="editable-form">
         <div class="input-field">

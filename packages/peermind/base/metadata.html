@@ -4,12 +4,14 @@
       {{> renderEditButton}}
     {{/if}}
     {{> renderExtraMetadataButtons}}
-    <div class="chip author">
-      {{#unless noAvatar}}
-        <img src="{{author.avatarUrl}}" alt="{{author.username}}" class="circle" />
-      {{/unless}}
-      {{author.username}}
-    </div>
+    <a href="{{pathFor 'User.display' params=author}}">
+      <div class="chip author">
+        {{#unless noAvatar}}
+          <img src="{{author.avatarUrl}}" alt="{{author.username}}" class="circle" />
+        {{/unless}}
+        {{author.username}}
+      </div>
+    </a>
     {{> renderMetadataTimestamp}}
   </div>
 </template>

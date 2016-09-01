@@ -156,7 +156,10 @@ Package.onUse(function (api) {
     'motion/vote.coffee',
     'motion/vote.styl',
     'admin/accounts.html',
-    'admin/accounts.coffee'
+    'admin/accounts.coffee',
+    'user/display.html',
+    'user/display.coffee',
+    'user/display.styl'
   ], 'client', options);
 
   api.addAssets([
