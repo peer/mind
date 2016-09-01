@@ -75,6 +75,8 @@ Meteor.methods
       check document.endAt, Match.Where (value) ->
         _.isFinite value.valueOf()
 
+      throw new Meteor.Error 'invalid-request', "Start time is after end time." if document.startAt.valueOf() > document.endAt.valueOf()
+
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
