@@ -1,13 +1,6 @@
 class Discussion.EditComponent extends Discussion.OneComponent
   @register 'Discussion.EditComponent'
 
-  onCreated: ->
-    super
-
-    @autorun (computation) =>
-      discussionId = @currentDiscussionId()
-      @subscribe 'Discussion.forEdit', discussionId if discussionId
-
 class Discussion.EditFormComponent extends UIComponent
   @register 'Discussion.EditFormComponent'
 

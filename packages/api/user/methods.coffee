@@ -47,8 +47,6 @@ Meteor.methods
       # This helps us that we can display a message to a visitor that a profile is empty.
       profile = '' unless profileText or $root.has('figure').length
 
-    profileDisplay = User.sanitizeForDisplay.sanitizeHTML profile
-
     attachments = User.extractAttachments profile
 
     updatedAt = new Date()
@@ -60,7 +58,6 @@ Meteor.methods
       $set:
         updatedAt: updatedAt
         profile: profile
-        profileDisplay: profileDisplay
         profileAttachments: ({_id} for _id in attachments)
       $push:
         changes:

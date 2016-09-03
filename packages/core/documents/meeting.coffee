@@ -10,7 +10,6 @@ class Meeting extends share.BaseDocument
   # startAt: time when the meeting started (or will start)
   # endAt: time when the meeting ended (or will end)
   # description: the latest version of the description
-  # descriptionDisplay: HTML content of the description without tags needed for editing
   # descriptionAttachments: list of
   #   _id
   # discussions: list of
@@ -59,8 +58,6 @@ class Meeting extends share.BaseDocument
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'discussions' of lastChange
         [fields._id, lastChange.discussions or []]
-      descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
-        [fields._id, fields.description and @sanitizeForDisplay.sanitizeHTML fields.description]
       descriptionAttachments: [
         # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['description'], (fields) =>
@@ -90,7 +87,7 @@ class Meeting extends share.BaseDocument
       title: 1
       startAt: 1
       endAt: 1
-      descriptionDisplay: 1
+      description: 1
       discussions: 1
 
 if Meteor.isServer

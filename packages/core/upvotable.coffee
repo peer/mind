@@ -9,7 +9,6 @@ class share.UpvotableDocument extends share.BaseDocument
   # discussion:
   #   _id
   # body: the latest version of the body
-  # bodyDisplay: HTML content of the body without tags needed for editing
   # bodyAttachments: list of
   #   _id
   # changes: list (the last list item is the most recent one) of changes
@@ -35,8 +34,6 @@ class share.UpvotableDocument extends share.BaseDocument
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'body' of lastChange
         [fields._id, lastChange.body or '']
-      bodyDisplay: @GeneratedField 'self', ['body'], (fields) =>
-        [fields._id, fields.body and @sanitizeForDisplay.sanitizeHTML fields.body]
       bodyAttachments: [
         # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['body'], (fields) =>
@@ -63,7 +60,7 @@ class share.UpvotableDocument extends share.BaseDocument
       lastActivity: 1
       author: 1
       discussion: 1
-      bodyDisplay: 1
+      body: 1
       upvotesCount: 1
       upvotes:
         # We publish only an entry associated with the current user.

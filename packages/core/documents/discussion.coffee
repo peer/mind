@@ -8,7 +8,6 @@ class Discussion extends share.BaseDocument
   #   avatar
   # title: the latest version of the title
   # description: the latest version of the description
-  # descriptionDisplay: HTML content of the description without tags needed for editing
   # descriptionAttachments: list of
   #   _id
   # changes: list (the last list item is the most recent one) of changes
@@ -44,7 +43,6 @@ class Discussion extends share.BaseDocument
   # discussionClosedAt: time when discussion ended
   # passingMotions: list of motions which passed
   # closingNote: the latest version of the closing note
-  # closingNoteDisplay: HTML content of the closing note without tags needed for editing
   # closingNoteAttachments: list of
   #   _id
   # status: one of Discussion.STATUS values
@@ -70,16 +68,12 @@ class Discussion extends share.BaseDocument
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'closingNote' of lastChange
         [fields._id, lastChange.closingNote or '']
-      descriptionDisplay: @GeneratedField 'self', ['description'], (fields) =>
-        [fields._id, fields.description and @sanitizeForDisplay.sanitizeHTML fields.description]
       descriptionAttachments: [
         # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['description'], (fields) =>
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
-      closingNoteDisplay: @GeneratedField 'self', ['closingNote'], (fields) =>
-        [fields._id, fields.closingNote and @sanitizeForDisplay.sanitizeHTML fields.closingNote]
       closingNoteAttachments: [
         # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['closingNote'], (fields) =>
@@ -96,7 +90,7 @@ class Discussion extends share.BaseDocument
         [fields._id, fields.comments?.length or 0]
       pointsCount: @GeneratedField 'self', ['points'], (fields) ->
         [fields._id, fields.points?.length or 0]
-      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'passingMotions', 'closingNoteDisplay', 'motions', 'passingMotions'], (fields) ->
+      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'passingMotions', 'closingNote', 'motions'], (fields) ->
         discussion = new Discussion fields
         if discussion.isClosed()
           if fields.passingMotions?.length
@@ -125,14 +119,14 @@ class Discussion extends share.BaseDocument
       lastActivity: 1
       author: 1
       title: 1
-      descriptionDisplay: 1
+      description: 1
       meetings: 1
       discussionOpenedBy: 1
       discussionOpenedAt: 1
       discussionClosedBy: 1
       discussionClosedAt: 1
       passingMotions: 1
-      closingNoteDisplay: 1
+      closingNote: 1
       motionsCount: 1
       commentsCount: 1
       pointsCount: 1
@@ -149,7 +143,7 @@ class Discussion extends share.BaseDocument
     PASSED: 'passed'
 
   isOpen: ->
-    !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @passingMotions or @passingMotions.length is 0) and not @closingNoteDisplay)
+    !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @passingMotions or @passingMotions.length is 0) and not @closingNote)
 
   isClosed: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and @discussionClosedAt and @discussionClosedBy)

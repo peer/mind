@@ -20,8 +20,6 @@ Meteor.methods
 
     document.description = Meeting.sanitize.sanitizeHTML document.description
 
-    descriptionDisplay = Meeting.sanitizeForDisplay.sanitizeHTML document.description
-
     attachments = Meeting.extractAttachments document.description
 
     createdAt = new Date()
@@ -34,7 +32,6 @@ Meteor.methods
       startAt: document.startAt
       endAt: document.endAt or null
       description: document.description
-      descriptionDisplay: descriptionDisplay
       descriptionAttachments: ({_id} for _id in attachments)
       discussions: []
       changes: [
@@ -82,8 +79,6 @@ Meteor.methods
 
     document.description = Meeting.sanitize.sanitizeHTML document.description
 
-    descriptionDisplay = Meeting.sanitizeForDisplay.sanitizeHTML document.description
-
     attachments = Meeting.extractAttachments document.description
 
     if User.hasPermission User.PERMISSIONS.MEETING_UPDATE
@@ -123,7 +118,6 @@ Meteor.methods
         startAt: document.startAt
         endAt: document.endAt or null
         description: document.description
-        descriptionDisplay: descriptionDisplay
         descriptionAttachments: ({_id} for _id in attachments)
       $push:
         changes:

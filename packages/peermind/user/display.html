@@ -26,9 +26,9 @@
             {{#if canEdit}}
               {{> EditButton}}
             {{/if}}
-            {{#if user.profileDisplay}}
+            {{#if user.profile}}
               {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
-              <div class="trix-content">{{{user.profileDisplay}}}</div>
+              <div class="trix-content">{{{user.profile}}}</div>
             {{else}}
               <p class="grey-text">User has an empty profile.</p>
             {{/if}}

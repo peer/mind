@@ -52,8 +52,6 @@ Meteor.methods
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
       $root.has('figure').length
 
-    bodyDisplay = Point.sanitizeForDisplay.sanitizeHTML document.body
-
     attachments = Point.extractAttachments document.body
 
     if User.hasPermission User.PERMISSIONS.POINT_UPDATE
@@ -84,7 +82,6 @@ Meteor.methods
       $set:
         updatedAt: updatedAt
         body: document.body
-        bodyDisplay: bodyDisplay
         bodyAttachments: ({_id} for _id in attachments)
         category: document.category
       $push:

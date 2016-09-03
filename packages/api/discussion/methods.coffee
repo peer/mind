@@ -11,8 +11,6 @@ Meteor.methods
 
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
-    descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
-
     attachments = Discussion.extractAttachments document.description
 
     createdAt = new Date()
@@ -23,7 +21,6 @@ Meteor.methods
       author: user.getReference()
       title: document.title
       description: document.description
-      descriptionDisplay: descriptionDisplay
       descriptionAttachments: ({_id} for _id in attachments)
       changes: [
         updatedAt: createdAt
@@ -38,7 +35,6 @@ Meteor.methods
       discussionClosedAt: null
       passingMotions: []
       closingNote: ''
-      closingNoteDisplay: ''
       motions: []
       comments: []
       points: []
@@ -82,8 +78,6 @@ Meteor.methods
 
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
-    descriptionDisplay = Discussion.sanitizeForDisplay.sanitizeHTML document.description
-
     descriptionAttachments = Discussion.extractAttachments document.description
 
     if User.hasPermission User.PERMISSIONS.DISCUSSION_UPDATE
@@ -115,7 +109,6 @@ Meteor.methods
         updatedAt: updatedAt
         title: document.title
         description: document.description
-        descriptionDisplay: descriptionDisplay
         descriptionAttachments: ({_id} for _id in descriptionAttachments)
       $push:
         changes:
@@ -135,8 +128,6 @@ Meteor.methods
         multi: true
 
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
-
-    closingNoteDisplay = Discussion.sanitizeForDisplay.sanitizeHTML closingNote
 
     closingNoteAttachments = Discussion.extractAttachments closingNote
 
@@ -198,7 +189,6 @@ Meteor.methods
         updatedAt: updatedAt
         passingMotions: ({_id} for _id in passingMotions)
         closingNote: closingNote
-        closingNoteDisplay: closingNoteDisplay
         closingNoteAttachments: ({_id} for _id in closingNoteAttachments)
         status: if passingMotions.length then Discussion.STATUS.PASSED else Discussion.STATUS.CLOSED
       $push:
@@ -231,8 +221,6 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
-
-    closingNoteDisplay = Discussion.sanitizeForDisplay.sanitizeHTML closingNote
 
     attachments = Discussion.extractAttachments closingNote
 
@@ -287,7 +275,6 @@ Meteor.methods
         discussionClosedAt: closedAt
         passingMotions: ({_id} for _id in passingMotions)
         closingNote: closingNote
-        closingNoteDisplay: closingNoteDisplay
         closingNoteAttachments: ({_id} for _id in attachments)
         status: if passingMotions.length then Discussion.STATUS.PASSED else Discussion.STATUS.CLOSED
       $push:

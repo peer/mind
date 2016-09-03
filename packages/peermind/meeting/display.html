@@ -20,11 +20,11 @@
           Time: {{formatStartEndDate meeting.startAt meeting.endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}
         </div>
       </div>
-      {{#if meeting.descriptionDisplay}}
+      {{#if meeting.description}}
         <div class="row">
           <div class="col s12 trix-content">
             {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
-            {{{meeting.descriptionDisplay}}}
+            {{{meeting.description}}}
           </div>
         </div>
       {{/if}}

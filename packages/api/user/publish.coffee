@@ -29,16 +29,5 @@ new PublishEndpoint 'User.profile', (userId) ->
       # Fields published by Meteor for logged-in users.
       username: 1,
       emails: 1
-      # Our fields for profile.
-      profileDisplay: 1
-
-new PublishEndpoint 'User.profileForEdit', (userId) ->
-  check userId, Match.DocumentId
-
-  # TODO: Allow only for those who can edit the profile?
-
-  User.documents.find
-    _id: userId
-  ,
-    fields:
+      # We use profile field differently than how Meteor is using it.
       profile: 1

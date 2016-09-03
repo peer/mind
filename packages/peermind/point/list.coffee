@@ -65,9 +65,6 @@ class Point.ListItemComponent extends UIComponent
     @canEdit = new ComputedField =>
       @data() and (User.hasPermission(User.PERMISSIONS.POINT_UPDATE) or (User.hasPermission(User.PERMISSIONS.POINT_UPDATE_OWN) and (Meteor.userId() is @data().author._id)))
 
-  editingSubscriptions: ->
-    @subscribe 'Point.forEdit', @data()._id
-
   onBeingEdited: ->
     @callFirstWith @, 'isExpanded', false
 

@@ -191,7 +191,6 @@ class User extends share.BaseDocument
   #   selected: boolean if this is the preferred avatar
   # researchData: boolean if user consents to contributing data to a dataset
   # profile: the latest version of the profile
-  # profileDisplay: HTML content of the profile without tags needed for editing
   # profileAttachments: list of
   #   _id
   # changes: list (the last list item is the most recent one) of changes
@@ -219,8 +218,6 @@ class User extends share.BaseDocument
           lastChange = fields.changes?[fields.changes?.length - 1]
           return [] unless lastChange and 'profile' of lastChange
           [fields._id, lastChange.profile or '']
-        profileDisplay: @GeneratedField 'self', ['profile'], (fields) =>
-          [fields._id, fields.profile and @sanitizeForDisplay.sanitizeHTML fields.profile]
         profileAttachments: [
           # TODO: Make it an array of references to StorageFile as well.
           @GeneratedField 'self', ['profile'], (fields) =>

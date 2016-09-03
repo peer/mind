@@ -1,13 +1,6 @@
 class Meeting.EditComponent extends Meeting.OneComponent
   @register 'Meeting.EditComponent'
 
-  onCreated: ->
-    super
-
-    @autorun (computation) =>
-      meetingId = @currentMeetingId()
-      @subscribe 'Meeting.forEdit', meetingId if meetingId
-
 class Meeting.EditFormComponent extends UIComponent
   @register 'Meeting.EditFormComponent'
 

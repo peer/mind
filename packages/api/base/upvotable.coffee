@@ -25,8 +25,6 @@ share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
   check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
     $root.has('figure').length
 
-  bodyDisplay = documentClass.sanitizeForDisplay.sanitizeHTML document.body
-
   attachments = documentClass.extractAttachments document.body
 
   createdAt = new Date()
@@ -38,7 +36,6 @@ share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
     discussion:
       _id: discussion._id
     body: document.body
-    bodyDisplay: bodyDisplay
     bodyAttachments: ({_id} for _id in attachments)
     changes: [
       updatedAt: createdAt

@@ -10,7 +10,6 @@ class Motion extends share.UpvotableDocument
   #   _id
   #   status
   # body: the latest version of the body
-  # bodyDisplay: HTML content of the body without tags needed for editing
   # bodyAttachments: list of
   #   _id
   # changes: list (the last list item is the most recent one) of changes

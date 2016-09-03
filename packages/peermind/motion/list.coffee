@@ -97,9 +97,6 @@ class Motion.ListItemComponent extends UIComponent
     @canUpvote = new ComputedField =>
       @data() and not (@data().isOpen() or @data().isClosed() or @data().isWithdrawn())
 
-  editingSubscriptions: ->
-    @subscribe 'Motion.forEdit', @data()._id
-
   onBeingEdited: ->
     @callFirstWith @, 'isExpanded', false
 
@@ -173,25 +170,17 @@ class Motion.ExtraMetadataButtonsComponent extends UIComponent
   onButtonClick: (event) ->
     event.preventDefault()
 
-    handle = @subscribe 'Motion.forEdit', @data()._id
+    editor = $('trix-editor[input="new-motion-description"]').get(0).editor
 
-    @autorun (computation) =>
-      return unless handle.ready()
-      computation.stop()
+    # Move the cursor to the end of existing content.
+    originalLastPosition = editor.getDocument().getLength() - 1
+    editor.setSelectedRange originalLastPosition
 
-      editor = $('trix-editor[input="new-motion-description"]').get(0).editor
+    # Add it at the end of existing content.
+    editor.insertHTML @data().body
 
-      # Move the cursor to the end of existing content.
-      originalLastPosition = editor.getDocument().getLength() - 1
-      editor.setSelectedRange originalLastPosition
-
-      # Add it at the end of existing content.
-      editor.insertHTML @data().body
-
-      # Select new content.
-      editor.setSelectedRange [originalLastPosition, editor.getDocument().getLength() - 1]
-
-      handle.stop()
+    # Select new content.
+    editor.setSelectedRange [originalLastPosition, editor.getDocument().getLength() - 1]
 
 class Motion.WithdrawComponent extends UIComponent
   @register 'Motion.WithdrawComponent'

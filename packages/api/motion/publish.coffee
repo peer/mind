@@ -6,18 +6,6 @@ new PublishEndpoint 'Motion.list', (discussionId) ->
   ,
     fields: Motion.PUBLISH_FIELDS()
 
-new PublishEndpoint 'Motion.forEdit', (motionId) ->
-  check motionId, Match.DocumentId
-
-  # TODO: Allow only for those who can edit the motion?
-  #       Not really because data is needed for copying of motions as well.
-
-  Motion.documents.find
-    _id: motionId
-  ,
-    fields:
-      body: 1
-
 new PublishEndpoint 'Motion.vote', (motionId) ->
   check motionId, Match.DocumentId
 

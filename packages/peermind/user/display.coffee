@@ -35,9 +35,6 @@ class User.DisplayComponent extends UIComponent
   notFound: ->
     @subscriptionsReady() and not @user()
 
-  editingSubscriptions: ->
-    @subscribe 'User.profileForEdit', @currentUserId()
-
   onSaveEdit: (event, onSuccess) ->
     Meteor.call 'User.profileUpdate', @$('[name="profile"]').val(), (error, result) =>
       if error

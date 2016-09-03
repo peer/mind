@@ -54,24 +54,6 @@ sanitizeAttachment = ($, $element, sanitize) ->
 
   sanitizeAttachmentTree $, $element, sanitize
 
-# Should sanitize the tag and return its sanitized contents.
-sanitizeAttachmentDisplay = ($, $element, sanitize) ->
-  # If it is not attachment, allow only a with href attribute.
-  unless $element.attr('data-trix-attachment')
-    return sanitize.sanitizeTagAndContents $, $element,
-      href: true
-
-  @sanitizeAttributes $, $element,
-    'href': true
-
-  # Invalid.
-  return unless $element.attr('href')
-
-  href = sanitize.sanitizeHref $, $element.attr('href')
-  $element.attr 'href', href
-
-  sanitizeAttachmentTree $, $element, sanitize
-
 class share.BaseDocument extends Document
   @Meta
     abstract: true
@@ -84,20 +66,6 @@ class share.BaseDocument extends Document
     em: {}
     del: {}
     a: sanitizeAttachment
-    blockquote: {}
-    pre: {}
-    ul: {}
-    li: {}
-    ol: {}
-
-  @sanitizeForDisplay: new Sanitize
-    div: {}
-    br: {}
-
-    strong: {}
-    em: {}
-    del: {}
-    a: sanitizeAttachmentDisplay
     blockquote: {}
     pre: {}
     ul: {}

@@ -50,8 +50,6 @@ Meteor.methods
     check bodyText, Match.OneOf Match.NonEmptyString, Match.Where ->
       $root.has('figure').length
 
-    bodyDisplay = Comment.sanitizeForDisplay.sanitizeHTML document.body
-
     attachments = Comment.extractAttachments document.body
 
     if User.hasPermission User.PERMISSIONS.COMMENT_UPDATE
@@ -77,7 +75,6 @@ Meteor.methods
       $set:
         updatedAt: updatedAt
         body: document.body
-        bodyDisplay: bodyDisplay
         bodyAttachments: ({_id} for _id in attachments)
       $push:
         changes:
