@@ -108,6 +108,7 @@ Package.onUse(function (api) {
     'migrations/0013-upvotable-status.coffee',
     'migrations/0014-user-changes.coffee',
     'migrations/0015-user-profile.coffee',
-    'migrations/0016-displayfields.coffee'
+    'migrations/0016-displayfields.coffee',
+    'migrations/0017-vote-motion.coffee'
   ], 'server');
 });
