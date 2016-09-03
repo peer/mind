@@ -1,4 +1,4 @@
-{routeObjectMatch} = require './lib.coffee'
+{routeObjectMatch, escapeKeys} = require './lib.coffee'
 
 Meteor.methods
   'Activity.route': (routeObject) ->
@@ -16,7 +16,7 @@ Meteor.methods
       user: user
       type: 'route'
       level: Activity.LEVEL.DEBUG
-      data: routeObject
+      data: escapeKeys routeObject
 
   'Activity.error': (error) ->
     check error,
@@ -52,7 +52,7 @@ Meteor.methods
       user: user
       type: 'error'
       level: Activity.LEVEL.ERROR
-      data: error
+      data: escapeKeys error
 
   'Activity.ui': (type, data) ->
     check type, Match.NonEmptyString

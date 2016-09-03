@@ -1,3 +1,20 @@
+escapeKeys = (object) ->
+  if _.isArray object
+    return (escapeKeys i for i in object)
+
+  else if _.isObject object
+    check object, Object
+    result = {}
+    for key, value of object
+      # We replace $ at the beginning with \$, so that it is not at the beginning anymore.
+      # We replace . anywhere with \_. We also replace \ with \\ so that we can unescape.
+      key = key.replace(/\\/g, '\\\\').replace(/^\$/, '\\$').replace(/\./g, '\\_')
+      result[key] = escapeKeys value
+    return result
+
+  else
+    return object
+
 routeObject = (context) ->
   routeName: context.route.name
   params: context.params
@@ -17,4 +34,5 @@ routeObjectMatch =
 module.exports = {
   routeObject
   routeObjectMatch
+  escapeKeys
 }
