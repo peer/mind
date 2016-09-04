@@ -4,28 +4,32 @@
   {{else}}
     {{#if canClose}}
       <div class="section discussion">
-        <div class="row">
-          <h4 class="col s12">
-            {{> ExpandableButton}}{{discussion.title}}
-          </h4>
-        </div>
-        {{#if discussion.description}}
+        {{#if $and canEdit isBeingEdited}}
+          {{> Discussion.EditFormComponent discussion}}
+        {{else}}
           <div class="row">
-            <div class="col s12 trix-content">
-              {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
-              {{{discussion.description}}}
-            </div>
+            <h4 class="col s12">
+              {{> ExpandableButton}}{{discussion.title}}
+            </h4>
           </div>
-        {{/if}}
-        {{#if isExpanded}}
-          <div class="row expansion">
-            <div class="col s12">
-              <div class="divider"></div>
-              {{#with discussion}}
-                {{> MetadataComponent args editButton='Discussion.EditButton'}}
-              {{/with}}
+          {{#if discussion.description}}
+            <div class="row">
+              <div class="col s12 trix-content">
+                {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+                {{{discussion.description}}}
+              </div>
             </div>
-          </div>
+          {{/if}}
+          {{#if isExpanded}}
+            <div class="row expansion">
+              <div class="col s12">
+                <div class="divider"></div>
+                {{#with discussion}}
+                  {{> MetadataComponent args}}
+                {{/with}}
+              </div>
+            </div>
+          {{/if}}
         {{/if}}
       </div>
       {{#if subscriptionsReady}}

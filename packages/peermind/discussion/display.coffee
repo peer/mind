@@ -1,23 +1,31 @@
 class Discussion.DisplayComponent extends Discussion.OneComponent
   @register 'Discussion.DisplayComponent'
 
-  mixins: ->
-    super.concat share.ExpandableMixin
-
-  expandableEventData: ->
-    data = @discussion()
-
-    _id: data._id
-    _type: data.constructor.Meta._name
-
   renderMetadataTimestamp: (parentComponent, metadataComponent) ->
     Discussion.MetadataTimestampComponent.renderComponent parentComponent
 
-class Discussion.EditButton extends UIComponent
-  @register 'Discussion.EditButton'
-
 class Discussion.MetadataTimestampComponent extends UIComponent
   @register 'Discussion.MetadataTimestampComponent'
+
+class Discussion.EditFormComponent extends UIComponent
+  @register 'Discussion.EditFormComponent'
+
+  onRendered: ->
+    super
+
+    Materialize.updateTextFields()
+
+    Tracker.afterFlush =>
+      # A bit of mangling to get cursor to focus at the end of the text.
+      $title = @$('[name="title"]')
+      title = $title.val()
+      $title.focus().val('').val(title)
+
+  canOnlyEdit: (args...) ->
+    @callAncestorWith 'canOnlyEdit', args...
+
+  canEditClosed: (args...) ->
+    @callAncestorWith 'canEditClosed', args...
 
 FlowRouter.route '/discussion/:_id',
   name: 'Discussion.display'

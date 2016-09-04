@@ -1,15 +1,6 @@
 class Discussion.CloseComponent extends Discussion.OneComponent
   @register 'Discussion.CloseComponent'
 
-  mixins: ->
-    super.concat share.ExpandableMixin
-
-  expandableEventData: ->
-    data = @discussion()
-
-    _id: data._id
-    _type: data.constructor.Meta._name
-
 class Discussion.CloseFormComponent extends UIComponent
   @register 'Discussion.CloseFormComponent'
 

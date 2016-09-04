@@ -118,8 +118,6 @@ Package.onUse(function (api) {
     'discussion/list.styl',
     'discussion/new.html',
     'discussion/new.coffee',
-    'discussion/edit.html',
-    'discussion/edit.coffee',
     'discussion/display.html',
     'discussion/display.coffee',
     'discussion/close.html',

@@ -10,48 +10,48 @@
       </div>
     {{/if}}
     <div class="section discussion">
-      <div class="row">
-        <h4 class="col s12">
-          {{> ExpandableButton}}{{discussion.title}}
-        </h4>
-      </div>
-      {{#if discussion.description}}
+      {{#if $and canEdit isBeingEdited}}
+        {{> Discussion.EditFormComponent discussion}}
+      {{else}}
         <div class="row">
-          <div class="col s12 trix-content">
-            {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
-            {{{discussion.description}}}
-          </div>
+          <h4 class="col s12">
+            {{> ExpandableButton}}{{discussion.title}}
+          </h4>
         </div>
-      {{/if}}
-      {{#if isExpanded}}
-        <div class="row expansion">
-          <div class="col s12">
-            <div class="divider"></div>
-            {{#with discussion}}
-              {{> MetadataComponent args editButton='Discussion.EditButton'}}
-            {{/with}}
-          </div>
-        </div>
-      {{/if}}
-      {{#if discussion.isClosed}}
-        <div class="center-align success card-panel balance-text">
-          This discussion is closed.
-        </div>
-        {{#if discussion.closingNote}}
+        {{#if discussion.description}}
           <div class="row">
             <div class="col s12 trix-content">
               {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
-              {{{discussion.closingNote}}}
+              {{{discussion.description}}}
             </div>
           </div>
+        {{/if}}
+        {{#if isExpanded}}
+          <div class="row expansion">
+            <div class="col s12">
+              <div class="divider"></div>
+              {{#with discussion}}
+                {{> MetadataComponent args}}
+              {{/with}}
+            </div>
+          </div>
+        {{/if}}
+        {{#if discussion.isClosed}}
+          <div class="center-align success card-panel balance-text">
+            This discussion is closed.
+          </div>
+          {{#if discussion.closingNote}}
+            <div class="row">
+              <div class="col s12 trix-content">
+                {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+                {{{discussion.closingNote}}}
+              </div>
+            </div>
+          {{/if}}
         {{/if}}
       {{/if}}
     </div>
   {{/if}}
-</template>
-
-<template name="Discussion.EditButton">
-  <a href="{{pathFor 'Discussion.edit' params=data}}" class="metadata-button waves-effect waves-light btn-flat right" title="Edit"><i class="material-icons tiny">edit</i></a>
 </template>
 
 <template name="Discussion.MetadataTimestampComponent">
@@ -63,4 +63,55 @@
   {{else}}
     <span class="timestamp" title="{{formatDate createdAt DEFAULT_DATETIME_FORMAT}}">created {{fromNow createdAt}}</span>
   {{/if}}
+</template>
+
+<template name="Discussion.EditFormComponent">
+  <div class="row">
+    <form class="col s12 editable-form">
+      {{!-- Or canEditClosed is true, or canEditClosed, or both. This is assured by the definition of canEdit. --}}
+      {{#if canOnlyEdit}}
+        <div class="row">
+          <div class="input-field col s12">
+            <input type="text" name="title" id="edit-discussion-title" required value="{{title}}" />
+            <label for="edit-discussion-title">Title</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            {{> EditorComponent args name='description' id=($join '-' 'edit-discussion-description' _id) label='Description'}}
+          </div>
+        </div>
+      {{else}}
+        <div class="row">
+          <h4 class="col s12">
+            {{title}}
+          </h4>
+        </div>
+        {{#if description}}
+          <div class="row">
+            <div class="col s12 trix-content">
+              {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+              {{{description}}}
+            </div>
+          </div>
+        {{/if}}
+      {{/if}}
+      {{!-- If a discussion is closed those who can close it can edit closing information. --}}
+      {{#if canEditClosed}}
+        <div class="row">
+          <div class="col s12">
+            <div class="center-align success card-panel balance-text">
+              This discussion is closed.
+            </div>
+          </div>
+        </div>
+        {{> Discussion.CloseFormRowsComponent}}
+      {{/if}}
+      <div class="divider"></div>
+      <div class="buttons">
+        <button class="save-edit-button waves-effect waves-light btn-flat" type="submit"><i class="material-icons left">done</i>Save</button>
+        <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+      </div>
+    </form>
+  </div>
 </template>
