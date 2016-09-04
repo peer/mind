@@ -38,6 +38,9 @@ class Meeting.ListDiscussionsItemComponent extends UIComponent
   closed: ->
     'closed' if @data()?.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
+  otherMeetings: ->
+    (meeting for meeting in @data().meetings when meeting._id isnt @meeting()?._id)
+
 FlowRouter.route '/meeting/discussions/:_id',
   name: 'Meeting.discussions'
   action: (params, queryParams) ->

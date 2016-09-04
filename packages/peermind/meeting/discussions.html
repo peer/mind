@@ -8,7 +8,7 @@
           <i class="large material-icons">done</i>
         </a>
       </div>
-      <div class="section">
+      <div class="section discussions">
         {{#if discussions.exists}}
           <ul class="collection z-depth-1">
             {{#each discussions}}
@@ -28,5 +28,13 @@
     <input type="checkbox" id="meeting-discussion-{{_id}}" onChange {{checked}} />
     <label for="meeting-discussion-{{_id}}" class="left"></label>
     <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>
+    {{#if otherMeetings.length}}
+      <label class="active">In other meetings</label>
+      <ul class="collection meetings">
+        {{#each otherMeetings}}
+          {{> Meeting.ListItemComponent}}
+        {{/each}}
+      </ul>
+    {{/if}}
   </li>
 </template>

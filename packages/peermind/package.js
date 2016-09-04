@@ -144,6 +144,7 @@ Package.onUse(function (api) {
     'meeting/display.styl',
     'meeting/discussions.html',
     'meeting/discussions.coffee',
+    'meeting/discussions.styl',
     'motion/list.html',
     'motion/list.coffee',
     'motion/list.styl',
