@@ -82,26 +82,29 @@
           <label for="edit-meeting-title">Title</label>
         </div>
       </div>
+      {{!-- TODO: Improve date and time pickers to work in all browsers. --}}
       <div class="row">
         <div class="input-field col s6">
-          <input type="date" class="datepicker" name="start-date" id="edit-meeting-start-date" required value="{{startAtDate}}" />
-          <label for="edit-meeting-start-date">Start date</label>
+          <input type="date" placeholder="YYYY-MM-DD" class="browser-default" name="start-date" id="edit-meeting-start-date" required value="{{startAtDate}}" />
+          {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+          <label for="edit-meeting-start-date" class="active">Start date</label>
         </div>
         <div class="input-field col s6">
-          {{! TODO: Style time picker. }}
-          <input type="time" name="start-time" id="edit-meeting-start-time" required value="{{startAtTime}}" />
-          <label for="edit-meeting-start-time">Start time</label>
+          <input type="time" placeholder="HH:mm" class="browser-default" name="start-time" id="edit-meeting-start-time" required value="{{startAtTime}}" />
+          {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+          <label for="edit-meeting-start-time" class="active">Start time</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s6">
-          <input type="date" class="datepicker" name="end-date" id="edit-meeting-end-date" value="{{endAtDate}}" />
-          <label for="edit-meeting-end-date">End date</label>
+          <input type="date" placeholder="YYYY-MM-DD" class="browser-default" name="end-date" id="edit-meeting-end-date" value="{{endAtDate}}" />
+          {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+          <label for="edit-meeting-end-date" class="active">End date</label>
         </div>
         <div class="input-field col s6">
-          {{! TODO: Style time picker. }}
-          <input type="time" name="end-time" id="edit-meeting-end-time" value="{{endAtTime}}" />
-          <label for="edit-meeting-end-time">End time</label>
+          <input type="time" placeholder="HH:mm" class="browser-default" name="end-time" id="edit-meeting-end-time" value="{{endAtTime}}" />
+          {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+          <label for="edit-meeting-end-time" class="active">End time</label>
         </div>
       </div>
       <div class="row">

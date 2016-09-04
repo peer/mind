@@ -9,26 +9,29 @@
               <label for="new-meeting-title">Title</label>
             </div>
           </div>
+          {{!-- TODO: Improve date and time pickers to work in all browsers. --}}
           <div class="row">
             <div class="input-field col s6">
-              <input type="date" class="datepicker" name="start-date" id="new-meeting-start-date" required />
-              <label for="new-meeting-start-date">Start date</label>
+              <input type="date" placeholder="YYYY-MM-DD" class="browser-default" name="start-date" id="new-meeting-start-date" required />
+              {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+              <label for="new-meeting-start-date" class="active">Start date</label>
             </div>
             <div class="input-field col s6">
-              {{! TODO: Style time picker. }}
-              <input type="time" name="start-time" id="new-meeting-start-time" required />
-              <label for="new-meeting-start-time">Start time</label>
+              <input type="time" placeholder="HH:mm" class="browser-default" name="start-time" id="new-meeting-start-time" required />
+              {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+              <label for="new-meeting-start-time" class="active">Start time</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s6">
-              <input type="date" class="datepicker" name="end-date" id="new-meeting-end-date" />
-              <label for="new-meeting-end-date">End date</label>
+              <input type="date" placeholder="YYYY-MM-DD" class="browser-default" name="end-date" id="new-meeting-end-date" />
+              {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+              <label for="new-meeting-end-date" class="active">End date</label>
             </div>
             <div class="input-field col s6">
-              {{! TODO: Style time picker. }}
-              <input type="time" name="end-time" id="new-meeting-end-time" />
-              <label for="new-meeting-end-time">End time</label>
+              <input type="time" placeholder="HH:mm" class="browser-default" name="end-time" id="new-meeting-end-time" />
+              {{!-- We are temporary always setting "active" class so that it does not overlap the input in Chrome. --}}
+              <label for="new-meeting-end-time" class="active">End time</label>
             </div>
           </div>
           <div class="row">
