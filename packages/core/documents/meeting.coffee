@@ -45,11 +45,11 @@ class Meeting extends share.BaseDocument
       startAt: @GeneratedField 'self', ['changes'], (fields) =>
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'startAt' of lastChange
-        [fields._id, lastChange.startAt or '']
+        [fields._id, lastChange.startAt or null]
       endAt: @GeneratedField 'self', ['changes'], (fields) =>
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'endAt' of lastChange
-        [fields._id, lastChange.endAt or '']
+        [fields._id, lastChange.endAt or null]
       description: @GeneratedField 'self', ['changes'], (fields) =>
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'description' of lastChange
@@ -65,7 +65,7 @@ class Meeting extends share.BaseDocument
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
       discussions: [
-        discussion: @ReferenceField Discussion, [], true, 'meetings'
+        discussion: @ReferenceField Discussion, [], true, 'meetings', ['title', 'startAt', 'endAt']
       ]
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
