@@ -38,6 +38,9 @@ class Discussion.CloseFormComponent extends UIComponent
       FlowRouter.go 'Discussion.display',
         _id: discussionId
 
+  disabled: ->
+    disabled: true if @callAncestorWith 'isBeingEdited'
+
 class Discussion.CloseFormRowsComponent extends UIComponent
   @register 'Discussion.CloseFormRowsComponent'
 
