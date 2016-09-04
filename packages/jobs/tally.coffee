@@ -47,8 +47,6 @@ class ComputeTallyJob extends Job
       majority: motion.majority
       population: populationSize
       abstentions: result.abstentionsCount
-      inFavor: result.inFavorVotesCount
-      against: result.againstVotesCount
       confidence: result.confidenceLevel
       confidenceLower: result.confidenceIntervalLowerBound
       confidenceUpper: result.confidenceIntervalUpperBound

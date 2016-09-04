@@ -11,8 +11,6 @@ class Tally extends share.BaseDocument
   # majority: one of Motion.MAJORITY values
   # population: population size
   # abstentions: abstentions count
-  # inFavor: in favor votes count
-  # against: against votes count
   # confidence: confidence level
   # confidenceLower: confidence interval lower bound
   # confidenceUpper: confidence interval upper bound
