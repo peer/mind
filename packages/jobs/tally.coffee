@@ -37,7 +37,7 @@ class ComputeTallyJob extends Job
     # In stored documents we use shorter field names so that less data has to stored and be transferred to the client.
     documentId = Tally.documents.insert
       createdAt: computedAt
-      version: VotingEngine.COMPUTE_TALLY_VERSION
+      version: VotingEngine.VERSION
       motion:
         _id: motion._id
       votes: (_.pick vote, '_id' for vote in votes)
