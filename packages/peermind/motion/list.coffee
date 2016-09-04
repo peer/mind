@@ -332,21 +332,34 @@ class Motion.TallyChartComponent extends UIComponent
         @chart?.detach()
         @chart = null
       else
+        series = []
+        previousTally = null
+
+        Tally.documents.find(
+          'motion._id': @data()._id
+        ,
+          sort:
+            createdAt: 1
+          fields:
+            createdAt: 1
+            result: 1
+            population: 1
+            abstentions: 1
+            confidence: 1
+            votesCount: 1
+          transform: null
+        ).forEach (tally, index, cursor) =>
+          # If tally is exactly the same as a previous one, we do not draw it.
+          return if previousTally and EJSON.equals _.omit(previousTally, '_id', 'createdAt'), _.omit(tally, '_id', 'createdAt')
+          previousTally = tally
+
+          series.push
+            x: tally.createdAt.valueOf()
+            y: tally.result
+            meta: tally._id
+
         data =
-          series: [
-            Tally.documents.find(
-              'motion._id': @data()._id
-            ,
-              sort:
-                createdAt: 1
-              fields:
-                createdAt: 1
-                result: 1
-            ).map (tally, index, cursor) =>
-              x: tally.createdAt.valueOf()
-              y: tally.result
-              meta: tally._id
-          ]
+          series: [series]
 
         if @chart
           @chart.update data
