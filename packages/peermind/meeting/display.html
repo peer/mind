@@ -10,33 +10,37 @@
       </div>
     {{/if}}
     <div class="section meeting">
-      <div class="row">
-        <h4 class="col s12">
-          {{> ExpandableButton}}{{meeting.title}}
-        </h4>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          Time: {{formatStartEndDate meeting.startAt meeting.endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}
-        </div>
-      </div>
-      {{#if meeting.description}}
+      {{#if $and canEdit isBeingEdited}}
+        {{> Meeting.EditFormComponent meeting}}
+      {{else}}
         <div class="row">
-          <div class="col s12 trix-content">
-            {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
-            {{{meeting.description}}}
-          </div>
+          <h4 class="col s12">
+            {{> ExpandableButton}}{{meeting.title}}
+          </h4>
         </div>
-      {{/if}}
-      {{#if isExpanded}}
-        <div class="row expansion">
+        <div class="row">
           <div class="col s12">
-            <div class="divider"></div>
-            {{#with meeting}}
-              {{> MetadataComponent args editButton='Meeting.EditButton'}}
-            {{/with}}
+            Time: {{formatStartEndDate meeting.startAt meeting.endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}
           </div>
         </div>
+        {{#if meeting.description}}
+          <div class="row">
+            <div class="col s12 trix-content">
+              {{! Remember to sanitize content in all codepaths which allow users to provide this content. }}
+              {{{meeting.description}}}
+            </div>
+          </div>
+        {{/if}}
+        {{#if isExpanded}}
+          <div class="row expansion">
+            <div class="col s12">
+              <div class="divider"></div>
+              {{#with meeting}}
+                {{> MetadataComponent args}}
+              {{/with}}
+            </div>
+          </div>
+        {{/if}}
       {{/if}}
     </div>
     <div class="section">
@@ -45,10 +49,6 @@
       {{/if}}
     </div>
   {{/if}}
-</template>
-
-<template name="Meeting.EditButton">
-  <a href="{{pathFor 'Meeting.edit' params=data}}" class="metadata-button waves-effect waves-light btn-flat right" title="Edit"><i class="material-icons tiny">edit</i></a>
 </template>
 
 <template name="Meeting.DiscussionsListComponent">
@@ -71,4 +71,49 @@
     {{/if}}
     <a href="{{pathFor 'Discussion.display' params=data}}">{{title}}</a>
   </li>
+</template>
+
+<template name="Meeting.EditFormComponent">
+  <div class="row">
+    <form class="col s12 editable-form">
+      <div class="row">
+        <div class="input-field col s12">
+          <input type="text" name="title" id="edit-meeting-title" required value="{{title}}" />
+          <label for="edit-meeting-title">Title</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <input type="date" class="datepicker" name="start-date" id="edit-meeting-start-date" required value="{{startAtDate}}" />
+          <label for="edit-meeting-start-date">Start date</label>
+        </div>
+        <div class="input-field col s6">
+          {{! TODO: Style time picker. }}
+          <input type="time" name="start-time" id="edit-meeting-start-time" required value="{{startAtTime}}" />
+          <label for="edit-meeting-start-time">Start time</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <input type="date" class="datepicker" name="end-date" id="edit-meeting-end-date" value="{{endAtDate}}" />
+          <label for="edit-meeting-end-date">End date</label>
+        </div>
+        <div class="input-field col s6">
+          {{! TODO: Style time picker. }}
+          <input type="time" name="end-time" id="edit-meeting-end-time" value="{{endAtTime}}" />
+          <label for="edit-meeting-end-time">End time</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          {{> EditorComponent args name='description' id=($join '-' 'edit-meeting-description' _id) label='Description'}}
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="buttons">
+        <button class="save-edit-button waves-effect waves-light btn-flat" type="submit"><i class="material-icons left">done</i>Save</button>
+        <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
+      </div>
+    </form>
+  </div>
 </template>

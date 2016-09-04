@@ -2,7 +2,7 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
   @register 'Meeting.DisplayComponent'
 
   mixins: ->
-    super.concat share.ExpandableMixin
+    super.concat share.ExpandableMixin, share.EditableMixin
 
   onCreated: ->
     super
@@ -47,8 +47,25 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
     _id: data._id
     _type: data.constructor.Meta._name
 
-class Meeting.EditButton extends UIComponent
-  @register 'Meeting.EditButton'
+  onSaveEdit: (event, onSuccess) ->
+    event.preventDefault()
+
+    Meteor.call 'Meeting.update',
+      _id: @currentMeetingId()
+      title: @$('[name="title"]').val()
+      startAt: @constructDatetime @$('[name="start-date"]').val(), @$('[name="start-time"]').val()
+      endAt: @constructDatetime @$('[name="end-date"]').val(), @$('[name="end-time"]').val()
+      description: @$('[name="description"]').val()
+    ,
+      (error, result) =>
+        if error
+          console.error "Update meeting error", error
+          alert "Update meeting error: #{error.reason or error}"
+          return
+
+        # TODO: Should we check the result and if it is not expected show an error instead?
+
+        onSuccess()
 
 class Meeting.DiscussionsListComponent extends UIComponent
   @register 'Meeting.DiscussionsListComponent'
@@ -163,6 +180,36 @@ class Meeting.DiscussionsListItemComponent extends UIComponent
 
   closed: ->
     'closed' if @data()?.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+
+class Meeting.EditFormComponent extends UIComponent
+  @register 'Meeting.EditFormComponent'
+
+  onRendered: ->
+    super
+
+    Materialize.updateTextFields()
+
+    Tracker.afterFlush =>
+      # A bit of mangling to get cursor to focus at the end of the text.
+      $title = @$('[name="title"]')
+      title = $title.val()
+      $title.focus().val('').val(title)
+
+    # TODO: Check why it does not enable every time?
+    # TODO: Enable when know how to get the value.
+    #@$('.datepicker').pickadate()
+
+  startAtDate: ->
+    moment(@data().startAt).format 'YYYY-MM-DD'
+
+  startAtTime: ->
+    moment(@data().startAt).format 'HH:mm'
+
+  endAtDate: ->
+    moment(@data().endAt).format 'YYYY-MM-DD' if @data().endAt
+
+  endAtTime: ->
+    moment(@data().endAt).format 'HH:mm' if @data().endAt
 
 FlowRouter.route '/meeting/:_id',
   name: 'Meeting.display'

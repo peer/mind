@@ -45,8 +45,7 @@ class Comment.NewComponent extends UIComponent
           component.reset()
 
   hasBody: ->
-    # TODO: Search all descendant components, not just children.
-    _.every(component.hasContent() for component in @childComponents 'EditorComponent')
+    _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')
 
   canNewDiscussion: ->
     User.hasPermission User.PERMISSIONS.DISCUSSION_NEW

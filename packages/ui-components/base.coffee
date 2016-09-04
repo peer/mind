@@ -62,6 +62,17 @@ class UIComponent extends CommonComponent
     if styleClassesArrays?.length
       class: styleClassesArrays.join ' '
 
+  descendantComponents: (args...) ->
+    components = @childComponents args...
+
+    for component in @childComponents()
+      components = components.concat component.descendantComponents args...
+
+    components
+
 class UIMixin extends CommonMixin
   getFirstWith: (args...) ->
     @component().getFirstWith args...
+
+  descendantComponents: (args...) ->
+    @component().descendantComponents args...

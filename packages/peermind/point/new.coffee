@@ -61,5 +61,4 @@ class Point.NewComponent extends UIComponent
     "s#{Math.floor(12 / _.size(Point.CATEGORY))}"
 
   hasBody: ->
-    # TODO: Search all descendant components, not just children.
-    _.every(component.hasContent() for component in @childComponents 'EditorComponent')
+    _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')

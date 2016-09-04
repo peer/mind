@@ -60,6 +60,5 @@ class share.EditableMixin extends UIMixin
   editingEnded: ->
     @_isBeingEdited false
 
-    # TODO: Search all descendant components, not just children.
-    for component in @childComponents 'EditorComponent'
+    for component in @descendantComponents 'EditorComponent'
       component.reset()

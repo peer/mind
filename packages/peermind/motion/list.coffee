@@ -126,8 +126,7 @@ class Motion.ListItemComponent extends UIComponent
         onSuccess()
 
   hasBody: ->
-    # TODO: Search all descendant components, not just children.
-    _.every(component.hasContent() for component in @childComponents 'EditorComponent')
+    _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')
 
   motionPassed: ->
     tally = Tally.documents.findOne

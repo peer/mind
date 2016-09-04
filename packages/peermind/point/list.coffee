@@ -116,8 +116,7 @@ class Point.ListItemComponent extends UIComponent
     'checked' if @currentData().category is @data().category
 
   hasBody: ->
-    # TODO: Search all descendant components, not just children.
-    _.every(component.hasContent() for component in @childComponents 'EditorComponent')
+    _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')
 
   expandableEventData: ->
     data = @data()

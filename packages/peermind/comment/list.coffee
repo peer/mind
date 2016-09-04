@@ -69,8 +69,7 @@ class Comment.ListItemComponent extends UIComponent
         onSuccess()
 
   hasBody: ->
-    # TODO: Search all descendant components, not just children.
-    _.every(component.hasContent() for component in @childComponents 'EditorComponent')
+    _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')
 
   expandableEventData: ->
     data = @data()
