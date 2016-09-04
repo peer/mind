@@ -2,8 +2,7 @@ escapeKeys = (object) ->
   if _.isArray object
     return (escapeKeys i for i in object)
 
-  else if _.isObject object
-    check object, Object
+  else if _.isPlainObject object
     result = {}
     for key, value of object
       # We replace $ at the beginning with \$, so that it is not at the beginning anymore.
