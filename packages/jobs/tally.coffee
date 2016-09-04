@@ -9,13 +9,11 @@ class ComputeTallyJob extends Job
     Motion = Package.core.Motion unless Motion
     VotingEngine = Package.voting.VotingEngine unless VotingEngine
 
-    motion = Motion.documents.findOne @data.motion._id,
-      fields:
-        majority: 1
-
-    assert motion.majority
+    motion = Motion.documents.findOne @data.motion._id
 
     throw new Error ("Motion '#{@data.motion._id}' does not exist.") unless motion
+
+    throw new Error ("Motion '#{@data.motion._id}' is not open for voting.") unless motion.isOpen()
 
     votes = Vote.documents.find('motion._id': motion._id,
       fields:
