@@ -110,6 +110,7 @@ Package.onUse(function (api) {
     'migrations/0015-user-profile.coffee',
     'migrations/0016-displayfields.coffee',
     'migrations/0017-vote-motion.coffee',
-    'migrations/0018-tally-infavor.coffee'
+    'migrations/0018-tally-infavor.coffee',
+    'migrations/0019-meeting-discussions.coffee'
   ], 'server');
 });

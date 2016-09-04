@@ -31,6 +31,14 @@
             <div class="col s12">
               <div class="divider"></div>
               {{> MetadataComponent discussion}}
+              {{#if discussion.meetings.length}}
+                <ul class="collection with-header z-depth-1">
+                  <li class="collection-header"><h5>Meetings</h5></li>
+                  {{#each discussion.meetings}}
+                    {{> Meeting.ListItemComponent}}
+                  {{/each}}
+                </ul>
+              {{/if}}
             </div>
           </div>
         {{/if}}
