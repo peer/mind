@@ -31,12 +31,15 @@ class ColumnsLayoutComponent extends BlazeLayoutComponent
     @activeTab = new ReactiveField @constructor.REGIONS.MAIN
     @previousActiveTab = new ReactiveField @constructor.REGIONS.FIRST
 
+    @directionClass = new ReactiveField null
+
     @windowWidth = new ReactiveField $(window).width()
 
     @_eventHandlerId = Random.id()
 
     $(window).on "resize.columns-#{@_eventHandlerId}", (event) =>
-      @windowWidth  $(window).width()
+      @windowWidth $(window).width()
+      @directionClass null
 
   onDestroyed: ->
     super
@@ -83,11 +86,14 @@ class ColumnsLayoutComponent extends BlazeLayoutComponent
       # We select the new tab and the tab on the left of it.
       @previousActiveTab @constructor.REGIONS_ORDER[newIndex - 1]
       @activeTab @constructor.REGIONS_ORDER[newIndex]
+      @directionClass 'moving-right'
+
     # If we moving to the left.
     else if newIndex < currentlyActiveIndex
       # We select the new tab and the tab on the right of it.
       @previousActiveTab @constructor.REGIONS_ORDER[newIndex + 1]
       @activeTab @constructor.REGIONS_ORDER[newIndex]
+      @directionClass 'moving-left'
 
     # If it is equal, then we do not do anything, a click was on the already active tab.
 

@@ -5,6 +5,13 @@
   min-height 100vh
   flex-direction column
 
+.tabs .indicator
+  &.moving-right
+    transition left 0.3s ease-out 0.09s, right 0.3s ease-out
+
+  &.moving-left
+    transition left 0.3s ease-out, right 0.3s ease-out 0.09s
+
 main
   flex 1 0 auto
 

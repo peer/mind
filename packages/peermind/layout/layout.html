@@ -20,7 +20,7 @@
         {{!-- ColumnsLayoutComponent is not inheriting from UIComponent so we cannot use "class" method. --}}
         <li class="tab col s3"><a href="" class="{{activeClass}}" onClick>{{displayTab}}</a></li>
       {{/each}}
-      <div class="indicator" {{positionStyle}}></div>
+      <div class="indicator {{directionClass}}" {{positionStyle}}></div>
     </ul>
     <div class="row">
       {{#if visible 'main'}}
