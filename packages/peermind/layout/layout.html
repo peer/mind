@@ -15,23 +15,36 @@
 <template name="ColumnsLayoutComponent">
   {{> HeaderComponent}}
   <main>
-    <div class="container">
-      <div class="row">
-        <div class="main col s12">
-          {{> renderMain}}
-        </div>
-      </div>
-    </div>
+    <ul class="tabs z-depth-1 hide-on-large-only">
+      {{#each tabs}}
+        {{!-- ColumnsLayoutComponent is not inheriting from UIComponent so we cannot use "class" method. --}}
+        <li class="tab col s3"><a href="" class="{{activeClass}}" onClick>{{displayTab}}</a></li>
+      {{/each}}
+      <div class="indicator" {{positionStyle}}></div>
+    </ul>
     <div class="row">
-      <div class="first col s4">
-        {{> renderFirst}}
-      </div>
-      <div class="second col s4">
-        {{> renderSecond}}
-      </div>
-      <div class="third col s4">
-        {{> renderThird}}
-      </div>
+      {{#if visible 'main'}}
+        <div class="main col l12 m6 s12">
+          <div class="container">
+            {{> renderMain}}
+          </div>
+        </div>
+      {{/if}}
+      {{#if visible 'first'}}
+        <div class="first col l4 m6 s12">
+          {{> renderFirst}}
+        </div>
+      {{/if}}
+      {{#if visible 'second'}}
+        <div class="second col l4 m6 s12">
+          {{> renderSecond}}
+        </div>
+      {{/if}}
+      {{#if visible 'third'}}
+        <div class="third col l4 m6 s12">
+          {{> renderThird}}
+        </div>
+      {{/if}}
     </div>
   </main>
   {{> FooterComponent}}

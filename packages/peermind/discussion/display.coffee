@@ -1,6 +1,9 @@
 class Discussion.DisplayComponent extends Discussion.OneComponent
   @register 'Discussion.DisplayComponent'
 
+  @displayTab: ->
+    "Description"
+
   renderMetadataTimestamp: (parentComponent, metadataComponent) ->
     Discussion.MetadataTimestampComponent.renderComponent parentComponent
 

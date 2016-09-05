@@ -7,6 +7,9 @@ STATUS_ORDER[Motion.STATUS.WITHDRAWN] = 3
 class Motion.ListComponent extends UIComponent
   @register 'Motion.ListComponent'
 
+  @displayTab: ->
+    "Motions"
+
   onCreated: ->
     super
 
@@ -21,7 +24,23 @@ class Motion.ListComponent extends UIComponent
 
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
+      @subscribe 'Discussion.one', discussionId if discussionId
+
+    @autorun (computation) =>
+      discussionId = @currentDiscussionId()
       @subscribe 'Motion.list', discussionId if discussionId
+
+    @autorun (computation) =>
+      return unless @subscriptionsReady()
+
+      discussion = Discussion.documents.findOne @currentDiscussionId(),
+        fields:
+          title: 1
+
+      if discussion
+        share.PageTitle discussion.title
+      else
+        share.PageTitle "Not found"
 
   motions: ->
     Motion.documents.find

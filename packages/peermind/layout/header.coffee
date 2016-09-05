@@ -12,7 +12,7 @@ class HeaderComponent extends UIComponent
     # If side out menu is opened and window gets resized so that the responsive
     # design switches to large design, close the side out menu.
     $(window).on "resize.sideNav-#{@_eventHandlerId}", (event) =>
-      # TODO: Use $medium-screen-up here. Check that is is "screen" as well?
+      # TODO: Use $medium-screen-up here. Check that it is "screen" as well?
       @$('.button-collapse').sideNav('hide') if $(window).width() >= 993
 
   onDestroyed: ->

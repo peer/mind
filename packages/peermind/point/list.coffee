@@ -1,6 +1,9 @@
 class Point.ListComponent extends UIComponent
   @register 'Point.ListComponent'
 
+  @displayTab: ->
+    "Points"
+
   onCreated: ->
     super
 
@@ -15,7 +18,23 @@ class Point.ListComponent extends UIComponent
 
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
+      @subscribe 'Discussion.one', discussionId if discussionId
+
+    @autorun (computation) =>
+      discussionId = @currentDiscussionId()
       @subscribe 'Point.list', discussionId if discussionId
+
+    @autorun (computation) =>
+      return unless @subscriptionsReady()
+
+      discussion = Discussion.documents.findOne @currentDiscussionId(),
+        fields:
+          title: 1
+
+      if discussion
+        share.PageTitle discussion.title
+      else
+        share.PageTitle "Not found"
 
   inFavorPoints: ->
     Point.documents.find

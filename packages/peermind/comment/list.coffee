@@ -1,6 +1,9 @@
 class Comment.ListComponent extends UIComponent
   @register 'Comment.ListComponent'
 
+  @displayTab: ->
+    "Comments"
+
   onCreated: ->
     super
 
@@ -15,7 +18,23 @@ class Comment.ListComponent extends UIComponent
 
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
+      @subscribe 'Discussion.one', discussionId if discussionId
+
+    @autorun (computation) =>
+      discussionId = @currentDiscussionId()
       @subscribe 'Comment.list', discussionId if discussionId
+
+    @autorun (computation) =>
+      return unless @subscriptionsReady()
+
+      discussion = Discussion.documents.findOne @currentDiscussionId(),
+        fields:
+          title: 1
+
+      if discussion
+        share.PageTitle discussion.title
+      else
+        share.PageTitle "Not found"
 
   comments: ->
     Comment.documents.find
