@@ -57,7 +57,9 @@ class share.ExpandableMixin extends UIMixin
 
     $node = $(node)
     if $node.hasClass('expansion') and @_expandWithAnimation
-      $node.velocity 'slideUp',
+      # We can call just "stop" because it does not matter that we have not animated insertion
+      # to the end and we have no "complete" callback on insertion as well to care about.
+      $node.velocity('stop').velocity 'slideUp',
         duration: 'fast'
         queue: false
         complete: (element) =>
