@@ -54,10 +54,12 @@ class Meeting extends share.BaseDocument
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'description' of lastChange
         [fields._id, lastChange.description or '']
-      discussions: @GeneratedField 'self', ['changes'], (fields) =>
-        lastChange = fields.changes?[fields.changes?.length - 1]
-        return [] unless lastChange and 'discussions' of lastChange
-        [fields._id, lastChange.discussions or []]
+      discussions: [
+        @GeneratedField 'self', ['changes'], (fields) =>
+          lastChange = fields.changes?[fields.changes?.length - 1]
+          return [] unless lastChange and 'discussions' of lastChange
+          [fields._id, lastChange.discussions or []]
+      ]
       descriptionAttachments: [
         # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['description'], (fields) =>

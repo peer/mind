@@ -60,10 +60,12 @@ class Discussion extends share.BaseDocument
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'description' of lastChange
         [fields._id, lastChange.description or '']
-      passingMotions: @GeneratedField 'self', ['changes'], (fields) =>
-        lastChange = fields.changes?[fields.changes?.length - 1]
-        return [] unless lastChange and 'passingMotions' of lastChange
-        [fields._id, lastChange.passingMotions or []]
+      passingMotions: [
+        @GeneratedField 'self', ['changes'], (fields) =>
+          lastChange = fields.changes?[fields.changes?.length - 1]
+          return [] unless lastChange and 'passingMotions' of lastChange
+          [fields._id, lastChange.passingMotions or []]
+      ]
       closingNote: @GeneratedField 'self', ['changes'], (fields) =>
         lastChange = fields.changes?[fields.changes?.length - 1]
         return [] unless lastChange and 'closingNote' of lastChange

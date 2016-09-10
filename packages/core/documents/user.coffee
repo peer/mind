@@ -230,10 +230,14 @@ class User extends share.BaseDocument
       if __meteor_runtime_config__.SANDSTORM
         _.extend fields,
           username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
-          avatars: [@GeneratedField 'self', ['services.sandstorm.picture'], generateSandstormAvatars]
+          avatars: [
+            @GeneratedField 'self', ['services.sandstorm.picture'], generateSandstormAvatars
+          ]
       else
         _.extend fields,
-          avatars: [@GeneratedField 'self', ['username', 'emails', 'services.facebook.id', 'services.google.picture', 'services.twitter.profile_image_url_https'], generateAvatars]
+          avatars: [
+            @GeneratedField 'self', ['username', 'emails', 'services.facebook.id', 'services.google.picture', 'services.twitter.profile_image_url_https'], generateAvatars
+          ]
       fields
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
