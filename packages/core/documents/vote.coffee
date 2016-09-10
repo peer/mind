@@ -16,7 +16,7 @@ class Vote extends share.BaseDocument
   @Meta
     name: 'Vote'
     fields: =>
-      author: @ReferenceField User, User.REFERENCE_FIELDS()
+      author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       # We care only about discussion ID and not any other fields (like status).
       # TODO: Do we even really need discussion field?
       motion: @ReferenceField Motion, ['discussion._id']
