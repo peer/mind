@@ -211,8 +211,12 @@ class User extends share.BaseDocument
     name: 'User'
     collection: Meteor.users
     fields: =>
-      # We include "avatar" field so the if it gets deleted it gets regenerated.
+      changes: [
+        author: @ReferenceField 'self', User.REFERENCE_FIELDS(), false
+      ]
+    generators: =>
       fields =
+        # We include "avatar" field so the if it gets deleted it gets regenerated.
         avatar: @GeneratedField 'self', ['avatar', 'avatars'], generateAvatar
         profile: @GeneratedField 'self', ['changes'], (fields) =>
           lastChange = fields.changes?[fields.changes?.length - 1]
@@ -223,9 +227,6 @@ class User extends share.BaseDocument
           @GeneratedField 'self', ['profile'], (fields) =>
             return [fields._id, []] unless fields.profile
             [fields._id, ({_id} for _id in @extractAttachments fields.profile)]
-        ]
-        changes: [
-          author: @ReferenceField 'self', User.REFERENCE_FIELDS(), false
         ]
       if __meteor_runtime_config__.SANDSTORM
         _.extend fields,

@@ -37,6 +37,17 @@ class Meeting extends share.BaseDocument
     name: 'Meeting'
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
+      discussions: [
+        discussion: @ReferenceField Discussion, [], true, 'meetings', ['title', 'startAt', 'endAt']
+      ]
+      changes: [
+        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
+        # TODO: PeerDB does not support reference fields inside a nested array.
+        #discussions: [
+        #  discussion: @ReferenceField Discussion, [], false
+        #]
+      ]
+    generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       title: @GeneratedField 'self', ['changes'], (fields) =>
         lastChange = fields.changes?[fields.changes?.length - 1]
@@ -65,16 +76,6 @@ class Meeting extends share.BaseDocument
         @GeneratedField 'self', ['description'], (fields) =>
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
-      ]
-      discussions: [
-        discussion: @ReferenceField Discussion, [], true, 'meetings', ['title', 'startAt', 'endAt']
-      ]
-      changes: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
-        # TODO: PeerDB does not support reference fields inside a nested array.
-        #discussions: [
-        #  discussion: @ReferenceField Discussion, [], false
-        #]
       ]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']

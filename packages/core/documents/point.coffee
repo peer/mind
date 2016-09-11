@@ -31,13 +31,15 @@ class Point extends share.UpvotableDocument
     name: 'Point'
     fields: (fields) =>
       _.extend fields,
+        # We override this field with one with a reverse field.
+        discussion: @ReferenceField Discussion, ['status'], true, 'points', []
+    generators: (generators) =>
+      _.extend generators,
         # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
         category: @GeneratedField 'self', ['changes'], (fields) =>
           lastChange = fields.changes?[fields.changes?.length - 1]
           return [] unless lastChange and 'category' of lastChange
           [fields._id, lastChange.category or Point.CATEGORY.OTHER]
-        # We override this field with one with a reverse field.
-        discussion: @ReferenceField Discussion, ['status'], true, 'points', []
 
   @CATEGORY:
     IN_FAVOR: 'infavor'

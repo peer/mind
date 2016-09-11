@@ -29,6 +29,13 @@ class share.UpvotableDocument extends share.BaseDocument
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
       discussion: @ReferenceField Discussion
+      changes: [
+        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      ]
+      upvotes: [
+        author: @ReferenceField User
+      ]
+    generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       body: @GeneratedField 'self', ['changes'], (fields) ->
         lastChange = fields.changes?[fields.changes?.length - 1]
@@ -39,12 +46,6 @@ class share.UpvotableDocument extends share.BaseDocument
         @GeneratedField 'self', ['body'], (fields) =>
           return [fields._id, []] unless fields.body
           [fields._id, ({_id} for _id in @extractAttachments fields.body)]
-      ]
-      changes: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
-      ]
-      upvotes: [
-        author: @ReferenceField User
       ]
       upvotesCount: @GeneratedField 'self', ['upvotes'], (fields) ->
         [fields._id, fields.upvotes?.length or 0]

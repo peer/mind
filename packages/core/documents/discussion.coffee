@@ -51,6 +51,11 @@ class Discussion extends share.BaseDocument
     name: 'Discussion'
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS()
+      passingMotions: [@ReferenceField Motion]
+      changes: [
+        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      ]
+    generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       title: @GeneratedField 'self', ['changes'], (fields) =>
         lastChange = fields.changes?[fields.changes?.length - 1]
@@ -81,10 +86,6 @@ class Discussion extends share.BaseDocument
         @GeneratedField 'self', ['closingNote'], (fields) =>
           return [fields._id, []] unless fields.closingNote
           [fields._id, ({_id} for _id in @extractAttachments fields.closingNote)]
-      ]
-      passingMotions: [@ReferenceField Motion]
-      changes: [
-        author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
       motionsCount: @GeneratedField 'self', ['motions'], (fields) ->
         [fields._id, fields.motions?.length or 0]

@@ -51,6 +51,8 @@ class Motion extends share.UpvotableDocument
         withdrawnBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
         # We override this field with one with a reverse field.
         discussion: @ReferenceField Discussion, ['status'], true, 'motions', ['status']
+    generators: (generators) =>
+      _.extend generators,
         status: @GeneratedField 'self', ['withdrawnAt', 'withdrawnBy', 'votingOpenedAt', 'votingOpenedBy', 'votingClosedAt', 'votingClosedBy', 'majority'], (fields) ->
           motion = new Motion fields
           if motion.isWithdrawn()

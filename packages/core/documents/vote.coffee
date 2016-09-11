@@ -20,6 +20,7 @@ class Vote extends share.BaseDocument
       # We care only about discussion ID and not any other fields (like status).
       # TODO: Do we even really need discussion field?
       motion: @ReferenceField Motion, ['discussion._id']
+    generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       value: @GeneratedField 'self', ['changes'], (fields) ->
         lastChange = fields.changes?[fields.changes?.length - 1]
