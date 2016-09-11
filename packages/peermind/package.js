@@ -56,7 +56,8 @@ Package.onUse(function (api) {
     'api',
     'ui-components',
     'trix',
-    'storage'
+    'storage',
+    'loading'
   ]);
 
   api.addFiles([

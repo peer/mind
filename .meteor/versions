@@ -56,6 +56,7 @@ kadira:flow-router@2.12.1
 kenton:accounts-sandstorm@0.5.1
 launch-screen@1.0.12
 livedata@1.0.18
+loading@0.1.0
 localstorage@1.0.11
 logging@1.1.15
 materialize:materialize@0.97.7
@@ -132,6 +133,7 @@ spacebars-compiler@1.0.12
 srp@1.0.9
 standard-minifier-css@1.2.0
 standard-minifier-js@1.2.0
+static-html@1.1.12
 storage@0.1.0
 stylus@2.513.5
 templating@1.2.14
