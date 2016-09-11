@@ -12,6 +12,27 @@ class Discussion.ListComponent extends UIComponent
     @subscribe 'Meeting.list'
     @subscribe 'Discussion.list'
 
+  onRendered: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    @autorun (computation) =>
+      if @canNew()
+        footerComponent.fixedButtonComponent 'Discussion.ListComponent.FixedButton'
+        footerComponent.fixedButtonDataContext null
+      else
+        footerComponent.fixedButtonComponent null
+        footerComponent.fixedButtonDataContext null
+
+  onDestroyed: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    footerComponent.fixedButtonComponent null
+    footerComponent.fixedButtonDataContext null
+
   discussionsWithoutMeeting: ->
     Discussion.documents.find _.extend(@showClosedDiscussionsQuery(),
       # Or discussions which are not part of any meeting which is being shown.
@@ -85,6 +106,9 @@ class Discussion.ListItemComponent extends UIComponent
 
   closed: ->
     'closed' if @data()?.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+
+class Discussion.ListComponent.FixedButton extends UIComponent
+  @register 'Discussion.ListComponent.FixedButton'
 
 FlowRouter.route '/',
   name: 'Discussion.list'

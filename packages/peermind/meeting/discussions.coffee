@@ -6,6 +6,27 @@ class Meeting.ListDiscussionsComponent extends Meeting.OneComponent
 
     @subscribe 'Discussion.list'
 
+  onRendered: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    @autorun (computation) =>
+      if @canEdit()
+        footerComponent.fixedButtonComponent 'Meeting.ListDiscussionsComponent.FixedButton'
+        footerComponent.fixedButtonDataContext @meeting()
+      else
+        footerComponent.fixedButtonComponent null
+        footerComponent.fixedButtonDataContext null
+
+  onDestroyed: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    footerComponent.fixedButtonComponent null
+    footerComponent.fixedButtonDataContext null
+
   discussions: ->
     Discussion.documents.find {},
       sort:
@@ -40,6 +61,9 @@ class Meeting.ListDiscussionsItemComponent extends UIComponent
 
   otherMeetings: ->
     (meeting for meeting in @data().meetings when meeting._id isnt @meeting()?._id)
+
+class Meeting.ListDiscussionsComponent.FixedButton extends UIComponent
+  @register 'Meeting.ListDiscussionsComponent.FixedButton'
 
 FlowRouter.route '/meeting/discussions/:_id',
   name: 'Meeting.discussions'

@@ -4,6 +4,27 @@ class Discussion.DisplayComponent extends Discussion.OneComponent
   @displayTab: ->
     "Description"
 
+  onRendered: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    @autorun (computation) =>
+      if @canClose()
+        footerComponent.fixedButtonComponent 'Discussion.DisplayComponent.FixedButton'
+        footerComponent.fixedButtonDataContext @discussion()
+      else
+        footerComponent.fixedButtonComponent null
+        footerComponent.fixedButtonDataContext null
+
+  onDestroyed: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    footerComponent.fixedButtonComponent null
+    footerComponent.fixedButtonDataContext null
+
   renderMetadataTimestamp: (parentComponent, metadataComponent) ->
     Discussion.MetadataTimestampComponent.renderComponent parentComponent
 
@@ -29,6 +50,9 @@ class Discussion.EditFormComponent extends UIComponent
 
   canEditClosed: (args...) ->
     @callAncestorWith 'canEditClosed', args...
+
+class Discussion.DisplayComponent.FixedButton extends UIComponent
+  @register 'Discussion.DisplayComponent.FixedButton'
 
 FlowRouter.route '/discussion/:_id',
   name: 'Discussion.display'

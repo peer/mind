@@ -9,6 +9,27 @@ class Meeting.ListComponent extends UIComponent
 
     @subscribe 'Meeting.list'
 
+  onRendered: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    @autorun (computation) =>
+      if @canNew()
+        footerComponent.fixedButtonComponent 'Meeting.ListComponent.FixedButton'
+        footerComponent.fixedButtonDataContext null
+      else
+        footerComponent.fixedButtonComponent null
+        footerComponent.fixedButtonDataContext null
+
+  onDestroyed: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    footerComponent.fixedButtonComponent null
+    footerComponent.fixedButtonDataContext null
+
   meetings: ->
     Meeting.documents.find {},
       sort:
@@ -17,6 +38,9 @@ class Meeting.ListComponent extends UIComponent
 
 class Meeting.ListItemComponent extends UIComponent
   @register 'Meeting.ListItemComponent'
+
+class Meeting.ListComponent.FixedButton extends UIComponent
+  @register 'Meeting.ListComponent.FixedButton'
 
 FlowRouter.route '/meeting',
   name: 'Meeting.list'

@@ -27,6 +27,27 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
     ,
       EJSON.equals
 
+  onRendered: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    @autorun (computation) =>
+      if @canEdit()
+        footerComponent.fixedButtonComponent 'Meeting.DisplayComponent.FixedButton'
+        footerComponent.fixedButtonDataContext @meeting()
+      else
+        footerComponent.fixedButtonComponent null
+        footerComponent.fixedButtonDataContext null
+
+  onDestroyed: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    footerComponent.fixedButtonComponent null
+    footerComponent.fixedButtonDataContext null
+
   discussions: ->
     discussions = @currentMeetingDiscussions()
 
@@ -210,6 +231,9 @@ class Meeting.EditFormComponent extends UIComponent
 
   endAtTime: ->
     moment(@data().endAt).format 'HH:mm' if @data().endAt
+
+class Meeting.DisplayComponent.FixedButton extends UIComponent
+  @register 'Meeting.DisplayComponent.FixedButton'
 
 FlowRouter.route '/meeting/:_id',
   name: 'Meeting.display'

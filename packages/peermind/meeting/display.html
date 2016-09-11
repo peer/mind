@@ -2,13 +2,6 @@
   {{#if notFound}}
     {{> NotFoundComponent}}
   {{else}}
-    {{#if canEdit}}
-      <div class="fixed-action-btn">
-        <a href="{{pathFor 'Meeting.discussions' params=meeting}}" class="btn-floating btn-large waves-effect waves-light red">
-          <i class="large material-icons">playlist_add_check</i>
-        </a>
-      </div>
-    {{/if}}
     <div class="section meeting">
       {{#if $and canEdit isBeingEdited}}
         {{> Meeting.EditFormComponent meeting}}
@@ -116,5 +109,13 @@
         <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
       </div>
     </form>
+  </div>
+</template>
+
+<template name="Meeting.DisplayComponent.FixedButton">
+  <div class="fixed-action-btn">
+    <a href="{{pathFor 'Meeting.discussions' params=data}}" class="btn-floating btn-large waves-effect waves-light red">
+      <i class="large material-icons">playlist_add_check</i>
+    </a>
   </div>
 </template>

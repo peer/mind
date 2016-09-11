@@ -2,13 +2,6 @@
   {{#if notFound}}
     {{> NotFoundComponent}}
   {{else}}
-    {{#if canClose}}
-      <div class="fixed-action-btn">
-        <a href="{{pathFor 'Discussion.close' params=discussion}}" class="btn-floating btn-large waves-effect waves-light red">
-          <i class="large material-icons">stop</i>
-        </a>
-      </div>
-    {{/if}}
     <div class="section discussion">
       {{#if $and canEdit isBeingEdited}}
         {{> Discussion.EditFormComponent discussion}}
@@ -119,5 +112,13 @@
         <button class="cancel-edit-button waves-effect waves-light btn-flat" type="button"><i class="material-icons left">cancel</i>Cancel</button>
       </div>
     </form>
+  </div>
+</template>
+
+<template name="Discussion.DisplayComponent.FixedButton">
+  <div class="fixed-action-btn">
+    <a href="{{pathFor 'Discussion.close' params=data}}" class="btn-floating btn-large waves-effect waves-light red">
+      <i class="large material-icons">stop</i>
+    </a>
   </div>
 </template>

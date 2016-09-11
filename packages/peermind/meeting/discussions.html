@@ -3,11 +3,6 @@
     {{> NotFoundComponent}}
   {{else}}
     {{#if canEdit}}
-      <div class="fixed-action-btn">
-        <a href="{{pathFor 'Meeting.display' params=meeting}}" class="btn-floating btn-large waves-effect waves-light red">
-          <i class="large material-icons">done</i>
-        </a>
-      </div>
       <div class="section discussions">
         {{#if discussions.exists}}
           <ul class="collection z-depth-1">
@@ -37,4 +32,12 @@
       </ul>
     {{/if}}
   </li>
+</template>
+
+<template name="Meeting.ListDiscussionsComponent.FixedButton">
+  <div class="fixed-action-btn">
+    <a href="{{pathFor 'Meeting.display' params=data}}" class="btn-floating btn-large waves-effect waves-light red">
+      <i class="large material-icons">done</i>
+    </a>
+  </div>
 </template>

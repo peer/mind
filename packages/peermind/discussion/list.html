@@ -1,11 +1,4 @@
 <template name="Discussion.ListComponent">
-  {{#if canNew}}
-    <div class="fixed-action-btn">
-      <a href="{{pathFor 'Discussion.new'}}" class="btn-floating btn-large waves-effect waves-light red">
-        <i class="large material-icons">add</i>
-      </a>
-    </div>
-  {{/if}}
   <div class="section">
     <div class="row">
       <div class="col s12">
@@ -55,4 +48,12 @@
     <a href="{{pathFor 'Discussion.display' params=data}}" class="title">{{title}}</a>
     <p>{{pluralize commentsCount 'comment'}}&nbsp;&nbsp;•&nbsp;&nbsp;{{pluralize pointsCount 'point'}}&nbsp;&nbsp;•&nbsp;&nbsp;{{pluralize motionsCount 'motion'}}</p>
   </li>
+</template>
+
+<template name="Discussion.ListComponent.FixedButton">
+  <div class="fixed-action-btn">
+    <a href="{{pathFor 'Discussion.new'}}" class="btn-floating btn-large waves-effect waves-light red">
+      <i class="large material-icons">add</i>
+    </a>
+  </div>
 </template>

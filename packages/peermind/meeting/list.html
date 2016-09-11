@@ -1,11 +1,4 @@
 <template name="Meeting.ListComponent">
-  {{#if canNew}}
-    <div class="fixed-action-btn">
-      <a href="{{pathFor 'Meeting.new'}}" class="btn-floating btn-large waves-effect waves-light red">
-        <i class="large material-icons">add</i>
-      </a>
-    </div>
-  {{/if}}
   <div class="section">
     {{#if meetings.exists}}
       <ul class="collection z-depth-1">
@@ -22,4 +15,12 @@
     <span class="secondary-content">{{formatStartEndDate startAt endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}</span>
     <a href="{{pathFor 'Meeting.display' params=data}}" class="title">{{title}}</a>
   </li>
+</template>
+
+<template name="Meeting.ListComponent.FixedButton">
+  <div class="fixed-action-btn">
+    <a href="{{pathFor 'Meeting.new'}}" class="btn-floating btn-large waves-effect waves-light red">
+      <i class="large material-icons">add</i>
+    </a>
+  </div>
 </template>
