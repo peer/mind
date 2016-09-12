@@ -113,6 +113,7 @@ Package.onUse(function (api) {
     'layout/access-denied.coffee',
     'layout/icons.html',
     'layout/sandstorm.coffee',
+    'layout/mobile.html',
     'discussion/base.coffee',
     'discussion/list.html',
     'discussion/list.coffee',
