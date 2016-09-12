@@ -130,8 +130,8 @@ class ColumnsLayoutComponent extends BlazeLayoutComponent
 
     return unless $activeTab.length
 
-    left = $activeTab.position().left
-    right = $activeTab.offsetParent().width() - ($activeTab.position().left + $activeTab.width())
+    left = $activeTab.position().left + $activeTab.offsetParent().scrollLeft()
+    right = $activeTab.offsetParent().width() - (left + $activeTab.width())
 
     if @visible @previousActiveTab()
       previousActiveIndex = _.indexOf @constructor.REGIONS_ORDER, @previousActiveTab()
