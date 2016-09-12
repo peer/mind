@@ -1,6 +1,6 @@
 Package.describe({
   name: 'balancetext',
-  summary: 'A jQuery plugin for implementing balancing of wrapping text in a web page',
+  summary: "A jQuery plugin for implementing balancing of wrapping text in a web page",
   version: '2.0.0_1'
 });
 
