@@ -16,19 +16,17 @@ class Meeting.ListComponent extends UIComponent
 
     @autorun (computation) =>
       if @canNew()
-        footerComponent.fixedButtonComponent 'Meeting.ListComponent.FixedButton'
-        footerComponent.fixedButtonDataContext null
+        footerComponent.setFixedButton 'Meeting.ListComponent.FixedButton'
       else
-        footerComponent.fixedButtonComponent null
-        footerComponent.fixedButtonDataContext null
+        footerComponent.setFixedButton null
+
+    footerComponent.fixedButtonDataContext null
 
   onDestroyed: ->
     super
 
     footerComponent = @constructor.getComponent 'FooterComponent'
-
-    footerComponent.fixedButtonComponent null
-    footerComponent.fixedButtonDataContext null
+    footerComponent.removeFixedButton()
 
   meetings: ->
     Meeting.documents.find {},

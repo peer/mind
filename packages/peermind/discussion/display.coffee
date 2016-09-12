@@ -11,19 +11,18 @@ class Discussion.DisplayComponent extends Discussion.OneComponent
 
     @autorun (computation) =>
       if @canClose()
-        footerComponent.fixedButtonComponent 'Discussion.DisplayComponent.FixedButton'
-        footerComponent.fixedButtonDataContext @discussion()
+        footerComponent.setFixedButton 'Discussion.DisplayComponent.FixedButton'
       else
-        footerComponent.fixedButtonComponent null
-        footerComponent.fixedButtonDataContext null
+        footerComponent.setFixedButton null
+
+    @autorun (computation) =>
+      footerComponent.fixedButtonDataContext @discussion()
 
   onDestroyed: ->
     super
 
     footerComponent = @constructor.getComponent 'FooterComponent'
-
-    footerComponent.fixedButtonComponent null
-    footerComponent.fixedButtonDataContext null
+    footerComponent.removeFixedButton()
 
   renderMetadataTimestamp: (parentComponent, metadataComponent) ->
     Discussion.MetadataTimestampComponent.renderComponent parentComponent

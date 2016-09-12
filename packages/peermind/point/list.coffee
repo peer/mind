@@ -46,19 +46,18 @@ class Point.ListComponent extends UIComponent
 
     @autorun (computation) =>
       if @canClose()
-        footerComponent.fixedButtonComponent 'Discussion.DisplayComponent.FixedButton'
-        footerComponent.fixedButtonDataContext @discussion()
+        footerComponent.setFixedButton 'Discussion.DisplayComponent.FixedButton'
       else
-        footerComponent.fixedButtonComponent null
-        footerComponent.fixedButtonDataContext null
+        footerComponent.setFixedButton null
+
+    @autorun (computation) =>
+      footerComponent.fixedButtonDataContext @discussion()
 
   onDestroyed: ->
     super
 
     footerComponent = @constructor.getComponent 'FooterComponent'
-
-    footerComponent.fixedButtonComponent null
-    footerComponent.fixedButtonDataContext null
+    footerComponent.removeFixedButton()
 
   discussion: ->
     Discussion.documents.findOne @currentDiscussionId()

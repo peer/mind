@@ -13,19 +13,18 @@ class Meeting.ListDiscussionsComponent extends Meeting.OneComponent
 
     @autorun (computation) =>
       if @canEdit()
-        footerComponent.fixedButtonComponent 'Meeting.ListDiscussionsComponent.FixedButton'
-        footerComponent.fixedButtonDataContext @meeting()
+        footerComponent.setFixedButton 'Meeting.ListDiscussionsComponent.FixedButton'
       else
-        footerComponent.fixedButtonComponent null
-        footerComponent.fixedButtonDataContext null
+        footerComponent.setFixedButton null
+
+    @autorun (computation) =>
+      footerComponent.fixedButtonDataContext @meeting()
 
   onDestroyed: ->
     super
 
     footerComponent = @constructor.getComponent 'FooterComponent'
-
-    footerComponent.fixedButtonComponent null
-    footerComponent.fixedButtonDataContext null
+    footerComponent.removeFixedButton()
 
   discussions: ->
     Discussion.documents.find {},

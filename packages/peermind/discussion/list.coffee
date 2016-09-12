@@ -19,19 +19,17 @@ class Discussion.ListComponent extends UIComponent
 
     @autorun (computation) =>
       if @canNew()
-        footerComponent.fixedButtonComponent 'Discussion.ListComponent.FixedButton'
-        footerComponent.fixedButtonDataContext null
+        footerComponent.setFixedButton 'Discussion.ListComponent.FixedButton'
       else
-        footerComponent.fixedButtonComponent null
-        footerComponent.fixedButtonDataContext null
+        footerComponent.setFixedButton null
+
+    footerComponent.fixedButtonDataContext null
 
   onDestroyed: ->
     super
 
     footerComponent = @constructor.getComponent 'FooterComponent'
-
-    footerComponent.fixedButtonComponent null
-    footerComponent.fixedButtonDataContext null
+    footerComponent.removeFixedButton()
 
   discussionsWithoutMeeting: ->
     Discussion.documents.find _.extend(@showClosedDiscussionsQuery(),
