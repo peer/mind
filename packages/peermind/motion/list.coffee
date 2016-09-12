@@ -22,6 +22,9 @@ class Motion.ListComponent extends UIComponent
     @discussionIsClosed = new ComputedField =>
       Discussion.documents.findOne(@currentDiscussionId())?.isClosed()
 
+    @canClose = new ComputedField =>
+      @discussion() and @discussion().isOpen() and not @discussion().isClosed() and User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)
+
     @autorun (computation) =>
       discussionId = @currentDiscussionId()
       @subscribe 'Discussion.one', discussionId if discussionId
@@ -41,6 +44,30 @@ class Motion.ListComponent extends UIComponent
         share.PageTitle discussion.title
       else
         share.PageTitle "Not found"
+
+  onRendered: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    @autorun (computation) =>
+      if @canClose()
+        footerComponent.fixedButtonComponent 'Discussion.DisplayComponent.FixedButton'
+        footerComponent.fixedButtonDataContext @discussion()
+      else
+        footerComponent.fixedButtonComponent null
+        footerComponent.fixedButtonDataContext null
+
+  onDestroyed: ->
+    super
+
+    footerComponent = @constructor.getComponent 'FooterComponent'
+
+    footerComponent.fixedButtonComponent null
+    footerComponent.fixedButtonDataContext null
+
+  discussion: ->
+    Discussion.documents.findOne @currentDiscussionId()
 
   motions: ->
     Motion.documents.find
