@@ -57,7 +57,8 @@ Package.onUse(function (api) {
     'ui-components',
     'trix',
     'storage',
-    'loading'
+    'loading',
+    'jquery-ui-touch-punch'
   ]);
 
   api.addFiles([
