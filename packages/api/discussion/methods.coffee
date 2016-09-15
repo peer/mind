@@ -149,7 +149,7 @@ Meteor.methods
           $size: passingMotions.length
     ]
 
-    for i, passingMotionId in passingMotions
+    for passingMotionId, i in passingMotions
       condition = {}
       condition["passingMotions.#{i}._id"] =
         $ne: passingMotionId
