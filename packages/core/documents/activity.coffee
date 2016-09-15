@@ -14,6 +14,12 @@ class Activity extends share.BaseDocument
     collection: 'Activities'
     fields: =>
       user: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      data:
+        comment: @ReferenceField Comment, [], false
+        motion: @ReferenceField Motion, [], false
+        point: @ReferenceField Point, [], false
+        meeting: @ReferenceField Meeting, ['title'], false
+        discussion: @ReferenceField Discussion, ['title'], false
 
   @LEVEL:
     DEBUG: 'debug'

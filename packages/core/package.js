@@ -113,6 +113,7 @@ Package.onUse(function (api) {
     'migrations/0018-tally-infavor.coffee',
     'migrations/0019-meeting-discussions.coffee',
     'migrations/0020-activity-type.coffee',
-    'migrations/0021-activity-document.coffee'
+    'migrations/0021-activity-document.coffee',
+    'migrations/0022-activity-data.coffee'
   ], 'server');
 });
