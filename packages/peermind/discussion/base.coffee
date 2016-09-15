@@ -45,10 +45,11 @@ class Discussion.OneComponent extends UIComponent
     @subscriptionsReady() and not @discussion()
 
   expandableEventData: ->
-    data = @discussion()
+    document = @discussion()
 
-    _id: data._id
-    _type: data.constructor.Meta._name
+    document:
+      _id: document._id
+    type: document.constructor.Meta._name
 
   onSaveEdit: (event, onSuccess) ->
     event.preventDefault()

@@ -30,7 +30,7 @@ class share.ExpandableMixin extends UIMixin
 
     return unless expandableEventData
 
-    $(@firstNode()).trigger 'expandable.peermind', [value, expandableEventData]
+    $(@firstNode()).trigger 'expandable.peermind', [value, expandableEventData.type, expandableEventData.document]
 
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>

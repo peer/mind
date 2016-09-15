@@ -187,10 +187,11 @@ class Motion.ListItemComponent extends UIComponent
     tally?.result > 0 && tally?.confidence >= 0.90
 
   expandableEventData: ->
-    data = @data()
+    document = @data()
 
-    _id: data._id
-    _type: data.constructor.Meta._name
+    document:
+      _id: document._id
+    type: document.constructor.Meta._name
 
   renderExtraMetadataButtons: (parentComponent, metadataComponent) ->
     return null if @noExtraMetadataButtons

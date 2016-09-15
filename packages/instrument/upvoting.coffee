@@ -8,16 +8,17 @@ for type in ['Comment', 'Motion', 'Point']
         user = null
 
       unless options.error and options.result
+        data = {}
+        data[type.toLowerCase()] =
+          _id: options.arguments[0]
+
         Activity.documents.insert
           timestamp: new Date()
           connection: @connection.id
           user: user
           type: 'upvote'
           level: Activity.LEVEL.DEBUG
-          data:
-            document:
-              _id: options.arguments[0]
-              _type: type
+          data: data
 
       options.result
 
@@ -29,15 +30,16 @@ for type in ['Comment', 'Motion', 'Point']
         user = null
 
       unless options.error and options.result
+        data = {}
+        data[type.toLowerCase()] =
+          _id: options.arguments[0]
+
         Activity.documents.insert
           timestamp: new Date()
           connection: @connection.id
           user: user
           type: 'removeUpvote'
           level: Activity.LEVEL.DEBUG
-          data:
-            document:
-              _id: options.arguments[0]
-              _type: type
+          data: data
 
       options.result

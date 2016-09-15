@@ -62,10 +62,11 @@ class Meeting.DisplayComponent extends Meeting.OneComponent
         order[a._id] - order[b._id]
 
   expandableEventData: ->
-    data = @meeting()
+    document = @meeting()
 
-    _id: data._id
-    _type: data.constructor.Meta._name
+    document:
+      _id: document._id
+    type: document.constructor.Meta._name
 
   onSaveEdit: (event, onSuccess) ->
     event.preventDefault()
