@@ -42,7 +42,7 @@ Package.onUse(function (api) {
     'mfpierre:chartist-js@1.6.2',
     'cunneen:accounts-admin-materializecss@0.3.0',
     'peerlibrary:blaze-layout-component@0.1.1',
-    'momentjs:moment@2.14.4',
+    'momentjs:moment@2.15.0',
     'mizzao:jquery-ui@1.11.4',
     'fourseven:scss@3.9.0',
     'softwarerero:accounts-t9n@1.3.3',

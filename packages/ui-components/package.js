@@ -17,7 +17,7 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:blaze-components@0.19.0',
     'peerlibrary:blaze-common-component@0.4.0',
-    'momentjs:moment@2.11.2'
+    'momentjs:moment@2.15.0'
   ]);
 
   // Internal dependencies.
