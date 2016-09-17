@@ -56,7 +56,7 @@ e-mail with instructions how to setup their password. To invite a user, run the 
 in your browser's web console:
 
 ```javascript
-Meteor.call('User.invite', 'email@example.com', 'username', console.log.bind(console));
+Meteor.call('User.invite', 'email@example.com', console.log.bind(console));
 ```
 
 Invited users initally do not belong to any group. Currently this means that effectively they cannot do anything
