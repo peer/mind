@@ -22,7 +22,7 @@ Package.onUse(function (api) {
     'peerlibrary:peerdb@0.23.0',
     'peerlibrary:peerdb-migrations@0.3.0',
     'peerlibrary:meteor-file@0.2.1',
-    'peerlibrary:reactive-field@0.1.0',
+    'peerlibrary:reactive-field@0.2.0',
     'peerlibrary:assert@0.2.5',
     // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
