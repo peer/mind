@@ -214,6 +214,9 @@ class User extends share.BaseDocument
       changes: [
         author: @ReferenceField 'self', User.REFERENCE_FIELDS(), false
       ]
+      profileAttachments: [
+        @ReferenceField StorageFile
+      ]
     generators: =>
       fields =
         # We include "avatar" field so the if it gets deleted it gets regenerated.
@@ -223,7 +226,6 @@ class User extends share.BaseDocument
           return [] unless lastChange and 'profile' of lastChange
           [fields._id, lastChange.profile or '']
         profileAttachments: [
-          # TODO: Make it an array of references to StorageFile as well.
           @GeneratedField 'self', ['profile'], (fields) =>
             return [fields._id, []] unless fields.profile
             [fields._id, ({_id} for _id in @extractAttachments fields.profile)]

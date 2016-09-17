@@ -47,6 +47,9 @@ class Meeting extends share.BaseDocument
         #  discussion: @ReferenceField Discussion, [], false
         #]
       ]
+      descriptionAttachments: [
+        @ReferenceField StorageFile
+      ]
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       title: @GeneratedField 'self', ['changes'], (fields) =>
@@ -72,7 +75,6 @@ class Meeting extends share.BaseDocument
           [fields._id, lastChange.discussions or []]
       ]
       descriptionAttachments: [
-        # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['description'], (fields) =>
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]

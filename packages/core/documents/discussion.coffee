@@ -55,6 +55,12 @@ class Discussion extends share.BaseDocument
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
+      descriptionAttachments: [
+        @ReferenceField StorageFile
+      ]
+      closingNoteAttachments: [
+        @ReferenceField StorageFile
+      ]
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       title: @GeneratedField 'self', ['changes'], (fields) =>
@@ -76,13 +82,11 @@ class Discussion extends share.BaseDocument
         return [] unless lastChange and 'closingNote' of lastChange
         [fields._id, lastChange.closingNote or '']
       descriptionAttachments: [
-        # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['description'], (fields) =>
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
       closingNoteAttachments: [
-        # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['closingNote'], (fields) =>
           return [fields._id, []] unless fields.closingNote
           [fields._id, ({_id} for _id in @extractAttachments fields.closingNote)]

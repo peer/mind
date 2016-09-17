@@ -35,6 +35,9 @@ class share.UpvotableDocument extends share.BaseDocument
       upvotes: [
         author: @ReferenceField User
       ]
+      bodyAttachments: [
+        @ReferenceField StorageFile
+      ]
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       body: @GeneratedField 'self', ['changes'], (fields) ->
@@ -42,7 +45,6 @@ class share.UpvotableDocument extends share.BaseDocument
         return [] unless lastChange and 'body' of lastChange
         [fields._id, lastChange.body or '']
       bodyAttachments: [
-        # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['body'], (fields) =>
           return [fields._id, []] unless fields.body
           [fields._id, ({_id} for _id in @extractAttachments fields.body)]
