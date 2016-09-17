@@ -6,7 +6,7 @@ class Activity extends share.BaseDocument
   #   username
   #   avatar
   # type: type of activity
-  # level: one of "debug", "error", "admin", "user", and "public"
+  # level: one of "debug", "error", "admin", "user", and "general"
   # data: custom data for this activity
 
   @Meta
@@ -26,7 +26,7 @@ class Activity extends share.BaseDocument
     ERROR: 'error'
     ADMIN: 'admin'
     USER: 'user'
-    PUBLIC: 'public'
+    GENERAL: 'general'
 
   @PUBLISH_FIELDS: ->
     _.extend super,
