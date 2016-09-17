@@ -6,7 +6,7 @@ class Activity extends share.BaseDocument
   #   username
   #   avatar
   # type: type of activity
-  # level: one of "debug", "error", "admin", "user", and "general"
+  # level: one of Activity.LEVEL values
   # data: custom data for this activity
 
   @Meta
