@@ -2,7 +2,7 @@ Accounts.onLogin (attempt) ->
   Activity.documents.insert
     timestamp: new Date()
     connection: attempt.connection.id
-    user:
+    byUser:
       _id: attempt.user._id
     type: 'login'
     level: Activity.LEVEL.ADMIN
@@ -22,7 +22,7 @@ Accounts.onLoginFailure (attempt) ->
   Activity.documents.insert
     timestamp: new Date()
     connection: attempt.connection.id
-    user: user
+    byUser: user
     type: 'loginFailure'
     level: Activity.LEVEL.ADMIN
     data:
@@ -42,7 +42,7 @@ Accounts.onLogout (attempt) ->
   Activity.documents.insert
     timestamp: new Date()
     connection: attempt.connection.id
-    user: user
+    byUser: user
     type: 'logout'
     level: Activity.LEVEL.ADMIN
     data: null
@@ -58,7 +58,7 @@ MethodHooks.after 'Account.unlinkAccount', (options) ->
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'accountUnlinkFailure'
       level: Activity.LEVEL.ADMIN
       data:
@@ -69,7 +69,7 @@ MethodHooks.after 'Account.unlinkAccount', (options) ->
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'accountUnlink'
       level: Activity.LEVEL.ADMIN
       data:
@@ -90,7 +90,7 @@ MethodHooks.after 'Account.researchData', (options) ->
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'researchDataFailure'
       level: Activity.LEVEL.DEBUG
       data:
@@ -99,7 +99,7 @@ MethodHooks.after 'Account.researchData', (options) ->
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'researchData'
       level: Activity.LEVEL.DEBUG
       data:
@@ -124,7 +124,7 @@ unless __meteor_runtime_config__.SANDSTORM
       Activity.documents.insert
         timestamp: new Date()
         connection: @connection.id
-        user: user
+        byUser: user
         type: 'usernameChangeFailure'
         level: Activity.LEVEL.ADMIN
         data:
@@ -135,7 +135,7 @@ unless __meteor_runtime_config__.SANDSTORM
       Activity.documents.insert
         timestamp: new Date()
         connection: @connection.id
-        user: user
+        byUser: user
         type: 'usernameChange'
         level: Activity.LEVEL.ADMIN
         data:
@@ -157,7 +157,7 @@ unless __meteor_runtime_config__.SANDSTORM
       Activity.documents.insert
         timestamp: new Date()
         connection: @connection.id
-        user: user
+        byUser: user
         type: 'passwordChangeFailure'
         level: Activity.LEVEL.ADMIN
         data:
@@ -168,7 +168,7 @@ unless __meteor_runtime_config__.SANDSTORM
       Activity.documents.insert
         timestamp: new Date()
         connection: @connection.id
-        user: user
+        byUser: user
         type: 'passwordChange'
         level: Activity.LEVEL.ADMIN
         data:
@@ -188,7 +188,7 @@ unless __meteor_runtime_config__.SANDSTORM
       Activity.documents.insert
         timestamp: new Date()
         connection: @connection.id
-        user: user
+        byUser: user
         type: 'avatarSelectionFailure'
         level: Activity.LEVEL.ADMIN
         data:
@@ -199,7 +199,7 @@ unless __meteor_runtime_config__.SANDSTORM
       Activity.documents.insert
         timestamp: new Date()
         connection: @connection.id
-        user: user
+        byUser: user
         type: 'avatarSelection'
         level: Activity.LEVEL.ADMIN
         data:

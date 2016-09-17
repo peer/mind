@@ -15,7 +15,7 @@ for type in ['Comment', 'Motion', 'Point']
         Activity.documents.insert
           timestamp: new Date()
           connection: @connection.id
-          user: user
+          byUser: user
           type: 'upvote'
           level: Activity.LEVEL.DEBUG
           data: data
@@ -37,7 +37,7 @@ for type in ['Comment', 'Motion', 'Point']
         Activity.documents.insert
           timestamp: new Date()
           connection: @connection.id
-          user: user
+          byUser: user
           type: 'removeUpvote'
           level: Activity.LEVEL.DEBUG
           data: data

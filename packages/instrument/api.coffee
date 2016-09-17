@@ -13,7 +13,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'route'
       level: Activity.LEVEL.DEBUG
       data: escapeKeys routeObject
@@ -49,7 +49,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'error'
       level: Activity.LEVEL.ERROR
       data: escapeKeys error
@@ -75,7 +75,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'ui'
       level: Activity.LEVEL.DEBUG
       data: data
@@ -92,7 +92,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'visibility'
       level: Activity.LEVEL.DEBUG
       data:
@@ -110,7 +110,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'focus'
       level: Activity.LEVEL.DEBUG
       data:

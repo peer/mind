@@ -3,7 +3,7 @@ Meteor.onConnection (connection) ->
     Activity.documents.insert
       timestamp: new Date()
       connection: connection.id
-      user: null
+      byUser: null
       type: 'connectionEnd'
       level: Activity.LEVEL.DEBUG
       data: null
@@ -11,7 +11,7 @@ Meteor.onConnection (connection) ->
   Activity.documents.insert
     timestamp: new Date()
     connection: connection.id
-    user: null
+    byUser: null
     type: 'connectionStart'
     level: Activity.LEVEL.DEBUG
     data:

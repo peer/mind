@@ -1,7 +1,7 @@
 class Activity extends share.BaseDocument
   # timestamp: time of activity
   # connection
-  # user:
+  # byUser:
   #   _id
   #   username
   #   avatar
@@ -13,7 +13,7 @@ class Activity extends share.BaseDocument
     name: 'Activity'
     collection: 'Activities'
     fields: =>
-      user: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      byUser: @ReferenceField User, User.REFERENCE_FIELDS(), false
       data:
         comment: @ReferenceField Comment, [], false
         motion: @ReferenceField Motion, [], false
@@ -31,7 +31,7 @@ class Activity extends share.BaseDocument
   @PUBLISH_FIELDS: ->
     _.extend super,
       timestamp: 1
-      user: 1
+      byUser: 1
       type: 1
       data: 1
 

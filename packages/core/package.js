@@ -114,6 +114,7 @@ Package.onUse(function (api) {
     'migrations/0019-meeting-discussions.coffee',
     'migrations/0020-activity-type.coffee',
     'migrations/0021-activity-document.coffee',
-    'migrations/0022-activity-data.coffee'
+    'migrations/0022-activity-data.coffee',
+    'migrations/0023-activity-byuser.coffee'
   ], 'server');
 });
