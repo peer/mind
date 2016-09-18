@@ -57,10 +57,41 @@ class UIComponent extends CommonComponent
   # All input arrays are flattened and multiple input arrays can be passed. Everything
   # besides strings is filtered out.
   class: (styleClassesArrays...) ->
+    # Removing kwargs.
+    styleClassesArrays.pop() if styleClassesArrays[styleClassesArrays.length - 1] instanceof Spacebars.kw
+
     styleClassesArrays = _.uniq _.filter _.flatten(styleClassesArrays), (item) =>
       _.isString item
     if styleClassesArrays?.length
       class: styleClassesArrays.join ' '
+
+  # Converts a style object to a css string. Useful in templates when you need just the string and not a style attribute.
+  css: (styleObject...) ->
+    # Removing kwargs.
+    styleObject.pop() if styleObject[styleObject.length - 1] instanceof Spacebars.kw
+    styleObject = _.filter styleObject, (x) -> !!x
+    styleObject = _.extend {}, styleObject...
+
+    propertyStrings = for camelCaseKey, value of styleObject
+      key = camelCaseKey.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
+
+      # If a number was passed in, add the unit (except for certain CSS properties, as defined by jQuery)
+      value += 'px' if typeof value is 'number' and not $.cssNumber[camelCaseKey]
+
+      "#{key}: #{value};"
+
+    propertyStrings.join ' '
+
+  # Converts a style object to a css attribute. Useful in templates as a helper to construct the style attribute.
+  style: (styleObject...) ->
+    # Removing kwargs.
+    styleObject.pop() if styleObject[styleObject.length - 1] instanceof Spacebars.kw
+    styleObject = _.filter styleObject, (x) -> !!x
+    styleObject = _.extend {}, styleObject...
+
+    return if _.isEmpty styleObject
+
+    style: @css styleObject
 
   descendantComponents: (args...) ->
     components = @childComponents args...
