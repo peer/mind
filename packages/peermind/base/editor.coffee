@@ -359,7 +359,7 @@ class EditorComponent extends UIComponent
         username: username
 
       if user
-        embed = '<a href="" class="trix-mention">@' + username + '</a>'
+        embed = EditorComponent.Mention.renderComponentToHTML(null, null, user).trim()
         attachment = new Trix.Attachment
           content: embed
           type: 'mention'
@@ -394,6 +394,9 @@ class EditorComponent.Toolbar extends UIComponent
 
   lang: ->
     Trix.config.lang
+
+class EditorComponent.Mention extends UIComponent
+  @register 'EditorComponent.Mention'
 
 Trix.config.toolbar.content = Trix.makeFragment EditorComponent.Toolbar.renderComponentToHTML()
 

@@ -54,3 +54,7 @@
     </div>
   </div>
 </template>
+
+<template name="EditorComponent.Mention">
+  <a href="{{pathFor 'User.display' params=data}}" class="trix-mention">@{{username}}</a>
+</template>
