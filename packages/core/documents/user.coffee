@@ -193,6 +193,8 @@ class User extends share.BaseDocument
   # profile: the latest version of the profile
   # profileAttachments: list of
   #   _id
+  # profileMentions: list of
+  #   _id
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
@@ -230,8 +232,15 @@ class User extends share.BaseDocument
             return [fields._id, []] unless fields.profile
             [fields._id, ({_id} for _id in @extractAttachments fields.profile)]
         ]
+        profileMentions: [
+          @GeneratedField 'self', ['body'], (fields) =>
+            return [fields._id, []] unless fields.body
+            [fields._id, ({_id} for _id in @extractMentions fields.body)]
+        ]
       if __meteor_runtime_config__.SANDSTORM
         _.extend fields,
+          # Sandstorm's proffered handle can contain only lower-case ASCII letters, digits, and underscores, and it never starts with a digit.
+          # This is a subset of Settings.USERNAME_REGEX. But it is not necessary unique, so we generate an unique username based on it.
           username: @GeneratedField 'self', ['services.sandstorm.preferredHandle'], generateSandstormUsername
           avatars: [
             @GeneratedField 'self', ['services.sandstorm.picture'], generateSandstormAvatars

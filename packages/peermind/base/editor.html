@@ -1,11 +1,20 @@
 <template name="EditorComponent">
-  <div {{class classes}}>
+  <div {{class classes 'editor-wrapper'}}>
     <input name="{{name}}" id="{{id}}" type="hidden" value="{{value}}" />
     {{#if label}}
       <label for="{{id}}" class="editor">{{label}}</label>
     {{/if}}
     <trix-editor input="{{id}}" class="trix-content" autofocus="{{autofocus}}"></trix-editor>
     <div class="drop-file-hint">Attach files by dragging &amp; dropping or <a href="" class="select-file-link">selecting them</a>.<input class="select-file" type="file" multiple="multiple" /></div>
+    {{#if $and mentionPosition mentionHandle.ready}}
+      <ul class="mention dropdown-content autocomplete-content" {{style mentionDialogPosition}}>
+        {{#each mentionDialogUsers}}
+          <li class="{{#if $eq @index mentionSelected}}active selected{{/if}}"><img src="{{avatarUrl}}" alt="{{username}}" class="right circle" /><span class="username"><span class="highlight">{{matchingMention username}}</span>{{nonmatchingMention username}}</span></li>
+        {{else}}
+          <li class="no-matching-users"><span>No matching users.</span></li>
+        {{/each}}
+      </ul>
+    {{/if}}
   </div>
 </template>
 

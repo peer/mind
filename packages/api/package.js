@@ -29,7 +29,8 @@ Package.onUse(function (api) {
     // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
     'peerlibrary:meteor-file@0.2.1',
-    'doctorpangloss:method-hooks@2.0.2'
+    'doctorpangloss:method-hooks@2.0.2',
+    'peerlibrary:subscription-scope@0.1.0'
   ]);
 
   // Internal dependencies.

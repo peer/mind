@@ -10,6 +10,8 @@ class Discussion extends share.BaseDocument
   # description: the latest version of the description
   # descriptionAttachments: list of
   #   _id
+  # descriptionMentions: list of
+  #   _id
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
@@ -45,6 +47,8 @@ class Discussion extends share.BaseDocument
   # closingNote: the latest version of the closing note
   # closingNoteAttachments: list of
   #   _id
+  # closingNoteMentions: list of
+  #   _id
   # status: one of Discussion.STATUS values
 
   @Meta
@@ -58,8 +62,14 @@ class Discussion extends share.BaseDocument
       descriptionAttachments: [
         @ReferenceField StorageFile
       ]
+      descriptionMentions: [
+        @ReferenceField User
+      ]
       closingNoteAttachments: [
         @ReferenceField StorageFile
+      ]
+      closingNoteMentions: [
+        @ReferenceField User
       ]
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
@@ -86,10 +96,20 @@ class Discussion extends share.BaseDocument
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
+      descriptionMentions: [
+        @GeneratedField 'self', ['body'], (fields) =>
+          return [fields._id, []] unless fields.body
+          [fields._id, ({_id} for _id in @extractMentions fields.body)]
+      ]
       closingNoteAttachments: [
         @GeneratedField 'self', ['closingNote'], (fields) =>
           return [fields._id, []] unless fields.closingNote
           [fields._id, ({_id} for _id in @extractAttachments fields.closingNote)]
+      ]
+      closingNoteMentions: [
+        @GeneratedField 'self', ['body'], (fields) =>
+          return [fields._id, []] unless fields.body
+          [fields._id, ({_id} for _id in @extractMentions fields.body)]
       ]
       motionsCount: @GeneratedField 'self', ['motions'], (fields) ->
         [fields._id, fields.motions?.length or 0]

@@ -12,6 +12,8 @@ class Meeting extends share.BaseDocument
   # description: the latest version of the description
   # descriptionAttachments: list of
   #   _id
+  # descriptionMentions: list of
+  #   _id
   # discussions: list of
   #   discussion:
   #     _id
@@ -50,6 +52,9 @@ class Meeting extends share.BaseDocument
       descriptionAttachments: [
         @ReferenceField StorageFile
       ]
+      descriptionMentions: [
+        @ReferenceField User
+      ]
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
       title: @GeneratedField 'self', ['changes'], (fields) =>
@@ -78,6 +83,11 @@ class Meeting extends share.BaseDocument
         @GeneratedField 'self', ['description'], (fields) =>
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
+      ]
+      descriptionMentions: [
+        @GeneratedField 'self', ['body'], (fields) =>
+          return [fields._id, []] unless fields.body
+          [fields._id, ({_id} for _id in @extractMentions fields.body)]
       ]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']

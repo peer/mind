@@ -12,6 +12,8 @@ class Point extends share.UpvotableDocument
   # body: the latest version of the body
   # bodyAttachments: list of
   #   _id
+  # bodyMentions: list of
+  #   _id
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
