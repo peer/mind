@@ -47,58 +47,58 @@ trix-editor
   a.trix-mention
     color $off-black
 
-.editor-wrapper
-  // To make the wrapper an offset parent which allows us to
-  // position list of potential mentions relativelly to it.
-  position relative
+.input-field
+  trix-editor
+    background-color transparent
+    border none
+    border-bottom $input-border
+    border-radius 0
+    outline none
+    margin $input-margin
+    // Because we have a hint for attachments below the editor.
+    margin-bottom 0
+    padding $input-padding
+    box-shadow none
+    box-sizing content-box
+    transition $input-transition
+    padding-bottom 1rem
 
-  .input-field
-    trix-editor
-      background-color transparent
-      border none
-      border-bottom $input-border
-      border-radius 0
-      outline none
-      margin $input-margin
-      // Because we have a hint for attachments below the editor.
-      margin-bottom 0
-      padding $input-padding
-      box-shadow none
-      box-sizing content-box
-      transition $input-transition
-      padding-bottom 1rem
+  label.editor
+    top 2.65rem
 
+  .active label.editor
+    font-size $label-font-size
+    transform translateY(-370%)
+
+  .focused
     label.editor
-      top 2.65rem
+      color $input-focus-color
 
-    .active label.editor
-      font-size $label-font-size
-      transform translateY(-370%)
+    trix-editor
+      border-color $input-focus-color
+      box-shadow 0 1px 0 0 $input-focus-color
 
-    .focused
-      label.editor
-        color $input-focus-color
+  .editor-wrapper
+    // To make the wrapper an offset parent which allows us to
+    // position list of potential mentions relativelly to it.
+    position relative
 
-      trix-editor
-        border-color $input-focus-color
-        box-shadow 0 1px 0 0 $input-focus-color
+    .mention
+      // This makes the element an offset parent, too.
+      position absolute
+      margin-top 5px
+      max-height (5 * $dropdown-item-height)
 
-  .mention
-    // This makes the element an offset parent, too.
-    position absolute
-    margin-top 5px
-    max-height (5 * $dropdown-item-height)
+      li
+        span.username
+          float left
 
-    li
-      span.username
-        float left
+        &.no-matching-users
+          background-color transparent
 
-      &.no-matching-users
-        background-color transparent
-
-        span
-          color $off-black
-          cursor default
+          span
+            color $off-black
+            cursor default
 
 // To override .collection .collection-item.avatar .circle style which is otherwise applied.
 .collection .collection-item.avatar .mention .circle
