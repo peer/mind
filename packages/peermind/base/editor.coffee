@@ -366,7 +366,10 @@ class EditorComponent extends UIComponent
         username: username
 
       if user
-        embed = EditorComponent.Mention.renderComponentToHTML(null, null, user).trim()
+        # We use Blaze.toHTMLWithData instead of renderComponentToHTML because it is simpler and does
+        # not trigger "Can't call Tracker.flush while flushing" error when this method is called from a computation.
+        # This happens because renderComponentToHTML calls Tracker.flush() as part of its logic.
+        embed = Blaze.toHTMLWithData(EditorComponent.Mention.renderComponent(), user).trim()
         attachment = new Trix.Attachment
           content: embed
           type: 'mention'
@@ -415,7 +418,8 @@ class EditorComponent.Toolbar extends UIComponent
 class EditorComponent.Mention extends UIComponent
   @register 'EditorComponent.Mention'
 
-Trix.config.toolbar.content = Trix.makeFragment EditorComponent.Toolbar.renderComponentToHTML()
+# We use Blaze.toHTML instead of renderComponentToHTML because it is simpler and we do not need whole component rendering.
+Trix.config.toolbar.content = Trix.makeFragment Blaze.toHTML EditorComponent.Toolbar.renderComponent()
 
 originalReturn = Trix.InputController::keys.return
 Trix.InputController::keys.return = (event) ->
