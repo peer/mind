@@ -118,7 +118,7 @@ class share.BaseDocument extends Document
       data.documentId or null
 
     # Convert cheerio/jQuery array to a standard array.
-    _.unique $documentIds.get()
+    _.uniq $documentIds.get()
 
   @extractMentions: (html) ->
     if Meteor.isServer
@@ -135,7 +135,7 @@ class share.BaseDocument extends Document
       data.documentId or null
 
     # Convert cheerio/jQuery array to a standard array.
-    _.unique $documentIds.get()
+    _.uniq $documentIds.get()
 
   # Verbose name is used when representing the class in a non-technical
   # setting. The convention is not to capitalize the first letter of
