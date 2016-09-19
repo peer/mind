@@ -32,7 +32,6 @@ sanitizeAttachment = ($, $element, sanitize) ->
     'href': true
     'data-trix-attachment': true
     'data-trix-content-type': true
-    'data-trix-attributes': true
 
   # Invalid.
   return unless $element.attr('href')
@@ -42,12 +41,6 @@ sanitizeAttachment = ($, $element, sanitize) ->
 
   try
     JSON.parse $element.attr 'data-trix-attachment'
-  catch error
-    # Invalid.
-    return
-
-  try
-    JSON.parse $element.attr 'data-trix-attributes' if $element.attr 'data-trix-attributes'
   catch error
     # Invalid.
     return
