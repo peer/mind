@@ -53,6 +53,7 @@ Meteor.methods
       $root.has('figure').length
 
     attachments = Point.extractAttachments document.body
+    mentions = Point.extractMentions document.body
 
     if User.hasPermission User.PERMISSIONS.POINT_UPDATE
       permissionCheck = {}
@@ -83,6 +84,7 @@ Meteor.methods
         updatedAt: updatedAt
         body: document.body
         bodyAttachments: ({_id} for _id in attachments)
+        bodyMentions: ({_id} for _id in mentions)
         category: document.category
       $push:
         changes:

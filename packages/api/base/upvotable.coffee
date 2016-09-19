@@ -26,6 +26,7 @@ share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
     $root.has('figure').length
 
   attachments = documentClass.extractAttachments document.body
+  mentions = documentClass.extractMentions document.body
 
   createdAt = new Date()
   documentId = documentClass.documents.insert extend user,
@@ -37,6 +38,7 @@ share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
       _id: discussion._id
     body: document.body
     bodyAttachments: ({_id} for _id in attachments)
+    bodyMentions: ({_id} for _id in mentions)
     changes: [
       updatedAt: createdAt
       author: user.getReference()

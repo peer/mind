@@ -12,6 +12,7 @@ Meteor.methods
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
     attachments = Discussion.extractAttachments document.description
+    mentions = Discussion.extractMentions document.description
 
     createdAt = new Date()
     documentId = Discussion.documents.insert
@@ -22,6 +23,7 @@ Meteor.methods
       title: document.title
       description: document.description
       descriptionAttachments: ({_id} for _id in attachments)
+      descriptionMentions: ({_id} for _id in mentions)
       changes: [
         updatedAt: createdAt
         author: user.getReference()
@@ -79,6 +81,7 @@ Meteor.methods
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
     descriptionAttachments = Discussion.extractAttachments document.description
+    descriptionMentions = Discussion.extractMentions document.description
 
     if User.hasPermission User.PERMISSIONS.DISCUSSION_UPDATE
       permissionCheck = {}
@@ -110,6 +113,7 @@ Meteor.methods
         title: document.title
         description: document.description
         descriptionAttachments: ({_id} for _id in descriptionAttachments)
+        descriptionMentions: ({_id} for _id in descriptionMentions)
       $push:
         changes:
           updatedAt: updatedAt
@@ -130,6 +134,7 @@ Meteor.methods
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
 
     closingNoteAttachments = Discussion.extractAttachments closingNote
+    closingNoteMentions = Discussion.extractMentions closingNote
 
     # For closed discussions users with DISCUSSION_CLOSE permission can edit information about closing state.
     if User.hasPermission User.PERMISSIONS.DISCUSSION_CLOSE
@@ -190,6 +195,7 @@ Meteor.methods
         passingMotions: ({_id} for _id in passingMotions)
         closingNote: closingNote
         closingNoteAttachments: ({_id} for _id in closingNoteAttachments)
+        closingNoteMentions: ({_id} for _id in closingNoteMentions)
         status: if passingMotions.length then Discussion.STATUS.PASSED else Discussion.STATUS.CLOSED
       $push:
         changes:
@@ -223,6 +229,7 @@ Meteor.methods
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
 
     attachments = Discussion.extractAttachments closingNote
+    mentions = Discussion.extractMentions closingNote
 
     if User.hasPermission User.PERMISSIONS.DISCUSSION_CLOSE
       permissionCheck = {}
@@ -276,6 +283,7 @@ Meteor.methods
         passingMotions: ({_id} for _id in passingMotions)
         closingNote: closingNote
         closingNoteAttachments: ({_id} for _id in attachments)
+        closingNoteMentions: ({_id} for _id in mentions)
         status: if passingMotions.length then Discussion.STATUS.PASSED else Discussion.STATUS.CLOSED
       $push:
         changes:

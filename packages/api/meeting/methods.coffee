@@ -21,6 +21,7 @@ Meteor.methods
     document.description = Meeting.sanitize.sanitizeHTML document.description
 
     attachments = Meeting.extractAttachments document.description
+    mentions = Meeting.extractMentions document.description
 
     createdAt = new Date()
     documentId = Meeting.documents.insert
@@ -33,6 +34,7 @@ Meteor.methods
       endAt: document.endAt or null
       description: document.description
       descriptionAttachments: ({_id} for _id in attachments)
+      descriptionMentions: ({_id} for _id in mentions)
       discussions: []
       changes: [
         updatedAt: createdAt
@@ -80,6 +82,7 @@ Meteor.methods
     document.description = Meeting.sanitize.sanitizeHTML document.description
 
     attachments = Meeting.extractAttachments document.description
+    mentions = Meeting.extractMentions document.description
 
     if User.hasPermission User.PERMISSIONS.MEETING_UPDATE
       permissionCheck = {}
@@ -119,6 +122,7 @@ Meteor.methods
         endAt: document.endAt or null
         description: document.description
         descriptionAttachments: ({_id} for _id in attachments)
+        descriptionMentions: ({_id} for _id in mentions)
       $push:
         changes:
           updatedAt: updatedAt

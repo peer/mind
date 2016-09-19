@@ -51,6 +51,7 @@ Meteor.methods
       $root.has('figure').length
 
     attachments = Comment.extractAttachments document.body
+    mentions = Comment.extractMentions document.body
 
     if User.hasPermission User.PERMISSIONS.COMMENT_UPDATE
       permissionCheck = {}
@@ -76,6 +77,7 @@ Meteor.methods
         updatedAt: updatedAt
         body: document.body
         bodyAttachments: ({_id} for _id in attachments)
+        bodyMentions: ({_id} for _id in mentions)
       $push:
         changes:
           updatedAt: updatedAt

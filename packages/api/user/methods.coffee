@@ -52,6 +52,7 @@ Meteor.methods
       profile = '' unless profileText or $root.has('figure').length
 
     attachments = User.extractAttachments profile
+    mentions = User.extractMentions profile
 
     updatedAt = new Date()
     changed = User.documents.update
@@ -63,6 +64,7 @@ Meteor.methods
         updatedAt: updatedAt
         profile: profile
         profileAttachments: ({_id} for _id in attachments)
+        profileMentions: ({_id} for _id in mentions)
       $push:
         changes:
           updatedAt: updatedAt
