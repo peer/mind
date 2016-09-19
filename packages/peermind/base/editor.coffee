@@ -332,12 +332,19 @@ class EditorComponent extends UIComponent
 
       return unless dataContext
 
-      position = editor.getPosition()
-      editor.setSelectedRange [@mentionAtPosition() + 1, position]
-      editor.deleteInDirection 'forward'
-      editor.insertString dataContext.username
+      @selectMention dataContext
 
-      @finishMention @mentionAtPosition(), editor.getPosition()
+  selectMention: (dataContext) ->
+    editor = @editor()
+
+    return unless editor
+
+    position = editor.getPosition()
+    editor.setSelectedRange [@mentionAtPosition() + 1, position]
+    editor.deleteInDirection 'forward'
+    editor.insertString dataContext.username
+
+    @finishMention @mentionAtPosition(), editor.getPosition()
 
   finishMention: (atPosition, endPosition) ->
     editor = @editor()
@@ -388,6 +395,16 @@ class EditorComponent extends UIComponent
         editor.setSelectedRange oldSelection
 
     @disableMention()
+
+  onNoMatchingUsersClick: (event) ->
+    event.preventDefault()
+
+    @disableMention()
+
+  onMentionClick: (event) ->
+    event.preventDefault()
+
+    @selectMention @currentData()
 
 class EditorComponent.Toolbar extends UIComponent
   @register 'EditorComponent.Toolbar'

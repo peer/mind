@@ -9,9 +9,9 @@
     {{#if $and mentionPosition mentionHandle.ready}}
       <ul class="mention dropdown-content autocomplete-content" {{style mentionDialogPosition}}>
         {{#each mentionDialogUsers}}
-          <li class="{{#if $eq @index mentionSelected}}active selected{{/if}}"><img src="{{avatarUrl}}" alt="{{username}}" class="right circle" /><span class="username"><span class="highlight">{{matchingMention username}}</span>{{nonmatchingMention username}}</span></li>
+          <li class="{{#if $eq @index mentionSelected}}active selected{{/if}}" onClick="{{onMentionClick}}"><img src="{{avatarUrl}}" alt="{{username}}" class="right circle" /><span class="username"><span class="highlight">{{matchingMention username}}</span>{{nonmatchingMention username}}</span></li>
         {{else}}
-          <li class="no-matching-users"><span>No matching users.</span></li>
+          <li class="no-matching-users" onClick="{{onNoMatchingUsersClick}}"><span>No matching users.</span></li>
         {{/each}}
       </ul>
     {{/if}}
