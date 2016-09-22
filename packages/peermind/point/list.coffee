@@ -178,3 +178,11 @@ class Point.ListItemComponent extends UIComponent
 
   upvotingDisabled: ->
     not (@discussionIsOpen() and not @discussionIsClosed())
+
+  contributeUsersForMention: ->
+    users = []
+
+    if author = @data()?.author
+      users.push author
+
+    users

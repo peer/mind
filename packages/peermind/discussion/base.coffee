@@ -91,3 +91,11 @@ class Discussion.OneComponent extends UIComponent
         #       For this method, the result is an array [changedUpdate, changedClosing].
 
         onSuccess()
+
+  contributeUsersForMention: ->
+    users = []
+
+    if author = @discussion()?.author
+      users.push author
+
+    users

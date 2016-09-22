@@ -132,3 +132,11 @@ class Comment.ListItemComponent extends UIComponent
   upvotingDisabled: ->
     # TODO: We disable upvoting once discussion is closed even if we allow users to still post comments. Could we do something else?
     not (@discussionIsOpen() and not @discussionIsClosed())
+
+  contributeUsersForMention: ->
+    users = []
+
+    if author = @data()?.author
+      users.push author
+
+    users

@@ -46,6 +46,10 @@ class User.DisplayComponent extends UIComponent
 
       onSuccess()
 
+  # TODO: Should we populate the list with user's friends or something like this?
+  contributeUsersForMention: ->
+    []
+
 FlowRouter.route '/user/:_id',
   name: 'User.display'
   action: (params, queryParams) ->

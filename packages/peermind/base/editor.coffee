@@ -1,3 +1,24 @@
+contributedUsers = new ComputedField ->
+  rootComponent = UIComponent.getComponentForElement $('#__blaze-root').get(0)
+
+  componentsToProcess = [rootComponent]
+
+  allUsers = {}
+
+  while component = componentsToProcess.pop()
+    if users = component.contributeUsersForMention?()
+      for user in users
+        # We merge potential new fields.
+        allUsers[user._id] = _.defaults (allUsers[user._id] or {}), _.pick(user, '_id', 'username', 'avatar'),
+          _count: 0
+        allUsers[user._id]._count++
+
+    componentsToProcess = componentsToProcess.concat component.childComponents()
+
+  _.chain(allUsers).values().sortBy('_count').reverse().map((u) -> new User _.omit u, '_count').value()
+,
+  EJSON.equals
+
 class EditorComponent extends UIComponent
   @register 'EditorComponent'
 
@@ -20,6 +41,8 @@ class EditorComponent extends UIComponent
     @mentionContent = new ReactiveField ''
     @mentionHandle = new ReactiveField null
     @mentionSelected = new ReactiveField null
+
+    @contributedUsers = contributedUsers
 
     @mentionDialogUsersCount = new ComputedField =>
       users = @mentionDialogUsers()
@@ -263,11 +286,17 @@ class EditorComponent extends UIComponent
 
   mentionDialogUsers: ->
     handle = @mentionHandle()
-    return [] unless handle
+    return @contributedUsers() unless handle
 
     User.documents.find handle.scopeQuery(),
       sort:
         username: 1
+
+  mentionDialogUsersReady: ->
+    handle = @mentionHandle()
+    return true unless handle
+
+    handle.ready()
 
   splitMention: (username) ->
     username.split new RegExp("^(#{@mentionContent()})", 'i')
@@ -364,6 +393,11 @@ class EditorComponent extends UIComponent
       # We assume that the user with this username is published to the client.
       user = User.documents.findOne
         username: username
+
+      # If not, we try contributedUsers.
+      unless user
+        user = _.findWhere @contributedUsers(),
+          username: username
 
       if user
         # We use Blaze.toHTMLWithData instead of renderComponentToHTML because it is simpler and does
