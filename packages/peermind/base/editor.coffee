@@ -15,6 +15,7 @@ contributedUsers = new ComputedField ->
 
     componentsToProcess = componentsToProcess.concat component.childComponents()
 
+  # TODO: Should we simply order by username instead?
   _.chain(allUsers).values().sortBy('_count').reverse().map((u) -> new User _.omit u, '_count').value()
 ,
   EJSON.equals
