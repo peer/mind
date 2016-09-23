@@ -63,6 +63,11 @@ trix-editor
     transition $input-transition
     padding-bottom 1rem
 
+    a
+      // Links are disabled inisde figures inside trix-editor (mentions),
+      // so we want to style them accordingly only as text as well.
+      cursor text
+
   label.editor
     top 2.65rem
 

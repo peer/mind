@@ -134,6 +134,7 @@ class EditorComponent extends UIComponent
       'trix-change': @storeEditorState
       'trix-selection-change, trix-focus, trix-change': @doMention
       'keydown trix-editor': @onKeyDown
+      'click trix-editor a': @onLinkClick
 
   onAttachmentAdd: (event) ->
     attachment = event.originalEvent.attachment
@@ -443,6 +444,10 @@ class EditorComponent extends UIComponent
     event.preventDefault()
 
     @selectMention @currentData()
+
+  onLinkClick: (event) ->
+    # We explicitly have to disable links inside figures (mentions) inside trix-editor.
+    event.preventDefault()
 
 class EditorComponent.Toolbar extends UIComponent
   @register 'EditorComponent.Toolbar'
