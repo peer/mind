@@ -41,6 +41,7 @@ class EditorComponent extends UIComponent
     @mentionAtPosition = new ReactiveField null, true
     @mentionContent = new ReactiveField ''
     @mentionHandle = new ReactiveField null
+    @mentionContentBeforeCursor = new ReactiveField ''
     @mentionSelected = new ReactiveField null
 
     @contributedUsers = contributedUsers
@@ -117,7 +118,16 @@ class EditorComponent extends UIComponent
         @mentionHandle null
         return
 
-      @mentionHandle @subscribe 'User.autocomplete', @mentionContent()
+      @mentionHandle @subscribe 'User.autocomplete', @mentionContent(), true
+
+    # We need one more subscription to handle a special case. Consider if a user types "@foobar" and positions the cursor
+    # between "foo" and "bar", and presses space. Now "@foo" should be considered for a mention. But with subscription
+    # above we are subscribed only for "foobar" prefix, so we do not have information about "foo" user readily available.
+    # This subscription makes sure that we have it so that processing such mention works without any delay.
+    @autorun (computation) =>
+      return unless @mentionContentBeforeCursor()
+
+      @subscribe 'User.autocomplete', @mentionContentBeforeCursor(), false
 
   editor: ->
     return null unless @isRendered()
@@ -237,6 +247,7 @@ class EditorComponent extends UIComponent
     @mentionPosition null
     @mentionAtPosition null
     @mentionContent ''
+    @mentionContentBeforeCursor ''
     @mentionSelected null
 
   doMention: (event) ->
@@ -268,6 +279,7 @@ class EditorComponent extends UIComponent
       @mentionPosition _.pick cursorPosition, 'left', 'bottom'
       @mentionAtPosition atPosition
       @mentionContent mentionContentMatch[1]
+      @mentionContentBeforeCursor documentString.substring atPosition + 1, position
       @mentionSelected 0 if @mentionSelected() is null
     else
       @disableMention()

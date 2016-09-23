@@ -32,18 +32,28 @@ new PublishEndpoint 'User.profile', (userId) ->
       # We use profile field differently than how Meteor is using it.
       profile: 1
 
-new PublishEndpoint 'User.autocomplete', (usernamePrefix) ->
-  check usernamePrefix, Match.Where (x) ->
+new PublishEndpoint 'User.autocomplete', (username, prefixSearch) ->
+  check username, Match.Where (x) ->
     check x, Match.NonEmptyString
     # Based on Settings.USERNAME_REGEX.
     /^[A-Za-z0-9_]+$/.test x
+  check prefixSearch, Boolean
 
-  @enableScope()
+  if prefixSearch
+    @enableScope()
 
-  User.documents.find
-    username: new RegExp("^#{usernamePrefix}", 'i')
-  ,
-    fields:
-      _id: 1
-      username: 1
-      avatar: 1
+    User.documents.find
+      username: new RegExp("^#{username}", 'i')
+    ,
+      fields:
+        _id: 1
+        username: 1
+        avatar: 1
+  else
+    User.documents.find
+      username: username
+    ,
+      fields:
+        _id: 1
+        username: 1
+        avatar: 1
