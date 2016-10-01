@@ -117,6 +117,7 @@ Package.onUse(function (api) {
     'migrations/0022-activity-data.coffee',
     'migrations/0023-activity-byuser.coffee',
     'migrations/0024-attachments.coffee',
-    'migrations/0025-mentions.coffee'
+    'migrations/0025-mentions.coffee',
+    'migrations/0026-discussion-followers.coffee'
   ], 'server');
 });

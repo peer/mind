@@ -50,6 +50,10 @@ class Discussion extends share.BaseDocument
   # closingNoteMentions: list of
   #   _id
   # status: one of Discussion.STATUS values
+  # followers: list of
+  #   user:
+  #     _id
+  #   reason: the first reason for following, or the last manual setting, one of Discussion.REASON values
 
   @Meta
     name: 'Discussion'
@@ -72,6 +76,9 @@ class Discussion extends share.BaseDocument
       ]
       closingNoteMentions: [
         @ReferenceField User
+      ]
+      followers: [
+        user: @ReferenceField User
       ]
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
@@ -141,7 +148,15 @@ class Discussion extends share.BaseDocument
       updatedAt: share.UpdatedAtTrigger ['changes']
 
   @PUBLISH_FIELDS: ->
-    _.extend super,
+    if userId = Meteor.userId()
+      followers =
+        followers:
+          $elemMatch:
+            'user._id': userId
+    else
+      followers = {}
+
+    _.extend super, followers,
       _id: 1
       createdAt: 1
       updatedAt: 1
@@ -170,6 +185,19 @@ class Discussion extends share.BaseDocument
     VOTING: 'voting'
     CLOSED: 'closed'
     PASSED: 'passed'
+
+  @REASON:
+    AUTHOR: 'author'
+    MENTIONED: 'mentioned'
+    # Manually started following a discussion.
+    FOLLOWED: 'followed'
+    # Made a comment, point, or a motion, or modified a discussion.
+    # But not if only voted on a motion, or upvoted content.
+    # Modifying a comment, point, or a motion also does not count.
+    PARTICIPATED: 'participated'
+    IGNORING: 'ignoring'
+    # Ignoring, but notify for mentions.
+    MENTIONS: 'mentions'
 
   isOpen: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @passingMotions or @passingMotions.length is 0) and not @closingNote)
