@@ -59,6 +59,8 @@ class Discussion extends share.BaseDocument
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       ]
+      discussionOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      discussionClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
       descriptionAttachments: [
         @ReferenceField StorageFile
       ]
