@@ -54,6 +54,7 @@ class Discussion extends share.BaseDocument
   #   user:
   #     _id
   #   reason: the first reason for following, or the last manual setting, one of Discussion.REASON values
+  # followersCount
 
   @Meta
     name: 'Discussion'
@@ -144,6 +145,8 @@ class Discussion extends share.BaseDocument
             return [fields._id, Discussion.STATUS.OPEN]
         else
           return [fields._id, Discussion.STATUS.DRAFT]
+      followersCount: @GeneratedField 'self', ['followers'], (fields) ->
+        [fields._id, fields.followers?.length or 0]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
 
@@ -175,6 +178,7 @@ class Discussion extends share.BaseDocument
       commentsCount: 1
       pointsCount: 1
       status: 1
+      followersCount: 1
 
   @STATUS:
     DRAFT: 'draft'
