@@ -24,7 +24,7 @@ class Activity extends share.BaseDocument
       data:
         comment: @ReferenceField Comment, [], false
         motion: @ReferenceField Motion, [], false
-        point: @ReferenceField Point, [], false
+        point: @ReferenceField Point, ['category'], false
         meeting: @ReferenceField Meeting, ['title'], false
         discussion: @ReferenceField Discussion, ['title'], false
 
