@@ -57,6 +57,17 @@ Meteor.methods
     ,
       multi: true
 
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      byUser: user.getReference()
+      type: 'documentCreate'
+      level: Activity.LEVEL.GENERAL
+      data:
+        meeting:
+          _id: documentId
+          title: document.title
+
     documentId
 
   'Meeting.update': (document) ->
