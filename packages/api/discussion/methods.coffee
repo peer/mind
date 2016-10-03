@@ -44,7 +44,13 @@ Meteor.methods
       commentsCount: 0
       pointsCount: 0
       # TODO: For now we are always starting a discussion already in an open state.
+      #       Then also add a user who opened the discussion to followers as "participated".
       status: Discussion.STATUS.OPEN
+      followers: [
+        user:
+          _id: user._id
+        reason: Discussion.REASON.AUTHOR
+      ]
 
     assert documentId
 
@@ -131,6 +137,17 @@ Meteor.methods
       ,
         multi: true
 
+      Discussion.documents.update
+        _id: document._id
+        'followers.user._id':
+          $ne: user._id
+      ,
+        $addToSet:
+          followers:
+            user:
+              _id: user._id
+            reason: Discussion.REASON.PARTICIPATED
+
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
 
     closingNoteAttachments = Discussion.extractAttachments closingNote
@@ -213,6 +230,17 @@ Meteor.methods
           active: true
       ,
         multi: true
+
+      Discussion.documents.update
+        _id: document._id
+        'followers.user._id':
+          $ne: user._id
+      ,
+        $addToSet:
+          followers:
+            user:
+              _id: user._id
+            reason: Discussion.REASON.PARTICIPATED
 
     [changedUpdate, changedClosing]
 
@@ -345,7 +373,7 @@ Meteor.methods
       'followers.user._id':
         $ne: userId
     ,
-      $push:
+      $addToSet:
         followers:
           user:
             _id: userId

@@ -150,6 +150,8 @@ class Discussion extends share.BaseDocument
         [fields._id, followers.length]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
+      followMentionedUsersInDescription: share.MentionsTrigger 'descriptionMentions', '_id'
+      followMentionedUsersInClosingNote: share.MentionsTrigger 'closingNoteMentions', '_id'
 
   @PUBLISH_FIELDS: ->
     if userId = Meteor.userId()

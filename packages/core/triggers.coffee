@@ -92,3 +92,37 @@ class UpdatedAtTriggerClass extends LastActivityTriggerClass
 
 share.UpdatedAtTrigger = (args...) ->
   new UpdatedAtTriggerClass args...
+
+# Adds mentioned users to followers of the discussions
+class MentionsTriggerClass extends share.BaseDocument._Trigger
+  constructor: (mentionsField, discussionField) ->
+    super [mentionsField, discussionField], (newDocument, oldDocument) ->
+      # Don't do anything when document is removed.
+      return unless newDocument?._id
+
+      discussionId = _.path newDocument, discussionField
+
+      # Change of a discussion should not really happen, but let's handle it.
+      if oldDocument and discussionId isnt _.path(oldDocument, discussionField)
+        # We just pretend it is a new document.
+        oldDocument = null
+
+      newMentions = _.pluck _.path(newDocument, mentionsField), '_id'
+      oldMentions = _.pluck _.path(oldDocument, mentionsField), '_id'
+
+      addedMentions = _.difference newMentions, oldMentions
+
+      for addedMention in addedMentions
+        Discussion.documents.update
+          _id: discussionId
+          'followers.user._id':
+            $ne: addedMention
+        ,
+          $addToSet:
+            followers:
+              user:
+                _id: addedMention
+              reason: Discussion.REASON.MENTIONED
+
+share.MentionsTrigger = (args...) ->
+  new MentionsTriggerClass args...

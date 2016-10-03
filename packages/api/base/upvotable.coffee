@@ -58,6 +58,17 @@ share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
   ,
     multi: true
 
+  Discussion.documents.update
+    _id: discussion._id
+    'followers.user._id':
+      $ne: user._id
+  ,
+    $addToSet:
+      followers:
+        user:
+          _id: user._id
+        reason: Discussion.REASON.PARTICIPATED
+
   documentId
 
 share.upvoteUpvotable = (documentClass, documentId, permissionCheck) ->
