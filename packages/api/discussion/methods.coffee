@@ -63,6 +63,17 @@ Meteor.methods
     ,
       multi: true
 
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      byUser: user.getReference()
+      type: 'documentCreate'
+      level: Activity.LEVEL.GENERAL
+      data:
+        discussion:
+          _id: documentId
+          title: document.title
+
     documentId
 
   # We allow changing discussions even after they have been closed (one should be able to edit the record to correct it).
@@ -246,13 +257,17 @@ Meteor.methods
 
   # TODO: Implement Discussion.open. For now we open discussions by default.
 
-  'Discussion.close': (discussionID, passingMotions, closingNote) ->
-    check discussionID, Match.DocumentId
+  'Discussion.close': (discussionId, passingMotions, closingNote) ->
+    check discussionId, Match.DocumentId
     check passingMotions, [Match.DocumentId]
     check closingNote, String
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+    discussion = Discussion.documents.findOne discussionId
+
+    throw new Meteor.Error 'not-found', "Discussion '#{discussionId}' cannot be found." unless discussion
 
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
 
@@ -282,7 +297,7 @@ Meteor.methods
 
     closedAt = new Date()
     changed = Discussion.documents.update _.extend(permissionCheck,
-      _id: discussionID
+      _id: discussion._id
       discussionOpenedAt:
         $ne: null
       discussionOpenedBy:
@@ -329,6 +344,18 @@ Meteor.methods
           active: true
       ,
         multi: true
+
+      Activity.documents.insert
+        timestamp: new Date()
+        connection: @connection.id
+        byUser: user.getReference()
+        forUsers: _.pluck discussion.followers, 'user'
+        type: 'documentClosed'
+        level: Activity.LEVEL.GENERAL
+        data:
+          discussion:
+            _id: discussion._id
+            title: discussion.title
 
     changed
 
