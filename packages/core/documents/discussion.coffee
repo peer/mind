@@ -150,8 +150,8 @@ class Discussion extends share.BaseDocument
         [fields._id, followers.length]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
-      followMentionedUsersInDescription: share.MentionsTrigger 'descriptionMentions', '_id'
-      followMentionedUsersInClosingNote: share.MentionsTrigger 'closingNoteMentions', '_id'
+      followMentionedUsersInDescription: share.MentionsTrigger 'descriptionMentions', '_id', 'author'
+      followMentionedUsersInClosingNote: share.MentionsTrigger 'closingNoteMentions', '_id', 'discussionClosedBy'
 
   @PUBLISH_FIELDS: ->
     if userId = Meteor.userId()
@@ -228,6 +228,14 @@ class Discussion extends share.BaseDocument
 
   isClosed: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and @discussionClosedAt and @discussionClosedBy)
+
+  followerDocument: (userId) ->
+    return null unless userId
+
+    for follower in (@followers or []) when follower.user?._id is userId
+      return follower
+
+    null
 
 if Meteor.isServer
   Discussion.Meta.collection._ensureIndex

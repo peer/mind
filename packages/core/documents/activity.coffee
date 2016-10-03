@@ -5,6 +5,10 @@ class Activity extends share.BaseDocument
   #   _id
   #   username
   #   avatar
+  # forUsers: list of:
+  #   _id
+  #   username
+  #   avatar
   # type: type of activity
   # level: one of Activity.LEVEL values
   # data: custom data for this activity
@@ -14,6 +18,9 @@ class Activity extends share.BaseDocument
     collection: 'Activities'
     fields: =>
       byUser: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      forUsers: [
+        @ReferenceField User, User.REFERENCE_FIELDS()
+      ]
       data:
         comment: @ReferenceField Comment, [], false
         motion: @ReferenceField Motion, [], false

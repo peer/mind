@@ -64,7 +64,7 @@ class share.UpvotableDocument extends share.BaseDocument
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
       lastActivity: share.LastActivityTrigger ['upvotes']
-      followMentionedUsers: share.MentionsTrigger 'bodyMentions', 'discussion._id'
+      followMentionedUsers: share.MentionsTrigger 'bodyMentions', 'discussion._id', 'author'
 
   @PUBLISH_FIELDS: ->
     _.extend super,

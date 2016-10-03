@@ -82,19 +82,8 @@ class Discussion.FollowingDropdown extends UIComponent
   discussion: ->
     @callAncestorWith 'discussion'
 
-  followerDocument: ->
-    userId = Meteor.userId()
-    discussion = @discussion()
-
-    return null unless userId and discussion
-
-    for follower in (discussion.followers or []) when follower.user?._id is userId
-      return follower
-
-    null
-
   icon: ->
-    follower = @followerDocument()
+    follower = @discussion()?.followerDocument Meteor.userId()
 
     if Discussion.isFollower follower
       'bookmark'
@@ -102,7 +91,7 @@ class Discussion.FollowingDropdown extends UIComponent
       'bookmark_border'
 
   label: ->
-    follower = @followerDocument()
+    follower = @discussion()?.followerDocument Meteor.userId()
 
     if Discussion.isFollowing follower?.reason
       "Following"
@@ -114,7 +103,7 @@ class Discussion.FollowingDropdown extends UIComponent
       "Not following"
 
   active: (type) ->
-    follower = @followerDocument()
+    follower = @discussion()?.followerDocument Meteor.userId()
 
     classes = ['active', 'selected']
 
@@ -131,7 +120,7 @@ class Discussion.FollowingDropdown extends UIComponent
       return classes
 
   reason: ->
-    follower = @followerDocument()
+    follower = @discussion()?.followerDocument Meteor.userId()
 
     if follower?.reason is Discussion.REASON.AUTHOR
       "you are its author"
