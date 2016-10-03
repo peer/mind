@@ -53,6 +53,109 @@ class Discussion.EditFormComponent extends UIComponent
 class Discussion.DisplayComponent.FixedButton extends UIComponent
   @register 'Discussion.DisplayComponent.FixedButton'
 
+class Discussion.FollowingDropdown extends UIComponent
+  @register 'Discussion.FollowingDropdown'
+
+  onCreated: ->
+    super
+
+    @dialogOpened = new ReactiveField false
+
+    @dropdownId = Random.id()
+
+    $(document).on "click.peermind.#{@dropdownId}", (event) =>
+      return unless @isRendered() and @dialogOpened()
+
+      dropdown = @$('.dropdown-content').get(0)
+
+      return unless dropdown
+
+      return if dropdown is event.target or $.contains(dropdown, event.target)
+
+      @dialogOpened false
+
+  onDestroyed: ->
+    super
+
+    $(document).off "click.peermind.#{@dropdownId}"
+
+  discussion: ->
+    @callAncestorWith 'discussion'
+
+  followerDocument: ->
+    userId = Meteor.userId()
+    discussion = @discussion()
+
+    return null unless userId and discussion
+
+    for follower in (discussion.followers or []) when follower.user?._id is userId
+      return follower
+
+    null
+
+  icon: ->
+    follower = @followerDocument()
+
+    if Discussion.isFollower follower
+      'bookmark'
+    else
+      'bookmark_border'
+
+  label: ->
+    follower = @followerDocument()
+
+    if Discussion.isFollowing follower?.reason
+      "Following"
+    else if Discussion.isOnlyMentions follower?.reason
+      "Only mentions"
+    else if Discussion.isIgnoring follower?.reason
+      "Ignoring"
+    else if Discussion.isNotFollowing follower?.reason
+      "Not following"
+
+  active: (type) ->
+    follower = @followerDocument()
+
+    classes = ['active', 'selected']
+
+    if type is 'following' and Discussion.isFollowing follower?.reason
+      return classes
+
+    if type is 'mentions' and Discussion.isOnlyMentions follower?.reason
+      return classes
+
+    if type is 'ignoring' and Discussion.isIgnoring follower?.reason
+      return classes
+
+    if type is 'not-following' and Discussion.isNotFollowing follower?.reason
+      return classes
+
+  reason: ->
+    follower = @followerDocument()
+
+    if follower?.reason is Discussion.REASON.AUTHOR
+      "you are its author"
+    else if follower?.reason is Discussion.REASON.MENTIONED
+      "you were mentioned in it"
+    else if follower?.reason is Discussion.REASON.PARTICIPATED
+      "you participated in it"
+
+  onButtonClick: (event) ->
+    event.preventDefault()
+
+    @dialogOpened true
+
+  onOptionClick: (event, type) ->
+    event.preventDefault()
+
+    Meteor.call 'Discussion.follow', @discussion()._id, type, (error, result) =>
+      if error
+        console.error "Follow error", error
+        alert "Follow error: #{error.reason or error}"
+        return
+
+      @dialogOpened false
+
 FlowRouter.route '/discussion/:_id',
   name: 'Discussion.display'
   action: (params, queryParams) ->

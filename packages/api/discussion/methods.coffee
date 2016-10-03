@@ -303,3 +303,50 @@ Meteor.methods
         multi: true
 
     changed
+
+  'Discussion.follow': (discussionId, type) ->
+    check discussionId, Match.DocumentId
+    check type, Match.Where (x) ->
+      check x, Match.NonEmptyString
+      x in ['not-following', 'following', 'mentions', 'ignoring']
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    # A special case.
+    if type is 'not-following'
+      return Discussion.documents.update
+        _id: discussionId
+      ,
+        $pull:
+          followers:
+            'user._id': userId
+
+    if type is 'following'
+      reason = Discussion.REASON.FOLLOWED
+    else if type is 'mentions'
+      reason = Discussion.REASON.MENTIONS
+    else if type is 'ignoring'
+      reason = Discussion.REASON.IGNORING
+    else
+      throw new Meteor.Error 'internal-error', "Internal error."
+
+    changed = Discussion.documents.update
+      _id: discussionId
+      'followers.user._id': userId
+    ,
+      $set:
+        'followers.$.reason': reason
+
+    return changed if changed
+
+    Discussion.documents.update
+      _id: discussionId
+      'followers.user._id':
+        $ne: userId
+    ,
+      $push:
+        followers:
+          user:
+            _id: userId
+          reason: reason

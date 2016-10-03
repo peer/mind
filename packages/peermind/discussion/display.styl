@@ -1,0 +1,31 @@
+@import '../base/base'
+
+.following-dropdown
+  font-size 1rem
+  line-height $button-height
+  // To make the wrapper div an offset parent which allows
+  // us to position the dropdown relativelly to it.
+  position relative
+
+  button
+    padding 0 0.5rem
+
+    .label
+      position relative
+      top -4px
+
+  .dropdown-content
+    top $button-height
+    left 0
+    display block
+    opacity 1
+    min-width 250px
+
+    .title
+      padding-bottom 0
+
+    .description
+      padding-top 5px
+      color $off-black
+      line-height 1.5rem
+      font-size 1rem

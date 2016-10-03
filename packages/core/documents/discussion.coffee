@@ -121,13 +121,13 @@ class Discussion extends share.BaseDocument
           return [fields._id, []] unless fields.body
           [fields._id, ({_id} for _id in @extractMentions fields.body)]
       ]
-      motionsCount: @GeneratedField 'self', ['motions'], (fields) ->
+      motionsCount: @GeneratedField 'self', ['motions'], (fields) =>
         [fields._id, fields.motions?.length or 0]
-      commentsCount: @GeneratedField 'self', ['comments'], (fields) ->
+      commentsCount: @GeneratedField 'self', ['comments'], (fields) =>
         [fields._id, fields.comments?.length or 0]
-      pointsCount: @GeneratedField 'self', ['points'], (fields) ->
+      pointsCount: @GeneratedField 'self', ['points'], (fields) =>
         [fields._id, fields.points?.length or 0]
-      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'passingMotions', 'closingNote', 'motions'], (fields) ->
+      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'passingMotions', 'closingNote', 'motions'], (fields) =>
         discussion = new Discussion fields
         if discussion.isClosed()
           if fields.passingMotions?.length
@@ -145,8 +145,9 @@ class Discussion extends share.BaseDocument
             return [fields._id, Discussion.STATUS.OPEN]
         else
           return [fields._id, Discussion.STATUS.DRAFT]
-      followersCount: @GeneratedField 'self', ['followers'], (fields) ->
-        [fields._id, fields.followers?.length or 0]
+      followersCount: @GeneratedField 'self', ['followers'], (fields) =>
+        followers = (follower for follower in (fields.followers or []) when @isFollower follower)
+        [fields._id, followers.length]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
 
@@ -202,6 +203,21 @@ class Discussion extends share.BaseDocument
     IGNORING: 'ignoring'
     # Ignoring, but notify for mentions.
     MENTIONS: 'mentions'
+
+  @isFollower: (follower) ->
+    follower?.reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.MENTIONS]
+
+  @isFollowing: (reason) ->
+    reason and reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED]
+
+  @isOnlyMentions: (reason) ->
+    reason and reason in [@REASON.MENTIONS]
+
+  @isIgnoring: (reason) ->
+    reason and reason in [@REASON.IGNORING]
+
+  @isNotFollowing: (reason) ->
+    not reason or reason not in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.MENTIONS, @REASON.IGNORING]
 
   isOpen: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @passingMotions or @passingMotions.length is 0) and not @closingNote)

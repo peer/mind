@@ -8,7 +8,7 @@
       {{else}}
         <div class="row">
           <h4 class="col s12">
-            {{> ExpandableButton}}{{discussion.title}}
+            {{> ExpandableButton}}{{> Discussion.FollowingDropdown}}{{discussion.title}}
           </h4>
         </div>
         {{#if discussion.description}}
@@ -121,4 +121,53 @@
       <i class="large material-icons">stop</i>
     </a>
   </div>
+</template>
+
+<template name="Discussion.FollowingDropdown">
+  {{!-- TODO: Display the count of followers somewhere. --}}
+  {{#if $and currentUserId discussion}}
+    <div class="following-dropdown right">
+      <button onClick="{{onButtonClick}}" class="waves-effect waves-light btn-flat"><i class="material-icons tiny">{{icon}}</i><span class="label">{{label}}</span> <i class="material-icons tiny">arrow_drop_down</i></button>
+      {{#if dialogOpened}}
+        <ul class="dropdown-content">
+          <li {{class (active 'not-following')}} onClick="{{onOptionClick 'not-following'}}">
+            {{#if active 'not-following'}}
+              <span class="title">Not following</span>
+              <span class="description">Not following until you participate or are @mentioned.</span>
+            {{else}}
+              <span class="title">Not follow</span>
+              <span class="description">Do not follow until you participate or are @mentioned.</span>
+            {{/if}}
+          </li>
+          <li {{class (active 'following')}} onClick="{{onOptionClick 'following'}}">
+            {{#if active 'following'}}
+              <span class="title">Following</span>
+              <span class="description">You are notified about this discussion{{#if reason}} because {{reason}}{{/if}}.</span>
+            {{else}}
+              <span class="title">Follow</span>
+              <span class="description">Be notified about this discussion.</span>
+            {{/if}}
+          </li>
+          <li {{class (active 'mentions')}} onClick="{{onOptionClick 'mentions'}}">
+            {{#if active 'mentions'}}
+              <span class="title">Only mentions</span>
+              <span class="description">You are notified only when @mentioned.</span>
+            {{else}}
+              <span class="title">Only mentions</span>
+              <span class="description">Be notified only when @mentioned.</span>
+            {{/if}}
+          </li>
+          <li {{class (active 'ignoring')}} onClick="{{onOptionClick 'ignoring'}}">
+            {{#if active 'ignoring'}}
+              <span class="title">Ignoring</span>
+              <span class="description">You are not notified about this discussion.</span>
+            {{else}}
+              <span class="title">Ignore</span>
+              <span class="description">Do not be notified about this discussion.</span>
+            {{/if}}
+          </li>
+        </ul>
+      {{/if}}
+    </div>
+  {{/if}}
 </template>

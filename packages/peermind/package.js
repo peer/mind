@@ -124,6 +124,7 @@ Package.onUse(function (api) {
     'discussion/new.coffee',
     'discussion/display.html',
     'discussion/display.coffee',
+    'discussion/display.styl',
     'discussion/close.html',
     'discussion/close.coffee',
     'discussion/close.styl',
