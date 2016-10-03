@@ -58,10 +58,10 @@ Meteor.methods
       multi: true
 
     Activity.documents.insert
-      timestamp: new Date()
+      timestamp: createdAt
       connection: @connection.id
       byUser: user.getReference()
-      type: 'documentCreate'
+      type: 'meetingCreated'
       level: Activity.LEVEL.GENERAL
       data:
         meeting:

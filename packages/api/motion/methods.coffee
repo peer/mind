@@ -159,7 +159,7 @@ Meteor.methods
         ]
 
     openedAt = new Date()
-    Motion.documents.update _.extend(permissionCheck,
+    changed = Motion.documents.update _.extend(permissionCheck,
       _id: motionId
       votingOpenedBy: null
       votingOpenedAt: null
@@ -175,6 +175,27 @@ Meteor.methods
         votingOpenedAt: openedAt
         majority: majority
         status: Motion.STATUS.OPEN
+
+    if changed
+      discussion = Discussion.documents.findOne
+        'motions._id': motionId
+
+      # This should not really happen.
+      if discussion
+        Activity.documents.insert
+          timestamp: openedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.pluck discussion.followers, 'user'
+          type: 'motionOpened'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+    changed
 
   'Motion.closeVoting': (motionId) ->
     check motionId, Match.DocumentId
@@ -194,7 +215,7 @@ Meteor.methods
         ]
 
     closedAt = new Date()
-    Motion.documents.update _.extend(permissionCheck,
+    changed = Motion.documents.update _.extend(permissionCheck,
       _id: motionId
       votingOpenedBy:
         $ne: null
@@ -212,6 +233,27 @@ Meteor.methods
         votingClosedBy: user.getReference()
         votingClosedAt: closedAt
         status: Motion.STATUS.CLOSED
+
+    if changed
+      discussion = Discussion.documents.findOne
+        'motions._id': motionId
+
+      # This should not really happen.
+      if discussion
+        Activity.documents.insert
+          timestamp: closedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.pluck discussion.followers, 'user'
+          type: 'motionClosed'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+    changed
 
   'Motion.withdraw': (motionId) ->
     check motionId, Match.DocumentId
@@ -234,7 +276,7 @@ Meteor.methods
         ]
 
     withdrawnAt = new Date()
-    Motion.documents.update _.extend(permissionCheck,
+    changed = Motion.documents.update _.extend(permissionCheck,
       _id: motionId
       votingOpenedBy: null
       votingOpenedAt: null
@@ -249,6 +291,27 @@ Meteor.methods
         withdrawnBy: user.getReference()
         withdrawnAt: withdrawnAt
         status: Motion.STATUS.WITHDRAWN
+
+    if changed
+      discussion = Discussion.documents.findOne
+        'motions._id': motionId
+
+      # This should not really happen.
+      if discussion
+        Activity.documents.insert
+          timestamp: withdrawnAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.pluck discussion.followers, 'user'
+          type: 'motionWithdrawn'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+    changed
 
   'Motion.vote': (document) ->
     check document,

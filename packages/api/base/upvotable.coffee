@@ -65,11 +65,11 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
     _id: documentId
 
   Activity.documents.insert
-    timestamp: new Date()
+    timestamp: createdAt
     connection: connection.id
     byUser: user.getReference()
     forUsers: _.pluck discussion.followers, 'user'
-    type: 'documentCreate'
+    type: "#{documentClass.Meta._name.toLowerCase()}Created"
     level: Activity.LEVEL.GENERAL
     data: data
 
@@ -101,7 +101,7 @@ share.upvoteUpvotable = ({connection, documentClass, documentId, permissionCheck
   throw new Meteor.Error 'not-found', "#{documentClass.Meta._name} '#{documentId}' cannot be found." unless document
 
   createdAt = new Date()
-  count = documentClass.documents.update _.extend(permissionCheck,
+  changed = documentClass.documents.update _.extend(permissionCheck,
     _id: document._id
     # User has not upvoted already.
     'upvotes.author._id':
@@ -120,7 +120,7 @@ share.upvoteUpvotable = ({connection, documentClass, documentId, permissionCheck
     $inc:
       upvotesCount: 1
 
-  if count
+  if changed
     data =
       discussion:
         _id: document.discussion._id
@@ -128,17 +128,17 @@ share.upvoteUpvotable = ({connection, documentClass, documentId, permissionCheck
       _id: documentId
 
     Activity.documents.insert
-      timestamp: new Date()
+      timestamp: createdAt
       connection: connection.id
       byUser: user.getReference()
       forUsers: [
         _id: document.author._id
       ]
-      type: 'documentUpvoted'
+      type: "#{documentClass.Meta._name.toLowerCase()}Upvoted"
       level: Activity.LEVEL.USER
       data: data
 
-  count
+  changed
 
 share.removeUpvoteUpvotable = ({connection, documentClass, documentId, permissionCheck}) ->
   check documentId, Match.DocumentId
@@ -151,7 +151,7 @@ share.removeUpvoteUpvotable = ({connection, documentClass, documentId, permissio
   # We allow anyone to remove their own upvote.
 
   lastActivity = new Date()
-  count = documentClass.documents.update _.extend(permissionCheck,
+  changed = documentClass.documents.update _.extend(permissionCheck,
     _id: documentId
     'upvotes.author._id': userId
   ),
@@ -163,7 +163,7 @@ share.removeUpvoteUpvotable = ({connection, documentClass, documentId, permissio
     $inc:
       upvotesCount: -1
 
-  if count
+  if changed
     # We just remove prior activity document when upvote is removed.
     Activity.documents.remove
       'byUser._id': userId
@@ -171,4 +171,4 @@ share.removeUpvoteUpvotable = ({connection, documentClass, documentId, permissio
       level: Activity.LEVEL.USER
       "data.#{documentClass.Meta._name.toLowerCase()}._id": documentId
 
-  count
+  changed

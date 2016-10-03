@@ -64,10 +64,10 @@ Meteor.methods
       multi: true
 
     Activity.documents.insert
-      timestamp: new Date()
+      timestamp: createdAt
       connection: @connection.id
       byUser: user.getReference()
-      type: 'documentCreate'
+      type: 'discussionCreated'
       level: Activity.LEVEL.GENERAL
       data:
         discussion:
@@ -346,11 +346,11 @@ Meteor.methods
         multi: true
 
       Activity.documents.insert
-        timestamp: new Date()
+        timestamp: closedAt
         connection: @connection.id
         byUser: user.getReference()
         forUsers: _.pluck discussion.followers, 'user'
-        type: 'documentClosed'
+        type: 'discussionClosed'
         level: Activity.LEVEL.GENERAL
         data:
           discussion:
