@@ -4,6 +4,7 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.COMMENT_NEW
 
     share.newUpvotable
+      connection: @connection
       documentClass: Comment
       document: document
       match:

@@ -3,6 +3,7 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.MOTION_NEW
 
     share.newUpvotable
+      connection: @connection
       documentClass: Motion
       document: document
       match:

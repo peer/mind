@@ -1,4 +1,4 @@
-share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
+share.newUpvotable = ({connection, documentClass, document, match, extend, extraChecks}) ->
   check document, match
 
   extend ?= (user, doc) -> doc
@@ -57,6 +57,21 @@ share.newUpvotable = ({documentClass, document, match, extend, extraChecks}) ->
       active: true
   ,
     multi: true
+
+  data =
+    discussion:
+      _id: discussion._id
+  data["#{documentClass.Meta._name.toLowerCase()}"] =
+    _id: documentId
+
+  Activity.documents.insert
+    timestamp: new Date()
+    connection: connection.id
+    byUser: user.getReference()
+    forUsers: _.pluck discussion.followers, 'user'
+    type: 'documentCreate'
+    level: Activity.LEVEL.GENERAL
+    data: data
 
   Discussion.documents.update
     _id: discussion._id
