@@ -193,6 +193,8 @@ class Discussion extends share.BaseDocument
     CLOSED: 'closed'
     PASSED: 'passed'
 
+  # The default behavior is to be added to followers when you are mentioned, or when you participate.
+  # This state is represented by not having a subdocument for the user among followers.
   @REASON:
     AUTHOR: 'author'
     MENTIONED: 'mentioned'
