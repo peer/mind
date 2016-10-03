@@ -25,34 +25,42 @@ Meteor.methods
         throw new Meteor.Error 'invalid-request', "Discussion is closed." if discussion.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Motion.upvote': (pointId) ->
-    share.upvoteUpvotable Motion, pointId,
-      votingOpenedBy: null
-      votingOpenedAt: null
-      votingClosedBy: null
-      votingClosedAt: null
-      withdrawnBy: null
-      withdrawnAt: null
-      majority: null
-      status: Motion.STATUS.DRAFT
-      # Not really needed because motions can be made only on non-draft discussions, and while
-      # a motion is in draft status, discussions cannot be closed anyway.
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.upvoteUpvotable
+      connection: @connection
+      documentClass: Motion
+      documentId: pointId
+      permissionCheck:
+        votingOpenedBy: null
+        votingOpenedAt: null
+        votingClosedBy: null
+        votingClosedAt: null
+        withdrawnBy: null
+        withdrawnAt: null
+        majority: null
+        status: Motion.STATUS.DRAFT
+        # Not really needed because motions can be made only on non-draft discussions, and while
+        # a motion is in draft status, discussions cannot be closed anyway.
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Motion.removeUpvote': (pointId) ->
-    share.removeUpvoteUpvotable Motion, pointId,
-      votingOpenedBy: null
-      votingOpenedAt: null
-      votingClosedBy: null
-      votingClosedAt: null
-      withdrawnBy: null
-      withdrawnAt: null
-      majority: null
-      status: Motion.STATUS.DRAFT
-      # Not really needed because motions can be made only on non-draft discussions, and while
-      # a motion is in draft status, discussions cannot be closed anyway.
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.removeUpvoteUpvotable
+      connection: @connection
+      documentClass: Motion
+      documentId: pointId
+      permissionCheck:
+        votingOpenedBy: null
+        votingOpenedAt: null
+        votingClosedBy: null
+        votingClosedAt: null
+        withdrawnBy: null
+        withdrawnAt: null
+        majority: null
+        status: Motion.STATUS.DRAFT
+        # Not really needed because motions can be made only on non-draft discussions, and while
+        # a motion is in draft status, discussions cannot be closed anyway.
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   # A discussion cannot be closed without all motions be closed (closed voting or withdrawn) first.
   # But we do not allow editing of motions after voting has been started or motion withdrawn,

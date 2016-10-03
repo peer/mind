@@ -86,37 +86,61 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
 
   documentId
 
-share.upvoteUpvotable = (documentClass, documentId, permissionCheck) ->
+share.upvoteUpvotable = ({connection, documentClass, documentId, permissionCheck}) ->
   check documentId, Match.DocumentId
 
   permissionCheck ?= {}
 
-  userId = Meteor.userId()
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+  user = Meteor.user User.REFERENCE_FIELDS()
+  throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.UPVOTE
 
+  document = documentClass.documents.findOne documentId
+
+  throw new Meteor.Error 'not-found', "#{documentClass.Meta._name} '#{documentId}' cannot be found." unless document
+
   createdAt = new Date()
-  documentClass.documents.update _.extend(permissionCheck,
-    _id: documentId
+  count = documentClass.documents.update _.extend(permissionCheck,
+    _id: document._id
     # User has not upvoted already.
     'upvotes.author._id':
-      $ne: userId
+      $ne: user._id
     # User cannot upvote their documents.
     'author._id':
-      $ne: userId
+      $ne: user._id
   ),
     $addToSet:
       upvotes:
         createdAt: createdAt
         author:
-          _id: userId
+          _id: user._id
     $set:
       lastActivity: createdAt
     $inc:
       upvotesCount: 1
 
-share.removeUpvoteUpvotable = (documentClass, documentId, permissionCheck) ->
+  if count
+    data =
+      discussion:
+        _id: document.discussion._id
+    data["#{documentClass.Meta._name.toLowerCase()}"] =
+      _id: documentId
+
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: connection.id
+      byUser: user.getReference()
+      forUsers: [
+        _id: document.author._id
+      ]
+      type: 'documentUpvoted'
+      level: Activity.LEVEL.USER
+      data: data
+
+  count
+
+share.removeUpvoteUpvotable = ({connection, documentClass, documentId, permissionCheck}) ->
   check documentId, Match.DocumentId
 
   permissionCheck ?= {}
@@ -127,7 +151,7 @@ share.removeUpvoteUpvotable = (documentClass, documentId, permissionCheck) ->
   # We allow anyone to remove their own upvote.
 
   lastActivity = new Date()
-  documentClass.documents.update _.extend(permissionCheck,
+  count = documentClass.documents.update _.extend(permissionCheck,
     _id: documentId
     'upvotes.author._id': userId
   ),
@@ -138,3 +162,13 @@ share.removeUpvoteUpvotable = (documentClass, documentId, permissionCheck) ->
       lastActivity: lastActivity
     $inc:
       upvotesCount: -1
+
+  if count
+    # We just remove prior activity document when upvote is removed.
+    Activity.documents.remove
+      'byUser._id': userId
+      type: 'documentUpvoted'
+      level: Activity.LEVEL.USER
+      "data.#{documentClass.Meta._name.toLowerCase()}._id": documentId
+
+  count
