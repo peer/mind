@@ -176,18 +176,45 @@ Meteor.methods
         majority: majority
         status: Motion.STATUS.OPEN
 
-    if changed
+    if changed and Meteor.isServer
       discussion = Discussion.documents.findOne
         'motions._id': motionId
 
       # This should not really happen.
       if discussion
+        # We notify all followers.
         Activity.documents.insert
           timestamp: openedAt
           connection: @connection.id
           byUser: user.getReference()
           forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
           type: 'motionOpened'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+        # We notify all users who voted on any competing motion.
+        # (Not really voted, but interacted in a way which gave them a Vote document.)
+        competingVoters = _.pluck Vote.documents.find(
+          'motion._id':
+            $ne: motionId
+          'motion.discussion._id': discussion._id
+          author:
+            $ne: null
+        ,
+          fields:
+            author: 1
+        ).fetch(), 'author'
+
+        Activity.documents.insert
+          timestamp: openedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq competingVoters, (u) -> u._id
+          type: 'competingMotionOpened'
           level: Activity.LEVEL.GENERAL
           data:
             discussion:
@@ -234,18 +261,43 @@ Meteor.methods
         votingClosedAt: closedAt
         status: Motion.STATUS.CLOSED
 
-    if changed
+    if changed and Meteor.isServer
       discussion = Discussion.documents.findOne
         'motions._id': motionId
 
       # This should not really happen.
       if discussion
+        # We notify all followers.
         Activity.documents.insert
           timestamp: closedAt
           connection: @connection.id
           byUser: user.getReference()
           forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
           type: 'motionClosed'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+        # We notify all users who voted on the motion.
+        # (Not really voted, but interacted in a way which gave them a Vote document.)
+        voters = _.pluck Vote.documents.find(
+          'motion._id': motionId
+          author:
+            $ne: null
+        ,
+          fields:
+            author: 1
+        ).fetch(), 'author'
+
+        Activity.documents.insert
+          timestamp: closedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq voters, (u) -> u._id
+          type: 'votedMotionClosed'
           level: Activity.LEVEL.GENERAL
           data:
             discussion:
@@ -292,7 +344,7 @@ Meteor.methods
         withdrawnAt: withdrawnAt
         status: Motion.STATUS.WITHDRAWN
 
-    if changed
+    if changed and Meteor.isServer
       discussion = Discussion.documents.findOne
         'motions._id': motionId
 

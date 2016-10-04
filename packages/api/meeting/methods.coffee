@@ -57,16 +57,17 @@ Meteor.methods
     ,
       multi: true
 
-    Activity.documents.insert
-      timestamp: createdAt
-      connection: @connection.id
-      byUser: user.getReference()
-      type: 'meetingCreated'
-      level: Activity.LEVEL.GENERAL
-      data:
-        meeting:
-          _id: documentId
-          title: document.title
+    if Meteor.isServer
+      Activity.documents.insert
+        timestamp: createdAt
+        connection: @connection.id
+        byUser: user.getReference()
+        type: 'meetingCreated'
+        level: Activity.LEVEL.GENERAL
+        data:
+          meeting:
+            _id: documentId
+            title: document.title
 
     documentId
 

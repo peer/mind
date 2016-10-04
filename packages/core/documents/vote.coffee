@@ -8,6 +8,7 @@ class Vote extends share.BaseDocument
   # motion:
   #   _id
   #   discussion
+  #     _id
   # value: the latest version of the value (can be of arbitrary type)
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
@@ -18,7 +19,7 @@ class Vote extends share.BaseDocument
     fields: =>
       author: @ReferenceField User, User.REFERENCE_FIELDS(), false
       # We care only about discussion ID and not any other fields (like status).
-      # TODO: Do we even really need discussion field?
+      # We need discussion ID to be able to get all votes for a discussion.
       motion: @ReferenceField Motion, ['discussion._id']
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.

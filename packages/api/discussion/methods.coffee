@@ -63,16 +63,17 @@ Meteor.methods
     ,
       multi: true
 
-    Activity.documents.insert
-      timestamp: createdAt
-      connection: @connection.id
-      byUser: user.getReference()
-      type: 'discussionCreated'
-      level: Activity.LEVEL.GENERAL
-      data:
-        discussion:
-          _id: documentId
-          title: document.title
+    if Meteor.isServer
+      Activity.documents.insert
+        timestamp: createdAt
+        connection: @connection.id
+        byUser: user.getReference()
+        type: 'discussionCreated'
+        level: Activity.LEVEL.GENERAL
+        data:
+          discussion:
+            _id: documentId
+            title: document.title
 
     documentId
 
@@ -345,17 +346,18 @@ Meteor.methods
       ,
         multi: true
 
-      Activity.documents.insert
-        timestamp: closedAt
-        connection: @connection.id
-        byUser: user.getReference()
-        forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
-        type: 'discussionClosed'
-        level: Activity.LEVEL.GENERAL
-        data:
-          discussion:
-            _id: discussion._id
-            title: discussion.title
+      if Meteor.isServer
+        Activity.documents.insert
+          timestamp: closedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+          type: 'discussionClosed'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+              title: discussion.title
 
     changed
 

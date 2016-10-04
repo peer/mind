@@ -64,25 +64,26 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
   data["#{documentClass.Meta._name.toLowerCase()}"] =
     _id: documentId
 
-  Activity.documents.insert
-    timestamp: createdAt
-    connection: connection.id
-    byUser: user.getReference()
-    forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
-    type: "#{documentClass.Meta._name.toLowerCase()}Created"
-    level: Activity.LEVEL.GENERAL
-    data: data
+  if Meteor.isServer
+    Activity.documents.insert
+      timestamp: createdAt
+      connection: connection.id
+      byUser: user.getReference()
+      forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+      type: "#{documentClass.Meta._name.toLowerCase()}Created"
+      level: Activity.LEVEL.GENERAL
+      data: data
 
-  Discussion.documents.update
-    _id: discussion._id
-    'followers.user._id':
-      $ne: user._id
-  ,
-    $addToSet:
-      followers:
-        user:
-          _id: user._id
-        reason: Discussion.REASON.PARTICIPATED
+    Discussion.documents.update
+      _id: discussion._id
+      'followers.user._id':
+        $ne: user._id
+    ,
+      $addToSet:
+        followers:
+          user:
+            _id: user._id
+          reason: Discussion.REASON.PARTICIPATED
 
   documentId
 
@@ -120,7 +121,7 @@ share.upvoteUpvotable = ({connection, documentClass, documentId, permissionCheck
     $inc:
       upvotesCount: 1
 
-  if changed
+  if changed and Meteor.isServer
     data =
       discussion:
         _id: document.discussion._id
