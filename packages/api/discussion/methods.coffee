@@ -349,7 +349,7 @@ Meteor.methods
         timestamp: closedAt
         connection: @connection.id
         byUser: user.getReference()
-        forUsers: _.pluck discussion.followers, 'user'
+        forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
         type: 'discussionClosed'
         level: Activity.LEVEL.GENERAL
         data:

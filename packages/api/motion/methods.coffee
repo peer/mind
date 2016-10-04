@@ -186,7 +186,7 @@ Meteor.methods
           timestamp: openedAt
           connection: @connection.id
           byUser: user.getReference()
-          forUsers: _.pluck discussion.followers, 'user'
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
           type: 'motionOpened'
           level: Activity.LEVEL.GENERAL
           data:
@@ -244,7 +244,7 @@ Meteor.methods
           timestamp: closedAt
           connection: @connection.id
           byUser: user.getReference()
-          forUsers: _.pluck discussion.followers, 'user'
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
           type: 'motionClosed'
           level: Activity.LEVEL.GENERAL
           data:
@@ -302,7 +302,7 @@ Meteor.methods
           timestamp: withdrawnAt
           connection: @connection.id
           byUser: user.getReference()
-          forUsers: _.pluck discussion.followers, 'user'
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
           type: 'motionWithdrawn'
           level: Activity.LEVEL.GENERAL
           data:
