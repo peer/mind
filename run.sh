@@ -14,8 +14,8 @@ MONGODB_LOG="${DATA_ROOT}/${NAME}/mongodb/log"
 METEOR_LOG="${DATA_ROOT}/${NAME}/meteor/log"
 METEOR_STORAGE="${DATA_ROOT}/${NAME}/meteor/storage"
 
-PEERDB_INSTANCES=2
-WORKER_INSTANCES=2
+export PEERDB_INSTANCES=2
+export WORKER_INSTANCES=2
 
 # This file is used by both peermind/peermind and tozd/meteor-mongodb images. The latter automatically creates the
 # database and accounts with provided passwords. The file should look like:
@@ -40,15 +40,15 @@ if [ ! -s "$CONFIG" ]; then
   exit 1
 fi
 
-docker stop "${NAME}_mongodb" || true
-sleep 1
-docker rm "${NAME}_mongodb" || true
-sleep 1
+#docker stop "${NAME}_mongodb" || true
+#sleep 1
+#docker rm "${NAME}_mongodb" || true
+#sleep 1
 # Mounted volume "/srv/var/hosts:/etc/hosts:ro" is used by tozd/docker-hosts service discovery and can be removed.
-docker run --detach=true --restart=always --name "${NAME}_mongodb" --hostname "${NAME}_mongodb" \
- --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/mongod/run.config" \
- --volume "${MONGODB_LOG}:/var/log/mongod" --volume "${MONGODB_DATA}:/var/lib/mongodb" \
- tozd/meteor-mongodb:2.6
+#docker run --detach=true --restart=always --name "${NAME}_mongodb" --hostname "${NAME}_mongodb" \
+# --volume /srv/var/hosts:/etc/hosts:ro --volume "${CONFIG}:/etc/service/mongod/run.config" \
+# --volume "${MONGODB_LOG}:/var/log/mongod" --volume "${MONGODB_DATA}:/var/lib/mongodb" \
+# tozd/meteor-mongodb:2.6
 
 for I in $(seq 1 $PEERDB_INSTANCES); do
     mkdir -p "${DATA_ROOT}/${NAME}/peerdb$I/log"
