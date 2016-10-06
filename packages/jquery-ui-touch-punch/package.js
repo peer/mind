@@ -5,9 +5,9 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.4.1.2');
 
-    // Core dependencies.
+  // Core dependencies.
   api.use([
     'jquery'
   ]);
