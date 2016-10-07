@@ -58,13 +58,13 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
   ,
     multi: true
 
-  data =
-    discussion:
-      _id: discussion._id
-  data["#{documentClass.Meta._name.toLowerCase()}"] =
-    _id: documentId
-
   if Meteor.isServer
+    data =
+      discussion:
+        _id: discussion._id
+    data["#{documentClass.Meta._name.toLowerCase()}"] =
+      _id: documentId
+
     Activity.documents.insert
       timestamp: createdAt
       connection: connection.id
@@ -168,7 +168,7 @@ share.removeUpvoteUpvotable = ({connection, documentClass, documentId, permissio
     # We just remove prior activity document when upvote is removed.
     Activity.documents.remove
       'byUser._id': userId
-      type: 'documentUpvoted'
+      type: "#{documentClass.Meta._name.toLowerCase()}Upvoted"
       level: Activity.LEVEL.USER
       "data.#{documentClass.Meta._name.toLowerCase()}._id": documentId
 
