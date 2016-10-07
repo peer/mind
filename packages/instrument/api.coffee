@@ -13,7 +13,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'route'
       level: Activity.LEVEL.DEBUG
       data: escapeKeys routeObject
@@ -49,16 +49,18 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'error'
       level: Activity.LEVEL.ERROR
       data: escapeKeys error
 
-  'Activity.ui': (type, data) ->
+  'Activity.ui': (type, documentType, document) ->
     check type, Match.NonEmptyString
-    check data,
+    check documentType, Match.NonEmptyString
+    check documentType, Match.Where (x) ->
+      x in [Comment.Meta._name, Discussion.Meta._name, Meeting.Meta._name, Motion.Meta._name, Point.Meta._name]
+    check document,
       _id: Match.DocumentId
-      _type: Match.NonEmptyString
 
     if @userId
       user =
@@ -66,15 +68,17 @@ Meteor.methods
     else
       user = null
 
+    data =
+      type: type
+    data[documentType.toLowerCase()] = document
+
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'ui'
       level: Activity.LEVEL.DEBUG
-      data:
-        type: type
-        data: data
+      data: data
 
   'Activity.visibility': (visible) ->
     check visible, Boolean
@@ -88,7 +92,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'visibility'
       level: Activity.LEVEL.DEBUG
       data:
@@ -106,7 +110,7 @@ Meteor.methods
     Activity.documents.insert
       timestamp: new Date()
       connection: @connection.id
-      user: user
+      byUser: user
       type: 'focus'
       level: Activity.LEVEL.DEBUG
       data:

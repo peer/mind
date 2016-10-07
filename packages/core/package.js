@@ -22,7 +22,7 @@ Package.onUse(function (api) {
     'peerlibrary:peerdb@0.23.0',
     'peerlibrary:peerdb-migrations@0.3.0',
     'peerlibrary:meteor-file@0.2.1',
-    'peerlibrary:reactive-field@0.1.0',
+    'peerlibrary:reactive-field@0.3.0',
     'peerlibrary:assert@0.2.5',
     // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
@@ -111,6 +111,16 @@ Package.onUse(function (api) {
     'migrations/0016-displayfields.coffee',
     'migrations/0017-vote-motion.coffee',
     'migrations/0018-tally-infavor.coffee',
-    'migrations/0019-meeting-discussions.coffee'
+    'migrations/0019-meeting-discussions.coffee',
+    'migrations/0020-activity-type.coffee',
+    'migrations/0021-activity-document.coffee',
+    'migrations/0022-activity-data.coffee',
+    'migrations/0023-activity-byuser.coffee',
+    'migrations/0024-attachments.coffee',
+    'migrations/0025-mentions.coffee',
+    'migrations/0026-discussion-followers.coffee',
+    'migrations/0027-discussion-followerscount.coffee',
+    'migrations/0028-activity-forusers.coffee',
+    'migrations/0029-activity.coffee'
   ], 'server');
 });

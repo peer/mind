@@ -45,10 +45,11 @@ class Discussion.OneComponent extends UIComponent
     @subscriptionsReady() and not @discussion()
 
   expandableEventData: ->
-    data = @discussion()
+    document = @discussion()
 
-    _id: data._id
-    _type: data.constructor.Meta._name
+    document:
+      _id: document._id
+    type: document.constructor.Meta._name
 
   onSaveEdit: (event, onSuccess) ->
     event.preventDefault()
@@ -90,3 +91,11 @@ class Discussion.OneComponent extends UIComponent
         #       For this method, the result is an array [changedUpdate, changedClosing].
 
         onSuccess()
+
+  contributeUsersForMention: ->
+    users = []
+
+    if author = @discussion()?.author
+      users.push author
+
+    users

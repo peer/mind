@@ -3,6 +3,7 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.MOTION_NEW
 
     share.newUpvotable
+      connection: @connection
       documentClass: Motion
       document: document
       match:
@@ -24,34 +25,42 @@ Meteor.methods
         throw new Meteor.Error 'invalid-request', "Discussion is closed." if discussion.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Motion.upvote': (pointId) ->
-    share.upvoteUpvotable Motion, pointId,
-      votingOpenedBy: null
-      votingOpenedAt: null
-      votingClosedBy: null
-      votingClosedAt: null
-      withdrawnBy: null
-      withdrawnAt: null
-      majority: null
-      status: Motion.STATUS.DRAFT
-      # Not really needed because motions can be made only on non-draft discussions, and while
-      # a motion is in draft status, discussions cannot be closed anyway.
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.upvoteUpvotable
+      connection: @connection
+      documentClass: Motion
+      documentId: pointId
+      permissionCheck:
+        votingOpenedBy: null
+        votingOpenedAt: null
+        votingClosedBy: null
+        votingClosedAt: null
+        withdrawnBy: null
+        withdrawnAt: null
+        majority: null
+        status: Motion.STATUS.DRAFT
+        # Not really needed because motions can be made only on non-draft discussions, and while
+        # a motion is in draft status, discussions cannot be closed anyway.
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Motion.removeUpvote': (pointId) ->
-    share.removeUpvoteUpvotable Motion, pointId,
-      votingOpenedBy: null
-      votingOpenedAt: null
-      votingClosedBy: null
-      votingClosedAt: null
-      withdrawnBy: null
-      withdrawnAt: null
-      majority: null
-      status: Motion.STATUS.DRAFT
-      # Not really needed because motions can be made only on non-draft discussions, and while
-      # a motion is in draft status, discussions cannot be closed anyway.
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.removeUpvoteUpvotable
+      connection: @connection
+      documentClass: Motion
+      documentId: pointId
+      permissionCheck:
+        votingOpenedBy: null
+        votingOpenedAt: null
+        votingClosedBy: null
+        votingClosedAt: null
+        withdrawnBy: null
+        withdrawnAt: null
+        majority: null
+        status: Motion.STATUS.DRAFT
+        # Not really needed because motions can be made only on non-draft discussions, and while
+        # a motion is in draft status, discussions cannot be closed anyway.
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   # A discussion cannot be closed without all motions be closed (closed voting or withdrawn) first.
   # But we do not allow editing of motions after voting has been started or motion withdrawn,
@@ -78,6 +87,7 @@ Meteor.methods
       $root.has('figure').length
 
     attachments = Motion.extractAttachments document.body
+    mentions = Motion.extractMentions document.body
 
     if User.hasPermission User.PERMISSIONS.MOTION_UPDATE
       permissionCheck = {}
@@ -111,6 +121,7 @@ Meteor.methods
         updatedAt: updatedAt
         body: document.body
         bodyAttachments: ({_id} for _id in attachments)
+        bodyMentions: ({_id} for _id in mentions)
       $push:
         changes:
           updatedAt: updatedAt
@@ -148,7 +159,7 @@ Meteor.methods
         ]
 
     openedAt = new Date()
-    Motion.documents.update _.extend(permissionCheck,
+    changed = Motion.documents.update _.extend(permissionCheck,
       _id: motionId
       votingOpenedBy: null
       votingOpenedAt: null
@@ -164,6 +175,55 @@ Meteor.methods
         votingOpenedAt: openedAt
         majority: majority
         status: Motion.STATUS.OPEN
+
+    if changed and Meteor.isServer
+      discussion = Discussion.documents.findOne
+        'motions._id': motionId
+
+      # This should not really happen.
+      if discussion
+        # We notify all followers.
+        Activity.documents.insert
+          timestamp: openedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+          type: 'motionOpened'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+        # We notify all users who voted on any competing motion.
+        # (Not really voted, but interacted in a way which gave them a Vote document.)
+        competingVoters = _.pluck Vote.documents.find(
+          'motion._id':
+            $ne: motionId
+          'motion.discussion._id': discussion._id
+          # Author can be null if user was deleted in meantime.
+          author:
+            $ne: null
+        ,
+          fields:
+            author: 1
+        ).fetch(), 'author'
+
+        Activity.documents.insert
+          timestamp: openedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq competingVoters, (u) -> u._id
+          type: 'competingMotionOpened'
+          level: Activity.LEVEL.USER
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+    changed
 
   'Motion.closeVoting': (motionId) ->
     check motionId, Match.DocumentId
@@ -183,7 +243,7 @@ Meteor.methods
         ]
 
     closedAt = new Date()
-    Motion.documents.update _.extend(permissionCheck,
+    changed = Motion.documents.update _.extend(permissionCheck,
       _id: motionId
       votingOpenedBy:
         $ne: null
@@ -201,6 +261,53 @@ Meteor.methods
         votingClosedBy: user.getReference()
         votingClosedAt: closedAt
         status: Motion.STATUS.CLOSED
+
+    if changed and Meteor.isServer
+      discussion = Discussion.documents.findOne
+        'motions._id': motionId
+
+      # This should not really happen.
+      if discussion
+        # We notify all followers.
+        Activity.documents.insert
+          timestamp: closedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+          type: 'motionClosed'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+        # We notify all users who voted on the motion.
+        # (Not really voted, but interacted in a way which gave them a Vote document.)
+        voters = _.pluck Vote.documents.find(
+          'motion._id': motionId
+          # Author can be null if user was deleted in meantime.
+          author:
+            $ne: null
+        ,
+          fields:
+            author: 1
+        ).fetch(), 'author'
+
+        Activity.documents.insert
+          timestamp: closedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq voters, (u) -> u._id
+          type: 'votedMotionClosed'
+          level: Activity.LEVEL.USER
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+    changed
 
   'Motion.withdraw': (motionId) ->
     check motionId, Match.DocumentId
@@ -223,7 +330,7 @@ Meteor.methods
         ]
 
     withdrawnAt = new Date()
-    Motion.documents.update _.extend(permissionCheck,
+    changed = Motion.documents.update _.extend(permissionCheck,
       _id: motionId
       votingOpenedBy: null
       votingOpenedAt: null
@@ -238,6 +345,27 @@ Meteor.methods
         withdrawnBy: user.getReference()
         withdrawnAt: withdrawnAt
         status: Motion.STATUS.WITHDRAWN
+
+    if changed and Meteor.isServer
+      discussion = Discussion.documents.findOne
+        'motions._id': motionId
+
+      # This should not really happen.
+      if discussion
+        Activity.documents.insert
+          timestamp: withdrawnAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+          type: 'motionWithdrawn'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+            motion:
+              _id: motionId
+
+    changed
 
   'Motion.vote': (document) ->
     check document,

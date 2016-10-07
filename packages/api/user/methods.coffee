@@ -1,9 +1,8 @@
 unless __meteor_runtime_config__.SANDSTORM
   Meteor.methods
     # TODO: Temporary, to invite users.
-    'User.invite': (email, username) ->
+    'User.invite': (email) ->
       check email, Match.NonEmptyString
-      check username, Match.NonEmptyString
 
       throw new Meteor.Error 'unauthorized', "Unauthorized." unless Meteor.userId()
 
@@ -14,6 +13,11 @@ unless __meteor_runtime_config__.SANDSTORM
 
       # Invite only if e-mail is not already verified (invitation has already been accepted).
       return null if user and _.findWhere(user.emails, address: email).verified
+
+      # Inverse of Settings.USERNAME_REGEX.
+      username = email.split('@')[0]?.replace /^[^A-Za-z]+|[^A-Za-z0-9]+$|[^A-Za-z0-9_]+/g, ''
+
+      throw new Meteor.Error 'invalid-request', "Invalid username generated: '#{username}'" unless username and new RegExp("^#{Settings.USERNAME_REGEX}$").test username
 
       if user
         userId = user._id
@@ -48,6 +52,7 @@ Meteor.methods
       profile = '' unless profileText or $root.has('figure').length
 
     attachments = User.extractAttachments profile
+    mentions = User.extractMentions profile
 
     updatedAt = new Date()
     changed = User.documents.update
@@ -59,6 +64,7 @@ Meteor.methods
         updatedAt: updatedAt
         profile: profile
         profileAttachments: ({_id} for _id in attachments)
+        profileMentions: ({_id} for _id in mentions)
       $push:
         changes:
           updatedAt: updatedAt

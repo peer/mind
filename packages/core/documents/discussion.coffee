@@ -10,6 +10,8 @@ class Discussion extends share.BaseDocument
   # description: the latest version of the description
   # descriptionAttachments: list of
   #   _id
+  # descriptionMentions: list of
+  #   _id
   # changes: list (the last list item is the most recent one) of changes
   #   updatedAt: timestamp of the change
   #   author: author of the change
@@ -45,7 +47,14 @@ class Discussion extends share.BaseDocument
   # closingNote: the latest version of the closing note
   # closingNoteAttachments: list of
   #   _id
+  # closingNoteMentions: list of
+  #   _id
   # status: one of Discussion.STATUS values
+  # followers: list of
+  #   user:
+  #     _id
+  #   reason: the first reason for following, or the last manual setting, one of Discussion.REASON values
+  # followersCount
 
   @Meta
     name: 'Discussion'
@@ -54,6 +63,23 @@ class Discussion extends share.BaseDocument
       passingMotions: [@ReferenceField Motion]
       changes: [
         author: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      ]
+      discussionOpenedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      discussionClosedBy: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      descriptionAttachments: [
+        @ReferenceField StorageFile
+      ]
+      descriptionMentions: [
+        @ReferenceField User
+      ]
+      closingNoteAttachments: [
+        @ReferenceField StorageFile
+      ]
+      closingNoteMentions: [
+        @ReferenceField User
+      ]
+      followers: [
+        user: @ReferenceField User
       ]
     generators: =>
       # $slice in the projection is not supported by Meteor, so we fetch all changes and manually read the latest entry.
@@ -76,24 +102,32 @@ class Discussion extends share.BaseDocument
         return [] unless lastChange and 'closingNote' of lastChange
         [fields._id, lastChange.closingNote or '']
       descriptionAttachments: [
-        # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['description'], (fields) =>
           return [fields._id, []] unless fields.description
           [fields._id, ({_id} for _id in @extractAttachments fields.description)]
       ]
+      descriptionMentions: [
+        @GeneratedField 'self', ['body'], (fields) =>
+          return [fields._id, []] unless fields.body
+          [fields._id, ({_id} for _id in @extractMentions fields.body)]
+      ]
       closingNoteAttachments: [
-        # TODO: Make it an array of references to StorageFile as well.
         @GeneratedField 'self', ['closingNote'], (fields) =>
           return [fields._id, []] unless fields.closingNote
           [fields._id, ({_id} for _id in @extractAttachments fields.closingNote)]
       ]
-      motionsCount: @GeneratedField 'self', ['motions'], (fields) ->
+      closingNoteMentions: [
+        @GeneratedField 'self', ['body'], (fields) =>
+          return [fields._id, []] unless fields.body
+          [fields._id, ({_id} for _id in @extractMentions fields.body)]
+      ]
+      motionsCount: @GeneratedField 'self', ['motions'], (fields) =>
         [fields._id, fields.motions?.length or 0]
-      commentsCount: @GeneratedField 'self', ['comments'], (fields) ->
+      commentsCount: @GeneratedField 'self', ['comments'], (fields) =>
         [fields._id, fields.comments?.length or 0]
-      pointsCount: @GeneratedField 'self', ['points'], (fields) ->
+      pointsCount: @GeneratedField 'self', ['points'], (fields) =>
         [fields._id, fields.points?.length or 0]
-      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'passingMotions', 'closingNote', 'motions'], (fields) ->
+      status: @GeneratedField 'self', ['discussionOpenedAt', 'discussionOpenedBy', 'discussionClosedAt', 'discussionClosedBy', 'passingMotions', 'closingNote', 'motions'], (fields) =>
         discussion = new Discussion fields
         if discussion.isClosed()
           if fields.passingMotions?.length
@@ -111,11 +145,24 @@ class Discussion extends share.BaseDocument
             return [fields._id, Discussion.STATUS.OPEN]
         else
           return [fields._id, Discussion.STATUS.DRAFT]
+      followersCount: @GeneratedField 'self', ['followers'], (fields) =>
+        followers = (follower for follower in (fields.followers or []) when @isFollower follower)
+        [fields._id, followers.length]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
+      followMentionedUsersInDescription: share.MentionsTrigger 'descriptionMentions', '_id', 'author'
+      followMentionedUsersInClosingNote: share.MentionsTrigger 'closingNoteMentions', '_id', 'discussionClosedBy'
 
   @PUBLISH_FIELDS: ->
-    _.extend super,
+    if userId = Meteor.userId()
+      followers =
+        followers:
+          $elemMatch:
+            'user._id': userId
+    else
+      followers = {}
+
+    _.extend super, followers,
       _id: 1
       createdAt: 1
       updatedAt: 1
@@ -134,6 +181,7 @@ class Discussion extends share.BaseDocument
       commentsCount: 1
       pointsCount: 1
       status: 1
+      followersCount: 1
 
   @STATUS:
     DRAFT: 'draft'
@@ -145,11 +193,49 @@ class Discussion extends share.BaseDocument
     CLOSED: 'closed'
     PASSED: 'passed'
 
+  # The default behavior is to be added to followers when you are mentioned, or when you participate.
+  # This state is represented by not having a subdocument for the user among followers.
+  @REASON:
+    AUTHOR: 'author'
+    MENTIONED: 'mentioned'
+    # Manually started following a discussion.
+    FOLLOWED: 'followed'
+    # Made a comment, point, or a motion, or modified a discussion.
+    # But not if only voted on a motion, or upvoted content.
+    # Modifying a comment, point, or a motion also does not count.
+    PARTICIPATED: 'participated'
+    IGNORING: 'ignoring'
+    # Ignoring, but notify for mentions.
+    MENTIONS: 'mentions'
+
+  @isFollower: (follower) ->
+    follower?.reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.MENTIONS]
+
+  @isFollowing: (reason) ->
+    reason and reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED]
+
+  @isOnlyMentions: (reason) ->
+    reason and reason in [@REASON.MENTIONS]
+
+  @isIgnoring: (reason) ->
+    reason and reason in [@REASON.IGNORING]
+
+  @isNotFollowing: (reason) ->
+    not reason or reason not in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.MENTIONS, @REASON.IGNORING]
+
   isOpen: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @passingMotions or @passingMotions.length is 0) and not @closingNote)
 
   isClosed: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and @discussionClosedAt and @discussionClosedBy)
+
+  followerDocument: (userId) ->
+    return null unless userId
+
+    for follower in (@followers or []) when follower.user?._id is userId
+      return follower
+
+    null
 
 if Meteor.isServer
   Discussion.Meta.collection._ensureIndex

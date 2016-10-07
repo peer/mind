@@ -92,3 +92,69 @@ class UpdatedAtTriggerClass extends LastActivityTriggerClass
 
 share.UpdatedAtTrigger = (args...) ->
   new UpdatedAtTriggerClass args...
+
+# Adds mentioned users to followers of the discussions
+class MentionsTriggerClass extends share.BaseDocument._Trigger
+  constructor: (mentionsField, discussionField, userField) ->
+    super [mentionsField, discussionField, userField], (newDocument, oldDocument) ->
+      # Don't do anything when document is removed.
+      return unless newDocument?._id
+
+      discussionId = _.path newDocument, discussionField
+
+      # Change of a discussion should not really happen, but let's handle it.
+      if oldDocument and discussionId isnt _.path(oldDocument, discussionField)
+        # We just pretend it is a new document.
+        oldDocument = null
+
+      newMentions = _.pluck _.path(newDocument, mentionsField), '_id'
+      oldMentions = _.pluck _.path(oldDocument, mentionsField), '_id'
+
+      addedMentions = _.difference newMentions, oldMentions
+
+      for addedMention in addedMentions
+        Discussion.documents.update
+          _id: discussionId
+          'followers.user._id':
+            $ne: addedMention
+        ,
+          $addToSet:
+            followers:
+              user:
+                _id: addedMention
+              reason: Discussion.REASON.MENTIONED
+
+        discussion = Discussion.documents.findOne
+          _id: discussionId
+        ,
+          fields:
+            title: 1
+            followers:
+              $elemMatch:
+                'user._id': addedMention
+
+        continue unless Discussion.isFollower discussion?.followerDocument addedMention
+
+        data =
+          discussion:
+            _id: discussionId
+            title: discussion.title
+
+        # This could override "discussion" when mentions are inside discussion directly.
+        documentName = @document.Meta._name.toLowerCase()
+        if documentName isnt 'discussion'
+          data[documentName] =
+            _id: newDocument._id
+
+        Activity.documents.insert
+          timestamp: new Date()
+          byUser: _.path newDocument, userField
+          forUsers: [
+            _id: addedMention
+          ]
+          type: 'mention'
+          level: Activity.LEVEL.USER
+          data: data
+
+share.MentionsTrigger = (args...) ->
+  new MentionsTriggerClass args...

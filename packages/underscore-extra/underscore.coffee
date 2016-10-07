@@ -13,3 +13,10 @@ _.mixin
       return false
 
     return true
+
+  path: (object, path) ->
+    return undefined unless _.isString path
+    for segment in path.split '.'
+      return undefined unless _.isObject(object) and segment of object
+      object = object[segment]
+    object

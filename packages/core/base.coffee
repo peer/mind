@@ -21,7 +21,21 @@ sanitizeAttachmentTree = ($, $element, sanitize) ->
                 $text: true
   ]
 
+# Used for mentions attachments.
+sanitizeContentAttachmentTree = ($, $element, sanitize) ->
+  sanitize.sanitizeTree $, $element,
+    a:
+      attributes:
+        href: true
+        class: true
+      children:
+        $text: true
+
 # Should sanitize the tag and return its sanitized contents.
+# TODO: We should maybe simply re-render the whole attachment based on JSON data.
+#       So users cannot submit contradictory HTML and a different JSON.
+#       For example, to display image of one attachment, while JSON is pointing to the other.
+#       Or make a link to the file point somewhere else, but display a different image for it.
 sanitizeAttachment = ($, $element, sanitize) ->
   # If it is not attachment, allow only a with href attribute.
   unless $element.attr('data-trix-attachment')
@@ -32,7 +46,6 @@ sanitizeAttachment = ($, $element, sanitize) ->
     'href': true
     'data-trix-attachment': true
     'data-trix-content-type': true
-    'data-trix-attributes': true
 
   # Invalid.
   return unless $element.attr('href')
@@ -46,13 +59,28 @@ sanitizeAttachment = ($, $element, sanitize) ->
     # Invalid.
     return
 
+  sanitizeAttachmentTree $, $element, sanitize
+
+# Used for mentions attachments.
+# TODO: We should maybe simply re-render the whole attachment based on JSON data.
+#       So users cannot submit contradictory HTML and a different JSON.
+#       For example, to display an username of one user, while JSON is pointing to the other.
+#       Or make a link to one user account, but display a different username for it.
+sanitizeContentAttachment = ($, $element, sanitize) ->
+  # Do not allow if it is not content attachment.
+  return unless $element.attr('data-trix-attachment')
+
+  @sanitizeAttributes $, $element,
+    'class': true
+    'data-trix-attachment': true
+
   try
-    JSON.parse $element.attr 'data-trix-attributes' if $element.attr 'data-trix-attributes'
+    JSON.parse $element.attr 'data-trix-attachment'
   catch error
     # Invalid.
     return
 
-  sanitizeAttachmentTree $, $element, sanitize
+  sanitizeContentAttachmentTree $, $element, sanitize
 
 class share.BaseDocument extends Document
   @Meta
@@ -72,6 +100,9 @@ class share.BaseDocument extends Document
     li: {}
     ol: {}
 
+    # Used for mentions attachments.
+    figure: sanitizeContentAttachment
+
   @extractAttachments: (html) ->
     if Meteor.isServer
       $ = cheerio
@@ -79,10 +110,32 @@ class share.BaseDocument extends Document
       $ = jQuery
 
     $documentIds = $('[data-trix-attachment]', html).map (i, attachment) =>
-      JSON.parse($(attachment).attr('data-trix-attachment')).documentId or null
+      data = JSON.parse $(attachment).attr('data-trix-attachment')
+
+      # Returning null skips this attachment.
+      return null if data.type is 'mention'
+
+      data.documentId or null
 
     # Convert cheerio/jQuery array to a standard array.
-    $documentIds.get()
+    _.uniq $documentIds.get()
+
+  @extractMentions: (html) ->
+    if Meteor.isServer
+      $ = cheerio
+    else
+      $ = jQuery
+
+    $documentIds = $('[data-trix-attachment]', html).map (i, attachment) =>
+      data = JSON.parse $(attachment).attr('data-trix-attachment')
+
+      # Returning null skips this attachment.
+      return null unless data.type is 'mention'
+
+      data.documentId or null
+
+    # Convert cheerio/jQuery array to a standard array.
+    _.uniq $documentIds.get()
 
   # Verbose name is used when representing the class in a non-technical
   # setting. The convention is not to capitalize the first letter of

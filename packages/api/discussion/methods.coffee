@@ -12,6 +12,7 @@ Meteor.methods
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
     attachments = Discussion.extractAttachments document.description
+    mentions = Discussion.extractMentions document.description
 
     createdAt = new Date()
     documentId = Discussion.documents.insert
@@ -22,6 +23,7 @@ Meteor.methods
       title: document.title
       description: document.description
       descriptionAttachments: ({_id} for _id in attachments)
+      descriptionMentions: ({_id} for _id in mentions)
       changes: [
         updatedAt: createdAt
         author: user.getReference()
@@ -42,7 +44,13 @@ Meteor.methods
       commentsCount: 0
       pointsCount: 0
       # TODO: For now we are always starting a discussion already in an open state.
+      #       Then also add a user who opened the discussion to followers as "participated".
       status: Discussion.STATUS.OPEN
+      followers: [
+        user:
+          _id: user._id
+        reason: Discussion.REASON.AUTHOR
+      ]
 
     assert documentId
 
@@ -54,6 +62,18 @@ Meteor.methods
         active: true
     ,
       multi: true
+
+    if Meteor.isServer
+      Activity.documents.insert
+        timestamp: createdAt
+        connection: @connection.id
+        byUser: user.getReference()
+        type: 'discussionCreated'
+        level: Activity.LEVEL.GENERAL
+        data:
+          discussion:
+            _id: documentId
+            title: document.title
 
     documentId
 
@@ -79,6 +99,7 @@ Meteor.methods
     document.description = Discussion.sanitize.sanitizeHTML document.description
 
     descriptionAttachments = Discussion.extractAttachments document.description
+    descriptionMentions = Discussion.extractMentions document.description
 
     if User.hasPermission User.PERMISSIONS.DISCUSSION_UPDATE
       permissionCheck = {}
@@ -110,6 +131,7 @@ Meteor.methods
         title: document.title
         description: document.description
         descriptionAttachments: ({_id} for _id in descriptionAttachments)
+        descriptionMentions: ({_id} for _id in descriptionMentions)
       $push:
         changes:
           updatedAt: updatedAt
@@ -127,9 +149,21 @@ Meteor.methods
       ,
         multi: true
 
+      Discussion.documents.update
+        _id: document._id
+        'followers.user._id':
+          $ne: user._id
+      ,
+        $addToSet:
+          followers:
+            user:
+              _id: user._id
+            reason: Discussion.REASON.PARTICIPATED
+
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
 
     closingNoteAttachments = Discussion.extractAttachments closingNote
+    closingNoteMentions = Discussion.extractMentions closingNote
 
     # For closed discussions users with DISCUSSION_CLOSE permission can edit information about closing state.
     if User.hasPermission User.PERMISSIONS.DISCUSSION_CLOSE
@@ -149,7 +183,7 @@ Meteor.methods
           $size: passingMotions.length
     ]
 
-    for i, passingMotionId in passingMotions
+    for passingMotionId, i in passingMotions
       condition = {}
       condition["passingMotions.#{i}._id"] =
         $ne: passingMotionId
@@ -190,6 +224,7 @@ Meteor.methods
         passingMotions: ({_id} for _id in passingMotions)
         closingNote: closingNote
         closingNoteAttachments: ({_id} for _id in closingNoteAttachments)
+        closingNoteMentions: ({_id} for _id in closingNoteMentions)
         status: if passingMotions.length then Discussion.STATUS.PASSED else Discussion.STATUS.CLOSED
       $push:
         changes:
@@ -208,21 +243,37 @@ Meteor.methods
       ,
         multi: true
 
+      Discussion.documents.update
+        _id: document._id
+        'followers.user._id':
+          $ne: user._id
+      ,
+        $addToSet:
+          followers:
+            user:
+              _id: user._id
+            reason: Discussion.REASON.PARTICIPATED
+
     [changedUpdate, changedClosing]
 
   # TODO: Implement Discussion.open. For now we open discussions by default.
 
-  'Discussion.close': (discussionID, passingMotions, closingNote) ->
-    check discussionID, Match.DocumentId
+  'Discussion.close': (discussionId, passingMotions, closingNote) ->
+    check discussionId, Match.DocumentId
     check passingMotions, [Match.DocumentId]
     check closingNote, String
 
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
+    discussion = Discussion.documents.findOne discussionId
+
+    throw new Meteor.Error 'not-found', "Discussion '#{discussionId}' cannot be found." unless discussion
+
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
 
     attachments = Discussion.extractAttachments closingNote
+    mentions = Discussion.extractMentions closingNote
 
     if User.hasPermission User.PERMISSIONS.DISCUSSION_CLOSE
       permissionCheck = {}
@@ -247,7 +298,7 @@ Meteor.methods
 
     closedAt = new Date()
     changed = Discussion.documents.update _.extend(permissionCheck,
-      _id: discussionID
+      _id: discussion._id
       discussionOpenedAt:
         $ne: null
       discussionOpenedBy:
@@ -276,6 +327,7 @@ Meteor.methods
         passingMotions: ({_id} for _id in passingMotions)
         closingNote: closingNote
         closingNoteAttachments: ({_id} for _id in attachments)
+        closingNoteMentions: ({_id} for _id in mentions)
         status: if passingMotions.length then Discussion.STATUS.PASSED else Discussion.STATUS.CLOSED
       $push:
         changes:
@@ -294,4 +346,64 @@ Meteor.methods
       ,
         multi: true
 
+      if Meteor.isServer
+        Activity.documents.insert
+          timestamp: closedAt
+          connection: @connection.id
+          byUser: user.getReference()
+          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+          type: 'discussionClosed'
+          level: Activity.LEVEL.GENERAL
+          data:
+            discussion:
+              _id: discussion._id
+              title: discussion.title
+
     changed
+
+  'Discussion.follow': (discussionId, type) ->
+    check discussionId, Match.DocumentId
+    check type, Match.Where (x) ->
+      check x, Match.NonEmptyString
+      x in ['not-following', 'following', 'mentions', 'ignoring']
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    # A special case.
+    if type is 'not-following'
+      return Discussion.documents.update
+        _id: discussionId
+      ,
+        $pull:
+          followers:
+            'user._id': userId
+
+    if type is 'following'
+      reason = Discussion.REASON.FOLLOWED
+    else if type is 'mentions'
+      reason = Discussion.REASON.MENTIONS
+    else if type is 'ignoring'
+      reason = Discussion.REASON.IGNORING
+    else
+      throw new Meteor.Error 'internal-error', "Internal error."
+
+    changed = Discussion.documents.update
+      _id: discussionId
+      'followers.user._id': userId
+    ,
+      $set:
+        'followers.$.reason': reason
+
+    return changed if changed
+
+    Discussion.documents.update
+      _id: discussionId
+      'followers.user._id':
+        $ne: userId
+    ,
+      $addToSet:
+        followers:
+          user:
+            _id: userId
+          reason: reason

@@ -30,3 +30,11 @@ class Meeting.OneComponent extends UIComponent
 
   notFound: ->
     @subscriptionsReady() and not @meeting()
+
+  contributeUsersForMention: ->
+    users = []
+
+    if author = @meeting()?.author
+      users.push author
+
+    users

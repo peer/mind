@@ -117,10 +117,11 @@ class Comment.ListItemComponent extends UIComponent
     _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')
 
   expandableEventData: ->
-    data = @data()
+    document = @data()
 
-    _id: data._id
-    _type: data.constructor.Meta._name
+    document:
+      _id: document._id
+    type: document.constructor.Meta._name
 
   discussionIsOpen: ->
     @ancestorComponent(Comment.ListComponent)?.discussionIsOpen()
@@ -131,3 +132,11 @@ class Comment.ListItemComponent extends UIComponent
   upvotingDisabled: ->
     # TODO: We disable upvoting once discussion is closed even if we allow users to still post comments. Could we do something else?
     not (@discussionIsOpen() and not @discussionIsClosed())
+
+  contributeUsersForMention: ->
+    users = []
+
+    if author = @data()?.author
+      users.push author
+
+    users

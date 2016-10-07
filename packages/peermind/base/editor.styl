@@ -25,11 +25,27 @@
   ol ol ul, ol ul ul, ul ol ul, ul ul ul
     list-style-type square
 
+trix-editor
+  color $off-black
+
 /* Making sure displayed CSS matches the one in the editor. */
 .trix-content
   img
     max-width 100%
     height auto
+
+  .attachment.attachment-content
+    font-size inherit
+    user-select inherit
+
+    .remove
+      display none
+
+  .trix-mention
+    font-weight bold
+
+  a.trix-mention
+    color $off-black
 
 .input-field
   trix-editor
@@ -47,6 +63,11 @@
     transition $input-transition
     padding-bottom 1rem
 
+    a
+      // Links are disabled inisde figures inside trix-editor (mentions),
+      // so we want to style them accordingly only as text as well.
+      cursor text
+
   label.editor
     top 2.65rem
 
@@ -61,3 +82,31 @@
     trix-editor
       border-color $input-focus-color
       box-shadow 0 1px 0 0 $input-focus-color
+
+  .editor-wrapper
+    // To make the wrapper an offset parent which allows us to
+    // position list of potential mentions relativelly to it.
+    position relative
+
+    .mention
+      // This makes the element an offset parent, too.
+      position absolute
+      margin-top 5px
+      max-height (5 * $dropdown-item-height)
+
+      li
+        span.username
+          float left
+
+        &.no-matching-users
+          background-color transparent
+
+          span
+            color $off-black
+            cursor default
+
+// To override .collection .collection-item.avatar .circle style which is otherwise applied.
+.collection .collection-item.avatar .mention .circle
+  position static
+  height ($dropdown-item-height - 10px)
+  width ($dropdown-item-height - 10px)

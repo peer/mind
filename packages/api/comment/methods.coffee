@@ -4,6 +4,7 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.COMMENT_NEW
 
     share.newUpvotable
+      connection: @connection
       documentClass: Comment
       document: document
       match:
@@ -17,16 +18,24 @@ Meteor.methods
         # opening a new discussion instead. Only for drafts we do not allow commenting.
 
   'Comment.upvote': (commentId) ->
-    share.upvoteUpvotable Comment, commentId,
-      # TODO: We disable upvoting once discussion is closed even if we allow users to still post comments. Could we do something else?
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.upvoteUpvotable
+      connection: @connection
+      documentClass: Comment
+      documentId: commentId
+      permissionCheck:
+        # TODO: We disable upvoting once discussion is closed even if we allow users to still post comments. Could we do something else?
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Comment.removeUpvote': (commentId) ->
-    share.removeUpvoteUpvotable Comment, commentId,
-      # TODO: We disable upvoting once discussion is closed even if we allow users to still post comments. Could we do something else?
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.removeUpvoteUpvotable
+      connection: @connection
+      documentClass: Comment
+      documentId: commentId
+      permissionCheck:
+        # TODO: We disable upvoting once discussion is closed even if we allow users to still post comments. Could we do something else?
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   # We allow changing comments for closed discussions (one should be able to edit the record to correct it).
   # TODO: Should we allow editing for closed discussions only for comments made in the name of an user? Or just by moderators?
@@ -51,6 +60,7 @@ Meteor.methods
       $root.has('figure').length
 
     attachments = Comment.extractAttachments document.body
+    mentions = Comment.extractMentions document.body
 
     if User.hasPermission User.PERMISSIONS.COMMENT_UPDATE
       permissionCheck = {}
@@ -76,6 +86,7 @@ Meteor.methods
         updatedAt: updatedAt
         body: document.body
         bodyAttachments: ({_id} for _id in attachments)
+        bodyMentions: ({_id} for _id in mentions)
       $push:
         changes:
           updatedAt: updatedAt

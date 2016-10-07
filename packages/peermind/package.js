@@ -33,7 +33,7 @@ Package.onUse(function (api) {
     'peerlibrary:flow-router@2.12.1_1',
     'kadira:blaze-layout@2.3.0',
     'peerlibrary:computed-field@0.3.1',
-    'peerlibrary:reactive-field@0.1.0',
+    'peerlibrary:reactive-field@0.3.0',
     'peerlibrary:assert@0.2.5',
     'materialize:materialize@0.97.7',
     'useraccounts:materialize@1.14.2',
@@ -42,11 +42,12 @@ Package.onUse(function (api) {
     'mfpierre:chartist-js@1.6.2',
     'cunneen:accounts-admin-materializecss@0.3.0',
     'peerlibrary:blaze-layout-component@0.1.1',
-    'momentjs:moment@2.14.4',
+    'momentjs:moment@2.15.0',
     'mizzao:jquery-ui@1.11.4',
     'fourseven:scss@3.9.0',
     'softwarerero:accounts-t9n@1.3.3',
-    'doctorpangloss:method-hooks@2.0.2'
+    'doctorpangloss:method-hooks@2.0.2',
+    'peerlibrary:subscription-scope@0.1.0'
   ]);
 
   // Internal dependencies.
@@ -123,6 +124,7 @@ Package.onUse(function (api) {
     'discussion/new.coffee',
     'discussion/display.html',
     'discussion/display.coffee',
+    'discussion/display.styl',
     'discussion/close.html',
     'discussion/close.coffee',
     'discussion/close.styl',
@@ -160,7 +162,10 @@ Package.onUse(function (api) {
     'admin/accounts.coffee',
     'user/display.html',
     'user/display.coffee',
-    'user/display.styl'
+    'user/display.styl',
+    'activity/list.html',
+    'activity/list.coffee',
+    'activity/list.styl'
   ], 'client', options);
 
   api.addAssets([

@@ -1,32 +1,54 @@
 class Activity extends share.BaseDocument
   # timestamp: time of activity
   # connection
-  # user:
+  # byUser:
+  #   _id
+  #   username
+  #   avatar
+  # forUsers: list of:
   #   _id
   #   username
   #   avatar
   # type: type of activity
-  # level: one of "debug", "error", "admin", "user", and "public"
+  # level: one of Activity.LEVEL values
   # data: custom data for this activity
 
   @Meta
     name: 'Activity'
     collection: 'Activities'
     fields: =>
-      user: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      byUser: @ReferenceField User, User.REFERENCE_FIELDS(), false
+      forUsers: [
+        @ReferenceField User, User.REFERENCE_FIELDS()
+      ]
+      data:
+        comment: @ReferenceField Comment, [], false
+        motion: @ReferenceField Motion, [], false
+        point: @ReferenceField Point, ['category'], false
+        meeting: @ReferenceField Meeting, ['title'], false
+        discussion: @ReferenceField Discussion, ['title'], false
 
   @LEVEL:
     DEBUG: 'debug'
     ERROR: 'error'
     ADMIN: 'admin'
     USER: 'user'
-    PUBLIC: 'public'
+    GENERAL: 'general'
 
   @PUBLISH_FIELDS: ->
-    _.extend super,
+    if userId = Meteor.userId()
+      forUsers =
+        forUsers:
+          $elemMatch:
+            _id: userId
+    else
+      forUsers = {}
+
+    _.extend super, forUsers,
       timestamp: 1
-      user: 1
+      byUser: 1
       type: 1
+      level: 1
       data: 1
 
 if Meteor.isServer

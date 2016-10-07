@@ -4,6 +4,7 @@ Meteor.methods
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.POINT_NEW
 
     share.newUpvotable
+      connection: @connection
       documentClass: Point
       document: document
       match:
@@ -20,14 +21,22 @@ Meteor.methods
         throw new Meteor.Error 'invalid-request', "Discussion is closed." if discussion.status in [Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Point.upvote': (pointId) ->
-    share.upvoteUpvotable Point, pointId,
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.upvoteUpvotable
+      connection: @connection
+      documentClass: Point
+      documentId: pointId
+      permissionCheck:
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   'Point.removeUpvote': (pointId) ->
-    share.removeUpvoteUpvotable Point, pointId,
-      'discussion.status':
-        $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
+    share.removeUpvoteUpvotable
+      connection: @connection
+      documentClass: Point
+      documentId: pointId
+      permissionCheck:
+        'discussion.status':
+          $nin: [Discussion.STATUS.DRAFT, Discussion.STATUS.CLOSED, Discussion.STATUS.PASSED]
 
   # We allow changing points for closed discussions (one should be able to edit the record to correct it).
   # TODO: What to do if non-moderators will be able to create points themselves?
@@ -53,6 +62,7 @@ Meteor.methods
       $root.has('figure').length
 
     attachments = Point.extractAttachments document.body
+    mentions = Point.extractMentions document.body
 
     if User.hasPermission User.PERMISSIONS.POINT_UPDATE
       permissionCheck = {}
@@ -83,6 +93,7 @@ Meteor.methods
         updatedAt: updatedAt
         body: document.body
         bodyAttachments: ({_id} for _id in attachments)
+        bodyMentions: ({_id} for _id in mentions)
         category: document.category
       $push:
         changes:

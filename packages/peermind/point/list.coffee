@@ -164,10 +164,11 @@ class Point.ListItemComponent extends UIComponent
     _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')
 
   expandableEventData: ->
-    data = @data()
+    document = @data()
 
-    _id: data._id
-    _type: data.constructor.Meta._name
+    document:
+      _id: document._id
+    type: document.constructor.Meta._name
 
   discussionIsOpen: ->
     @ancestorComponent(Point.ListComponent)?.discussionIsOpen()
@@ -177,3 +178,11 @@ class Point.ListItemComponent extends UIComponent
 
   upvotingDisabled: ->
     not (@discussionIsOpen() and not @discussionIsClosed())
+
+  contributeUsersForMention: ->
+    users = []
+
+    if author = @data()?.author
+      users.push author
+
+    users

@@ -54,7 +54,7 @@ unless __meteor_runtime_config__.SANDSTORM
 
       avatars = EJSON.clone currentAvatars
 
-      for avatar, i in avatars
+      for avatar in avatars
         avatar.selected = false
 
       found = false
