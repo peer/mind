@@ -52,6 +52,11 @@ class UpvotableCreatedMigration extends Document.PatchMigration
           $set:
             _schema: newSchema
 
+    if count
+      # Because we do not have proper byUser references we have to populate fields later.
+      # But migrations run before observers are ready.
+      @updateAll()
+
     counts = super
     counts.migrated += count
     counts.all += count
@@ -129,6 +134,11 @@ class UpvotableUpvotedMigration extends Document.PatchMigration
           $set:
             _schema: newSchema
 
+    if count
+      # Because we do not have proper byUser references we have to populate fields later.
+      # But migrations run before observers are ready.
+      @updateAll()
+
     counts = super
     counts.migrated += count
     counts.all += count
@@ -159,6 +169,11 @@ class UpvotableUpvotedMigration extends Document.PatchMigration
         ,
           $set:
             _schema: oldSchema
+
+    if count
+      # Because we do not have proper byUser references we have to populate fields later.
+      # But migrations run before observers are ready.
+      @updateAll()
 
     counts = super
     counts.migrated += count
@@ -198,6 +213,11 @@ class DiscussionCreatedMigration extends Document.PatchMigration
         ,
           $set:
             _schema: newSchema
+
+    if count
+      # Because we do not have proper byUser references we have to populate fields later.
+      # But migrations run before observers are ready.
+      @updateAll()
 
     counts = super
     counts.migrated += count
@@ -261,6 +281,11 @@ class DiscussionClosedMigration extends Document.PatchMigration
           $set:
             _schema: newSchema
 
+    if count
+      # Because we do not have proper byUser references we have to populate fields later.
+      # But migrations run before observers are ready.
+      @updateAll()
+
     counts = super
     counts.migrated += count
     counts.all += count
@@ -321,6 +346,11 @@ class MeetingCreatedMigration extends Document.PatchMigration
         ,
           $set:
             _schema: newSchema
+
+    if count
+      # Because we do not have proper byUser references we have to populate fields later.
+      # But migrations run before observers are ready.
+      @updateAll()
 
     counts = super
     counts.migrated += count
@@ -406,7 +436,7 @@ class MotionMigration extends Document.PatchMigration
         {numberAffected, insertedId} = Activity.documents.upsert
           timestamp: document.votingOpenedAt
           'byUser._id': document.votingOpenedBy._id
-          level: Activity.LEVEL.GENERAL
+          level: Activity.LEVEL.USER
           type: 'competingMotionOpened'
           'data.discussion._id': discussion._id
           'data.motion._id': document._id
@@ -459,7 +489,7 @@ class MotionMigration extends Document.PatchMigration
         {numberAffected, insertedId} = Activity.documents.upsert
           timestamp: document.votingClosedAt
           'byUser._id': document.votingClosedBy._id
-          level: Activity.LEVEL.GENERAL
+          level: Activity.LEVEL.USER
           type: 'votedMotionClosed'
           'data.discussion._id': discussion._id
           'data.motion._id': document._id
@@ -507,6 +537,11 @@ class MotionMigration extends Document.PatchMigration
           $set:
             _schema: newSchema
 
+    if count
+      # Because we do not have proper byUser references we have to populate fields later.
+      # But migrations run before observers are ready.
+      @updateAll()
+
     counts = super
     counts.migrated += count
     counts.all += count
@@ -522,9 +557,13 @@ class MotionMigration extends Document.PatchMigration
         removed = Activity.documents.remove
           timestamp: document.votingOpenedAt
           'byUser._id': document.votingOpenedBy._id
-          level: Activity.LEVEL.GENERAL
-          type:
-            $in: ['motionOpened', 'competingMotionOpened']
+          $or: [
+            level: Activity.LEVEL.GENERAL
+            type: 'motionOpened'
+          ,
+            level: Activity.LEVEL.USER
+            type: 'competingMotionOpened'
+          ]
           'data.discussion._id': document.discussion._id
           'data.motion._id': document._id
 
@@ -535,9 +574,13 @@ class MotionMigration extends Document.PatchMigration
         removed = Activity.documents.remove
           timestamp: document.votingClosedAt
           'byUser._id': document.votingClosedBy._id
-          level: Activity.LEVEL.GENERAL
-          type:
-            $in: ['motionClosed', 'votedMotionClosed']
+          $or: [
+            level: Activity.LEVEL.GENERAL
+            type: 'motionClosed'
+          ,
+            level: Activity.LEVEL.USER
+            type: 'votedMotionClosed'
+          ]
           'data.discussion._id': document.discussion._id
           'data.motion._id': document._id
 

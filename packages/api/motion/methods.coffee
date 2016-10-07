@@ -216,7 +216,7 @@ Meteor.methods
           byUser: user.getReference()
           forUsers: _.uniq competingVoters, (u) -> u._id
           type: 'competingMotionOpened'
-          level: Activity.LEVEL.GENERAL
+          level: Activity.LEVEL.USER
           data:
             discussion:
               _id: discussion._id
@@ -300,7 +300,7 @@ Meteor.methods
           byUser: user.getReference()
           forUsers: _.uniq voters, (u) -> u._id
           type: 'votedMotionClosed'
-          level: Activity.LEVEL.GENERAL
+          level: Activity.LEVEL.USER
           data:
             discussion:
               _id: discussion._id
