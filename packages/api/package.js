@@ -60,6 +60,7 @@ Package.onUse(function (api) {
     'user/publish.coffee',
     'user/methods.coffee',
     'account/methods.coffee',
-    'activity/publish.coffee'
+    'activity/publish.coffee',
+    'base/methods.coffee'
   ], 'server');
 });
