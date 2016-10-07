@@ -59,6 +59,7 @@ Package.onUse(function (api) {
     'storagefile/methods.coffee',
     'user/publish.coffee',
     'user/methods.coffee',
-    'account/methods.coffee'
+    'account/methods.coffee',
+    'activity/publish.coffee'
   ], 'server');
 });

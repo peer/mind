@@ -36,10 +36,19 @@ class Activity extends share.BaseDocument
     GENERAL: 'general'
 
   @PUBLISH_FIELDS: ->
-    _.extend super,
+    if userId = Meteor.userId()
+      forUsers =
+        forUsers:
+          $elemMatch:
+            _id: userId
+    else
+      forUsers = {}
+
+    _.extend super, forUsers,
       timestamp: 1
       byUser: 1
       type: 1
+      level: 1
       data: 1
 
 if Meteor.isServer

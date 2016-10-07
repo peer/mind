@@ -101,6 +101,9 @@ class UIComponent extends CommonComponent
 
     components
 
+  isSentence: (string) ->
+    string and string.charAt(string.length - 1) in ['.', '?', '!']
+
 class UIMixin extends CommonMixin
   getFirstWith: (args...) ->
     @component().getFirstWith args...

@@ -162,7 +162,10 @@ Package.onUse(function (api) {
     'admin/accounts.coffee',
     'user/display.html',
     'user/display.coffee',
-    'user/display.styl'
+    'user/display.styl',
+    'activity/list.html',
+    'activity/list.coffee',
+    'activity/list.styl'
   ], 'client', options);
 
   api.addAssets([

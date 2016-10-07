@@ -1,0 +1,174 @@
+<template name="Activity.ListComponent" xmlns="http://www.w3.org/1999/html">
+  <div class="section">
+    {{#if currentUserId}}
+      <div class="row">
+        <div class="col s12">
+          <div class="switch right">
+            <label>
+              Show personalized activity
+              <input name="show-personalized" type="checkbox" onChange="{{onShowPersonalizedActivity}}">
+              <span class="lever"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+    {{#if activities.exists}}
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            {{#each activities}}
+              {{> Activity.ListItemComponent}}
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="Activity.ListItemComponent">
+  <li class="collection-item avatar">
+    <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{byUser.avatarUrl}}" alt="{{byUser.username}}" class="circle" /></a>
+    {{> renderActivity}}
+    <p class="activity-timestamp">
+      <i class="material-icons tiny vertical-middle">{{icon}}</i> <span class="timestamp" title="{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}">{{fromNow timestamp}}</span>
+    </p>
+  </li>
+</template>
+
+<template name="Activity.ListItemComponent.CommentCreated">
+  <p>
+    {{!-- TODO: Should we link directly to the comment? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> commented on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.PointCreated">
+  <p>
+    {{!-- TODO: Should we link directly to the point? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> made a point {{category}} on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.MotionCreated">
+  <p>
+    {{!-- TODO: Should we link directly to the motion? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> made a motion on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.CommentUpvoted">
+  <p>
+    {{!-- TODO: Should we link directly to the comment? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> upvoted your comment on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.PointUpvoted">
+  <p>
+    {{!-- TODO: Should we link directly to the point? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> upvoted your point {{category}} on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.MotionUpvoted">
+  <p>
+    {{!-- TODO: Should we link directly to the motion? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> upvoted your motion on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.DiscussionCreated">
+  <p>
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> started a discussion
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.DiscussionClosed">
+  <p>
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed a discussion
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.MeetingCreated">
+  <p>
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> created a meeting
+    <a href="{{pathFor 'Meeting.display' params=this.data.meeting}}">{{this.data.meeting.title}}</a>{{#unless isSentence this.data.meeting.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.MotionOpened">
+  <p>
+    {{!-- TODO: Should we link directly to the motion? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened a motion on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.CompetingMotionOpened">
+  <p>
+    {{!-- TODO: Should we link directly to the motion? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened a competing motion to the one you already voted on, on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.MotionClosed">
+  <p>
+    {{!-- TODO: Should we link directly to the motion? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed a motion on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.VotedMotionClosed">
+  <p>
+    {{!-- TODO: Should we link directly to the motion? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed a motion you voted on, on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.MotionWithdrawn">
+  <p>
+    {{!-- TODO: Should we link directly to the motion? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> has withdrawn a motion on
+    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+  </p>
+</template>
+
+<template name="Activity.ListItemComponent.Mention">
+  <p>
+    {{!-- TODO: Should we link directly? --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> mentioned you
+    {{#if this.data.comment}}
+      in a comment
+    {{else}}
+      {{#if this.data.point}}
+        in a point
+      {{else}}
+        {{#if this.data.motion}}
+          in a motion
+        {{/if}}
+      {{/if}}
+    {{/if}}
+    {{#if $or this.data.comment this.data.point this.data.motion}}
+      on <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{else}}
+      {{#if this.data.discussion}}
+        in <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+      {{else}}
+        .
+      {{/if}}
+    {{/if}}
+  </p>
+</template>
