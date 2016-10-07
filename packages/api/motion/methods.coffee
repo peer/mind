@@ -179,6 +179,10 @@ Meteor.methods
     if changed and Meteor.isServer
       discussion = Discussion.documents.findOne
         'motions._id': motionId
+      ,
+        fields:
+          title: 1
+          followers: 1
 
       # This should not really happen.
       if discussion
@@ -193,6 +197,7 @@ Meteor.methods
           data:
             discussion:
               _id: discussion._id
+              title: discussion.title
             motion:
               _id: motionId
 
@@ -220,6 +225,7 @@ Meteor.methods
           data:
             discussion:
               _id: discussion._id
+              title: discussion.title
             motion:
               _id: motionId
 
@@ -265,6 +271,10 @@ Meteor.methods
     if changed and Meteor.isServer
       discussion = Discussion.documents.findOne
         'motions._id': motionId
+      ,
+        fields:
+          title: 1
+          followers: 1
 
       # This should not really happen.
       if discussion
@@ -279,6 +289,7 @@ Meteor.methods
           data:
             discussion:
               _id: discussion._id
+              title: discussion.title
             motion:
               _id: motionId
 
@@ -304,6 +315,7 @@ Meteor.methods
           data:
             discussion:
               _id: discussion._id
+              title: discussion.title
             motion:
               _id: motionId
 
@@ -349,6 +361,10 @@ Meteor.methods
     if changed and Meteor.isServer
       discussion = Discussion.documents.findOne
         'motions._id': motionId
+      ,
+        fields:
+          title: 1
+          followers: 1
 
       # This should not really happen.
       if discussion
@@ -362,6 +378,7 @@ Meteor.methods
           data:
             discussion:
               _id: discussion._id
+              title: discussion.title
             motion:
               _id: motionId
 

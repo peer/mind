@@ -7,7 +7,10 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
   user = Meteor.user User.REFERENCE_FIELDS()
   throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-  discussion = Discussion.documents.findOne document.discussion._id
+  discussion = Discussion.documents.findOne document.discussion._id,
+    fields:
+      title: 1
+      followers: 1
 
   throw new Meteor.Error 'not-found', "Discussion '#{document.discussion._id}' cannot be found." unless discussion
 
@@ -62,6 +65,7 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
     data =
       discussion:
         _id: discussion._id
+        title: discussion.title
     data["#{documentClass.Meta._name.toLowerCase()}"] =
       _id: documentId
 
@@ -122,22 +126,29 @@ share.upvoteUpvotable = ({connection, documentClass, documentId, permissionCheck
       upvotesCount: 1
 
   if changed and Meteor.isServer
-    data =
-      discussion:
-        _id: document.discussion._id
-    data["#{documentClass.Meta._name.toLowerCase()}"] =
-      _id: documentId
+    discussion = Discussion.documents.findOne document.discussion._id,
+      fields:
+        title: 1
 
-    Activity.documents.insert
-      timestamp: createdAt
-      connection: connection.id
-      byUser: user.getReference()
-      forUsers: [
-        _id: document.author._id
-      ]
-      type: "#{documentClass.Meta._name.toLowerCase()}Upvoted"
-      level: Activity.LEVEL.USER
-      data: data
+    # This should not really happen.
+    if discussion
+      data =
+        discussion:
+          _id: discussion._id
+          title: discussion.title
+      data["#{documentClass.Meta._name.toLowerCase()}"] =
+        _id: documentId
+
+      Activity.documents.insert
+        timestamp: createdAt
+        connection: connection.id
+        byUser: user.getReference()
+        forUsers: [
+          _id: document.author._id
+        ]
+        type: "#{documentClass.Meta._name.toLowerCase()}Upvoted"
+        level: Activity.LEVEL.USER
+        data: data
 
   changed
 

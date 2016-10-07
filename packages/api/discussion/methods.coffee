@@ -266,10 +266,6 @@ Meteor.methods
     user = Meteor.user User.REFERENCE_FIELDS()
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
-    discussion = Discussion.documents.findOne discussionId
-
-    throw new Meteor.Error 'not-found', "Discussion '#{discussionId}' cannot be found." unless discussion
-
     closingNote = Discussion.sanitize.sanitizeHTML closingNote
 
     attachments = Discussion.extractAttachments closingNote
@@ -298,7 +294,7 @@ Meteor.methods
 
     closedAt = new Date()
     changed = Discussion.documents.update _.extend(permissionCheck,
-      _id: discussion._id
+      _id: discussionId
       discussionOpenedAt:
         $ne: null
       discussionOpenedBy:
@@ -347,17 +343,24 @@ Meteor.methods
         multi: true
 
       if Meteor.isServer
-        Activity.documents.insert
-          timestamp: closedAt
-          connection: @connection.id
-          byUser: user.getReference()
-          forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
-          type: 'discussionClosed'
-          level: Activity.LEVEL.GENERAL
-          data:
-            discussion:
-              _id: discussion._id
-              title: discussion.title
+        discussion = Discussion.documents.findOne discussionId,
+          fields:
+            title: 1
+            followers: 1
+
+        # This should not really happen.
+        if discussion
+          Activity.documents.insert
+            timestamp: closedAt
+            connection: @connection.id
+            byUser: user.getReference()
+            forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+            type: 'discussionClosed'
+            level: Activity.LEVEL.GENERAL
+            data:
+              discussion:
+                _id: discussion._id
+                title: discussion.title
 
     changed
 
