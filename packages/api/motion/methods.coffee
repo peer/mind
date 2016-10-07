@@ -202,6 +202,7 @@ Meteor.methods
           'motion._id':
             $ne: motionId
           'motion.discussion._id': discussion._id
+          # Author can be null if user was deleted in meantime.
           author:
             $ne: null
         ,
@@ -285,6 +286,7 @@ Meteor.methods
         # (Not really voted, but interacted in a way which gave them a Vote document.)
         voters = _.pluck Vote.documents.find(
           'motion._id': motionId
+          # Author can be null if user was deleted in meantime.
           author:
             $ne: null
         ,
