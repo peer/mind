@@ -58,61 +58,58 @@ class Activity.ListItemComponent extends UIComponent
       when 'meetingCreated' then 'event'
       when 'mention' then 'person'
 
-class Activity.ListItemComponent.CommentCreated extends UIComponent
+class ActivityComponent extends UIComponent
+
+class PointActivityComponent extends ActivityComponent
+  category: ->
+    switch @data 'data.point.category'
+      when Point.CATEGORY.AGAINST then "against"
+      when Point.CATEGORY.IN_FAVOR then "in favor"
+      when Point.CATEGORY.OTHER then ""
+
+class Activity.ListItemComponent.CommentCreated extends ActivityComponent
   @register 'Activity.ListItemComponent.CommentCreated'
 
-class Activity.ListItemComponent.PointCreated extends UIComponent
+class Activity.ListItemComponent.PointCreated extends PointActivityComponent
   @register 'Activity.ListItemComponent.PointCreated'
 
-  category: ->
-    switch @data 'data.point.category'
-      when Point.CATEGORY.AGAINST then "against"
-      when Point.CATEGORY.IN_FAVOR then "in favor"
-      when Point.CATEGORY.OTHER then ""
-
-class Activity.ListItemComponent.MotionCreated extends UIComponent
+class Activity.ListItemComponent.MotionCreated extends ActivityComponent
   @register 'Activity.ListItemComponent.MotionCreated'
 
-class Activity.ListItemComponent.CommentUpvoted extends UIComponent
+class Activity.ListItemComponent.CommentUpvoted extends ActivityComponent
   @register 'Activity.ListItemComponent.CommentUpvoted'
 
-class Activity.ListItemComponent.PointUpvoted extends UIComponent
+class Activity.ListItemComponent.PointUpvoted extends PointActivityComponent
   @register 'Activity.ListItemComponent.PointUpvoted'
 
-  category: ->
-    switch @data 'data.point.category'
-      when Point.CATEGORY.AGAINST then "against"
-      when Point.CATEGORY.IN_FAVOR then "in favor"
-      when Point.CATEGORY.OTHER then ""
-
-class Activity.ListItemComponent.MotionUpvoted extends UIComponent
+class Activity.ListItemComponent.MotionUpvoted extends ActivityComponent
   @register 'Activity.ListItemComponent.MotionUpvoted'
 
-class Activity.ListItemComponent.DiscussionCreated extends UIComponent
+class Activity.ListItemComponent.DiscussionCreated extends ActivityComponent
   @register 'Activity.ListItemComponent.DiscussionCreated'
 
-class Activity.ListItemComponent.DiscussionClosed extends UIComponent
+class Activity.ListItemComponent.DiscussionClosed extends ActivityComponent
   @register 'Activity.ListItemComponent.DiscussionClosed'
 
-class Activity.ListItemComponent.MeetingCreated extends UIComponent
+class Activity.ListItemComponent.MeetingCreated extends ActivityComponent
   @register 'Activity.ListItemComponent.MeetingCreated'
 
-class Activity.ListItemComponent.MotionOpened extends UIComponent
+class Activity.ListItemComponent.MotionOpened extends ActivityComponent
   @register 'Activity.ListItemComponent.MotionOpened'
 
-class Activity.ListItemComponent.CompetingMotionOpened extends UIComponent
+class Activity.ListItemComponent.CompetingMotionOpened extends ActivityComponent
   @register 'Activity.ListItemComponent.CompetingMotionOpened'
 
-class Activity.ListItemComponent.MotionClosed extends UIComponent
+class Activity.ListItemComponent.MotionClosed extends ActivityComponent
   @register 'Activity.ListItemComponent.MotionClosed'
 
-class Activity.ListItemComponent.VotedMotionClosed extends UIComponent
+class Activity.ListItemComponent.VotedMotionClosed extends ActivityComponent
   @register 'Activity.ListItemComponent.VotedMotionClosed'
 
-class Activity.ListItemComponent.MotionWithdrawn extends UIComponent
+class Activity.ListItemComponent.MotionWithdrawn extends ActivityComponent
   @register 'Activity.ListItemComponent.MotionWithdrawn'
 
-class Activity.ListItemComponent.Mention extends UIComponent
+class Activity.ListItemComponent.Mention extends ActivityComponent
   @register 'Activity.ListItemComponent.Mention'
 
 FlowRouter.route '/activity',
