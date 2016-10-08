@@ -109,7 +109,7 @@
 <template name="Activity.ListItemComponent.MotionOpened">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened a motion on
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened for voting a motion on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -117,7 +117,7 @@
 <template name="Activity.ListItemComponent.CompetingMotionOpened">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened a competing motion to the one you already voted on, on
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened for voting a competing motion to the one you already voted on, on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -125,7 +125,7 @@
 <template name="Activity.ListItemComponent.MotionClosed">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed a motion on
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed for voting a motion on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -133,7 +133,7 @@
 <template name="Activity.ListItemComponent.VotedMotionClosed">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed a motion you voted on, on
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed for voting a motion you voted on, on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
