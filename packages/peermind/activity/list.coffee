@@ -10,7 +10,8 @@ class Activity.ListComponent extends UIComponent
     @activityHandle = new ReactiveField null
     @activityLimit = new ReactiveField PAGE_SIZE
     @showLoading = new ReactiveField 0
-    @showFinished = new ReactiveField false
+    @showFinished = new ReactiveField 0
+    @distanceToDocumentBottom = new ReactiveField null
 
     @autorun (computation) =>
       @activityHandle @subscribe 'Activity.list', !!@currentUserId() and @showPersonalizedActivity()
@@ -48,13 +49,14 @@ class Activity.ListComponent extends UIComponent
       allCount = handle.data('count') or 0
       activityCount = Activity.documents.find(handle.scopeQuery()).count()
 
-      if activityCount is allCount
-        @showFinished true
+      if activityCount is allCount and @distanceToDocumentBottom() is 0
+        Tracker.nonreactive =>
+          @showFinished @showFinished() + 1
 
-        Meteor.setTimeout =>
-          @showFinished false
-        ,
-          3000 # ms
+          Meteor.setTimeout =>
+            @showFinished @showFinished() - 1
+          ,
+            3000 # ms
 
     @_eventHandlerId = Random.id()
 
@@ -65,8 +67,12 @@ class Activity.ListComponent extends UIComponent
       windowHeight =  $window.height()
       bottom = $window.scrollTop() + windowHeight
 
-      # Increase limit only when beyond two window heights to the end.
-      return if bottom < $document.height() - 2 * windowHeight
+      distanceToDocumentBottom = $document.height() - bottom
+
+      @distanceToDocumentBottom distanceToDocumentBottom
+
+      # Increase limit only when beyond two window heights to the end, otherwise return.
+      return if distanceToDocumentBottom > 2 * windowHeight
 
       handle = @activityHandle()
 
@@ -166,7 +172,7 @@ class Activity.ListComponent extends UIComponent
     if $node.hasClass 'finished-loading'
       next()
       $node.velocity 'fadeIn',
-        duration: 'fast'
+        duration: 'slow'
         queue: false
 
     else
@@ -185,7 +191,7 @@ class Activity.ListComponent extends UIComponent
       # We can call just "stop" because it does not matter that we have not animated insertion
       # to the end and we have no "complete" callback on insertion as well to care about.
       $node.velocity('stop').velocity 'fadeOut',
-        duration: 'fast'
+        duration: 'slow'
         queue: false
         complete: (element) =>
           next()
