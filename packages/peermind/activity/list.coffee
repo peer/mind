@@ -15,9 +15,18 @@ class Activity.ListComponent extends UIComponent
 
     if handle
       documents = Activity.documents.find(handle.scopeQuery(),
-        sort:
+        sort: (a, b) =>
           # The newest first.
-          timestamp: -1
+          timestampDifference = b.timestamp.valueOf() - a.timestamp.valueOf()
+          return timestampDifference unless timestampDifference is 0
+
+          # We want personalized notifications first.
+          return -1 if a.type is 'competingMotionOpened' and b.type is 'motionOpened'
+          return -1 if a.type is 'votedMotionClosed' and b.type is 'motionClosed'
+          return 1 if b.type is 'competingMotionOpened' and a.type is 'motionOpened'
+          return 1 if b.type is 'votedMotionClosed' and a.type is 'motionClosed'
+
+          return 0
       ).fetch()
     else
       documents = []
