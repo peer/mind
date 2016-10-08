@@ -30,7 +30,8 @@ Package.onUse(function (api) {
     'fermuch:cheerio@0.19.0',
     'peerlibrary:meteor-file@0.2.1',
     'doctorpangloss:method-hooks@2.0.2',
-    'peerlibrary:subscription-scope@0.1.0'
+    'peerlibrary:subscription-scope@0.1.0',
+    'peerlibrary:subscription-data@0.3.0'
   ]);
 
   // Internal dependencies.

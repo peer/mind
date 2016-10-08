@@ -21,5 +21,13 @@ new PublishEndpoint 'Activity.list', (personalized) ->
     query =
       level: Activity.LEVEL.GENERAL
 
-  Activity.documents.find query,
-    fields: Activity.PUBLISH_FIELDS()
+  @autorun (computation) =>
+    limit = @data('limit') or 50
+    check limit, Match.PositiveNumber
+
+    Activity.documents.find query,
+      fields: Activity.PUBLISH_FIELDS()
+      limit: limit
+      sort:
+        # The newest first.
+        timestamp: -1

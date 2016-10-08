@@ -15,18 +15,9 @@ class Activity.ListComponent extends UIComponent
 
     if handle
       documents = Activity.documents.find(handle.scopeQuery(),
-        sort: (a, b) =>
+        sort:
           # The newest first.
-          timestampDifference = b.timestamp.valueOf() - a.timestamp.valueOf()
-          return timestampDifference unless timestampDifference is 0
-
-          # We want a user-level activity first.
-          return -1 if a.type is 'competingMotionOpened' and b.type is 'motionOpened'
-          return -1 if a.type is 'votedMotionClosed' and b.type is 'motionClosed'
-          return 1 if b.type is 'competingMotionOpened' and a.type is 'motionOpened'
-          return 1 if b.type is 'votedMotionClosed' and a.type is 'motionClosed'
-
-          return 0
+          timestamp: -1
       ).fetch()
     else
       documents = []
@@ -56,17 +47,17 @@ class Activity.ListComponent extends UIComponent
           previousDocument.laterDocuments.push document
           continue
 
-      # We show only a user-level activity if both are available for same motion.
-      else if previousDocument.type is 'competingMotionOpened' and document.type is 'motionOpened'
+      # We show only a user-level activity if both are available for same motion, one direction.
+      else if (previousDocument.type is 'competingMotionOpened' and document.type is 'motionOpened') or (previousDocument.type is 'votedMotionClosed' and document.type is 'motionClosed')
         if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
           # We skip this document.
           continue
 
-      # We show only a user-level activity if both are available for same motion.
-      else if previousDocument.type is 'votedMotionClosed' and document.type is 'motionClosed'
+      # We show only a user-level activity if both are available for same motion, the other direction.
+      else if (previousDocument.type is 'motionOpened' and document.type is 'competingMotionOpened') or (previousDocument.type is 'motionClosed' and document.type is 'votedMotionClosed')
         if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
-          # We skip this document.
-          continue
+          # We remove the previous (last) document, so that only this document is added to combinedDocuments.
+          combinedDocuments.pop()
 
       combinedDocuments.push document
 
