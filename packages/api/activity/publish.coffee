@@ -3,11 +3,14 @@ new PublishEndpoint 'Activity.list', (personalized) ->
 
   @enableScope()
 
-  if Meteor.userId() and personalized
+  userId = Meteor.userId()
+  if userId and personalized
     query =
       level:
         $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
-      'forUsers._id': Meteor.userId()
+      'forUsers._id': userId
+      'byUser._id':
+        $ne: userId
   else
     query =
       level: Activity.LEVEL.GENERAL
