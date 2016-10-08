@@ -13,8 +13,9 @@ new PublishEndpoint 'Activity.list', (personalized) ->
       $or: [
         'forUsers._id': userId
       ,
-        # A special case, we want all users to get notifications for new discussions.
-        type: 'discussionCreated'
+        # A special case, we want all users to get notifications for new discussions and meetings.
+        type:
+          $in: ['discussionCreated', 'meetingCreated']
       ]
   else
     query =
