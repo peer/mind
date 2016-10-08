@@ -2,22 +2,38 @@ class Activity.ListComponent extends UIComponent
   @register 'Activity.ListComponent'
 
   onCreated: ->
+    @showPersonalizedActivity = new ReactiveField false
+
+  onShowPersonalizedActivity: (event) ->
+    event.preventDefault()
+
+    @showPersonalizedActivity @$('[name="show-personalized"]').is(':checked')
+
+  personalized: ->
+    !!@currentUserId() and @showPersonalizedActivity()
+
+class Activity.ListContentComponent extends UIComponent
+  @register 'Activity.ListContentComponent'
+
+  constructor: (personalized) ->
+    personalized = false if personalized instanceof Spacebars.kw
+
+    @personalized = personalized
+
+  onCreated: ->
     super
 
     PAGE_SIZE = 50
 
-    @showPersonalizedActivity = new ReactiveField false
-    @activityHandle = new ReactiveField null
     @activityLimit = new ReactiveField PAGE_SIZE
     @showLoading = new ReactiveField 0
     @showFinished = new ReactiveField 0
     @distanceToDocumentBottom = new ReactiveField null
 
-    @autorun (computation) =>
-      @activityHandle @subscribe 'Activity.list', !!@currentUserId() and @showPersonalizedActivity()
+    @activityHandle = @subscribe 'Activity.list', @personalized
 
     @autorun (computation) =>
-      @activityHandle()?.setData 'limit', @activityLimit()
+      @activityHandle.setData 'limit', @activityLimit()
 
       Tracker.nonreactive =>
         @showLoading @showLoading() + 1
@@ -27,27 +43,19 @@ class Activity.ListComponent extends UIComponent
 
       return unless showLoading
 
-      handle = @activityHandle()
+      return unless @activityHandle.ready()
 
-      if handle
-        return unless handle.ready()
-
-        activityCount = Activity.documents.find(handle.scopeQuery()).count()
-        allCount = handle.data('count') or 0
-      else
-        activityCount = 0
-        allCount = 0
+      activityCount = Activity.documents.find(@activityHandle.scopeQuery()).count()
+      allCount = @activityHandle.data('count') or 0
 
       if activityCount is allCount or activityCount is @activityLimit()
         @showLoading showLoading - 1
 
     @autorun (computation) =>
-      handle = @activityHandle()
+      return unless @activityHandle.ready()
 
-      return unless handle.ready()
-
-      allCount = handle.data('count') or 0
-      activityCount = Activity.documents.find(handle.scopeQuery()).count()
+      allCount = @activityHandle.data('count') or 0
+      activityCount = Activity.documents.find(@activityHandle.scopeQuery()).count()
 
       if activityCount is allCount and @distanceToDocumentBottom() is 0
         Tracker.nonreactive =>
@@ -74,12 +82,10 @@ class Activity.ListComponent extends UIComponent
       # Increase limit only when beyond two window heights to the end, otherwise return.
       return if distanceToDocumentBottom > 2 * windowHeight
 
-      handle = @activityHandle()
-
-      return unless handle
 
       # We use the number of rendered activity documents instead of current count of
-      # Activity.documents.find(handle.scopeQuery()).count() because we care what is really displayed.
+      # Activity.documents.find(@activityHandle.scopeQuery()).count() because we care
+      # what is really displayed.
       renderedActivityCount = 0
       for child in @childComponents Activity.ListItemComponent
         renderedActivityCount += child.data().combinedDocumentsCount ? 1
@@ -99,16 +105,11 @@ class Activity.ListComponent extends UIComponent
     $(window).off "scroll.peermind.#{@_eventHandlerId}"
 
   activities: ->
-    handle = @activityHandle()
-
-    if handle
-      documents = Activity.documents.find(handle.scopeQuery(),
-        sort:
-          # The newest first.
-          timestamp: -1
-      ).fetch()
-    else
-      documents = []
+    documents = Activity.documents.find(@activityHandle.scopeQuery(),
+      sort:
+        # The newest first.
+        timestamp: -1
+    ).fetch()
 
     combinedDocuments = []
 
@@ -157,11 +158,6 @@ class Activity.ListComponent extends UIComponent
       combinedDocuments.push document
 
     combinedDocuments
-
-  onShowPersonalizedActivity: (event) ->
-    event.preventDefault()
-
-    @showPersonalizedActivity @$('[name="show-personalized"]').is(':checked')
 
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>
