@@ -1,6 +1,8 @@
 new PublishEndpoint 'Activity.list', (personalized) ->
   check personalized, Boolean
 
+  @enableScope()
+
   if Meteor.userId() and personalized
     query =
       level:

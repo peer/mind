@@ -5,24 +5,24 @@ class Activity.ListComponent extends UIComponent
     super
 
     @showPersonalizedActivity = new ReactiveField false
+    @activityHandle = new ReactiveField null
 
     @autorun (computation) =>
-      @subscribe 'Activity.list', !!@currentUserId() and @showPersonalizedActivity()
+      @activityHandle @subscribe 'Activity.list', !!@currentUserId() and @showPersonalizedActivity()
 
   activities: ->
-    if @currentUserId() and @showPersonalizedActivity()
-      query =
-        level:
-          $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
-        'forUsers._id': @currentUserId()
-    else
-      query =
-        level: Activity.LEVEL.GENERAL
+    handle = @activityHandle()
 
-    Activity.documents.find query,
-      sort:
-        # The newest first.
-        timestamp: -1
+    if handle
+      documents = Activity.documents.find(handle.scopeQuery(),
+        sort:
+          # The newest first.
+          timestamp: -1
+      ).fetch()
+    else
+      documents = []
+
+    documents
 
   onShowPersonalizedActivity: (event) ->
     event.preventDefault()
