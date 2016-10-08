@@ -8,9 +8,14 @@ new PublishEndpoint 'Activity.list', (personalized) ->
     query =
       level:
         $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
-      'forUsers._id': userId
       'byUser._id':
         $ne: userId
+      $or: [
+        'forUsers._id': userId
+      ,
+        # A special case, we want all users to get notifications for new discussions.
+        type: 'discussionCreated'
+      ]
   else
     query =
       level: Activity.LEVEL.GENERAL
