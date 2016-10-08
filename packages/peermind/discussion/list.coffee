@@ -2,13 +2,36 @@ class Discussion.ListComponent extends UIComponent
   @register 'Discussion.ListComponent'
 
   onCreated: ->
-    super
+    @showClosedDiscussions = new ComputedField =>
+      FlowRouter.getQueryParam('closed') is 'true'
 
-    @showClosedDiscussions = new ReactiveField false
+  onShowClosedDiscussions: (event) ->
+    event.preventDefault()
+
+    FlowRouter.go 'Discussion.list', {},
+      closed: @$('[name="show-discussions"]').is(':checked')
+
+  closed: ->
+    @showClosedDiscussions()
+
+  checked: ->
+    checked: true if @showClosedDiscussions()
+
+class Discussion.ListContentComponent extends UIComponent
+  @register 'Discussion.ListContentComponent'
+
+  constructor: (closed) ->
+    closed = false if closed instanceof Spacebars.kw
+
+    @closed = closed
+
+  onCreated: ->
+    super
 
     @canNew = new ComputedField =>
       User.hasPermission User.PERMISSIONS.DISCUSSION_NEW
 
+    # TODO: Subscribe only to those documents we need based on @closed.
     @subscribe 'Meeting.list'
     @subscribe 'Discussion.list'
 
@@ -65,20 +88,15 @@ class Discussion.ListComponent extends UIComponent
         # The newest first.
         startAt: -1
 
-  onShowClosedDiscussions: (event) ->
-    event.preventDefault()
-
-    @showClosedDiscussions @$('[name="show-discussions"]').is(':checked')
-
   showClosedDiscussionsQuery: ->
-    if @showClosedDiscussions()
+    if @closed
       {}
     else
       status:
         $in: [Discussion.STATUS.OPEN, Discussion.STATUS.MOTIONS, Discussion.STATUS.VOTING]
 
   showPastMeetingsQuery: ->
-    if @showClosedDiscussions()
+    if @closed
       {}
     else
       endAt:

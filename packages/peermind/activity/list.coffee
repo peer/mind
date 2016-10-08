@@ -2,15 +2,20 @@ class Activity.ListComponent extends UIComponent
   @register 'Activity.ListComponent'
 
   onCreated: ->
-    @showPersonalizedActivity = new ReactiveField false
+    @showPersonalizedActivity = new ComputedField =>
+      FlowRouter.getQueryParam('personalized') is 'true'
 
   onShowPersonalizedActivity: (event) ->
     event.preventDefault()
 
-    @showPersonalizedActivity @$('[name="show-personalized"]').is(':checked')
+    FlowRouter.go 'Activity.list', {},
+      personalized: @$('[name="show-personalized"]').is(':checked')
 
   personalized: ->
     !!@currentUserId() and @showPersonalizedActivity()
+
+  checked: ->
+    checked: true if @showPersonalizedActivity()
 
 class Activity.ListContentComponent extends UIComponent
   @register 'Activity.ListContentComponent'

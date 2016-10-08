@@ -5,41 +5,45 @@
         <div class="switch right">
           <label>
             Show closed discussions
-            <input name="show-discussions" type="checkbox" onChange="{{onShowClosedDiscussions}}">
+            <input name="show-discussions" type="checkbox" onChange="{{onShowClosedDiscussions}}" {{checked}}>
             <span class="lever"></span>
           </label>
         </div>
       </div>
     </div>
-    {{#if discussionsWithoutMeeting.exists}}
-      <div class="row">
-        <div class="col s12">
-          <ul class="collection z-depth-1">
-            {{#each discussionsWithoutMeeting}}
-              {{> Discussion.ListItemComponent}}
-            {{/each}}
-          </ul>
-        </div>
-      </div>
-    {{/if}}
-    {{#each meeting in meetings}}
-      {{#let discussions=(discussionsForMeeting meeting)}}
-        {{#if discussions.exists}}
-          <div class="row">
-            <div class="col s12">
-              <h4><a href="{{pathFor 'Meeting.display' params=meeting}}" class="title">{{meeting.title}}</a></h4>
-              <p>{{formatStartEndDate meeting.startAt meeting.endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}</p>
-              <ul class="collection z-depth-1">
-                {{#each discussions}}
-                  {{> Discussion.ListItemComponent}}
-                {{/each}}
-              </ul>
-            </div>
-          </div>
-        {{/if}}
-      {{/let}}
-    {{/each}}
+    {{> Discussion.ListContentComponent args closed}}
   </div>
+</template>
+
+<template name="Discussion.ListContentComponent">
+  {{#if discussionsWithoutMeeting.exists}}
+    <div class="row">
+      <div class="col s12">
+        <ul class="collection z-depth-1">
+          {{#each discussionsWithoutMeeting}}
+            {{> Discussion.ListItemComponent}}
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  {{/if}}
+  {{#each meeting in meetings}}
+    {{#let discussions=(discussionsForMeeting meeting)}}
+      {{#if discussions.exists}}
+        <div class="row">
+          <div class="col s12">
+            <h4><a href="{{pathFor 'Meeting.display' params=meeting}}" class="title">{{meeting.title}}</a></h4>
+            <p>{{formatStartEndDate meeting.startAt meeting.endAt DEFAULT_DATETIME_FORMAT DEFAULT_TIME_FORMAT}}</p>
+            <ul class="collection z-depth-1">
+              {{#each discussions}}
+                {{> Discussion.ListItemComponent}}
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      {{/if}}
+    {{/let}}
+  {{/each}}
 </template>
 
 <template name="Discussion.ListItemComponent">
