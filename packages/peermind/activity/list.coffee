@@ -4,11 +4,53 @@ class Activity.ListComponent extends UIComponent
   onCreated: ->
     super
 
+    PAGE_SIZE = 50
+
     @showPersonalizedActivity = new ReactiveField false
     @activityHandle = new ReactiveField null
+    @activityLimit = new ReactiveField PAGE_SIZE
 
     @autorun (computation) =>
       @activityHandle @subscribe 'Activity.list', !!@currentUserId() and @showPersonalizedActivity()
+
+    @autorun (computation) =>
+      @activityHandle()?.setData 'limit', @activityLimit()
+
+    @_eventHandlerId = Random.id()
+
+    $window = $(window)
+    $document = $(document)
+
+    $window.on "scroll.peermind.#{@_eventHandlerId}", _.throttle (event) =>
+      windowHeight =  $window.height()
+      bottom = $window.scrollTop() + windowHeight
+
+      # Increase limit only when beyond two window heights to the end.
+      return if bottom < $document.height() - 2 * windowHeight
+
+      handle = @activityHandle()
+
+      return unless handle
+
+      # We use the number of rendered activity documents instead of current count of
+      # Activity.documents.find(handle.scopeQuery()).count() because we care what is really displayed.
+      renderedActivityCount = 0
+      for child in @childComponents Activity.ListItemComponent
+        renderedActivityCount += child.data().combinedDocumentsCount ? 1
+
+      pages = Math.floor(renderedActivityCount / PAGE_SIZE)
+
+      if renderedActivityCount <= (pages + 0.5) * PAGE_SIZE
+        @activityLimit (pages + 1) * PAGE_SIZE
+      else
+        @activityLimit (pages + 2) * PAGE_SIZE
+    ,
+      50 # ms
+
+  onDestroyed: ->
+    super
+
+    $(window).off "scroll.peermind.#{@_eventHandlerId}"
 
   activities: ->
     handle = @activityHandle()
@@ -44,19 +86,26 @@ class Activity.ListComponent extends UIComponent
             continue
 
           previousDocument.laterDocuments ?= []
+          previousDocument.combinedDocumentsCount ?= 1
           previousDocument.laterDocuments.push document
+          previousDocument.combinedDocumentsCount++
           continue
 
       # We show only a user-level activity if both are available for same motion, one direction.
       else if (previousDocument.type is 'competingMotionOpened' and document.type is 'motionOpened') or (previousDocument.type is 'votedMotionClosed' and document.type is 'motionClosed')
         if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
           # We skip this document.
+          previousDocument.combinedDocumentsCount ?= 1
+          previousDocument.combinedDocumentsCount++
           continue
 
       # We show only a user-level activity if both are available for same motion, the other direction.
       else if (previousDocument.type is 'motionOpened' and document.type is 'competingMotionOpened') or (previousDocument.type is 'motionClosed' and document.type is 'votedMotionClosed')
         if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
           # We remove the previous (last) document, so that only this document is added to combinedDocuments.
+          previousDocument.combinedDocumentsCount ?= 1
+          document.combinedDocumentsCount = previousDocument.combinedDocumentsCount
+          document.combinedDocumentsCount++
           combinedDocuments.pop()
 
       combinedDocuments.push document
