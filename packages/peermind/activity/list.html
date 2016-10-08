@@ -37,71 +37,79 @@
   </li>
 </template>
 
+<template name="Activity.ListItemComponent.Author">
+  {{!-- TODO: Rewrap once whitespace control is implemented: https://github.com/meteor/blaze/issues/88 --}}
+  <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a>{{#if otherAuthors.length}}{{#if $eq otherAuthors.length 1}} and <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>{{else}}{{#if $eq otherAuthors.length 2}}, <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>, and <a href="{{pathFor 'User.display' params=otherAuthors.[1]}}">{{otherAuthors.[1].username}}</a>{{else}}, <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>, and {{others}} other users{{/if}}{{/if}}{{/if}}
+</template>
+
 <template name="Activity.ListItemComponent.CommentCreated">
   <p>
-    {{!-- TODO: Should we link directly to the comment? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> commented on
+    {{!-- TODO: Should we link directly to the comment (or comments)? --}}
+    {{> Activity.ListItemComponent.Author}} commented on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.PointCreated">
   <p>
-    {{!-- TODO: Should we link directly to the point? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> made a point {{category}} on
+    {{!-- TODO: Should we link directly to the point (or points)? --}}
+    {{> Activity.ListItemComponent.Author}} made {{count (different 'data.point') 'a point' 'points'}} {{category}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.MotionCreated">
   <p>
-    {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> made a motion on
+    {{!-- TODO: Should we link directly to the motion (or motions)? --}}
+    {{> Activity.ListItemComponent.Author}} made {{count (different 'data.motion') 'a motion' 'motions'}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.CommentUpvoted">
   <p>
-    {{!-- TODO: Should we link directly to the comment? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> upvoted your comment on
+    {{!-- TODO: Should we link directly to the comment (or comments)? --}}
+    {{> Activity.ListItemComponent.Author}} upvoted your {{count (different 'data.comment') 'comment' 'comments'}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.PointUpvoted">
   <p>
-    {{!-- TODO: Should we link directly to the point? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> upvoted your point {{category}} on
+    {{!-- TODO: Should we link directly to the point (or points)? --}}
+    {{> Activity.ListItemComponent.Author}} upvoted your {{count (different 'data.point') 'point' 'points'}} {{category}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.MotionUpvoted">
   <p>
-    {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> upvoted your motion on
+    {{!-- TODO: Should we link directly to the motion (or motions)? --}}
+    {{> Activity.ListItemComponent.Author}} upvoted your {{count (different 'data.motion') 'motion' 'motions'}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.DiscussionCreated">
   <p>
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> started a discussion
+    {{!-- There cannot be a combined activity for discussions because previous and current document do not have the same discussion reference. --}}
+    {{> Activity.ListItemComponent.Author}} started a discussion
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.DiscussionClosed">
   <p>
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed a discussion
+    {{!-- There cannot be a combined activity for discussions because previous and current document do not have the same discussion reference. --}}
+    {{> Activity.ListItemComponent.Author}} closed a discussion
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
 <template name="Activity.ListItemComponent.MeetingCreated">
   <p>
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> created a meeting
+    {{!-- There cannot be a combined activity for meetings because previous and current document do not have the same discussion reference. --}}
+    {{> Activity.ListItemComponent.Author}} created a meeting
     <a href="{{pathFor 'Meeting.display' params=this.data.meeting}}">{{this.data.meeting.title}}</a>{{#unless isSentence this.data.meeting.title}}.{{/unless}}
   </p>
 </template>
@@ -109,7 +117,7 @@
 <template name="Activity.ListItemComponent.MotionOpened">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened for voting a motion on
+    {{> Activity.ListItemComponent.Author}} opened for voting {{count (different 'data.motion') 'a motion' 'motions'}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -117,7 +125,7 @@
 <template name="Activity.ListItemComponent.CompetingMotionOpened">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> opened for voting a competing motion to the one you already voted on, on
+    {{> Activity.ListItemComponent.Author}} opened for voting {{count (different 'data.motion') 'a competing motion' 'competing motions'}} to the one you already voted on, on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -125,7 +133,7 @@
 <template name="Activity.ListItemComponent.MotionClosed">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed for voting a motion on
+    {{> Activity.ListItemComponent.Author}} closed for voting {{count (different 'data.motion') 'a motion' 'motions'}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -133,7 +141,7 @@
 <template name="Activity.ListItemComponent.VotedMotionClosed">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> closed for voting a motion you voted on, on
+    {{> Activity.ListItemComponent.Author}} closed for voting {{count (different 'data.motion') 'a motion' 'motions'}} you voted on, on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -141,7 +149,7 @@
 <template name="Activity.ListItemComponent.MotionWithdrawn">
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> has withdrawn a motion on
+    {{> Activity.ListItemComponent.Author}} has withdrawn {{count (different 'data.motion') 'a motion' 'motions'}} on
     <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
@@ -149,26 +157,8 @@
 <template name="Activity.ListItemComponent.Mention">
   <p>
     {{!-- TODO: Should we link directly? --}}
-    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a> mentioned you
-    {{#if this.data.comment}}
-      in a comment
-    {{else}}
-      {{#if this.data.point}}
-        in a point
-      {{else}}
-        {{#if this.data.motion}}
-          in a motion
-        {{/if}}
-      {{/if}}
-    {{/if}}
-    {{#if $or this.data.comment this.data.point this.data.motion}}
-      on <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
-    {{else}}
-      {{#if this.data.discussion}}
-        in <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
-      {{else}}
-        .
-      {{/if}}
-    {{/if}}
+    {{> Activity.ListItemComponent.Author}} mentioned you
+    {{!-- TODO: Rewrap once whitespace control is implemented: https://github.com/meteor/blaze/issues/88 --}}
+    {{#if this.data.comment}} in {{count (different 'data.comment') 'a comment' 'comments'}}{{else}}{{#if this.data.point}} in {{count (different 'data.comment') 'a point' 'points'}}{{else}}{{#if this.data.motion}} in {{count (different 'data.motion') 'a motion' 'motions'}}{{/if}}{{/if}}{{/if}}{{#if $or this.data.comment this.data.point this.data.motion}} on <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}{{else}}{{#if this.data.discussion}} in <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}{{else}}.{{/if}}{{/if}}
   </p>
 </template>

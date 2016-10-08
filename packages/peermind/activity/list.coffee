@@ -20,7 +20,7 @@ class Activity.ListComponent extends UIComponent
           timestampDifference = b.timestamp.valueOf() - a.timestamp.valueOf()
           return timestampDifference unless timestampDifference is 0
 
-          # We want personalized notifications first.
+          # We want a user-level activity first.
           return -1 if a.type is 'competingMotionOpened' and b.type is 'motionOpened'
           return -1 if a.type is 'votedMotionClosed' and b.type is 'motionClosed'
           return 1 if b.type is 'competingMotionOpened' and a.type is 'motionOpened'
@@ -31,7 +31,46 @@ class Activity.ListComponent extends UIComponent
     else
       documents = []
 
-    documents
+    combinedDocuments = []
+
+    for document in documents
+      if combinedDocuments.length is 0
+        combinedDocuments.push document
+        continue
+
+      previousDocument = combinedDocuments[combinedDocuments.length - 1]
+      if previousDocument.type is document.type
+        # If categories are not the same, do not combine documents.
+        if previousDocument.data.point?.category and previousDocument.data.point.category isnt document.data.point.category
+          combinedDocuments.push document
+          continue
+
+        # If both documents are for the same discussion, combine them.
+        if previousDocument.data.discussion?._id and previousDocument.data.discussion._id is document.data.discussion._id
+          # But not if it is a mention from different places.
+          if previousDocument.type is 'mention' and ((previousDocument.data.comment and not document.data.comment) or (previousDocument.data.point and not document.data.point) or (previousDocument.data.motion and not document.data.motion))
+            combinedDocuments.push document
+            continue
+
+          previousDocument.laterDocuments ?= []
+          previousDocument.laterDocuments.push document
+          continue
+
+      # We show only a user-level activity if both are available for same motion.
+      else if previousDocument.type is 'competingMotionOpened' and document.type is 'motionOpened'
+        if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
+          # We skip this document.
+          continue
+
+      # We show only a user-level activity if both are available for same motion.
+      else if previousDocument.type is 'votedMotionClosed' and document.type is 'motionClosed'
+        if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
+          # We skip this document.
+          continue
+
+      combinedDocuments.push document
+
+    combinedDocuments
 
   onShowPersonalizedActivity: (event) ->
     event.preventDefault()
@@ -68,6 +107,36 @@ class Activity.ListItemComponent extends UIComponent
       when 'mention' then 'person'
 
 class ActivityComponent extends UIComponent
+  # We do not use "pluralize" but a custom method.
+  count: (documents, singular, plural) ->
+    if documents.length is 1
+      singular
+    else
+      "#{documents.length} #{plural}"
+
+  different: (path) ->
+    first = @data path
+    laterDocuments = @data('laterDocuments') or []
+
+    all = [first].concat _.map laterDocuments, (doc) =>
+      _.path doc, path
+
+    _.uniq all, (doc) =>
+      doc?._id
+
+class Activity.ListItemComponent.Author extends ActivityComponent
+  @register 'Activity.ListItemComponent.Author'
+
+  otherAuthors: ->
+    authors = @different 'byUser'
+
+    # We remove the first author.
+    authors.shift()
+
+    authors
+
+  others: ->
+    @otherAuthors().length - 1
 
 class PointActivityComponent extends ActivityComponent
   category: ->
