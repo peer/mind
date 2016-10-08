@@ -61,9 +61,9 @@ class Discussion.FollowingDropdown extends UIComponent
 
     @dialogOpened = new ReactiveField false
 
-    @dropdownId = Random.id()
+    @_eventHandlerId = Random.id()
 
-    $(document).on "click.peermind.#{@dropdownId}", (event) =>
+    $(document).on "click.peermind.#{@_eventHandlerId}", (event) =>
       return unless @isRendered() and @dialogOpened()
 
       dropdown = @$('.dropdown-content').get(0)
@@ -77,7 +77,7 @@ class Discussion.FollowingDropdown extends UIComponent
   onDestroyed: ->
     super
 
-    $(document).off "click.peermind.#{@dropdownId}"
+    $(document).off "click.peermind.#{@_eventHandlerId}"
 
   discussion: ->
     @callAncestorWith 'discussion'
