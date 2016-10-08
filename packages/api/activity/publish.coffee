@@ -22,6 +22,9 @@ new PublishEndpoint 'Activity.list', (personalized) ->
       level: Activity.LEVEL.GENERAL
 
   @autorun (computation) =>
+    @setData 'count', Activity.documents.find(query).count()
+
+  @autorun (computation) =>
     limit = @data('limit') or 50
     check limit, Match.PositiveNumber
 

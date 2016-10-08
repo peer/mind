@@ -9,12 +9,52 @@ class Activity.ListComponent extends UIComponent
     @showPersonalizedActivity = new ReactiveField false
     @activityHandle = new ReactiveField null
     @activityLimit = new ReactiveField PAGE_SIZE
+    @showLoading = new ReactiveField 0
+    @showFinished = new ReactiveField false
 
     @autorun (computation) =>
       @activityHandle @subscribe 'Activity.list', !!@currentUserId() and @showPersonalizedActivity()
 
     @autorun (computation) =>
       @activityHandle()?.setData 'limit', @activityLimit()
+
+      Tracker.nonreactive =>
+        @showLoading @showLoading() + 1
+
+    @autorun (computation) =>
+      showLoading = @showLoading()
+
+      return unless showLoading
+
+      handle = @activityHandle()
+
+      if handle
+        return unless handle.ready()
+
+        activityCount = Activity.documents.find(handle.scopeQuery()).count()
+        allCount = handle.data('count') or 0
+      else
+        activityCount = 0
+        allCount = 0
+
+      if activityCount is allCount or activityCount is @activityLimit()
+        @showLoading showLoading - 1
+
+    @autorun (computation) =>
+      handle = @activityHandle()
+
+      return unless handle.ready()
+
+      allCount = handle.data('count') or 0
+      activityCount = Activity.documents.find(handle.scopeQuery()).count()
+
+      if activityCount is allCount
+        @showFinished true
+
+        Meteor.setTimeout =>
+          @showFinished false
+        ,
+          3000 # ms
 
     @_eventHandlerId = Random.id()
 
@@ -116,6 +156,45 @@ class Activity.ListComponent extends UIComponent
     event.preventDefault()
 
     @showPersonalizedActivity @$('[name="show-personalized"]').is(':checked')
+
+  insertDOMElement: (parent, node, before, next) ->
+    next ?= =>
+      super parent, node, before
+      true
+
+    $node = $(node)
+    if $node.hasClass 'finished-loading'
+      next()
+      $node.velocity 'fadeIn',
+        duration: 'fast'
+        queue: false
+
+    else
+      next()
+
+    # We are handling it.
+    true
+
+  removeDOMElement: (parent, node, next) ->
+    next ?= =>
+      super parent, node
+      true
+
+    $node = $(node)
+    if $node.hasClass 'finished-loading'
+      # We can call just "stop" because it does not matter that we have not animated insertion
+      # to the end and we have no "complete" callback on insertion as well to care about.
+      $node.velocity('stop').velocity 'fadeOut',
+        duration: 'fast'
+        queue: false
+        complete: (element) =>
+          next()
+
+    else
+      next()
+
+    # We are handling it.
+    true
 
 class Activity.ListItemComponent extends UIComponent
   @register 'Activity.ListItemComponent'

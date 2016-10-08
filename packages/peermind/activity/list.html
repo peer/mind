@@ -24,6 +24,25 @@
         </div>
       </div>
     {{/if}}
+    <div class="loading-wrapper">
+      {{#if showLoading}}
+        <div class="row loading">
+          <div class="col s12">
+            <div class="progress">
+              <div class="indeterminate"></div>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        {{#if showFinished}}
+          <div class="row finished-loading">
+            <div class="col s12">
+              You reached the end of activities.
+            </div>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
   </div>
 </template>
 
