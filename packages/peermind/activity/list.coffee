@@ -20,17 +20,15 @@ class Activity.ListComponent extends UIComponent
 class Activity.ListContentComponent extends UIComponent
   @register 'Activity.ListContentComponent'
 
-  constructor: (personalized) ->
-    personalized = false if personalized instanceof Spacebars.kw
+  constructor: (kwargs) ->
+    _.extend @, _.pick (kwargs?.hash or {}), 'personalized', 'pageSize'
 
-    @personalized = personalized
-
+    @pageSize ||= 50  
+    
   onCreated: ->
     super
 
-    PAGE_SIZE = 50
-
-    @activityLimit = new ReactiveField PAGE_SIZE
+    @activityLimit = new ReactiveField @pageSize
     @showLoading = new ReactiveField 0
     @showFinished = new ReactiveField 0
     @distanceToDocumentBottom = new ReactiveField null
@@ -94,12 +92,12 @@ class Activity.ListContentComponent extends UIComponent
       for child in @childComponents Activity.ListItemComponent
         renderedActivityCount += child.data().combinedDocumentsCount ? 1
 
-      pages = Math.floor(renderedActivityCount / PAGE_SIZE)
+      pages = Math.floor(renderedActivityCount / @pageSize)
 
-      if renderedActivityCount <= (pages + 0.5) * PAGE_SIZE
-        @activityLimit (pages + 1) * PAGE_SIZE
+      if renderedActivityCount <= (pages + 0.5) * @pageSize
+        @activityLimit (pages + 1) * @pageSize
       else
-        @activityLimit (pages + 2) * PAGE_SIZE
+        @activityLimit (pages + 2) * @pageSize
     ,
       50 # ms
 
