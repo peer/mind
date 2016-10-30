@@ -109,59 +109,11 @@ class Activity.ListContentComponent extends UIComponent
     $(window).off "scroll.peermind.#{@_eventHandlerId}"
 
   activities: ->
-    documents = Activity.documents.find(@activityHandle.scopeQuery(),
+    Activity.combineActivities Activity.documents.find(@activityHandle.scopeQuery(),
       sort:
         # The newest first.
         timestamp: -1
     ).fetch()
-
-    combinedDocuments = []
-
-    for document in documents
-      if combinedDocuments.length is 0
-        combinedDocuments.push document
-        continue
-
-      previousDocument = combinedDocuments[combinedDocuments.length - 1]
-      if previousDocument.type is document.type
-        # If categories are not the same, do not combine documents.
-        if previousDocument.data.point?.category and previousDocument.data.point.category isnt document.data.point.category
-          combinedDocuments.push document
-          continue
-
-        # If both documents are for the same discussion, combine them.
-        if previousDocument.data.discussion?._id and previousDocument.data.discussion._id is document.data.discussion._id
-          # But not if it is a mention from different places.
-          if previousDocument.type is 'mention' and ((previousDocument.data.comment and not document.data.comment) or (previousDocument.data.point and not document.data.point) or (previousDocument.data.motion and not document.data.motion))
-            combinedDocuments.push document
-            continue
-
-          previousDocument.laterDocuments ?= []
-          previousDocument.combinedDocumentsCount ?= 1
-          previousDocument.laterDocuments.push document
-          previousDocument.combinedDocumentsCount++
-          continue
-
-      # We show only a user-level activity if both are available for same motion, one direction.
-      else if (previousDocument.type is 'competingMotionOpened' and document.type is 'motionOpened') or (previousDocument.type is 'votedMotionClosed' and document.type is 'motionClosed')
-        if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
-          # We skip this document.
-          previousDocument.combinedDocumentsCount ?= 1
-          previousDocument.combinedDocumentsCount++
-          continue
-
-      # We show only a user-level activity if both are available for same motion, the other direction.
-      else if (previousDocument.type is 'motionOpened' and document.type is 'competingMotionOpened') or (previousDocument.type is 'motionClosed' and document.type is 'votedMotionClosed')
-        if previousDocument.timestamp.valueOf() is document.timestamp.valueOf() and previousDocument.data.motion._id is document.data.motion._id
-          # We remove the previous (last) document, so that only this document is added to combinedDocuments.
-          previousDocument.combinedDocumentsCount ?= 1
-          document.combinedDocumentsCount = previousDocument.combinedDocumentsCount
-          document.combinedDocumentsCount++
-          combinedDocuments.pop()
-
-      combinedDocuments.push document
-
-    combinedDocuments
 
   insertDOMElement: (parent, node, before, next) ->
     next ?= =>
