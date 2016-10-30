@@ -87,7 +87,6 @@ class Activity.ListContentComponent extends UIComponent
       # Increase limit only when beyond two window heights to the end, otherwise return.
       return if distanceToDocumentBottom > 2 * windowHeight
 
-
       # We use the number of rendered activity documents instead of current count of
       # Activity.documents.find(@activityHandle.scopeQuery()).count() because we care
       # what is really displayed.
