@@ -59,7 +59,8 @@ Package.onUse(function (api) {
     'trix',
     'storage',
     'loading',
-    'jquery-ui-touch-punch'
+    'jquery-ui-touch-punch',
+    'scroll-lock'
   ]);
 
   api.addFiles([

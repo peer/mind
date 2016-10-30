@@ -34,3 +34,6 @@
 [submodule "packages/jquery-ui-touch-punch/vendor"]
 	path = packages/jquery-ui-touch-punch/vendor
 	url = https://github.com/furf/jquery-ui-touch-punch.git
+[submodule "packages/mousewheel/vendor"]
+	path = packages/mousewheel/vendor
+	url = https://github.com/jquery/jquery-mousewheel.git

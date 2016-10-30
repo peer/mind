@@ -284,20 +284,6 @@ class EditorComponent extends UIComponent
     else
       @disableMention()
 
-  mentionDialogPosition: ->
-    position = @mentionPosition()
-    return unless position
-
-    # .editor-wrapper is an offset parent, it has position: relative.
-    offsetParentOffset = @$('.editor-wrapper').offset()
-
-    viewportPositionTop = position.bottom
-    viewportPositionLeft = position.left
-
-    # We convert document-based offset values to viewport-based by subtracting scrolling.
-    top: viewportPositionTop - (offsetParentOffset.top - $(window).scrollTop())
-    left: viewportPositionLeft - (offsetParentOffset.left - $(window).scrollLeft())
-
   mentionDialogUsers: ->
     handle = @mentionHandle()
     return @contributedUsers() unless handle
@@ -311,27 +297,6 @@ class EditorComponent extends UIComponent
     return true unless handle
 
     handle.ready()
-
-  splitMention: (username) ->
-    username.split new RegExp("^(#{@mentionContent()})", 'i')
-
-  matchingMention: (username) ->
-    split = @splitMention username
-
-    if split.length > 1
-      # If there was a split, then split contains ["", <matching mention>, <nonmatching mention>].
-      split[1]
-    else
-      ''
-
-  nonmatchingMention: (username) ->
-    split = @splitMention username
-
-    if split.length > 1
-      # If there was a split, then split contains ["", <matching mention>, <nonmatching mention>].
-      split[2]
-    else
-      split[0]
 
   onKeyDown: (event) ->
     editor = @editor()
@@ -447,16 +412,6 @@ class EditorComponent extends UIComponent
 
     @disableMention()
 
-  onNoMatchingUsersClick: (event) ->
-    event.preventDefault()
-
-    @disableMention()
-
-  onMentionClick: (event) ->
-    event.preventDefault()
-
-    @selectMention @currentData()
-
   onLinkClick: (event) ->
     # We explicitly have to disable links inside figures (mentions) inside trix-editor.
     event.preventDefault()
@@ -466,6 +421,77 @@ class EditorComponent.Toolbar extends UIComponent
 
   lang: ->
     Trix.config.lang
+
+class EditorComponent.MentionDialog extends UIComponent
+  @register 'EditorComponent.MentionDialog'
+
+  onRendered: ->
+    super
+
+    @$('.autocomplete-content').scrollLock()
+
+  mentionDialogPosition: ->
+    position = @mentionPosition()
+    return unless position
+
+    # .editor-wrapper is an offset parent, it has position: relative.
+    offsetParentOffset = @ancestorComponent(EditorComponent).$('.editor-wrapper').offset()
+
+    viewportPositionTop = position.bottom
+    viewportPositionLeft = position.left
+
+    # We convert document-based offset values to viewport-based by subtracting scrolling.
+    top: viewportPositionTop - (offsetParentOffset.top - $(window).scrollTop())
+    left: viewportPositionLeft - (offsetParentOffset.left - $(window).scrollLeft())
+
+  mentionDialogUsers: ->
+    @callAncestorWith 'mentionDialogUsers'
+
+  mentionPosition: ->
+    @callAncestorWith 'mentionPosition'
+
+  mentionSelected: ->
+    @callAncestorWith 'mentionSelected'
+
+  mentionContent: ->
+    @callAncestorWith 'mentionContent'
+
+  selectMention: (args...) ->
+    @callAncestorWith 'selectMention', args...
+
+  disableMention: ->
+    @callAncestorWith 'disableMention'
+
+  onMentionClick: (event) ->
+    event.preventDefault()
+
+    @selectMention @currentData()
+
+  onNoMatchingUsersClick: (event) ->
+    event.preventDefault()
+
+    @disableMention()
+
+  splitMention: (username) ->
+    username.split new RegExp("^(#{@mentionContent()})", 'i')
+
+  matchingMention: (username) ->
+    split = @splitMention username
+
+    if split.length > 1
+      # If there was a split, then split contains ["", <matching mention>, <nonmatching mention>].
+      split[1]
+    else
+      ''
+
+  nonmatchingMention: (username) ->
+    split = @splitMention username
+
+    if split.length > 1
+      # If there was a split, then split contains ["", <matching mention>, <nonmatching mention>].
+      split[2]
+    else
+      split[0]
 
 class EditorComponent.Mention extends UIComponent
   @register 'EditorComponent.Mention'

@@ -77,6 +77,7 @@ momentjs:moment@2.15.1
 mongo@1.1.12_1
 mongo-id@1.0.5
 mongo-livedata@1.0.12
+mousewheel@3.1.13_1
 mrt:later@1.6.1
 npm-bcrypt@0.9.1_1
 npm-mongo@1.5.50
@@ -126,6 +127,7 @@ reload@1.1.10
 retry@1.0.8
 routepolicy@1.0.11
 sanitize@0.1.0
+scroll-lock@0.1.0
 service-configuration@1.0.10
 session@1.1.6
 sha@1.0.8
