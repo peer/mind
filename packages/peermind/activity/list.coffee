@@ -23,7 +23,7 @@ class Activity.ListContentComponent extends UIComponent
   constructor: (kwargs) ->
     _.extend @, _.pick (kwargs?.hash or {}), 'personalized', 'pageSize'
 
-    @pageSize ||= 50  
+    @pageSize ||= 50
     
   onCreated: ->
     super
