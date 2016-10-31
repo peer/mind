@@ -94,10 +94,17 @@ class Activity.ListContentComponent extends UIComponent
 
       pages = Math.floor(renderedActivityCount / @pageSize)
 
+      oldActivityLimit = @activityLimit()
+
       if renderedActivityCount <= (pages + 0.5) * @pageSize
         @activityLimit (pages + 1) * @pageSize
       else
         @activityLimit (pages + 2) * @pageSize
+
+      # We want new limit to get into the effect as soon as possible so that we immediately show
+      # loading feedback and start getting new data. So we flush manually. Otherwise sometimes there
+      # were delays between change to activityLimit and autorun setting limit on activityHandle.
+      Tracker.flush() if oldActivityLimit isnt @activityLimit()
     ,
       50 # ms
 
