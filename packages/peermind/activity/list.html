@@ -18,17 +18,19 @@
 </template>
 
 <template name="Activity.ListContentComponent">
-  {{#if activities.length}}
-    <div class="row">
-      <div class="col s12">
-        <ul class="collection z-depth-1">
-          {{#each activities}}
-            {{> Activity.ListItemComponent}}
-          {{/each}}
-        </ul>
+  <div class="list-wrapper">
+    {{#if activities.length}}
+      <div class="row">
+        <div class="col s12">
+          <ul class="collection z-depth-1">
+            {{#each activities}}
+              {{> Activity.ListItemComponent}}
+            {{/each}}
+          </ul>
+        </div>
       </div>
-    </div>
-  {{/if}}
+    {{/if}}
+  </div>
   <div class="loading-wrapper">
     {{#if showLoading}}
       <div class="row loading">

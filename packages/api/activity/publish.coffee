@@ -1,23 +1,26 @@
-new PublishEndpoint 'Activity.list', (personalized) ->
+personalizedActivityQuery = (userId) ->
+  level:
+    $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
+  'byUser._id':
+    $ne: userId
+  $or: [
+    'forUsers._id': userId
+  ,
+    # A special case, we want all users to get notifications for new discussions and meetings.
+    type:
+      $in: ['discussionCreated', 'meetingCreated']
+  ]
+
+new PublishEndpoint 'Activity.list', (personalized, initialLimit) ->
   check personalized, Boolean
+  check initialLimit, Match.PositiveNumber
 
   @enableScope()
 
   userId = Meteor.userId()
   if personalized
     if userId
-      query =
-        level:
-          $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
-        'byUser._id':
-          $ne: userId
-        $or: [
-          'forUsers._id': userId
-        ,
-          # A special case, we want all users to get notifications for new discussions and meetings.
-          type:
-            $in: ['discussionCreated', 'meetingCreated']
-        ]
+      query = personalizedActivityQuery userId
     else
       return []
   else
@@ -28,7 +31,7 @@ new PublishEndpoint 'Activity.list', (personalized) ->
     @setData 'count', Activity.documents.find(query).count()
 
   @autorun (computation) =>
-    limit = @data('limit') or 50
+    limit = @data('limit') or initialLimit
     check limit, Match.PositiveNumber
 
     Activity.documents.find query,

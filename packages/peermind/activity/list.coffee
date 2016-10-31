@@ -31,9 +31,9 @@ class Activity.ListContentComponent extends UIComponent
     @activityLimit = new ReactiveField @pageSize
     @showLoading = new ReactiveField 0
     @showFinished = new ReactiveField 0
-    @distanceToDocumentBottom = new ReactiveField null
+    @distanceToScrollParentBottom = new ReactiveField null
 
-    @activityHandle = @subscribe 'Activity.list', @personalized
+    @activityHandle = @subscribe 'Activity.list', @personalized, @pageSize
 
     @autorun (computation) =>
       @activityHandle.setData 'limit', @activityLimit()
@@ -60,7 +60,7 @@ class Activity.ListContentComponent extends UIComponent
       allCount = @activityHandle.data('count') or 0
       activityCount = Activity.documents.find(@activityHandle.scopeQuery()).count()
 
-      if activityCount is allCount and @distanceToDocumentBottom() is 0
+      if activityCount is allCount and @distanceToScrollParentBottom() <= 0
         Tracker.nonreactive =>
           @showFinished @showFinished() + 1
 
@@ -69,21 +69,36 @@ class Activity.ListContentComponent extends UIComponent
           ,
             3000 # ms
 
+  onRendered: ->
+    super
+
     @_eventHandlerId = Random.id()
 
-    $window = $(window)
-    $document = $(document)
+    $listWrapper = @$('.list-wrapper')
+    @$scrollParent = $listWrapper.scrollParent()
 
-    $window.on "scroll.peermind.#{@_eventHandlerId}", _.throttle (event) =>
-      windowHeight =  $window.height()
-      bottom = $window.scrollTop() + windowHeight
+    @$scrollParent = $(window) if @$scrollParent.get(0) is document
 
-      distanceToDocumentBottom = $document.height() - bottom
+    @handleScrolling = _.throttle (event) =>
+      # If list is not visible, we cannot compute current height to know how much more we should load.
+      return unless $listWrapper.is(':visible')
 
-      @distanceToDocumentBottom distanceToDocumentBottom
+      scrollParentHeight = @$scrollParent.height()
+      # If max-height is set on a scroll parent element, we want to expand the content all
+      # the way until scroll parent element is full of content, if it is not already.
+      # Window cannot have CSS and jQuery css method fails on it.
+      scrollParentHeight = Math.max(scrollParentHeight, parseInt(@$scrollParent.css('max-height')) or 0) if @$scrollParent.get(0) isnt window
+      bottom = @$scrollParent.scrollTop() + scrollParentHeight
+
+      contentHeight = $listWrapper.prop('scrollHeight')
+
+      distanceToScrollParentBottom = contentHeight - bottom
+
+
+      @distanceToScrollParentBottom distanceToScrollParentBottom
 
       # Increase limit only when beyond two window heights to the end, otherwise return.
-      return if distanceToDocumentBottom > 2 * windowHeight
+      return if distanceToScrollParentBottom > 2 * scrollParentHeight
 
       # We use the number of rendered activity documents instead of current count of
       # Activity.documents.find(@activityHandle.scopeQuery()).count() because we care
@@ -106,12 +121,26 @@ class Activity.ListContentComponent extends UIComponent
       # were delays between change to activityLimit and autorun setting limit on activityHandle.
       Tracker.flush() if oldActivityLimit isnt @activityLimit()
     ,
-      50 # ms
+      100 # ms
+
+    @$scrollParent.on "scroll.peermind.#{@_eventHandlerId}", @handleScrolling
+
+    @autorun (computation) =>
+      return unless @activityHandle.ready()
+
+      # Every time the number of documents change, check if we should load even more.
+      # This handles also loading all necessary documents to fill the scroll parent.
+      Activity.documents.find(@activityHandle.scopeQuery()).count()
+
+      # We want to wait for documents to render.
+      Tracker.afterFlush =>
+        # We cannot call it directly from inside the autorun because inside handleScrolling we call Tracker.flush.
+        Meteor.defer @handleScrolling
 
   onDestroyed: ->
     super
 
-    $(window).off "scroll.peermind.#{@_eventHandlerId}"
+    @$scrollParent.off "scroll.peermind.#{@_eventHandlerId}"
 
   activities: ->
     Activity.combineActivities Activity.documents.find(@activityHandle.scopeQuery(),
