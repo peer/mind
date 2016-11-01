@@ -32,7 +32,7 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:flow-router@2.12.1_1',
     'kadira:blaze-layout@2.3.0',
-    'peerlibrary:computed-field@0.5.0',
+    'peerlibrary:computed-field@0.5.1',
     'peerlibrary:reactive-field@0.3.0',
     'peerlibrary:assert@0.2.5',
     'materialize:materialize@0.97.7',

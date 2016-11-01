@@ -94,7 +94,7 @@ peerlibrary:blaze-layout-component@0.1.1
 peerlibrary:blocking@0.5.2
 peerlibrary:check-extension@0.2.1
 peerlibrary:classy-job@0.5.0
-peerlibrary:computed-field@0.5.0
+peerlibrary:computed-field@0.5.1
 peerlibrary:connect@2.28.1_1
 peerlibrary:crypto@0.2.1
 peerlibrary:data-lookup@0.1.0
