@@ -84,6 +84,11 @@ class Activity.ListContentComponent extends UIComponent
       # If list is not visible, we cannot compute current height to know how much more we should load.
       return unless $listWrapper.is(':visible')
 
+      if @$scrollParent.get(0) is window
+        listWrapperTopInsideScrollParent = $listWrapper.offset().top
+      else
+        listWrapperTopInsideScrollParent = ($listWrapper.offset().top + @$scrollParent.scrollTop()) - @$scrollParent.offset().top
+
       scrollParentHeight = @$scrollParent.height()
       # If max-height is set on a scroll parent element, we want to expand the content all
       # the way until scroll parent element is full of content, if it is not already.
@@ -93,8 +98,8 @@ class Activity.ListContentComponent extends UIComponent
 
       contentHeight = $listWrapper.prop('scrollHeight')
 
-      distanceToScrollParentBottom = contentHeight - bottom
 
+      distanceToScrollParentBottom = (contentHeight + listWrapperTopInsideScrollParent) - bottom
 
       @distanceToScrollParentBottom distanceToScrollParentBottom
 
