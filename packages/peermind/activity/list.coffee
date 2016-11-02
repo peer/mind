@@ -98,7 +98,6 @@ class Activity.ListContentComponent extends UIComponent
 
       contentHeight = $listWrapper.prop('scrollHeight')
 
-
       distanceToScrollParentBottom = (contentHeight + listWrapperTopInsideScrollParent) - bottom
 
       @distanceToScrollParentBottom distanceToScrollParentBottom
