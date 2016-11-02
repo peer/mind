@@ -31,7 +31,7 @@ class Activity.ListContentComponent extends UIComponent
     @activityLimit = new ReactiveField @pageSize
     @showLoading = new ReactiveField 0
     @showFinished = new ReactiveField 0
-    @distanceToScrollParentBottom = new ReactiveField null
+    @distanceToScrollParentBottom = new ReactiveField null, true
 
     @activityHandle = @subscribe 'Activity.list', @personalized, @pageSize
 
@@ -60,7 +60,8 @@ class Activity.ListContentComponent extends UIComponent
       allCount = @activityHandle.data('count') or 0
       activityCount = Activity.documents.find(@activityHandle.scopeQuery()).count()
 
-      if activityCount is allCount and @distanceToScrollParentBottom() <= 0
+      # Only when scrolling down and we reach scroll parent bottom we display finished message.
+      if activityCount is allCount and @distanceToScrollParentBottom() <= 0 and @distanceToScrollParentBottom() < @distanceToScrollParentBottom.previous()
         Tracker.nonreactive =>
           @showFinished @showFinished() + 1
 
