@@ -40,3 +40,39 @@ new PublishEndpoint 'Activity.list', (personalized, initialLimit) ->
       sort:
         # The newest first.
         timestamp: -1
+
+new PublishEndpoint 'Activity.unseenPersonalizedCount', ->
+  @enableScope()
+
+  userId = Meteor.userId()
+
+  return [] unless userId
+
+  lastSeenPersonalizedActivity = new ComputedField =>
+    User.documents.findOne(userId,
+      fields:
+        lastSeenPersonalizedActivity: 1
+    )?.lastSeenPersonalizedActivity or null
+  ,
+    true
+
+  @onStop =>
+    lastSeenPersonalizedActivity.stop()
+
+  @autorun (computation) =>
+    query = personalizedActivityQuery userId
+    if lastSeenPersonalizedActivity()
+      _.extend query,
+        timestamp:
+          $gt: lastSeenPersonalizedActivity()
+
+    activities = Activity.combineActivities Activity.documents.find(query,
+      fields: Activity.PUBLISH_FIELDS()
+      sort:
+        # The newest first.
+        timestamp: -1
+    ).fetch()
+
+    @setData 'count', Math.min activities.length, 999
+
+  @ready()

@@ -4,6 +4,7 @@ nav .nav-wrapper
   display flex
 
   .logo
+  .button-collapse
     margin 0
     padding 0 15px
     transition background-color 0.3s
@@ -14,6 +15,10 @@ nav .nav-wrapper
     img
       width $navbar-height
       height $navbar-height
+
+  .not-large-screen .notifications-menu-button
+  .button-collapse
+    padding 0 18px
 
   ul
   .logo
@@ -42,6 +47,77 @@ nav .nav-wrapper
   // The menu button should be on the left.
   .button-collapse
     order -1
+
+  .notifications-menu-item
+    .dropdown-content
+      max-height none
+      // The following is added by dropdown code, so we set it here as
+      // well to make sure the content has correct width from the beginning.
+      white-space nowrap
+      position absolute
+      display block
+      // We initially set it at 0 so that the content
+      // has the full width from the beginning.
+      left 0
+
+    .notifications-menu-button
+      // To make the button an offset parent which allows us to
+      // position count of notifications relativelly to it.
+      position relative
+
+    .notifications-count
+      position absolute
+      line-height 1rem
+      margin-left 0
+      min-width 0
+      padding 1px 3px
+      right 6px
+      bottom 50%
+
+      &:after
+        content ""
+
+    .notifications-see-all
+      text-align center
+      min-height 0
+
+      a
+        font-size 1rem
+        padding 0.5rem 0
+
+        &:hover
+          background-color transparent
+
+    .notifications-wrapper
+      overflow-y auto
+      border-bottom 1px solid $collection-border-color
+      max-width 400px
+      white-space normal
+
+      i.material-icons
+        display inline
+
+      i.tiny
+        font-size 1rem
+        line-height 1
+
+      a
+        color $link-color
+        transition none
+        display inline
+        padding 0
+
+        &:hover
+          background-color transparent
+
+      .col
+        padding 0
+
+      .row
+        margin 0
+
+      .collection
+        margin 0
 
   ul
     .signed-in-menu-item img

@@ -2,32 +2,41 @@
   <header>
     <nav>
       <div class="nav-wrapper">
-        {{! TODO: Programmatically resolve the root URL. }}
-        <a href="/" class="logo hide-on-med-and-down">
-          {{! TODO: Programmatically resolve the full image URL. }}
-          <img src="/packages/peermind/layout/logo.svg" alt="Logo" />
-        </a>
+        {{#if largeScreen}}
+          {{! TODO: Programmatically resolve the root URL. }}
+          <a href="/" class="logo">
+            {{! TODO: Programmatically resolve the full image URL. }}
+            <img src="/packages/peermind/layout/logo.svg" alt="Logo" />
+          </a>
+        {{/if}}
         <h1 class="brand-logo">{{title}}</h1>
         <a href="" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
-        <ul class="hide-on-med-and-down">
-          {{> NavItemsComponent}}
-          {{#unless currentUser}}
-            {{#if isSandstorm}}
-              <li class="static">Sign in through Sandstorm</li>
+        <ul class="{{#unless largeScreen}}not-large-screen{{/unless}}">
+          {{#if largeScreen}}
+            {{> NavItemsComponent}}
+          {{/if}}
+          {{#if currentUser}}
+            {{> NotificationsComponent}}
+          {{/if}}
+          {{#if largeScreen}}
+            {{#unless currentUser}}
+              {{#if isSandstorm}}
+                <li class="static">Sign in through Sandstorm</li>
+              {{else}}
+                <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
+              {{/if}}
             {{else}}
-              <li><a href="{{pathFor 'Account.signIn'}}">Sign in</a></li>
-            {{/if}}
-          {{else}}
-            <li class="signed-in-menu-item">
-              <a href="" data-activates="account-menu">
-                <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
-                {{currentUser.username}}
-              </a>
-              <ul id="account-menu" class="dropdown-content">
-                {{> AccountItemsComponent args isDropdown=true}}
-              </ul>
-            </li>
-          {{/unless}}
+              <li class="signed-in-menu-item">
+                <a href="" data-activates="account-menu">
+                  <img src="{{currentUser.avatarUrl}}" alt="" class="circle" />
+                  {{currentUser.username}}
+                </a>
+                <ul id="account-menu" class="dropdown-content">
+                  {{> AccountItemsComponent args isDropdown=true}}
+                </ul>
+              </li>
+            {{/unless}}
+          {{/if}}
         </ul>
         <ul class="side-nav" id="mobile-menu">
           {{#if currentUser}}
@@ -57,7 +66,6 @@
 <template name="NavItemsComponent">
   <li><a href="{{pathFor 'Discussion.list'}}">Discussions</a></li>
   <li><a href="{{pathFor 'Meeting.list'}}">Meetings</a></li>
-  <li><a href="{{pathFor 'Activity.list'}}">Activity</a></li>
 </template>
 
 <template name="AccountItemsComponent">
@@ -67,4 +75,16 @@
     <li class="divider"></li>
     <li><a href="" class="sign-out">Sign out</a></li>
   {{/unless}}
+</template>
+
+<template name="NotificationsComponent">
+  <li class="notifications-menu-item">
+    <a href="" data-activates="notifications-menu-{{componentId}}" class="notifications-menu-button"><i class="material-icons">{{#if count}}notifications{{else}}notifications_none{{/if}}</i>{{#if count}}<span class="notifications-count badge new">{{count}}</span>{{/if}}</a>
+    <ul id="notifications-menu-{{componentId}}" class="dropdown-content">
+      <li class="notifications-wrapper" {{style height}}>
+        {{> Activity.ListContentComponent args personalized=true pageSize=15}}
+      </li>
+      <li class="notifications-see-all"><a href="{{pathFor 'Activity.list' query=query}}">See all</a></li>
+    </ul>
+  </li>
 </template>

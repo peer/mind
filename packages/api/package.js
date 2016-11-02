@@ -31,7 +31,8 @@ Package.onUse(function (api) {
     'peerlibrary:meteor-file@0.2.1',
     'doctorpangloss:method-hooks@2.0.2',
     'peerlibrary:subscription-scope@0.1.0',
-    'peerlibrary:subscription-data@0.3.0'
+    'peerlibrary:subscription-data@0.3.0',
+    'peerlibrary:computed-field@0.6.0'
   ]);
 
   // Internal dependencies.

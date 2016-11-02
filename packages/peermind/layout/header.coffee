@@ -1,6 +1,12 @@
 class HeaderComponent extends UIComponent
   @register 'HeaderComponent'
 
+  onCreated: ->
+    super
+
+    # TODO: Use $medium-screen-up here. Check that it is "screen" as well?
+    @largeScreen = new ReactiveField $(window).width() >= 993
+
   onRendered: ->
     super
 
@@ -13,7 +19,10 @@ class HeaderComponent extends UIComponent
     # design switches to large design, close the side out menu.
     $(window).on "resize.peermind.#{@_eventHandlerId}", (event) =>
       # TODO: Use $medium-screen-up here. Check that it is "screen" as well?
-      @$('.button-collapse').sideNav('hide') if $(window).width() >= 993
+      @largeScreen $(window).width() >= 993
+
+    @autorun (computation) =>
+      @$('.button-collapse').sideNav('hide') if @largeScreen()
 
   onDestroyed: ->
     super
@@ -65,3 +74,72 @@ class AccountItemsComponent extends UIComponent
         belowOrigin: true
         alignment: 'right'
         constrain_width: false
+
+class NotificationsComponent extends UIComponent
+  @register 'NotificationsComponent'
+
+  onCreated: ->
+    super
+
+    @componentId = Random.id()
+
+    @countHandle = @subscribe 'Activity.unseenPersonalizedCount'
+
+    @windowHeight = new ReactiveField $(window).height()
+
+    @count = new ComputedField =>
+      return 0 unless @countHandle.ready()
+
+      @countHandle.data('count') or 0
+
+  onRendered: ->
+    super
+
+    @$('.notifications-wrapper').scrollLock()
+
+    # We use the fact that when it is rendered, we can enable dropdown inside the HeaderComponent
+    # on dropdown's activator. This makes sure that dropdown is enabled even if it is not initially
+    # rendered because an user is not yet signed in.
+    @autorun (computation) =>
+      $notificationsMenuActivator = @$('[data-activates="notifications-menu-' + @componentId + '"]')
+      return unless $notificationsMenuActivator
+      computation.stop()
+
+      $notificationsMenuActivator.dropdown
+        inDuration: 150
+        outDuration: 150
+        belowOrigin: true
+        alignment: 'right'
+        constrain_width: false
+
+    @_eventHandlerId = Random.id()
+
+    $(window).on "resize.peermind.#{@_eventHandlerId}", (event) =>
+      @windowHeight $(window).height()
+
+  onDestroyed: ->
+    super
+
+    $(window).off "resize.peermind.#{@_eventHandlerId}"
+
+  events: ->
+    super.concat
+      'dropdown:open': (event) ->
+        for component in @childComponents(Activity.ListContentComponent)
+          component.handleScrolling?()
+
+  height: ->
+    $notificationsMenuActivator = @$('[data-activates="notifications-menu-' + @componentId + '"]')
+    $seeAll = @$('.notifications-see-all')
+
+    # During initial run the element might not exist yet.
+    return unless $notificationsMenuActivator and $seeAll
+
+    offsetTop = $notificationsMenuActivator.offset().top - $(window).scrollTop() + $notificationsMenuActivator.height()
+
+    # Leave some space at the bottom of the window.
+    maxHeight: @windowHeight() - offsetTop - 110
+
+  # TODO: It should not be needed after: https://github.com/meteor/blaze/issues/5
+  query: ->
+    personalized: true
