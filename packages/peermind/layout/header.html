@@ -82,7 +82,7 @@
     <a href="" data-activates="notifications-menu-{{componentId}}" class="notifications-menu-button"><i class="material-icons">{{#if count}}notifications{{else}}notifications_none{{/if}}</i>{{#if count}}<span class="notifications-count badge new">{{count}}</span>{{/if}}</a>
     <ul id="notifications-menu-{{componentId}}" class="dropdown-content">
       <li class="notifications-wrapper" {{style height}}>
-        {{> Activity.ListContentComponent args personalized=true pageSize=15}}
+        {{> Activity.ListContentComponent args personalized=true pageSize=15 notifications=true}}
       </li>
       <li class="notifications-see-all"><a href="{{pathFor 'Activity.list' query=query}}">See all</a></li>
     </ul>

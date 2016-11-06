@@ -22,11 +22,11 @@
     {{#if activities.length}}
       <div class="row">
         <div class="col s12">
-          <ul class="collection z-depth-1">
+          {{#Activity.ListContainerComponent args notifications=notifications}}
             {{#each activities}}
-              {{> Activity.ListItemComponent}}
+              {{> Activity.ListItemComponent args notifications=notifications}}
             {{/each}}
-          </ul>
+          {{/Activity.ListContainerComponent}}
         </div>
       </div>
     {{/if}}
@@ -52,26 +52,64 @@
   </div>
 </template>
 
+<template name="Activity.ListContainerComponent">
+  {{#if notifications}}
+    <div class="collection z-depth-1">
+      {{> Template.contentBlock}}
+    </div>
+  {{else}}
+    <ul class="collection z-depth-1">
+      {{> Template.contentBlock}}
+    </ul>
+  {{/if}}
+</template>
+
 <template name="Activity.ListItemComponent">
-  <li class="collection-item avatar">
-    <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{byUser.avatarUrl}}" alt="{{byUser.username}}" class="circle" /></a>
+  {{#Activity.ListItemContainerComponent args notifications=notifications}}
+    {{#if notifications}}
+      <img src="{{byUser.avatarUrl}}" alt="{{byUser.username}}" class="circle" />
+    {{else}}
+      <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{byUser.avatarUrl}}" alt="{{byUser.username}}" class="circle" /></a>
+    {{/if}}
     {{> renderActivity}}
     <p class="activity-timestamp">
       <i class="material-icons tiny vertical-middle">{{icon}}</i> <span class="timestamp" title="{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}">{{fromNow timestamp}}</span>
     </p>
-  </li>
+  {{/Activity.ListItemContainerComponent}}
+</template>
+
+<template name="Activity.ListItemContainerComponent">
+  {{#if notifications}}
+    <a href="{{link}}" class="collection-item avatar">
+      {{> Template.contentBlock}}
+    </a>
+  {{else}}
+    <li class="collection-item avatar">
+      {{> Template.contentBlock}}
+    </li>
+  {{/if}}
 </template>
 
 <template name="Activity.ListItemComponent.Author">
+  {{#if notifications}}
+    {{!-- TODO: Rewrap once whitespace control is implemented: https://github.com/meteor/blaze/issues/88 --}}
+    <span class="author">{{byUser.username}}</span>{{#if otherAuthors.length}}{{#if $eq otherAuthors.length 1}} and <span class="author">{{otherAuthors.[0].username}}</span>{{else}}{{#if $eq otherAuthors.length 2}}, <span class="author">{{otherAuthors.[0].username}}</span>, and <span class="author">{{otherAuthors.[1].username}}</span>{{else}}, <span class="author">{{otherAuthors.[0].username}}</span>, and {{others}} other users{{/if}}{{/if}}{{/if}}
+  {{else}}
+    {{!-- TODO: Rewrap once whitespace control is implemented: https://github.com/meteor/blaze/issues/88 --}}
+    <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a>{{#if otherAuthors.length}}{{#if $eq otherAuthors.length 1}} and <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>{{else}}{{#if $eq otherAuthors.length 2}}, <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>, and <a href="{{pathFor 'User.display' params=otherAuthors.[1]}}">{{otherAuthors.[1].username}}</a>{{else}}, <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>, and {{others}} other users{{/if}}{{/if}}{{/if}}
+  {{/if}}
+</template>
+
+<template name="Activity.ListItemComponent.Link">
   {{!-- TODO: Rewrap once whitespace control is implemented: https://github.com/meteor/blaze/issues/88 --}}
-  <a href="{{pathFor 'User.display' params=byUser}}">{{byUser.username}}</a>{{#if otherAuthors.length}}{{#if $eq otherAuthors.length 1}} and <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>{{else}}{{#if $eq otherAuthors.length 2}}, <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>, and <a href="{{pathFor 'User.display' params=otherAuthors.[1]}}">{{otherAuthors.[1].username}}</a>{{else}}, <a href="{{pathFor 'User.display' params=otherAuthors.[0]}}">{{otherAuthors.[0].username}}</a>, and {{others}} other users{{/if}}{{/if}}{{/if}}
+  {{#if notifications}}<span class="link">{{> Template.contentBlock}}</span>{{else}}<a href="{{link}}">{{> Template.contentBlock}}</a>{{/if}}
 </template>
 
 <template name="Activity.ListItemComponent.CommentCreated">
   <p>
     {{!-- TODO: Should we link directly to the comment (or comments)? --}}
     {{> Activity.ListItemComponent.Author}} commented on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -79,7 +117,7 @@
   <p>
     {{!-- TODO: Should we link directly to the point (or points)? --}}
     {{> Activity.ListItemComponent.Author}} made {{count (different 'data.point') 'a point' 'points'}} {{category}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -87,7 +125,7 @@
   <p>
     {{!-- TODO: Should we link directly to the motion (or motions)? --}}
     {{> Activity.ListItemComponent.Author}} made {{count (different 'data.motion') 'a motion' 'motions'}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -95,7 +133,7 @@
   <p>
     {{!-- TODO: Should we link directly to the comment (or comments)? --}}
     {{> Activity.ListItemComponent.Author}} upvoted your {{count (different 'data.comment') 'comment' 'comments'}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -103,7 +141,7 @@
   <p>
     {{!-- TODO: Should we link directly to the point (or points)? --}}
     {{> Activity.ListItemComponent.Author}} upvoted your {{count (different 'data.point') 'point' 'points'}} {{category}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -111,7 +149,7 @@
   <p>
     {{!-- TODO: Should we link directly to the motion (or motions)? --}}
     {{> Activity.ListItemComponent.Author}} upvoted your {{count (different 'data.motion') 'motion' 'motions'}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -119,7 +157,7 @@
   <p>
     {{!-- There cannot be a combined activity for discussions because previous and current document do not have the same discussion reference. --}}
     {{> Activity.ListItemComponent.Author}} started a discussion
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -127,7 +165,7 @@
   <p>
     {{!-- There cannot be a combined activity for discussions because previous and current document do not have the same discussion reference. --}}
     {{> Activity.ListItemComponent.Author}} closed a discussion
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -135,7 +173,7 @@
   <p>
     {{!-- There cannot be a combined activity for meetings because previous and current document do not have the same discussion reference. --}}
     {{> Activity.ListItemComponent.Author}} created a meeting
-    <a href="{{pathFor 'Meeting.display' params=this.data.meeting}}">{{this.data.meeting.title}}</a>{{#unless isSentence this.data.meeting.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.meeting.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.meeting.title}}.{{/unless}}
   </p>
 </template>
 
@@ -143,7 +181,7 @@
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
     {{> Activity.ListItemComponent.Author}} opened for voting {{count (different 'data.motion') 'a motion' 'motions'}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -151,7 +189,7 @@
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
     {{> Activity.ListItemComponent.Author}} opened for voting {{count (different 'data.motion') 'a competing motion' 'competing motions'}} to the one you already voted on, on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -159,7 +197,7 @@
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
     {{> Activity.ListItemComponent.Author}} closed for voting {{count (different 'data.motion') 'a motion' 'motions'}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -167,7 +205,7 @@
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
     {{> Activity.ListItemComponent.Author}} closed for voting {{count (different 'data.motion') 'a motion' 'motions'}} you voted on, on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -175,7 +213,7 @@
   <p>
     {{!-- TODO: Should we link directly to the motion? --}}
     {{> Activity.ListItemComponent.Author}} has withdrawn {{count (different 'data.motion') 'a motion' 'motions'}} on
-    <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}
+    {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}
   </p>
 </template>
 
@@ -184,6 +222,6 @@
     {{!-- TODO: Should we link directly? --}}
     {{> Activity.ListItemComponent.Author}} mentioned you
     {{!-- TODO: Rewrap once whitespace control is implemented: https://github.com/meteor/blaze/issues/88 --}}
-    {{#if this.data.comment}} in {{count (different 'data.comment') 'a comment' 'comments'}}{{else}}{{#if this.data.point}} in {{count (different 'data.comment') 'a point' 'points'}}{{else}}{{#if this.data.motion}} in {{count (different 'data.motion') 'a motion' 'motions'}}{{/if}}{{/if}}{{/if}}{{#if $or this.data.comment this.data.point this.data.motion}} on <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}{{else}}{{#if this.data.discussion}} in <a href="{{pathFor 'Discussion.display' params=this.data.discussion}}">{{this.data.discussion.title}}</a>{{#unless isSentence this.data.discussion.title}}.{{/unless}}{{else}}.{{/if}}{{/if}}
+    {{#if this.data.comment}} in {{count (different 'data.comment') 'a comment' 'comments'}}{{else}}{{#if this.data.point}} in {{count (different 'data.comment') 'a point' 'points'}}{{else}}{{#if this.data.motion}} in {{count (different 'data.motion') 'a motion' 'motions'}}{{/if}}{{/if}}{{/if}}{{#if $or this.data.comment this.data.point this.data.motion}} on {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}{{else}}{{#if this.data.discussion}} in {{#Activity.ListItemComponent.Link}}{{this.data.discussion.title}}{{/Activity.ListItemComponent.Link}}{{#unless isSentence this.data.discussion.title}}.{{/unless}}{{else}}.{{/if}}{{/if}}
   </p>
 </template>

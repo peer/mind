@@ -21,7 +21,9 @@ class Activity.ListContentComponent extends UIComponent
   @register 'Activity.ListContentComponent'
 
   constructor: (kwargs) ->
-    _.extend @, _.pick (kwargs?.hash or {}), 'personalized', 'pageSize'
+    super
+
+    _.extend @, _.pick (kwargs?.hash or {}), 'personalized', 'pageSize', 'notifications'
 
     @pageSize ||= 50
     
@@ -109,7 +111,7 @@ class Activity.ListContentComponent extends UIComponent
       # Activity.documents.find(@activityHandle.scopeQuery()).count() because we care
       # what is really displayed.
       renderedActivityCount = 0
-      for child in @childComponents Activity.ListItemComponent
+      for child in @descendantComponents Activity.ListItemComponent
         renderedActivityCount += child.data().combinedDocumentsCount ? 1
 
       pages = Math.floor(renderedActivityCount / @pageSize)
@@ -193,8 +195,21 @@ class Activity.ListContentComponent extends UIComponent
     # We are handling it.
     true
 
+class Activity.ListContainerComponent extends UIComponent
+  @register 'Activity.ListContainerComponent'
+
+  constructor: (kwargs) ->
+    super
+
+    _.extend @, _.pick (kwargs?.hash or {}), 'notifications'
+
 class Activity.ListItemComponent extends UIComponent
   @register 'Activity.ListItemComponent'
+
+  constructor: (kwargs) ->
+    super
+
+    _.extend @, _.pick (kwargs?.hash or {}), 'notifications'
 
   renderActivity: (parentComponent) ->
     parentComponent ?= @currentComponent()
@@ -204,12 +219,15 @@ class Activity.ListItemComponent extends UIComponent
 
     component = @constructor.getComponent "Activity.ListItemComponent.#{componentName}"
 
-    return null unless component
+    unless component
+      console.error "Missing a component for activity type '#{type}'."
+      return null
 
     component.renderComponent parentComponent
 
   icon: ->
-    switch @data 'type'
+    type = @data 'type'
+    switch type
       when 'commentCreated' then 'comment'
       when 'pointCreated'
         switch @data 'data.point.category'
@@ -221,6 +239,35 @@ class Activity.ListItemComponent extends UIComponent
       when 'discussionCreated', 'discussionClosed' then 'bubble_chart'
       when 'meetingCreated' then 'event'
       when 'mention' then 'person'
+      else
+        console.error "Missing an icon for activity type '#{type}'."
+        null
+
+  link: ->
+    type = @data 'type'
+    switch type
+      # TODO: Should we link directly to comments, points, motions, mentions, instead of just to a discussion?
+      when 'commentCreated', 'pointCreated', 'motionCreated', 'motionOpened', \
+        'competingMotionOpened', 'motionClosed', 'votedMotionClosed', 'motionWithdrawn', \
+        'commentUpvoted', 'pointUpvoted', 'motionUpvoted', \
+        'discussionCreated', 'discussionClosed', 'mention'
+          FlowRouter.path 'Discussion.display', @data 'data.discussion'
+      when 'meetingCreated'
+          FlowRouter.path 'Meeting.display', @data 'data.meeting'
+      else
+        console.error "Missing an icon for activity type '#{type}'."
+        null
+
+class Activity.ListItemContainerComponent extends UIComponent
+  @register 'Activity.ListItemContainerComponent'
+
+  constructor: (kwargs) ->
+    super
+
+    _.extend @, _.pick (kwargs?.hash or {}), 'notifications'
+
+  link: ->
+    @parentComponent()?.link?()
 
 class ActivityComponent extends UIComponent
   # We do not use "pluralize" but a custom method.
@@ -240,6 +287,15 @@ class ActivityComponent extends UIComponent
     _.uniq all, (doc) =>
       doc?._id
 
+  notifications: ->
+    if _.isFunction @parentComponent()?.notifications
+      @parentComponent()?.notifications()
+    else
+      @parentComponent()?.notifications
+
+  link: ->
+    @parentComponent()?.link?()
+
 class Activity.ListItemComponent.Author extends ActivityComponent
   @register 'Activity.ListItemComponent.Author'
 
@@ -253,6 +309,9 @@ class Activity.ListItemComponent.Author extends ActivityComponent
 
   others: ->
     @otherAuthors().length - 1
+
+class Activity.ListItemComponent.Link extends ActivityComponent
+  @register 'Activity.ListItemComponent.Link'
 
 class PointActivityComponent extends ActivityComponent
   category: ->
