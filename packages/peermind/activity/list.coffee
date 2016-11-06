@@ -62,7 +62,7 @@ class Activity.ListContentComponent extends UIComponent
       allCount = @activityHandle.data('count') or 0
       activityCount = Activity.documents.find(@activityHandle.scopeQuery()).count()
 
-      # Only when scrolling down and we reach scroll parent bottom we display finished message.
+      # Only when scrolling down and we reach scroll parent bottom we display finished loading feedback.
       if activityCount is allCount and @distanceToScrollParentBottom() <= 0 and @distanceToScrollParentBottom() < @distanceToScrollParentBottom.previous()
         Tracker.nonreactive =>
           @showFinished @showFinished() + 1
@@ -71,6 +71,11 @@ class Activity.ListContentComponent extends UIComponent
             @showFinished @showFinished() - 1
           ,
             3000 # ms
+
+          # We want to immediately show finished loading feedback. So we flush manually.
+          # We cannot call Tracker.flush directly from inside the autorun.
+          # TODO: There are still occasionally delays (> 1 second) between scrolling to the bottom and finished loading feedback appearing.
+          Meteor.defer Tracker.flush if @showFinished() is 1
 
   onRendered: ->
     super
@@ -110,9 +115,9 @@ class Activity.ListContentComponent extends UIComponent
         @activityLimit (pages + 2) * @pageSize
 
       # We want new limit to get into the effect as soon as possible so that we immediately show
-      # loading feedback and start getting new data. So we flush manually. Otherwise sometimes there
-      # were delays between change to activityLimit and autorun setting limit on activityHandle.
-      Tracker.flush() if oldActivityLimit isnt @activityLimit()
+      # loading feedback and start getting new data, or finished loading feedback. So we flush manually.
+      # Otherwise sometimes there were delays between change to activityLimit and autoruns running.
+      Tracker.flush() if oldActivityLimit isnt @activityLimit() or @distanceToScrollParentBottom() <= 0
     ,
       100 # ms
 
@@ -183,7 +188,7 @@ class Activity.ListContentComponent extends UIComponent
             {distanceToScrollParentBottom} = @_distanceToScrollParentBottom()
 
             # If we are scrolled to the end, then make the end scrolling location
-            # sticky and scroll as we are expanding the finished loading message.
+            # sticky and scroll as we are expanding the finished loading feedback.
             return unless distanceToScrollParentBottom? and distanceToScrollParentBottom <= 0
 
             @$scrollParent.scrollTop @$scrollParent.prop('scrollHeight') - @$scrollParent.height()
