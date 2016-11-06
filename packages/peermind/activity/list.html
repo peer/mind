@@ -44,7 +44,11 @@
       {{#if showFinished}}
         <div class="row finished-loading">
           <div class="col s12">
-            You reached the end of activities.
+            {{#if notifications}}
+              You reached the end of notifications.
+            {{else}}
+              You reached the end of activities.
+            {{/if}}
           </div>
         </div>
       {{/if}}
