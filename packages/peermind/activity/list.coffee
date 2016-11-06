@@ -86,21 +86,7 @@ class Activity.ListContentComponent extends UIComponent
       # If list is not visible, we cannot compute current height to know how much more we should load.
       return unless $listWrapper.is(':visible')
 
-      if @$scrollParent.get(0) is window
-        listWrapperTopInsideScrollParent = $listWrapper.offset().top
-      else
-        listWrapperTopInsideScrollParent = ($listWrapper.offset().top + @$scrollParent.scrollTop()) - @$scrollParent.offset().top
-
-      scrollParentHeight = @$scrollParent.height()
-      # If max-height is set on a scroll parent element, we want to expand the content all
-      # the way until scroll parent element is full of content, if it is not already.
-      # Window cannot have CSS and jQuery css method fails on it.
-      scrollParentHeight = Math.max(scrollParentHeight, parseInt(@$scrollParent.css('max-height')) or 0) if @$scrollParent.get(0) isnt window
-      bottom = @$scrollParent.scrollTop() + scrollParentHeight
-
-      contentHeight = $listWrapper.prop('scrollHeight')
-
-      distanceToScrollParentBottom = (contentHeight + listWrapperTopInsideScrollParent) - bottom
+      {distanceToScrollParentBottom, scrollParentHeight} = @_distanceToScrollParentBottom()
 
       @distanceToScrollParentBottom distanceToScrollParentBottom
 
@@ -149,6 +135,30 @@ class Activity.ListContentComponent extends UIComponent
 
     @$scrollParent.off "scroll.peermind.#{@_eventHandlerId}"
 
+  _distanceToScrollParentBottom: ->
+    $listWrapper = @$('.list-wrapper')
+
+    # If list is not visible, we cannot compute current height to know how much more we should load.
+    return {} unless $listWrapper.is(':visible')
+
+    if @$scrollParent.get(0) is window
+      listWrapperTopInsideScrollParent = $listWrapper.offset().top
+    else
+      listWrapperTopInsideScrollParent = ($listWrapper.offset().top + @$scrollParent.scrollTop()) - @$scrollParent.offset().top
+
+    scrollParentHeight = @$scrollParent.height()
+    # If max-height is set on a scroll parent element, we want to expand the content all
+    # the way until scroll parent element is full of content, if it is not already.
+    # Window cannot have CSS and jQuery css method fails on it.
+    scrollParentHeight = Math.max(scrollParentHeight, parseInt(@$scrollParent.css('max-height')) or 0) if @$scrollParent.get(0) isnt window
+    bottom = @$scrollParent.scrollTop() + scrollParentHeight
+
+    contentHeight = $listWrapper.prop('scrollHeight')
+
+    distanceToScrollParentBottom = (contentHeight + listWrapperTopInsideScrollParent) - bottom
+
+    {distanceToScrollParentBottom, scrollParentHeight}
+
   activities: ->
     Activity.combineActivities Activity.documents.find(@activityHandle.scopeQuery(),
       sort:
@@ -164,9 +174,26 @@ class Activity.ListContentComponent extends UIComponent
     $node = $(node)
     if $node.hasClass 'finished-loading'
       next()
-      $node.velocity 'fadeIn',
-        duration: 'slow'
-        queue: false
+
+      if @notifications
+        $node.velocity 'slideDown',
+          duration: 'slow'
+          queue: false
+          progress: (elements, complete, remaining, start) =>
+            {distanceToScrollParentBottom} = @_distanceToScrollParentBottom()
+
+            # If we are scrolled to the end, then make the end scrolling location
+            # sticky and scroll as we are expanding the finished loading message.
+            return unless distanceToScrollParentBottom? and distanceToScrollParentBottom <= 0
+
+            @$scrollParent.scrollTop @$scrollParent.prop('scrollHeight') - @$scrollParent.height()
+
+            return
+
+      else
+        $node.velocity 'fadeIn',
+          duration: 'slow'
+          queue: false
 
     else
       next()
@@ -183,11 +210,20 @@ class Activity.ListContentComponent extends UIComponent
     if $node.hasClass 'finished-loading'
       # We can call just "stop" because it does not matter that we have not animated insertion
       # to the end and we have no "complete" callback on insertion as well to care about.
-      $node.velocity('stop').velocity 'fadeOut',
-        duration: 'slow'
-        queue: false
-        complete: (element) =>
-          next()
+      $node.velocity('stop')
+
+      if @notifications
+        $node.velocity 'slideUp',
+          duration: 'slow'
+          queue: false
+          complete: (element) =>
+            next()
+      else
+        $node.velocity 'fadeOut',
+          duration: 'slow'
+          queue: false
+          complete: (element) =>
+            next()
 
     else
       next()

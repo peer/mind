@@ -92,6 +92,10 @@ nav .nav-wrapper
       border-bottom 1px solid $collection-border-color
       max-width 400px
       white-space normal
+      cursor auto
+
+      &:hover
+        background-color transparent
 
       .collection-item
         i.material-icons
@@ -125,6 +129,22 @@ nav .nav-wrapper
       .author
       .link
         font-weight 500
+
+      .loading
+        position static
+
+        .progress
+          margin 0
+
+      .finished-loading
+        position static
+
+        .col
+          padding 0.5rem 0
+          font-size 1rem
+          line-height 22px
+          border-top 1px solid $collection-border-color
+          color: $grey.base
 
   ul
     .signed-in-menu-item img
