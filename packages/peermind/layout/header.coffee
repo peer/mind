@@ -85,7 +85,17 @@ class NotificationsComponent extends UIComponent
 
     @countHandle = @subscribe 'Activity.unseenPersonalizedCount'
 
+    @windowWidth = new ReactiveField $(window).width()
     @windowHeight = new ReactiveField $(window).height()
+
+    @dropdownVisible = new ReactiveField false
+
+    @notificationsSeeAllHeight = new ComputedField =>
+      # Recompute height when dropdown visibility changes. .notifications-see-all's
+      # height is not available when dropdown is not visible.
+      return 0 unless @dropdownVisible()
+
+      @$('.notifications-see-all').height() or 0
 
     @count = new ComputedField =>
       return 0 unless @countHandle.ready()
@@ -115,16 +125,44 @@ class NotificationsComponent extends UIComponent
     @_eventHandlerId = Random.id()
 
     $(window).on "resize.peermind.#{@_eventHandlerId}", (event) =>
+      @windowWidth $(window).width()
       @windowHeight $(window).height()
+
+    # When dropdown is visible on a small screen (one tab) we cover with notifications the whole
+    # screen. Because of that we want dropdown to behave like a modal, so we disable scrolling on body.
+    @autorun (computation) =>
+      $body = $('body')
+
+      # TODO: Use $small-screen here.
+      if @windowWidth() <= 600 and @dropdownVisible()
+        $body.css
+          overflow: 'hidden'
+          width: $body.innerWidth()
+      else
+        # To not interfere with potentially opened sidenav overlay.
+        # This can happen if user switches to sidenav directly from notifications.
+        unless $('#sidenav-overlay').length
+          $body.css
+            overflow: ''
+            width: ''
 
   onDestroyed: ->
     super
 
     $(window).off "resize.peermind.#{@_eventHandlerId}"
 
+    # To not interfere with potentially opened sidenav overlay.
+    # This can happen if user switches to sidenav directly from notifications.
+    unless $('#sidenav-overlay').length
+      $('body').css
+        overflow: ''
+        width: ''
+
   events: ->
     super.concat
       'dropdown:open': (event) ->
+        @dropdownVisible true
+
         for component in @childComponents(Activity.ListContentComponent)
           component.handleScrolling?()
 
@@ -138,6 +176,8 @@ class NotificationsComponent extends UIComponent
           top: ''
           left: ''
 
+        @dropdownVisible false
+
   height: ->
     $notificationsMenuActivator = @$('[data-activates="notifications-menu-' + @componentId + '"]')
     $seeAll = @$('.notifications-see-all')
@@ -147,8 +187,13 @@ class NotificationsComponent extends UIComponent
 
     offsetTop = $notificationsMenuActivator.offset().top - $(window).scrollTop() + $notificationsMenuActivator.height()
 
-    # Leave some space at the bottom of the window.
-    maxHeight: @windowHeight() - offsetTop - 110
+    # TODO: Use $small-screen here.
+    if @windowWidth() <= 600
+      # On small screens (one tab) we cover with notifications the whole screen.
+      maxHeight: @windowHeight() - offsetTop - @notificationsSeeAllHeight()
+    else
+      # Leave some space at the bottom of the window.
+      maxHeight: @windowHeight() - offsetTop - @notificationsSeeAllHeight() - 75
 
   # TODO: It should not be needed after: https://github.com/meteor/blaze/issues/5
   query: ->
