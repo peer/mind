@@ -41,7 +41,7 @@ Package.onUse(function (api) {
     'velocityjs:velocityjs@1.2.1',
     'mfpierre:chartist-js@1.6.2',
     'cunneen:accounts-admin-materializecss@0.3.0',
-    'peerlibrary:blaze-layout-component@0.1.1',
+    'peerlibrary:blaze-layout-component@0.2.0',
     'momentjs:moment@2.15.0',
     'mizzao:jquery-ui@1.11.4',
     'fourseven:scss@3.9.0',
