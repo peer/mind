@@ -121,6 +121,7 @@ Package.onUse(function (api) {
     'migrations/0026-discussion-followers.coffee',
     'migrations/0027-discussion-followerscount.coffee',
     'migrations/0028-activity-forusers.coffee',
-    'migrations/0029-activity.coffee'
+    'migrations/0029-activity.coffee',
+    'migrations/0030-user-lastseenpersonalizedactivity.coffee'
   ], 'server');
 });

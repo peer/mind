@@ -261,9 +261,11 @@ class User extends share.BaseDocument
       _id: 1
       avatar: 1
       'services.sandstorm.permissions': 1
+      lastSeenPersonalizedActivity: 1
     else
       _id: 1
       avatar: 1
+      lastSeenPersonalizedActivity: 1
 
   @PERMISSIONS:
     # We use upper case even for strings because we are using upper case for permissions and lower case for roles.

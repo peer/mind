@@ -49,7 +49,8 @@ Package.onUse(function (api) {
     'discussion/methods.coffee',
     'comment/methods.coffee',
     'point/methods.coffee',
-    'motion/methods.coffee'
+    'motion/methods.coffee',
+    'activity/methods.coffee'
   ]);
 
   api.addFiles([

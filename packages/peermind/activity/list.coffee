@@ -255,6 +255,32 @@ class Activity.ListItemComponent extends UIComponent
 
     _.extend @, _.pick (kwargs?.hash or {}), 'notifications'
 
+  onRendered: ->
+    super
+
+    component = @ancestorComponent Activity.ListContentComponent
+
+    return unless component.personalized
+
+    @autorun (computation) =>
+      # It should not really be possible for personalized activity.
+      return unless @currentUserId()
+
+      isSeen = @callFirstWith null, 'isSeen'
+      return unless isSeen
+      computation.stop()
+
+      lastSeenPersonalizedActivity = @currentUser(lastSeenPersonalizedActivity: 1).lastSeenPersonalizedActivity?.valueOf() or 0
+
+      activity = @data('timestamp').valueOf()
+
+      return unless lastSeenPersonalizedActivity < activity
+
+      Meteor.call 'Activity.seenPersonalized', @data()._id, (error, result) =>
+        if error
+          console.error "Activity seen personalized error", error
+          return
+
   # Used by IsSeenMixin.
   isVisible: ->
     component = @ancestorComponent('NotificationsComponent')
