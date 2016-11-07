@@ -37,14 +37,15 @@ class ColumnsLayoutComponent extends BlazeLayoutComponent
 
     @_eventHandlerId = Random.id()
 
-    $(window).on "resize.columns-#{@_eventHandlerId}", (event) =>
+    $(window).on("resize.peermind.#{@_eventHandlerId}", (event) =>
       @windowWidth $(window).width()
       @directionClass null
+    )
 
   onDestroyed: ->
     super
 
-    $(window).off "resize.columns-#{@_eventHandlerId}"
+    $(window).off("resize.peermind.#{@_eventHandlerId}")
 
   tabs: ->
     @constructor.REGIONS_ORDER

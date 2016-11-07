@@ -121,7 +121,7 @@ class Activity.ListContentComponent extends UIComponent
     ,
       100 # ms
 
-    @$scrollParent.on "scroll.peermind.#{@_eventHandlerId}", @handleScrolling
+    @$scrollParent.on("scroll.peermind.#{@_eventHandlerId}", @handleScrolling)
 
     @autorun (computation) =>
       return unless @activityHandle.ready()
@@ -138,7 +138,7 @@ class Activity.ListContentComponent extends UIComponent
   onDestroyed: ->
     super
 
-    @$scrollParent.off "scroll.peermind.#{@_eventHandlerId}"
+    @$scrollParent.off("scroll.peermind.#{@_eventHandlerId}")
 
   _distanceToScrollParentBottom: ->
     $listWrapper = @$('.list-wrapper')

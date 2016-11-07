@@ -63,7 +63,7 @@ class Discussion.FollowingDropdown extends UIComponent
 
     @_eventHandlerId = Random.id()
 
-    $(document).on "click.peermind.#{@_eventHandlerId}", (event) =>
+    $(document).on("click.peermind.#{@_eventHandlerId}", (event) =>
       return unless @isRendered() and @dialogOpened()
 
       dropdown = @$('.dropdown-content').get(0)
@@ -73,11 +73,12 @@ class Discussion.FollowingDropdown extends UIComponent
       return if dropdown is event.target or $.contains(dropdown, event.target)
 
       @dialogOpened false
+    )
 
   onDestroyed: ->
     super
 
-    $(document).off "click.peermind.#{@_eventHandlerId}"
+    $(document).off("click.peermind.#{@_eventHandlerId}")
 
   discussion: ->
     @callAncestorWith 'discussion'

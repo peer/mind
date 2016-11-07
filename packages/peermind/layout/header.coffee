@@ -17,9 +17,10 @@ class HeaderComponent extends UIComponent
 
     # If side out menu is opened and window gets resized so that the responsive
     # design switches to large design, close the side out menu.
-    $(window).on "resize.peermind.#{@_eventHandlerId}", (event) =>
+    $(window).on("resize.peermind.#{@_eventHandlerId}", (event) =>
       # TODO: Use $medium-screen-up here. Check that it is "screen" as well?
       @largeScreen $(window).width() >= 993
+    )
 
     @autorun (computation) =>
       @$('.button-collapse').sideNav('hide') if @largeScreen()
@@ -31,7 +32,7 @@ class HeaderComponent extends UIComponent
     # otherwise they are piling up every time header is rendered.
     $('body > .drag-target').remove()
 
-    $(window).off "resize.peermind.#{@_eventHandlerId}"
+    $(window).off("resize.peermind.#{@_eventHandlerId}")
 
   events: ->
     super.concat
@@ -124,9 +125,10 @@ class NotificationsComponent extends UIComponent
 
     @_eventHandlerId = Random.id()
 
-    $(window).on "resize.peermind.#{@_eventHandlerId}", (event) =>
+    $(window).on("resize.peermind.#{@_eventHandlerId}", (event) =>
       @windowWidth $(window).width()
       @windowHeight $(window).height()
+    )
 
     # When dropdown is visible on a small screen (one tab) we cover with notifications the whole
     # screen. Because of that we want dropdown to behave like a modal, so we disable scrolling on body.
