@@ -98,6 +98,7 @@ Package.onUse(function (api) {
     'base/editor.html',
     'base/editor.coffee',
     'base/editor.styl',
+    'base/isseen.coffee',
     'account/settings.html',
     'account/settings.coffee',
     'account/settings.styl',
