@@ -42,6 +42,7 @@ Package.onUse(function (api) {
     'connections.coffee',
     'accounts.coffee',
     'upvoting.coffee',
-    'discussions.coffee'
+    'discussions.coffee',
+    'activity.coffee'
   ], 'server');
 });

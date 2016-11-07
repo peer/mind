@@ -115,3 +115,17 @@ Meteor.methods
       level: Activity.LEVEL.DEBUG
       data:
         focused: focused
+
+  'Activity.notifications': ->
+    if @userId
+      user =
+        _id: @userId
+    else
+      user = null
+
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      byUser: user
+      type: 'notifications'
+      level: Activity.LEVEL.DEBUG

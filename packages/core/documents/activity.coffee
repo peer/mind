@@ -27,6 +27,7 @@ class Activity extends share.BaseDocument
         point: @ReferenceField Point, ['category'], false
         meeting: @ReferenceField Meeting, ['title'], false
         discussion: @ReferenceField Discussion, ['title'], false
+        activity: @ReferenceField 'self', [], false
 
   @LEVEL:
     DEBUG: 'debug'
