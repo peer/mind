@@ -165,6 +165,23 @@ class NotificationsComponent extends UIComponent
             overflow: ''
             width: ''
 
+    @autorun (computation) =>
+      # Register dependencies on the window size.
+      @windowWidth()
+      @windowHeight()
+
+      Tracker.nonreactive =>
+        return if @dropdownVisible()
+
+        # We remove top and level CSS which were added by dropdown code so that the hidden content is moved back
+        # to left. This is needed because when window is resized with hidden content being more to the right, then
+        # the content gets squeezed once it hits the right window edge when resizing and then next time the
+        # dropdown is displayed it does not have  the correct position, because its width was not correctly measured.
+        # This is a similar reason to why we have left set to 0 on .dropdown-content to begin with.
+        @$('.notifications-menu-item .dropdown-content').css
+          top: ''
+          left: ''
+
   onDestroyed: ->
     super
 
@@ -186,15 +203,6 @@ class NotificationsComponent extends UIComponent
           component.handleScrolling?()
 
       'dropdown:close': (event) ->
-        # We remove top and level CSS which were added by dropdown code so that the hidden content is moved back
-        # to left. This is needed because if window is resized with hidden content being more to the right, then
-        # the content gets squeezed once it hits the right window edge when resizing and then next time the
-        # dropdown is displayed it does not have  the correct position, because its width was not correctly measured.
-        # This is a similar reason to why we have left set to 0 on .dropdown-content to begin with.
-        @$('.notifications-menu-item .dropdown-content').css
-          top: ''
-          left: ''
-
         @dropdownVisible false
 
   height: ->
