@@ -247,10 +247,20 @@ class Activity.ListContainerComponent extends UIComponent
 class Activity.ListItemComponent extends UIComponent
   @register 'Activity.ListItemComponent'
 
+  mixins: ->
+    super.concat share.IsSeenMixin
+
   constructor: (kwargs) ->
     super
 
     _.extend @, _.pick (kwargs?.hash or {}), 'notifications'
+
+  # Used by IsSeenMixin.
+  isVisible: ->
+    component = @ancestorComponent('NotificationsComponent')
+    return true unless component
+
+    component.dropdownVisible()
 
   renderActivity: (parentComponent) ->
     parentComponent ?= @currentComponent()

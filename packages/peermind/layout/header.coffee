@@ -92,11 +92,28 @@ class NotificationsComponent extends UIComponent
     @dropdownVisible = new ReactiveField false
 
     @notificationsSeeAllHeight = new ComputedField =>
-      # Recompute height when dropdown visibility changes. .notifications-see-all's
-      # height is not available when dropdown is not visible.
-      return 0 unless @dropdownVisible()
+      return 0 unless @isRendered()
 
-      @$('.notifications-see-all').height() or 0
+      $notificationsSeeAll = @$('.notifications-see-all')
+
+      return $notificationsSeeAll.height() if $notificationsSeeAll.is(':visible')
+
+      # If dropdown is not visible, we temporary show it, with visibility hidden,
+      # so that we can measure height, and then hide it again.
+
+      $dropdown = @$('.notifications-menu-item .dropdown-content')
+
+      $dropdown.css
+        visibility: 'hidden'
+        display: 'block'
+
+      height = $notificationsSeeAll.height()
+
+      $dropdown.css
+        visibility: ''
+        display: ''
+
+      height
 
     @count = new ComputedField =>
       return 0 unless @countHandle.ready()
