@@ -410,3 +410,24 @@ Meteor.methods
           user:
             _id: userId
           reason: reason
+
+  'Discussion.seen': (discussionId) ->
+    check discussionId, Match.DocumentId
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    createdAt = Discussion.documents.findOne(discussionId)?.createdAt
+    throw new Meteor.Error 'not-found', "Discussion '#{discussionId}' cannot be found." unless createdAt
+
+    User.documents.update
+      _id: userId
+      $or: [
+        lastSeenDiscussion:
+          $lt: createdAt
+      ,
+        lastSeenDiscussion: null
+      ]
+    ,
+      $set:
+        lastSeenDiscussion: createdAt

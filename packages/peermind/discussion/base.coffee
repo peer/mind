@@ -1,7 +1,7 @@
 # Abstract class.
 class Discussion.OneComponent extends UIComponent
   mixins: ->
-    super.concat share.ExpandableMixin, share.EditableMixin
+    super.concat share.ExpandableMixin, share.EditableMixin, share.IsSeenMixin
 
   onCreated: ->
     super
@@ -37,6 +37,35 @@ class Discussion.OneComponent extends UIComponent
 
     @canEditClosed = new ComputedField =>
       @discussion() and not @discussion().isOpen() and @discussion().isClosed() and User.hasPermission(User.PERMISSIONS.DISCUSSION_CLOSE)
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      return unless @currentUserId()
+
+      return unless @subscriptionsReady()
+
+      return unless @discussion()
+
+      isSeen = @callFirstWith null, 'isSeen'
+      return unless isSeen
+      computation.stop()
+
+      lastSeenDiscussion = @currentUser(lastSeenDiscussion: 1).lastSeenDiscussion?.valueOf() or 0
+
+      discussionCreatedAt = @discussion().createdAt.valueOf()
+
+      return unless lastSeenDiscussion < discussionCreatedAt
+
+      Meteor.call 'Discussion.seen', @currentDiscussionId(), (error, result) =>
+        if error
+          console.error "Discussion seen error", error
+          return
+
+  # Used by IsSeenMixin.
+  isVisible: ->
+    true
 
   discussion: ->
     Discussion.documents.findOne @currentDiscussionId()

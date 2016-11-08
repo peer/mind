@@ -105,6 +105,34 @@ class Discussion.ListContentComponent extends UIComponent
 class Discussion.ListItemComponent extends UIComponent
   @register 'Discussion.ListItemComponent'
 
+  mixins: ->
+    super.concat share.IsSeenMixin
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      return unless @currentUserId()
+
+      isSeen = @callFirstWith null, 'isSeen'
+      return unless isSeen
+      computation.stop()
+
+      lastSeenDiscussion = @currentUser(lastSeenDiscussion: 1).lastSeenDiscussion?.valueOf() or 0
+
+      discussionCreatedAt = @data('createdAt').valueOf()
+
+      return unless lastSeenDiscussion < discussionCreatedAt
+
+      Meteor.call 'Discussion.seen', @data()._id, (error, result) =>
+        if error
+          console.error "Discussion seen error", error
+          return
+
+  # Used by IsSeenMixin.
+  isVisible: ->
+    true
+
   displayStatus: ->
     data = @data()
     if data?.status is Discussion.STATUS.DRAFT

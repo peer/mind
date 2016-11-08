@@ -60,7 +60,7 @@ livedata@1.0.18
 loading@0.1.0
 localstorage@1.0.11
 logging@1.1.15_1
-materialize:materialize@0.97.7
+materialize:materialize@0.97.8
 meteor@1.2.17_1
 meteor-base@1.0.4
 mfpierre:chartist-js@1.6.2

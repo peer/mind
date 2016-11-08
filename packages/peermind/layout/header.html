@@ -64,7 +64,7 @@
 </template>
 
 <template name="NavItemsComponent">
-  <li><a href="{{pathFor 'Discussion.list'}}">Discussions</a></li>
+  <li><a href="{{pathFor 'Discussion.list'}}">Discussions{{#if discussionCount}} <span class="new badge">{{discussionCount}}</span>{{/if}}</a></li>
   <li><a href="{{pathFor 'Meeting.list'}}">Meetings</a></li>
 </template>
 

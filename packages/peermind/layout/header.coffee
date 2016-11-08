@@ -7,6 +7,13 @@ class HeaderComponent extends UIComponent
     # TODO: Use $medium-screen-up here. Check that it is "screen" as well?
     @largeScreen = new ReactiveField $(window).width() >= 993
 
+    @discussionCountHandle = @subscribe 'Discussion.unseenCount'
+
+    @discussionCount = new ComputedField =>
+      return 0 unless @discussionCountHandle.ready()
+
+      @discussionCountHandle.data('count') or 0
+
   onRendered: ->
     super
 
