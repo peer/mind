@@ -42,8 +42,6 @@ new PublishEndpoint 'Activity.list', (personalized, initialLimit) ->
         timestamp: -1
 
 new PublishEndpoint 'Activity.unseenPersonalizedCount', ->
-  @enableScope()
-
   userId = Meteor.userId()
 
   return [] unless userId
