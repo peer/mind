@@ -272,9 +272,9 @@ class Activity.ListItemComponent extends UIComponent
 
       lastSeenPersonalizedActivity = @currentUser(lastSeenPersonalizedActivity: 1).lastSeenPersonalizedActivity?.valueOf() or 0
 
-      activity = @data('timestamp').valueOf()
+      activityTimestamp = @data('timestamp').valueOf()
 
-      return unless lastSeenPersonalizedActivity < activity
+      return unless lastSeenPersonalizedActivity < activityTimestamp
 
       Meteor.call 'Activity.seenPersonalized', @data()._id, (error, result) =>
         if error
