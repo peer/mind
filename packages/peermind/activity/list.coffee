@@ -30,6 +30,8 @@ class Activity.ListContentComponent extends UIComponent
   onCreated: ->
     super
 
+    @_eventHandlerId = Random.id()
+
     @activityLimit = new ReactiveField @pageSize
     @showLoading = new ReactiveField 0
     @showFinished = new ReactiveField 0
@@ -79,8 +81,6 @@ class Activity.ListContentComponent extends UIComponent
 
   onRendered: ->
     super
-
-    @_eventHandlerId = Random.id()
 
     $listWrapper = @$('.list-wrapper')
     @$scrollParent = $listWrapper.scrollParent()
@@ -138,7 +138,7 @@ class Activity.ListContentComponent extends UIComponent
   onDestroyed: ->
     super
 
-    @$scrollParent.off("scroll.peermind.#{@_eventHandlerId}")
+    @$scrollParent?.off("scroll.peermind.#{@_eventHandlerId}")
 
   _distanceToScrollParentBottom: ->
     $listWrapper = @$('.list-wrapper')

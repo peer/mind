@@ -59,9 +59,9 @@ class Discussion.FollowingDropdown extends UIComponent
   onCreated: ->
     super
 
-    @dialogOpened = new ReactiveField false
-
     @_eventHandlerId = Random.id()
+
+    @dialogOpened = new ReactiveField false
 
     $(document).on("click.peermind.#{@_eventHandlerId}", (event) =>
       return unless @isRendered() and @dialogOpened()

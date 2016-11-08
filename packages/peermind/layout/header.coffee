@@ -85,6 +85,8 @@ class NotificationsComponent extends UIComponent
     @componentId = Random.id()
 
     @countHandle = @subscribe 'Activity.unseenPersonalizedCount'
+    @_eventHandlerId = Random.id()
+
 
     @windowWidth = new ReactiveField $(window).width()
     @windowHeight = new ReactiveField $(window).height()
@@ -139,8 +141,6 @@ class NotificationsComponent extends UIComponent
         belowOrigin: true
         alignment: 'right'
         constrain_width: false
-
-    @_eventHandlerId = Random.id()
 
     $(window).on("resize.peermind.#{@_eventHandlerId}", (event) =>
       @windowWidth $(window).width()

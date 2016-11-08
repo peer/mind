@@ -27,6 +27,8 @@ class ColumnsLayoutComponent extends BlazeLayoutComponent
   onCreated: ->
     super
 
+    @_eventHandlerId = Random.id()
+
     # TODO: We should expose active tab(s) in the current URL as well.
     @activeTab = new ReactiveField @constructor.REGIONS.MAIN
     @previousActiveTab = new ReactiveField @constructor.REGIONS.FIRST
@@ -34,8 +36,6 @@ class ColumnsLayoutComponent extends BlazeLayoutComponent
     @directionClass = new ReactiveField null
 
     @windowWidth = new ReactiveField $(window).width()
-
-    @_eventHandlerId = Random.id()
 
     $(window).on("resize.peermind.#{@_eventHandlerId}", (event) =>
       @windowWidth $(window).width()

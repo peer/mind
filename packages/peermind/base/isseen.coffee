@@ -26,12 +26,12 @@ class share.IsSeenMixin extends UIMixin
   onCreated: ->
     super
 
+    @_eventHandlerId = Random.id()
+
     @isSeen = new ReactiveField null
 
   onRendered: ->
     super
-
-    @_eventHandlerId = Random.id()
 
     firstNode = @firstNode()
     lastNode = @lastNode()
@@ -152,4 +152,4 @@ class share.IsSeenMixin extends UIMixin
     $window.off("scroll.peermind.#{@_eventHandlerId}")
 
     # @$scrollParent might be window but we do not care.
-    @$scrollParent.off("scroll.peermind.#{@_eventHandlerId}")
+    @$scrollParent?.off("scroll.peermind.#{@_eventHandlerId}")
