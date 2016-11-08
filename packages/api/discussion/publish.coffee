@@ -25,6 +25,8 @@ new PublishEndpoint 'Discussion.unseenCount', ->
     lastSeenDiscussion.stop()
 
   @autorun (computation) =>
+    # TODO: Limit only to those which are displayed when clicking "discussions" in the menu.
+    #       I.e., only non-closed discussions.
     query =
       'author._id':
         $ne: userId
