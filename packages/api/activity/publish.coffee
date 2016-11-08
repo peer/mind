@@ -76,20 +76,3 @@ new PublishEndpoint 'Activity.unseenPersonalizedCount', ->
     @setData 'count', Math.min activities.length, 999
 
   @ready()
-
-new PublishEndpoint 'Activity.discussion', (discussionId) ->
-  check discussionId, Match.DocumentId
-
-  Activity.documents.find
-    'data.discussion._id': discussionId
-    type:
-      $in: [
-        'discussionCreated'
-        'discussionClosed'
-        'motionCreated'
-        'motionOpened'
-        'motionClosed'
-        'motionWithdrawn'
-      ]
-  ,
-    fields: Activity.PUBLISH_FIELDS()
