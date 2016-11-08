@@ -84,9 +84,9 @@ class NotificationsComponent extends UIComponent
 
     @componentId = Random.id()
 
-    @countHandle = @subscribe 'Activity.unseenPersonalizedCount'
     @_eventHandlerId = Random.id()
 
+    @activityCountHandle = @subscribe 'Activity.unseenPersonalizedCount'
 
     @windowWidth = new ReactiveField $(window).width()
     @windowHeight = new ReactiveField $(window).height()
@@ -117,10 +117,10 @@ class NotificationsComponent extends UIComponent
 
       height
 
-    @count = new ComputedField =>
-      return 0 unless @countHandle.ready()
+    @activityCount = new ComputedField =>
+      return 0 unless @activityCountHandle.ready()
 
-      @countHandle.data('count') or 0
+      @activityCountHandle.data('count') or 0
 
   onRendered: ->
     super

@@ -79,7 +79,7 @@
 
 <template name="NotificationsComponent">
   <li class="notifications-menu-item">
-    <a href="" data-activates="notifications-menu-{{componentId}}" class="notifications-menu-button"><i class="material-icons">{{#if count}}notifications{{else}}notifications_none{{/if}}</i>{{#if count}}<span class="notifications-count badge new">{{count}}</span>{{/if}}</a>
+    <a href="" data-activates="notifications-menu-{{componentId}}" class="notifications-menu-button"><i class="material-icons">{{#if activityCount}}notifications{{else}}notifications_none{{/if}}</i>{{#if activityCount}}<span class="notifications-count badge new">{{activityCount}}</span>{{/if}}</a>
     <ul id="notifications-menu-{{componentId}}" class="dropdown-content">
       <li class="notifications-wrapper" {{style height}}>
         {{> Activity.ListContentComponent args personalized=true pageSize=15 notifications=true}}
