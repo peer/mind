@@ -203,6 +203,7 @@ class User extends share.BaseDocument
   #     avatar
   #   profile
   # lastSeenPersonalizedActivity: timestamp of the last seen personalized activity
+  # lastSeenDiscussion: timestamp of the last seen discussion
 
   # We have it before @Meta because we are referencing it inside @Meta.
   @REFERENCE_FIELDS: ->
