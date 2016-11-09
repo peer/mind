@@ -88,7 +88,7 @@ observe-sequence@1.0.14
 ordered-dict@1.0.9
 peerlibrary:assert@0.2.5
 peerlibrary:base-component@0.16.0
-peerlibrary:blaze-common-component@0.4.0
+peerlibrary:blaze-common-component@0.4.1
 peerlibrary:blaze-components@0.20.0
 peerlibrary:blaze-layout-component@0.2.0
 peerlibrary:blocking@0.5.2
