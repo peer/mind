@@ -39,10 +39,10 @@ Package.onUse(function (api) {
 
   api.addFiles([
     'api.coffee',
-    'connections.coffee',
-    'accounts.coffee',
+    'connection.coffee',
+    'account.coffee',
     'upvoting.coffee',
-    'discussions.coffee',
+    'discussion.coffee',
     'activity.coffee'
   ], 'server');
 });
