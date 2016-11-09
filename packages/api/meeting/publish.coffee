@@ -16,3 +16,32 @@ new PublishEndpoint 'Meeting.discussion', (meetingId) ->
   ,
     fields:
       Discussion.PUBLISH_FIELDS()
+
+new PublishEndpoint 'Meeting.unseenCount', ->
+  userId = Meteor.userId()
+
+  return [] unless userId
+
+  lastSeenMeeting = new ComputedField =>
+    User.documents.findOne(userId,
+      fields:
+        lastSeenMeeting: 1
+    )?.lastSeenMeeting or null
+  ,
+    true
+
+  @onStop =>
+    lastSeenMeeting.stop()
+
+  @autorun (computation) =>
+    query =
+      'author._id':
+        $ne: userId
+    if lastSeenMeeting()
+      _.extend query,
+        createdAt:
+          $gt: lastSeenMeeting()
+
+    @setData 'count', Math.min Meeting.documents.find(query).count(), 999
+
+  @ready()

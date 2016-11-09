@@ -348,3 +348,24 @@ Meteor.methods
           updatedAt: updatedAt
           author: user.getReference()
           discussions: discussions
+
+  'Meeting.seen': (meetingId) ->
+    check meetingId, Match.DocumentId
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    createdAt = Meeting.documents.findOne(meetingId)?.createdAt
+    throw new Meteor.Error 'not-found', "Meeting '#{meetingId}' cannot be found." unless createdAt
+
+    User.documents.update
+      _id: userId
+      $or: [
+        lastSeenMeeting:
+          $lt: createdAt
+      ,
+        lastSeenMeeting: null
+      ]
+    ,
+      $set:
+        lastSeenMeeting: createdAt

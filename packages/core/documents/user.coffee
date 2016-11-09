@@ -204,6 +204,7 @@ class User extends share.BaseDocument
   #   profile
   # lastSeenPersonalizedActivity: timestamp of the last seen personalized activity
   # lastSeenDiscussion: timestamp of the last seen discussion
+  # lastSeenMeeting: timestamp of the last seen meeting
 
   # We have it before @Meta because we are referencing it inside @Meta.
   @REFERENCE_FIELDS: ->

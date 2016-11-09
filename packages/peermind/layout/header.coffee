@@ -8,6 +8,7 @@ class HeaderComponent extends UIComponent
     @largeScreen = new ReactiveField $(window).width() >= 993
 
     @discussionCountHandle = new ReactiveField null
+    @meetingCountHandle = new ReactiveField null
 
     @autorun (computation) =>
       unless @currentUserId()
@@ -20,6 +21,18 @@ class HeaderComponent extends UIComponent
       return 0 unless @discussionCountHandle()?.ready()
 
       @discussionCountHandle().data('count') or 0
+
+    @autorun (computation) =>
+      unless @currentUserId()
+        @meetingCountHandle null
+        return
+
+      @meetingCountHandle @subscribe 'Meeting.unseenCount'
+
+    @meetingCount = new ComputedField =>
+      return 0 unless @meetingCountHandle()?.ready()
+
+      @meetingCountHandle().data('count') or 0
 
   onRendered: ->
     super

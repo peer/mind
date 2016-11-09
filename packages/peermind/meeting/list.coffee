@@ -37,6 +37,34 @@ class Meeting.ListComponent extends UIComponent
 class Meeting.ListItemComponent extends UIComponent
   @register 'Meeting.ListItemComponent'
 
+  mixins: ->
+    super.concat share.IsSeenMixin
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      return unless @currentUserId()
+
+      isSeen = @callFirstWith null, 'isSeen'
+      return unless isSeen
+      computation.stop()
+
+      lastSeenMeeting = @currentUser(lastSeenMeeting: 1).lastSeenMeeting?.valueOf() or 0
+
+      meetingCreatedAt = @data('createdAt').valueOf()
+
+      return unless lastSeenMeeting < meetingCreatedAt
+
+      Meteor.call 'Meeting.seen', @data()._id, (error, result) =>
+        if error
+          console.error "Meeting seen error", error
+          return
+
+  # Used by IsSeenMixin.
+  isVisible: ->
+    true
+
 class Meeting.ListComponent.FixedButton extends UIComponent
   @register 'Meeting.ListComponent.FixedButton'
 

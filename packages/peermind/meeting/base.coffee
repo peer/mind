@@ -1,5 +1,8 @@
 # Abstract class.
 class Meeting.OneComponent extends UIComponent
+  mixins: ->
+    super.concat share.IsSeenMixin
+
   onCreated: ->
     super
 
@@ -24,6 +27,35 @@ class Meeting.OneComponent extends UIComponent
 
     @canEdit = new ComputedField =>
       @meeting() and (User.hasPermission(User.PERMISSIONS.MEETING_UPDATE) or (User.hasPermission(User.PERMISSIONS.MEETING_UPDATE_OWN) and (Meteor.userId() is @meeting().author._id)))
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      return unless @currentUserId()
+
+      return unless @subscriptionsReady()
+
+      return unless @meeting()
+
+      isSeen = @callFirstWith null, 'isSeen'
+      return unless isSeen
+      computation.stop()
+
+      lastSeenMeeting = @currentUser(lastSeenMeeting: 1).lastSeenMeeting?.valueOf() or 0
+
+      meetingCreatedAt = @meeting().createdAt.valueOf()
+
+      return unless lastSeenMeeting < meetingCreatedAt
+
+      Meteor.call 'Meeting.seen', @currentMeetingId(), (error, result) =>
+        if error
+          console.error "Meeting seen error", error
+          return
+
+  # Used by IsSeenMixin.
+  isVisible: ->
+    true
 
   meeting: ->
     Meeting.documents.findOne @currentMeetingId()
