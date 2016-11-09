@@ -7,12 +7,19 @@ class HeaderComponent extends UIComponent
     # TODO: Use $medium-screen-up here. Check that it is "screen" as well?
     @largeScreen = new ReactiveField $(window).width() >= 993
 
-    @discussionCountHandle = @subscribe 'Discussion.unseenCount'
+    @discussionCountHandle = new ReactiveField null
+
+    @autorun (computation) =>
+      unless @currentUserId()
+        @discussionCountHandle null
+        return
+
+      @discussionCountHandle @subscribe 'Discussion.unseenCount'
 
     @discussionCount = new ComputedField =>
-      return 0 unless @discussionCountHandle.ready()
+      return 0 unless @discussionCountHandle()?.ready()
 
-      @discussionCountHandle.data('count') or 0
+      @discussionCountHandle().data('count') or 0
 
   onRendered: ->
     super
@@ -93,6 +100,7 @@ class NotificationsComponent extends UIComponent
 
     @_eventHandlerId = Random.id()
 
+    # This component is rendered only when signed in, so we subscribe only when signed in.
     @activityCountHandle = @subscribe 'Activity.unseenPersonalizedCount'
 
     @windowWidth = new ReactiveField $(window).width()
