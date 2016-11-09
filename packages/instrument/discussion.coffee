@@ -34,7 +34,7 @@ MethodHooks.after 'Discussion.seen', (options) ->
       type: 'discussionSeen'
       level: Activity.LEVEL.DEBUG
       data:
-        activity:
+        discussion:
           _id: options.arguments[0]
 
   options.result
