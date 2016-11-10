@@ -241,12 +241,7 @@ class Motion.WithdrawComponent extends UIComponent
   onRendered: ->
     super
 
-    @autorun (computation) =>
-      $modalTrigger = @ancestorComponent(Motion.ListItemComponent).$(".modal-trigger[data-target='motion-withdraw-dialog-#{@data()._id}']")
-      return unless $modalTrigger
-      computation.stop()
-
-      $modalTrigger.leanModal()
+    @$('.modal').modal()
 
   events: ->
     super.concat
@@ -269,12 +264,7 @@ class Motion.OpenVotingComponent extends UIComponent
   onRendered: ->
     super
 
-    @autorun (computation) =>
-      $modalTrigger = @ancestorComponent(Motion.ListItemComponent).$(".modal-trigger[data-target='open-voting-dialog-#{@data()._id}']")
-      return unless $modalTrigger
-      computation.stop()
-
-      $modalTrigger.leanModal()
+    @$('.modal').modal()
 
   events: ->
     super.concat
@@ -306,12 +296,7 @@ class Motion.CloseVotingComponent extends UIComponent
   onRendered: ->
     super
 
-    @autorun (computation) =>
-      $modalTrigger = @ancestorComponent(Motion.ListItemComponent).$(".modal-trigger[data-target='close-voting-dialog-#{@data()._id}']")
-      return unless $modalTrigger
-      computation.stop()
-
-      $modalTrigger.leanModal()
+    @$('.modal').modal()
 
   events: ->
     super.concat

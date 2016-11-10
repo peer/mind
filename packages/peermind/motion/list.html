@@ -87,15 +87,15 @@
         <div class="card-action">
           <div class="buttons">
             {{#if canOpen}}
-              <button class="waves-effect waves-light btn-flat modal-trigger" type="button" data-target="open-voting-dialog-{{_id}}"><i class="material-icons left">play_arrow</i>Open voting</button>
+              <button class="waves-effect waves-light btn-flat" type="button" data-target="open-voting-dialog-{{_id}}"><i class="material-icons left">play_arrow</i>Open voting</button>
               {{> Motion.OpenVotingComponent}}
             {{/if}}
             {{#if canClose}}
-              <button class="waves-effect waves-light btn-flat modal-trigger" type="button" data-target="close-voting-dialog-{{_id}}"><i class="material-icons left">stop</i>Close voting</button>
+              <button class="waves-effect waves-light btn-flat" type="button" data-target="close-voting-dialog-{{_id}}"><i class="material-icons left">stop</i>Close voting</button>
               {{> Motion.CloseVotingComponent}}
             {{/if}}
             {{#if canWithdraw}}
-              <button class="waves-effect waves-light btn-flat modal-trigger" type="button" data-target="motion-withdraw-dialog-{{_id}}"><i class="material-icons left">delete</i>Withdraw</button>
+              <button class="waves-effect waves-light btn-flat" type="button" data-target="motion-withdraw-dialog-{{_id}}"><i class="material-icons left">delete</i>Withdraw</button>
               {{> Motion.WithdrawComponent}}
             {{/if}}
           </div>
