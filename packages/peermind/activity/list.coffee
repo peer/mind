@@ -55,7 +55,7 @@ class Activity.ListItemComponent extends UIComponent
   @register 'Activity.ListItemComponent'
 
   mixins: ->
-    if @isServer()
+    if @isEmail()
       super
     else
       super.concat share.IsSeenMixin
@@ -113,6 +113,9 @@ class Activity.ListItemComponent extends UIComponent
     component.renderComponent parentComponent
 
   icon: ->
+    # Custom fonts are not supported in e-mails.
+    return if @isEmail()
+
     type = @data 'type'
     switch type
       when 'commentCreated' then 'comment'
@@ -145,7 +148,7 @@ class Activity.ListItemComponent extends UIComponent
         console.error "Missing an icon for activity type '#{type}'."
         null
 
-  isServer: ->
+  isEmail: ->
     Meteor.isServer
 
 class Activity.ListItemContainerComponent extends UIComponent

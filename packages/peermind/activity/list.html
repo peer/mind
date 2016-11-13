@@ -87,8 +87,8 @@
     {{/if}}
     {{> renderActivity}}
     <p class="activity-timestamp">
-      <i class="material-icons tiny vertical-middle">{{icon}}</i>
-      {{#if isServer}}
+      {{#if icon}}<i class="material-icons tiny vertical-middle">{{icon}}</i>{{/if}}
+      {{#if isEmail}}
         <span class="timestamp">{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}</span>
       {{else}}
         <span class="timestamp" title="{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}">{{fromNow timestamp}}</span>
