@@ -1,0 +1,32 @@
+<template name="ActivityEmailsComponent">
+  <html>
+    <head>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <body>
+      <header>
+        <nav>
+          <div class="nav-wrapper">
+            {{! TODO: Programmatically resolve the root URL. }}
+            <a href="/" class="logo">
+              {{! TODO: Programmatically resolve the full image URL. }}
+              <img src="/packages/peermind/layout/logo.svg{{instrument}}" alt="PeerMind" />
+            </a>
+            <h1 class="brand-logo">Recent notifications</h1>
+          </div>
+        </nav>
+      </header>
+      <div class="list-wrapper">
+        <div class="row">
+          <div class="col s12">
+            {{#Activity.ListContainerComponent}}
+              {{#each activities}}
+                {{> Activity.ListItemComponent}}
+              {{/each}}
+            {{/Activity.ListContainerComponent}}
+          </div>
+        </div>
+      </div>
+    </body>
+  </html>
+</template>

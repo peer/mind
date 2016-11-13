@@ -69,7 +69,13 @@ Package.onUse(function (api) {
     'account/form.html',
     'account/form.coffee',
     'account/form.styl',
-    'account/templates.coffee'
+    'account/templates.coffee',
+    'activity/list.html',
+    'activity/list.coffee',
+    'activity/list.styl',
+    'meeting/display-route.coffee',
+    'user/display-route.coffee',
+    'discussion/display-route.coffee'
   ], ['client', 'server'], options);
 
   api.addFiles([
@@ -168,10 +174,7 @@ Package.onUse(function (api) {
     'admin/accounts.coffee',
     'user/display.html',
     'user/display.coffee',
-    'user/display.styl',
-    'activity/list.html',
-    'activity/list.coffee',
-    'activity/list.styl'
+    'user/display.styl'
   ], 'client', options);
 
   api.addAssets([

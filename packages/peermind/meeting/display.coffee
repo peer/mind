@@ -234,11 +234,3 @@ class Meeting.EditFormComponent extends UIComponent
 
 class Meeting.DisplayComponent.FixedButton extends UIComponent
   @register 'Meeting.DisplayComponent.FixedButton'
-
-FlowRouter.route '/meeting/:_id',
-  name: 'Meeting.display'
-  action: (params, queryParams) ->
-    BlazeLayout.render 'MainLayoutComponent',
-      main: 'Meeting.DisplayComponent'
-
-    # We set PageTitle after we get meeting title.

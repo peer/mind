@@ -1,16 +1,3 @@
-personalizedActivityQuery = (userId) ->
-  level:
-    $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
-  'byUser._id':
-    $ne: userId
-  $or: [
-    'forUsers._id': userId
-  ,
-    # A special case, we want all users to get notifications for new discussions and meetings.
-    type:
-      $in: ['discussionCreated', 'meetingCreated']
-  ]
-
 new PublishEndpoint 'Activity.list', (personalized, initialLimit) ->
   check personalized, Boolean
   check initialLimit, Match.PositiveNumber
@@ -20,7 +7,7 @@ new PublishEndpoint 'Activity.list', (personalized, initialLimit) ->
   userId = Meteor.userId()
   if personalized
     if userId
-      query = personalizedActivityQuery userId
+      query = Activity.personalizedActivityQuery userId
     else
       return []
   else
@@ -58,7 +45,7 @@ new PublishEndpoint 'Activity.unseenPersonalizedCount', ->
     lastSeenPersonalizedActivity.stop()
 
   @autorun (computation) =>
-    query = personalizedActivityQuery userId
+    query = Activity.personalizedActivityQuery userId
     if lastSeenPersonalizedActivity()
       _.extend query,
         timestamp:

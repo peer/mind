@@ -28,6 +28,16 @@ class Activity extends share.BaseDocument
         meeting: @ReferenceField Meeting, ['title'], false
         discussion: @ReferenceField Discussion, ['title'], false
         activity: @ReferenceField 'self', [], false
+    triggers: =>
+      sendEmails: @Trigger ['timestamp', 'level'], (newDocument, oldDocument) ->
+        # Only trigger when document is created.
+        return unless newDocument?._id and not oldDocument
+
+        # Small optimization, because we send e-mails only for those levels.
+        return unless newDocument.level in [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
+
+        # ActivityEmailsJob is enqueued only if there is no existing job which would cover this timestamp.
+        new ActivityEmailsJob(fromTimestamp: newDocument.timestamp).enqueue()
 
   @LEVEL:
     DEBUG: 'debug'
@@ -51,6 +61,19 @@ class Activity extends share.BaseDocument
       type: 1
       level: 1
       data: 1
+
+  @personalizedActivityQuery: (userId) ->
+    level:
+      $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
+    'byUser._id':
+      $ne: userId
+    $or: [
+      'forUsers._id': userId
+    ,
+      # A special case, we want all users to get notifications for new discussions and meetings.
+      type:
+        $in: ['discussionCreated', 'meetingCreated']
+    ]
 
   # Combine documents so that consecutive activities of the same type are combined into one document.
   @combineActivities: (documents) ->

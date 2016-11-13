@@ -49,11 +49,3 @@ class User.DisplayComponent extends UIComponent
   # TODO: Should we populate the list with user's friends or something like this?
   contributeUsersForMention: ->
     []
-
-FlowRouter.route '/user/:_id',
-  name: 'User.display'
-  action: (params, queryParams) ->
-    BlazeLayout.render 'MainLayoutComponent',
-      main: 'User.DisplayComponent'
-
-    # We set PageTitle after we get user username.

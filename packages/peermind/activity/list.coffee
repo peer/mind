@@ -55,7 +55,10 @@ class Activity.ListItemComponent extends UIComponent
   @register 'Activity.ListItemComponent'
 
   mixins: ->
-    super.concat share.IsSeenMixin
+    if @isServer()
+      super
+    else
+      super.concat share.IsSeenMixin
 
   constructor: (kwargs) ->
     super
@@ -141,6 +144,9 @@ class Activity.ListItemComponent extends UIComponent
       else
         console.error "Missing an icon for activity type '#{type}'."
         null
+
+  isServer: ->
+    Meteor.isServer
 
 class Activity.ListItemContainerComponent extends UIComponent
   @register 'Activity.ListItemContainerComponent'
