@@ -126,10 +126,12 @@ class ActivityEmailsJob extends Job
       emailId = Random.id()
 
       # DOCTYPE cannot be a part of the template.
-      html = @_absoluteURLs '<!DOCTYPE html>' + new ActivityEmailsComponent(userActivities, emailId).renderComponentToHTML()
+      html = '<!DOCTYPE html>' + new ActivityEmailsComponent(userActivities, emailId).renderComponentToHTML()
 
       # Inline all CSS.
       html = juice.inlineContent html, css
+
+      html = @_convertHTML html
 
       Email.send
         _id: emailId
@@ -142,7 +144,7 @@ class ActivityEmailsJob extends Job
         headers:
           Precedence: 'bulk'
 
-  _absoluteURLs: (html) ->
+  _convertHTML: (html) ->
     $ = cheerio.load html,
       # Normalize whitespace.
       # TODO: Probably not necessary once: https://github.com/meteor/blaze/issues/88
@@ -150,12 +152,24 @@ class ActivityEmailsJob extends Job
       xmlMode: false
       decodeEntities: true
 
+    # Make links absolute URLs.
     $.root().find('a[href]').each (index, element) =>
       $element = $(element)
       $element.attr('href', url.resolve Meteor.absoluteUrl(), $element.attr('href'))
 
+    # Make image sources absolute URLs.
     $.root().find('img[src]').each (index, element) =>
       $element = $(element)
       $element.attr('src', url.resolve Meteor.absoluteUrl(), $element.attr('src'))
+
+    # Because we inlined all CSS, we can remove all classes.
+    $.root().find('[class]').each (index, element) =>
+      $element = $(element)
+      $element.removeAttr('class')
+
+    # Tag "nav" is not supported in Gmail, so we replace it with "div".
+    # Because we already inlined all CSS, this not make CSS not match.
+    $.root().find('nav').each (index, element) =>
+      element.tagName = 'div'
 
     $.html()
