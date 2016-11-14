@@ -31,9 +31,8 @@ class Discussion.ListContentComponent extends UIComponent
     @canNew = new ComputedField =>
       User.hasPermission User.PERMISSIONS.DISCUSSION_NEW
 
-    # TODO: Subscribe only to those documents we need based on @closed.
     @subscribe 'Meeting.list'
-    @subscribe 'Discussion.list'
+    @subscribe 'Discussion.list', @closed
 
   onRendered: ->
     super
@@ -55,7 +54,7 @@ class Discussion.ListContentComponent extends UIComponent
     footerComponent.removeFixedButton()
 
   discussionsWithoutMeeting: ->
-    Discussion.documents.find _.extend(@showClosedDiscussionsQuery(),
+    Discussion.documents.find _.extend(Discussion.closedDiscussionsQuery(@closed),
       # Or discussions which are not part of any meeting which is being shown.
       'meetings._id':
         $nin: @meetings().map((meeting, i, cursor) => meeting._id)
@@ -75,7 +74,7 @@ class Discussion.ListContentComponent extends UIComponent
     for discussion in discussions
       order[discussion._id] = discussion.order
 
-    Discussion.documents.find _.extend(@showClosedDiscussionsQuery(),
+    Discussion.documents.find _.extend(Discussion.closedDiscussionsQuery(@closed),
       _id:
         $in: _.pluck discussions, '_id'
     ),
@@ -87,13 +86,6 @@ class Discussion.ListContentComponent extends UIComponent
       sort:
         # The newest first.
         startAt: -1
-
-  showClosedDiscussionsQuery: ->
-    if @closed
-      {}
-    else
-      status:
-        $in: [Discussion.STATUS.OPEN, Discussion.STATUS.MOTIONS, Discussion.STATUS.VOTING]
 
   showPastMeetingsQuery: ->
     if @closed

@@ -223,6 +223,13 @@ class Discussion extends share.BaseDocument
   @isNotFollowing: (reason) ->
     not reason or reason not in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.MENTIONS, @REASON.IGNORING]
 
+  @closedDiscussionsQuery: (closed) ->
+    if closed
+      {}
+    else
+      status:
+        $in: [@STATUS.OPEN, @STATUS.MOTIONS, @STATUS.VOTING]
+
   isOpen: ->
     !!(@discussionOpenedAt and @discussionOpenedBy and not @discussionClosedAt and not @discussionClosedBy and (not @passingMotions or @passingMotions.length is 0) and not @closingNote)
 
