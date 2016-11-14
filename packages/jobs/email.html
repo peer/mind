@@ -7,7 +7,9 @@
             {{! TODO: Programmatically resolve the root URL. }}
             <a href="/" class="logo">
               {{! TODO: Programmatically resolve the full image URL. }}
-              <img src="/packages/peermind/layout/logo.svg{{instrument}}" alt="PeerMind" />
+              {{!-- We use logo.png because SVG is not supported by Gmail.
+                    Logo has height and width equal to $navbar-height-mobile. --}}
+              <img src="/packages/peermind/layout/logo.png{{instrument}}" alt="PeerMind" />
             </a>
             <h1 class="brand-logo">Recent notifications</h1>
           </div>

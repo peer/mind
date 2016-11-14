@@ -3,6 +3,10 @@ Package.describe({
   version: '0.1.0'
 });
 
+Npm.depends({
+  'svg2img': '0.2.5'
+});
+
 Package.onUse(function (api) {
   api.versionsFrom('1.4.1');
 
@@ -29,7 +33,8 @@ Package.onUse(function (api) {
     'alanning:roles@1.2.15',
     'peerlibrary:classy-job@0.6.1',
     'peerlibrary:user-extra@0.1.0',
-    'kenton:accounts-sandstorm@0.5.1'
+    'kenton:accounts-sandstorm@0.5.1',
+    'peerlibrary:blocking@0.5.2'
   ]);
 
   api.use([
@@ -132,6 +137,7 @@ Package.onUse(function (api) {
     'migrations/0034-user-name.coffee',
     'migrations/0035-activity-levels.coffee',
     'migrations/0036-user-delegations.coffee',
+    'migrations/0037-user-avatars.coffee'
   ], 'server');
 });
 

@@ -81,9 +81,9 @@
 <template name="Activity.ListItemComponent">
   {{#Activity.ListItemContainerComponent args notifications=notifications}}
     {{#if notifications}}
-      <img src="{{byUser.avatarUrl}}" alt="{{byUser.username}}" class="circle" />
+      <img src="{{avatarUrl}}" alt="{{byUser.username}}" class="circle" />
     {{else}}
-      <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{byUser.avatarUrl}}" alt="{{byUser.username}}" class="circle" /></a>
+      <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{avatarUrl}}" alt="{{byUser.username}}" class="circle" /></a>
     {{/if}}
     {{> renderActivity}}
     <p class="activity-timestamp">

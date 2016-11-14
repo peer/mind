@@ -1,5 +1,6 @@
 if Meteor.isServer
   crypto = Npm.require 'crypto'
+  svg2img = blocking Npm.require 'svg2img'
 
 # Suffix can be:
 #  i - for automatically generated initials
@@ -55,13 +56,14 @@ updateAvatar = (usedId, type, extension, avatarContent) ->
   avatarHash = sha256.finalize()
 
   # TODO: Remove other types and extensions of previously stored avatars.
+  #       But we should keep both SVG and PNG versions for default avatars.
   Storage.save avatarFilename, avatarContent
 
   # Attach a query string to force reactive client-side update when the content changes.
   "#{avatarFilename}?#{avatarHash.substr 0, 16}"
 
 # Copied from: https://github.com/RocketChat/Rocket.Chat/blob/master/server/startup/avatar.coffee
-initialsAvatar = (username="") ->
+initialsAvatar = (username="", useRect=false) ->
   colors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#FF5722', '#795548', '#9E9E9E', '#607D8B']
 
   position = username.length % colors.length
@@ -77,14 +79,27 @@ initialsAvatar = (username="") ->
 
   initials ||= "?"
 
-  """
-  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-  <svg xmlns="http://www.w3.org/2000/svg" pointer-events="none" width="50" height="50" style="width: 50px; height: 50px; background-color: #{color};">
-    <text text-anchor="middle" y="50%" x="50%" dy="0.36em" pointer-events="auto" fill="#ffffff" font-family="Helvetica, Arial, Lucida Grande, sans-serif" style="font-weight: 400; font-size: 28px;">
-      #{initials}
-    </text>
-  </svg>
-  """
+  # svg2img does not support background-color, so we use a rect instead.
+  # See: https://github.com/fuzhenn/node-svg2img/issues/3
+  if useRect
+    """
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <svg xmlns="http://www.w3.org/2000/svg" pointer-events="none" width="50" height="50">
+      <rect x="0" y="0" width="50" height="50" fill="#{color}"/>
+      <text text-anchor="middle" y="50%" x="50%" dy="0.36em" pointer-events="auto" fill="#ffffff" font-family="Helvetica, Arial, Lucida Grande, sans-serif" style="font-weight: 400; font-size: 28px;">
+        #{initials}
+      </text>
+    </svg>
+    """
+  else
+    """
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <svg xmlns="http://www.w3.org/2000/svg" pointer-events="none" width="50" height="50" style="width: 50px; height: 50px; background-color: #{color};">
+      <text text-anchor="middle" y="50%" x="50%" dy="0.36em" pointer-events="auto" fill="#ffffff" font-family="Helvetica, Arial, Lucida Grande, sans-serif" style="font-weight: 400; font-size: 28px;">
+        #{initials}
+      </text>
+    </svg>
+    """
 
 generateAvatar = (fields) ->
   # Return selected avatar location.
@@ -125,27 +140,44 @@ gravatarHash = (address) ->
   hash.update address.trim().toLowerCase()
   hash.digest 'hex'
 
+pngAvatar = (svg) ->
+  svg2img svg,
+    # PNG height and width should be equal to 42px which is what is used in e-mails,
+    # but svg2img resizing is bad, so we use SVG's original size 50.
+    # See: https://github.com/fuzhenn/node-svg2img/issues/3
+    width: 50
+    height: 50
+
 generateAvatars = (fields) ->
   avatars = []
   selectedAvatar = currentlySelectedAvatar fields._id
 
   # It is OK if fields.username does not exist.
-  defaultAvatarContent = initialsAvatar fields.username
+  defaultAvatarSVGContent = initialsAvatar fields.username, false
+  defaultAvatarPNGContent = pngAvatar initialsAvatar fields.username, true
 
-  defaultAvatarLocation = updateAvatar fields._id, 'i', 'svg', defaultAvatarContent
+  defaultAvatarSVGLocation = updateAvatar fields._id, 'i', 'svg', defaultAvatarSVGContent
+  defaultAvatarPNGLocation = updateAvatar fields._id, 'i', 'png', defaultAvatarPNGContent
 
   avatars.push
     name: 'default'
-    argument: null
-    location: defaultAvatarLocation
+    argument: 'svg'
+    location: defaultAvatarSVGLocation
     selected: selectedAvatar?.name is 'default'
+
+  avatars.push
+    name: 'default'
+    argument: 'png'
+    location: defaultAvatarPNGLocation
+    # Only SVG version of the default avatar can be selected.
+    selected: false
 
   for email in fields.emails or [] when email.verified and email.address
     avatars.push
       name: 'gravatar'
       argument: email.address
       location: "https://www.gravatar.com/avatar/#{gravatarHash email.address}?d=identicon"
-      selected: selectedAvatar?.name is 'gravatar'
+      selected: selectedAvatar?.name is 'gravatar' and selectedAvatar?.argument is email.address
 
   if fields.services?.facebook?.id
     avatars.push

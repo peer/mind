@@ -25,3 +25,4 @@ Meteor.methods
     ,
       $set:
         researchData: consent
+

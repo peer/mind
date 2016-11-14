@@ -178,6 +178,7 @@ Package.onUse(function (api) {
   ], 'client', options);
 
   api.addAssets([
-    'layout/logo.svg'
+    'layout/logo.svg',
+    'layout/logo.png'
   ], 'client');
 });

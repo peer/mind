@@ -152,6 +152,13 @@ class Settings.AccountsComponent extends UIComponent
 class Settings.AvatarComponent extends UIComponent
   @register 'Settings.AvatarComponent'
 
+  avatars: ->
+    avatars = @currentUser()?.avatars or []
+
+    # SVG and PNG avatars are the same, we just use them for different reasons (like e-mails), so we hide the PNG one.
+    for avatar in avatars when not (avatar.name is 'default' and avatar.argument is 'png')
+      avatar
+
   onSelect: (event, name, argument) ->
     event.preventDefault()
 

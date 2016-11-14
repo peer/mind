@@ -33,6 +33,9 @@ unless __meteor_runtime_config__.SANDSTORM
       check name, Match.NonEmptyString
       check argument, Match.OptionalOrNull Match.NonEmptyString
 
+      # For default avatar, we allow only SVG version of the avatar to be selected.
+      argument = 'svg' if name is 'default'
+
       userId = Meteor.userId()
       throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
 

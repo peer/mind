@@ -56,6 +56,8 @@ class Activity.ListItemComponent extends UIComponent
 
   mixins: ->
     if @isEmail()
+      # TODO: For some reason loading of mixin fails when rendering for e-mail.
+      #       This is OK, because we do not really need it, but it should still not fail.
       super
     else
       super.concat share.IsSeenMixin
@@ -150,6 +152,15 @@ class Activity.ListItemComponent extends UIComponent
 
   isEmail: ->
     Meteor.isServer
+
+  # A special version of avatarUrl method which returns a PNG version of a default avatar
+  # when rendering for e-mail, because SVG is not supported in Gmail.
+  avatarUrl: ->
+    avatarUrl = @data()?.byUser?.avatarUrl() or ''
+    # We keep the cache query string from SVG, because if a SVG file changes, also the PNG file
+    # changes. So the purpose of query string works, even if it is not hash of the PNG file.
+    avatarUrl = avatarUrl.replace /avatar\/(\w+)-i\.svg\?/, 'avatar/$1-i.png?' if @isEmail()
+    avatarUrl
 
 class Activity.ListItemContainerComponent extends UIComponent
   @register 'Activity.ListItemContainerComponent'
