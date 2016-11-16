@@ -1,2 +1,5 @@
-# Ensure that storage has proper permissions.
-chown meteor:meteor /storage || true
+# Ensure that storage has proper permissions, if METEOR_STORAGE_CHOWN is set.
+if [[ -n "${METEOR_STORAGE_CHOWN}" && -d /storage ]]; then
+  # We run it in a background because it can potentially take a long time.
+  chown -Rh meteor:meteor /storage &
+fi
