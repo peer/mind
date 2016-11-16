@@ -4,7 +4,7 @@ class Meeting.ListDiscussionsComponent extends Meeting.OneComponent
   onCreated: ->
     super
 
-    @subscribe 'Discussion.list'
+    @subscribe 'Discussion.list', true
 
   onRendered: ->
     super
