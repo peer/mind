@@ -334,6 +334,12 @@ const pkgdef :Spk.PackageDefinition = (
           verbPhrase = (defaultText = "can manage user accounts"),
           description = (defaultText = "admins manage the grain"),
         ),
+        (
+          title = (defaultText = "guest"),
+          permissions  = [false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+          verbPhrase = (defaultText = "can make comments"),
+          description = (defaultText = "guests can comment"),
+        ),
       ],
     ),
   #  #apiPath = "/api",

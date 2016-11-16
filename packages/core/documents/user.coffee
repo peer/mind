@@ -338,6 +338,10 @@ class User extends share.BaseDocument
     ADMIN: [
       @PERMISSIONS.ACCOUNTS_ADMIN
     ]
+    GUEST: [
+      @PERMISSIONS.COMMENT_NEW
+      @PERMISSIONS.COMMENT_UPDATE_OWN
+    ]
 
   @_checkPermissions: (permissions) ->
     permissions = [permissions] unless _.isArray permissions
