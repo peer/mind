@@ -1,5 +1,8 @@
 # Ensure that storage has proper permissions, if METEOR_STORAGE_CHOWN is set.
-if [[ -n "${METEOR_STORAGE_CHOWN}" && -d /storage ]]; then
+if [[ -n "${METEOR_STORAGE_CHOWN}" && -d /storage && ! -f /dev/shm/meteor_storage_chown_ran ]]; then
+  # We want this to run only the first time inside a new container. And not
+  # after runit restarts the service because of some issues with the service.
+  touch /dev/shm/meteor_storage_chown_ran
   # We run it in a background because it can potentially take a long time.
   chown -Rh meteor:meteor /storage &
 fi
