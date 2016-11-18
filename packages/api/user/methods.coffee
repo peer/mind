@@ -1,18 +1,22 @@
 unless __meteor_runtime_config__.SANDSTORM
   Meteor.methods
     # TODO: Temporary, to invite users.
-    'User.invite': (email) ->
+    'User.invite': (email, name) ->
       check email, Match.NonEmptyString
+      check name, String
+
+      email = email.toLowerCase()
+      name = name.trim()
 
       throw new Meteor.Error 'unauthorized', "Unauthorized." unless Meteor.userId()
 
       throw new Meteor.Error 'unauthorized', "Unauthorized." unless User.hasPermission User.PERMISSIONS.ACCOUNTS_ADMIN
 
-      user = User.documents.findOne
-        'emails.address': email
+      user = Accounts.findUserByEmail email
 
       # Invite only if e-mail is not already verified (invitation has already been accepted).
-      return null if user and _.findWhere(user.emails, address: email).verified
+      for userEmail in (user?.emails or []) when (userEmail?.address or '').toLowerCase() is email and userEmail?.verified
+        return
 
       # Inverse of Settings.USERNAME_REGEX.
       username = email.split('@')[0]?.replace /^[^A-Za-z]+|[^A-Za-z0-9]+$|[^A-Za-z0-9_]+/g, ''
@@ -25,6 +29,13 @@ unless __meteor_runtime_config__.SANDSTORM
         userId = Accounts.createUser
           email: email
           username: username
+
+        if name
+          User.documents.update
+            _id: userId
+          ,
+            $set:
+              name: name
 
       Accounts.sendEnrollmentEmail userId
 
