@@ -11,7 +11,7 @@
           <div id="avatar" class="section scrollspy">
             <h4>Avatar</h4>
             {{#if isSandstorm}}
-              <p>Avatar is manged through Sandstorm. Consult Sandstorm account settings to select an avatar.</p>
+              <p class="justify" lang="en">Avatar is manged through Sandstorm. Consult Sandstorm account settings to select an avatar.</p>
             {{else}}
               {{> Settings.AvatarComponent}}
             {{/if}}
@@ -48,7 +48,7 @@
           <div id="username" class="section scrollspy">
             <h4>Username</h4>
             {{#if isSandstorm}}
-              <p>
+              <p class="justify" lang="en">
                 Username is based on Sandstorm's preferred handle, but made unique.
                 Consult Sandstorm account settings to change the preferred handle and username will be changed accordingly.
               </p>
@@ -80,7 +80,7 @@
 </template>
 
 <template name="Settings.NameComponent">
-  <p>
+  <p class="justify" lang="en">
     Name helps others find and identify you across PeerMind. It allows easier @mentions and delegation.
     It is shown on <a href="{{pathFor 'User.display' params=currentUser}}">your profile</a>. It is optional.
   </p>
@@ -149,11 +149,11 @@
 <template name="Settings.AccountsComponent">
   {{#if isSandstorm}}
     {{!-- TODO: It is unclear if linking of accounts can work inside Sandstorm. See: https://github.com/sandstorm-io/sandstorm/issues/2433 --}}
-    <p>
+    <p class="justify" lang="en">
       By linking your accounts on other sites PeerMind might be able to better suggest potential delegates to you.
     </p>
   {{else}}
-    <p>
+    <p class="justify" lang="en">
       By linking your accounts on other sites you will be able to use them to sign in and use their avatar.
       Moreover, PeerMind might be able to better suggest potential delegates to you.
     </p>
