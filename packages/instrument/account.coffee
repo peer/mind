@@ -60,7 +60,7 @@ MethodHooks.after 'Account.unlinkAccount', (options) ->
       connection: @connection.id
       byUser: user
       type: 'accountUnlinkFailure'
-      level: Activity.LEVEL.ADMIN
+      level: Activity.LEVEL.ERROR
       data:
         error: "#{options.error}"
         clientAddress: @connection.clientAddress
@@ -92,7 +92,7 @@ MethodHooks.after 'Account.researchData', (options) ->
       connection: @connection.id
       byUser: user
       type: 'researchDataFailure'
-      level: Activity.LEVEL.DEBUG
+      level: Activity.LEVEL.ERROR
       data:
         error: "#{options.error}"
   else
@@ -164,7 +164,7 @@ unless __meteor_runtime_config__.SANDSTORM
         connection: @connection.id
         byUser: user
         type: 'usernameChangeFailure'
-        level: Activity.LEVEL.ADMIN
+        level: Activity.LEVEL.ERROR
         data:
           error: "#{options.error}"
           clientAddress: @connection.clientAddress
@@ -197,7 +197,7 @@ unless __meteor_runtime_config__.SANDSTORM
         connection: @connection.id
         byUser: user
         type: 'passwordChangeFailure'
-        level: Activity.LEVEL.ADMIN
+        level: Activity.LEVEL.ERROR
         data:
           error: "#{options.error}"
           clientAddress: @connection.clientAddress
@@ -228,7 +228,7 @@ unless __meteor_runtime_config__.SANDSTORM
         connection: @connection.id
         byUser: user
         type: 'avatarSelectionFailure'
-        level: Activity.LEVEL.ADMIN
+        level: Activity.LEVEL.ERROR
         data:
           error: "#{options.error}"
           clientAddress: @connection.clientAddress

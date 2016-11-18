@@ -126,6 +126,7 @@ Package.onUse(function (api) {
     'migrations/0031-activity-data.coffee',
     'migrations/0032-user-lastseendiscussion.coffee',
     'migrations/0033-user-lastseenmeeting.coffee',
-    'migrations/0034-user-name.coffee'
+    'migrations/0034-user-name.coffee',
+    'migrations/0035-activity-levels.coffee'
   ], 'server');
 });
