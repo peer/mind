@@ -9,7 +9,7 @@ Meteor.methods
       _id: userId
     ,
       $set:
-        name: newName
+        name: newName.trim()
         nameSet: true
 
   'Account.unlinkAccount': (serviceName) ->
