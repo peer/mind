@@ -88,6 +88,6 @@ You can see [`run.sh`](https://github.com/peer/mind/blob/master/run.sh) file for
 ## Related projects ##
 
 * https://www.loomio.org/
-* http://democracyos.org/ 
+* http://democracy.earth/
 * https://airesis.eu/
 * https://www.vilfredo.org/
