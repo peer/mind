@@ -5,7 +5,7 @@
     <div class="section user">
       <div class="row">
         <h4 class="col s12">
-          <img src="{{user.avatarUrl}}" alt="{{user.username}}" class="circle avatar" />{{user.username}}
+          <img src="{{user.avatarUrl}}" alt="{{user.username}}" class="circle avatar" />{{user.username}}{{#if user.name}} ({{user.name}}){{/if}}
         </h4>
       </div>
       <div class="row">

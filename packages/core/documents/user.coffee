@@ -173,11 +173,21 @@ generateAvatars = (fields) ->
 
   [fields._id, avatars]
 
+generateName = (fields) ->
+  # Do not do anything if name is already set, or if name was explicitly set by the user
+  # (which in this case means if it was explicitly cleared by the user).
+  return [] if fields.name or fields.nameSet
+
+  # We prefer Facebook name over Google name.
+  [fields._id, fields.services?.facebook?.name or fields.services?.google?.name or '']
+
 class User extends share.BaseDocument
   # createdAt: time of document creation
   # updatedAt: time of the last change
   # lastActivity: time of the last user app activity (login, password change, authored anything, voted on anything, etc.)
   # username: user's username
+  # name: user's name
+  # nameSet: boolean, was name ever explicitly set by the user (then we do not populate it automatically)
   # emails: list of
   #   address: e-mail address
   #   verified: is e-mail address verified
@@ -224,6 +234,7 @@ class User extends share.BaseDocument
       ]
     generators: =>
       fields =
+        name: @GeneratedField 'self', ['name', 'nameSet', 'services.facebook.name', 'services.google.name'], generateName
         # We include "avatar" field so the if it gets deleted it gets regenerated.
         avatar: @GeneratedField 'self', ['avatar', 'avatars'], generateAvatar
         profile: @GeneratedField 'self', ['changes'], (fields) =>

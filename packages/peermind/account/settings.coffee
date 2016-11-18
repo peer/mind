@@ -29,6 +29,30 @@ class Settings.DisplayComponent extends UIComponent
   anyServiceConfiguration: ->
     ServiceConfiguration.configurations.find().exists()
 
+class Settings.NameComponent extends UIComponent
+  @register 'Settings.NameComponent'
+
+  onRendered: ->
+    super
+
+    Materialize.updateTextFields()
+
+  onSubmit: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'Account.changeName', @$('[name="name"]').val(), (error) =>
+      if error
+        console.error "Change name error", error
+        alert "Change name error: #{error.reason or error}"
+        return
+
+  name: ->
+    Tracker.afterFlush =>
+      # If value is set, we have to update fields to move the label to not overlap the value.
+      Materialize.updateTextFields()
+
+    @currentUser(name: 1)?.name or ''
+
 class Settings.UsernameComponent extends UIComponent
   @register 'Settings.UsernameComponent'
 

@@ -1,4 +1,17 @@
 Meteor.methods
+  'Account.changeName': (newName) ->
+    check newName, String
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    User.documents.update
+      _id: userId
+    ,
+      $set:
+        name: newName
+        nameSet: true
+
   'Account.unlinkAccount': (serviceName) ->
     check serviceName, Match.Where (x) ->
       check x, Match.NonEmptyString

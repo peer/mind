@@ -3,6 +3,11 @@
     <div class="section">
       <div class="row">
         <div class="col s12 m9 l9">
+          <div id="name" class="section scrollspy">
+            <h4>Name</h4>
+            {{> Settings.NameComponent}}
+          </div>
+
           <div id="avatar" class="section scrollspy">
             <h4>Avatar</h4>
             {{#if isSandstorm}}
@@ -54,6 +59,7 @@
         </div>
         <div class="col hide-on-small-only m3 l3">
           <ul class="section table-of-contents">
+            <li><a href="#name">Name</a></li>
             <li><a href="#avatar">Avatar</a></li>
             {{#if anyServiceConfiguration}}
               <li><a href="#accounts">Linked accounts</a></li>
@@ -71,6 +77,29 @@
   {{else}}
     {{> AccessDeniedComponent}}
   {{/if}}
+</template>
+
+<template name="Settings.NameComponent">
+  <p>
+    Name helps others find and identify you across PeerMind. It allows easier @mentions and delegation.
+    It is shown on <a href="{{pathFor 'User.display' params=currentUser}}">your profile</a>. It is optional.
+  </p>
+
+  <div class="row">
+    <form class="col s12" onSubmit>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="name" name="name" type="text" value="{{name}}" required>
+          <label for="name">Name</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 center-align">
+          <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">send</i>Change name</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
 
 <template name="Settings.UsernameComponent">

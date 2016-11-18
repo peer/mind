@@ -9,6 +9,7 @@ new PublishEndpoint 'User.settings', ->
     _id: @userId
   ,
     fields:
+      name: 1
       avatars: 1
       'services.facebook.id': 1
       'services.facebook.name': 1
@@ -26,8 +27,9 @@ new PublishEndpoint 'User.profile', (userId) ->
     _id: userId
   ,
     fields: _.extend User.EXTRA_PUBLISH_FIELDS(),
+      name: 1
       # Fields published by Meteor for logged-in users.
-      username: 1,
+      username: 1
       emails: 1
       # We use profile field differently than how Meteor is using it.
       profile: 1
