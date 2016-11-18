@@ -107,6 +107,44 @@ MethodHooks.after 'Account.researchData', (options) ->
 
   options.result
 
+MethodHooks.before 'Account.changeName', (options) ->
+  if @userId
+    # We store current name away so that we can log it.
+    @_oldName = User.documents.findOne(@userId, fields: name: 1)?.name or null
+
+MethodHooks.after 'Account.changeName', (options) ->
+  if @userId
+    user =
+      _id: @userId
+  else
+    user = null
+
+  if options.error
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      byUser: user
+      type: 'nameChangeFailure'
+      level: Activity.LEVEL.ERROR
+      data:
+        error: "#{options.error}"
+        clientAddress: @connection.clientAddress
+        userAgent: @connection.httpHeaders['user-agent'] or null
+  else
+    Activity.documents.insert
+      timestamp: new Date()
+      connection: @connection.id
+      byUser: user
+      type: 'nameChange'
+      level: Activity.LEVEL.ADMIN
+      data:
+        oldName: @_oldName
+        newName: options.arguments[0]
+        clientAddress: @connection.clientAddress
+        userAgent: @connection.httpHeaders['user-agent'] or null
+
+  options.result
+
 unless __meteor_runtime_config__.SANDSTORM
   MethodHooks.before 'Account.changeUsername', (options) ->
     if @userId
