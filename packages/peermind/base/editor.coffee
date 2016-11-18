@@ -8,8 +8,8 @@ contributedUsers = new ComputedField ->
   while component = componentsToProcess.pop()
     if users = component.contributeUsersForMention?()
       for user in users
-        # We merge potential new fields.
-        allUsers[user._id] = _.defaults (allUsers[user._id] or {}), _.pick(user, '_id', 'username', 'avatar'),
+        # We merge potential new fields. Name is mostly not really available.
+        allUsers[user._id] = _.defaults (allUsers[user._id] or {}), _.pick(user, '_id', 'name', 'username', 'avatar'),
           _count: 0
         allUsers[user._id]._count++
 

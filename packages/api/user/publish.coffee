@@ -49,6 +49,7 @@ new PublishEndpoint 'User.autocomplete', (username, prefixSearch) ->
     ,
       fields:
         _id: 1
+        name: 1
         username: 1
         avatar: 1
   else
@@ -57,5 +58,6 @@ new PublishEndpoint 'User.autocomplete', (username, prefixSearch) ->
     ,
       fields:
         _id: 1
+        name: 1
         username: 1
         avatar: 1
