@@ -95,8 +95,14 @@ trix-editor
       max-height (5 * $dropdown-item-height)
 
       li
+        display flex
+        white-space nowrap
+
         span.username
-          float left
+          order -1
+
+        img
+          flex-shrink 0
 
         &.with-name
           span.username

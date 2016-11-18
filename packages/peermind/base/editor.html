@@ -52,7 +52,7 @@
 <template name="EditorComponent.MentionDialog">
   <ul class="mention dropdown-content autocomplete-content" {{style mentionDialogPosition}}>
     {{#each mentionDialogUsers}}
-      <li class="{{#if $eq @index mentionSelected}}active selected{{/if}} {{#if name}}with-name{{/if}}" onClick="{{onMentionClick}}"><img src="{{avatarUrl}}" alt="{{username}}" class="right circle" /><span class="username"><span class="highlight">{{matchingMention username}}</span>{{nonmatchingMention username}}{{#if name}}<br/>{{name}}{{/if}}</span></li>
+      <li class="{{#if $eq @index mentionSelected}}active selected{{/if}} {{#if name}}with-name{{/if}}" onClick="{{onMentionClick}}"><img src="{{avatarUrl}}" alt="{{username}}" class="circle" /><span class="username"><span class="highlight">{{matchingMention username}}</span>{{nonmatchingMention username}}{{#if name}}<br/>{{name}}{{/if}}</span></li>
     {{else}}
       <li class="no-matching-users" onClick="{{onNoMatchingUsersClick}}"><span>No matching users.</span></li>
     {{/each}}
