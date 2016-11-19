@@ -50,7 +50,9 @@ Package.onUse(function (api) {
     'comment/methods.coffee',
     'point/methods.coffee',
     'motion/methods.coffee',
-    'activity/methods.coffee'
+    'activity/methods.coffee',
+    'user/methods.coffee',
+    'account/methods.coffee'
   ]);
 
   api.addFiles([
@@ -59,11 +61,15 @@ Package.onUse(function (api) {
     'comment/publish.coffee',
     'point/publish.coffee',
     'motion/publish.coffee',
-    'storagefile/methods.coffee',
     'user/publish.coffee',
-    'user/methods.coffee',
-    'account/methods.coffee',
-    'activity/publish.coffee',
-    'base/methods.coffee'
+    'activity/publish.coffee'
+  ], 'server');
+
+  // Methods which have to be or we prefer server-side.
+  api.addFiles([
+    'storagefile/methods-server.coffee',
+    'user/methods-server.coffee',
+    'account/methods-server.coffee',
+    'base/methods-server.coffee'
   ], 'server');
 });
