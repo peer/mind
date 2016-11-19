@@ -198,6 +198,38 @@ class Settings.ResearchDataComponent extends UIComponent
 
       # TODO: Should we check the result and if it is not expected show an error instead?
 
+class Settings.DelegationsComponent extends UIComponent
+  @register 'Settings.DelegationsComponent'
+
+  # We normalize because this is what is done when delegated votes are computed.
+  # It can happen that an user who was a delegate and was deleted and removed from the list of delegates.
+  # As a consequence, the list of delegates does not contain correctly normalized ratios anymore.
+  # TODO: Should we inform user that one of their delegates were deleted?
+  # TODO: Should we recompute ratios when one of users who are delegates are deleted?
+  normalizedDelegates: ->
+    delegates = @currentUser(delegates: 1)?.delegates or []
+
+    allRatios = 0
+    for delegate in delegates
+      allRatios += Math.max(delegate.ratio or 0, 0)
+
+    for delegate in delegates
+      if allRatios is 0
+        delegate.ratio = 0
+      else
+        delegate.ratio = Math.max(delegate.ratio or 0, 0) / allRatios
+
+    delegates
+
+  delegationsEquation: ->
+    # \u00A0 is a non-breaking space.
+    parts = ("#{delegate.ratio.toFixed 2}\u00A0×\u00A0vote\u00A0by\u00A0#{delegate.user.username}"for delegate in @normalizedDelegates())
+
+    parts.join " + "
+
+class Settings.DelegationsItemComponent extends UIComponent
+  @register 'Settings.DelegationsItemComponent'
+
 FlowRouter.route '/account/settings',
   name: 'Settings.display'
   action: (params, queryParams) ->
