@@ -201,6 +201,21 @@ class Settings.ResearchDataComponent extends UIComponent
 class Settings.DelegationsComponent extends UIComponent
   @register 'Settings.DelegationsComponent'
 
+  onCreated: ->
+    super
+
+    @normalizedDelegatesLength = new ComputedField =>
+      @normalizedDelegates().length
+
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      @normalizedDelegatesLength()
+
+      # When length changes, delegationsEquation changes, so we should update balance text.
+      $.fn.balanceTextUpdate()
+
   # We normalize because this is what is done when delegated votes are computed.
   # It can happen that an user who was a delegate and was deleted and removed from the list of delegates.
   # As a consequence, the list of delegates does not contain correctly normalized ratios anymore.
@@ -229,6 +244,27 @@ class Settings.DelegationsComponent extends UIComponent
 
 class Settings.DelegationsItemComponent extends UIComponent
   @register 'Settings.DelegationsItemComponent'
+
+  onRendered: ->
+    super
+
+    @$('.range').slider
+      range: 'min'
+      min: 0.0
+      max: 1.0
+      step: 0.01
+      value: @data('ratio') ? 0.0
+      slide: (event, ui) =>
+        @$('.ui-slider-handle').text(ui.value)
+        return
+      change: (event, ui) =>
+        @$('.ui-slider-handle').text(ui.value)
+        return
+
+    @autorun (computation) =>
+      value = @data('ratio') ? 0.0
+
+      @$('.range').slider('value', value)
 
 FlowRouter.route '/account/settings',
   name: 'Settings.display'

@@ -44,12 +44,10 @@ class Motion.VoteComponent extends UIComponent
       computation.stop()
 
       @$('.range').slider
-        range: 'min'
         min: -1.0
         max: 1.0
         step: 0.25
         value: @voteValue() ? 0.0
-        ticks: true
         slide: (event, ui) =>
           @$('.ui-slider-handle').text(ui.value)
           return

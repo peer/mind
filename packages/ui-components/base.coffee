@@ -8,6 +8,16 @@ class UIComponent extends CommonComponent
       # simple text segments anyway, so it should work in practice.
       $.fn.balanceTextUpdate()
 
+  insertDOMElement: (parent, node, before, next) ->
+    if $(node).hasClass 'balance-text'
+      Tracker.afterFlush =>
+        # This does not handle all cases, for example, if text changes reactively after
+        # the component has been rendered, but "balance-text" class should be used on
+        # simple text segments anyway, so it should work in practice.
+        $.fn.balanceTextUpdate()
+
+    super
+
   storageUrl: (filename, kwargs) ->
     Storage.url filename
 
