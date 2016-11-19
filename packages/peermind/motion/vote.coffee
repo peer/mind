@@ -15,7 +15,7 @@ class Motion.VoteComponent extends UIComponent
 
     @rangeDeselected = new ReactiveField 'deselected'
     @voteValueChange = new ReactiveField null
-    @_voteValueChangeByUser = false
+    @_voteValueChangeByUser = 0
 
     @autorun (computation) =>
       vote = @currentVote()
@@ -89,9 +89,9 @@ class Motion.VoteComponent extends UIComponent
   voteValueChangeByUser: (value) ->
     @voteValueChange value
 
-    @_voteValueChangeByUser = true
+    @_voteValueChangeByUser++
     Tracker.afterFlush =>
-      @_voteValueChangeByUser = false
+      @_voteValueChangeByUser--
 
   deselectRange: ->
     @rangeDeselected 'deselected'
