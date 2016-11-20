@@ -137,7 +137,8 @@ Package.onTest(function (api) {
   // Core dependencies.
   api.use([
     'coffeescript',
-    'random'
+    'random',
+    'ejson'
   ]);
 
   // Internal dependencies.

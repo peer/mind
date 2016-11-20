@@ -13,6 +13,12 @@ class CoreTestCase extends ClassyTestCase
 
       @assertEqual sum, 1.0, delegationsRepresentation
 
+      storedDelegations = EJSON.clone delegations
+      delegations = User.normalizeDelegations delegations
+
+      # Running it again should not change anything.
+      @assertEqual delegations, storedDelegations
+
   testUserNormalizeDelegations: ->
     TEST_CASES = [
       [0.0]
@@ -42,5 +48,11 @@ class CoreTestCase extends ClassyTestCase
       sum = User._delegationsSum delegations
 
       @assertEqual sum, 1.0, delegationsRepresentation
+
+      storedDelegations = EJSON.clone delegations
+      delegations = User.normalizeDelegations delegations
+
+      # Running it again should not change anything.
+      @assertEqual delegations, storedDelegations
 
 ClassyTestCase.addTest new CoreTestCase()
