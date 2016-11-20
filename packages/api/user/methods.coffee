@@ -50,3 +50,38 @@ Meteor.methods
         multi: true
 
     changed
+
+  'User.removeDelegation': (userId) ->
+    check userId, Match.DocumentId
+
+    # We are manually fetching the user document so that we can disable transform.
+    user = User.documents.findOne
+      _id: Meteor.userId()
+    ,
+      fields:
+        delegations: 1
+      # We use no transform because we want delegations array exactly as it is.
+      # We change it and store it back.
+      transform:
+        null
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+    delegations = user.delegations or []
+    # Deep clone so that normalizeDelegations can modify it at will.
+    newDelegations = EJSON.clone (delegation for delegation in delegations when delegation.user?._id isnt userId)
+
+    # Nothing was removed. This is also true if user.delegations does not exist.
+    return 0 if delegations.length is newDelegations.length
+
+    # user.delegations has to exist for us to be able to remove a document.
+    assert user.delegations
+
+    newDelegations = User.normalizeDelegations newDelegations
+
+    User.documents.update
+      _id: user._id
+      # Only if nothing changed in between.
+      delegations: user.delegations
+    ,
+      $set:
+        delegations: newDelegations

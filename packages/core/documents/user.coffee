@@ -433,6 +433,27 @@ class User extends share.BaseDocument
 
       Roles.getUsersInRole roles[0]
 
+  # Modifies delegations argument in-place, but it also returns it.
+  @normalizeDelegations: (delegations) ->
+    # We first get all ratios into an expected range.
+    for delegation in delegations
+      delegation.ratio = Math.min(Math.max(delegation.ratio or 0.0, 0.0), 1.0)
+
+    if delegations.length is 1
+      delegations.ratio = 1.0
+    else
+      allRatios = 0.0
+      for delegation in delegations
+        allRatios += delegation.ratio
+  
+      for delegation in delegations
+        if allRatios is 0.0
+          delegation.ratio = 0.0
+        else
+          delegation.ratio = delegation.ratio / allRatios
+
+    delegations
+
   getReference: ->
     _.pick @, _.keys @constructor.REFERENCE_FIELDS()
 

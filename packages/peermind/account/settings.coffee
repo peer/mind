@@ -227,24 +227,12 @@ class Settings.DelegationsComponent extends UIComponent
   currentDelegations: ->
     delegations = @currentUser(delegations: 1)?.delegations or []
 
-    # We first get all ratios into an expected range.
-    for delegation in delegations
-      delegation.ratio = Math.min(Math.max(delegation.ratio or 0.0, 0.0), 1.0)
-
-    allRatios = 0.0
-    for delegation in delegations
-      allRatios += delegation.ratio
-
-    # Then we normalize all ratios so that the sum is 1.0. We normalize because this is what is done when delegated
+    # We first normalize all ratios so that the sum is 1.0. We normalize because this is what is done when delegated
     # votes are computed. It can happen that an user who was a delegate and was deleted and removed from the list of
     # delegations. As a consequence, the list of delegations does not contain correctly normalized ratios anymore.
     # TODO: Should we inform user that one of their delegates were deleted?
     # TODO: Should we recompute ratios in the database when one of users who are delegates are deleted?
-    for delegation in delegations
-      if allRatios is 0.0
-        delegation.ratio = 0.0
-      else
-        delegation.ratio = delegation.ratio / allRatios
+    delegations = User.normalizeDelegations delegations
 
     # Now we apply any temporary override we might have while a user is changing a ratio.
     if @changingRatioUserId() and @changingRatioValue()?
@@ -283,6 +271,17 @@ class Settings.DelegationsItemComponent extends UIComponent
 
   currentDelegationsLength: ->
     @callAncestorWith 'currentDelegationsLength'
+
+  onRemove: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'User.removeDelegation', @data('user._id'), (error, result) =>
+      if error
+        console.error "Remove delegation error", error
+        alert "Remove delegation error: #{error.reason or error}"
+        return
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
 
 class Settings.DelegationsRangeComponent extends UIComponent
   @register 'Settings.DelegationsRangeComponent'
