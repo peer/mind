@@ -127,7 +127,8 @@ Package.onUse(function (api) {
     'migrations/0032-user-lastseendiscussion.coffee',
     'migrations/0033-user-lastseenmeeting.coffee',
     'migrations/0034-user-name.coffee',
-    'migrations/0035-activity-levels.coffee'
+    'migrations/0035-activity-levels.coffee',
+    'migrations/0036-user-delegations.coffee',
   ], 'server');
 });
 
