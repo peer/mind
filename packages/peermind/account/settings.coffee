@@ -285,8 +285,11 @@ class Settings.DelegationsComponent extends UIComponent
         # TODO: Sort by filter quality.
         username: 1
 
-  onFilterChange: (event) ->
+  onFilterChange: _.debounce (event) ->
+    console.log @$('#filter-users').val()
     @usersFilter @$('#filter-users').val()
+  ,
+    100 # ms
 
 class Settings.DelegationsItemComponent extends UIComponent
   @register 'Settings.DelegationsItemComponent'
