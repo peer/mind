@@ -204,46 +204,88 @@ class Settings.DelegationsComponent extends UIComponent
   onCreated: ->
     super
 
-    @normalizedDelegatesLength = new ComputedField =>
-      @normalizedDelegates().length
+    @changingRatioUserId = new ReactiveField null
+    @changingRatioValue = new ReactiveField null
+
+    @currentDelegatesLength = new ComputedField =>
+      @currentDelegates().length
 
   onRendered: ->
     super
 
     @autorun (computation) =>
-      @normalizedDelegatesLength()
+      @currentDelegatesLength()
 
       # When length changes, delegationsEquation changes, so we should update balance text.
       $.fn.balanceTextUpdate()
 
-  # We normalize because this is what is done when delegated votes are computed.
-  # It can happen that an user who was a delegate and was deleted and removed from the list of delegates.
-  # As a consequence, the list of delegates does not contain correctly normalized ratios anymore.
-  # TODO: Should we inform user that one of their delegates were deleted?
-  # TODO: Should we recompute ratios when one of users who are delegates are deleted?
-  normalizedDelegates: ->
+  events: ->
+    super.concat
+      'slide .range': @onRangeSlide
+      'slidestop .range, click .range': @onRangeSlideStop
+
+  currentDelegates: ->
     delegates = @currentUser(delegates: 1)?.delegates or []
 
-    allRatios = 0
+    # We first get all ratios into an expected range.
     for delegate in delegates
-      allRatios += Math.max(delegate.ratio or 0, 0)
+      delegate.ratio = Math.min(Math.max(delegate.ratio or 0.0, 0.0), 1.0)
 
+    allRatios = 0.0
     for delegate in delegates
-      if allRatios is 0
-        delegate.ratio = 0
+      allRatios += delegate.ratio
+
+    # Then we normalize all ratios so that the sum is 1.0. We normalize because this is what is done when delegated
+    # votes are computed. It can happen that an user who was a delegate and was deleted and removed from the list of
+    # delegates. As a consequence, the list of delegates does not contain correctly normalized ratios anymore.
+    # TODO: Should we inform user that one of their delegates were deleted?
+    # TODO: Should we recompute ratios in the database when one of users who are delegates are deleted?
+    for delegate in delegates
+      if allRatios is 0.0
+        delegate.ratio = 0.0
       else
-        delegate.ratio = Math.max(delegate.ratio or 0, 0) / allRatios
+        delegate.ratio = delegate.ratio / allRatios
+
+    # Now we apply any temporary override we might have while a user is changing a ratio.
+    if @changingRatioUserId() and @changingRatioValue()?
+      otherRatios = 0.0
+      for delegate in delegates
+        if delegate?.user?._id is @changingRatioUserId()
+          delegate.ratio = @changingRatioValue()
+        else
+          otherRatios += delegate.ratio
+
+      if otherRatios
+        for delegate in delegates when delegate?.user?._id isnt @changingRatioUserId()
+          delegate.ratio = delegate.ratio * (1.0 - @changingRatioValue()) / otherRatios
+      else
+        for delegate in delegates when delegate?.user?._id isnt @changingRatioUserId()
+          delegate.ratio = (1.0 - @changingRatioValue()) / (delegates.length - 1)
 
     delegates
 
   delegationsEquation: ->
     # \u00A0 is a non-breaking space.
-    parts = ("#{delegate.ratio.toFixed 2}\u00A0×\u00A0vote\u00A0by\u00A0#{delegate.user.username}"for delegate in @normalizedDelegates())
+    parts = ("#{delegate.ratio.toFixed 2}\u00A0×\u00A0vote\u00A0by\u00A0#{delegate.user.username}"for delegate in @currentDelegates())
 
     parts.join " + "
 
+  onRangeSlideStop: (event, ui) ->
+    @changingRatioUserId null
+    @changingRatioValue null
+
+  onRangeSlide: (event, ui) ->
+    @changingRatioUserId @currentComponent().data 'user._id'
+    @changingRatioValue parseFloat(ui.value)
+
 class Settings.DelegationsItemComponent extends UIComponent
   @register 'Settings.DelegationsItemComponent'
+
+  currentDelegatesLength: ->
+    @callAncestorWith 'currentDelegatesLength'
+
+class Settings.DelegationsRangeComponent extends UIComponent
+  @register 'Settings.DelegationsRangeComponent'
 
   onRendered: ->
     super
