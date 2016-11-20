@@ -236,19 +236,7 @@ class Settings.DelegationsComponent extends UIComponent
 
     # Now we apply any temporary override we might have while a user is changing a ratio.
     if @changingRatioUserId() and @changingRatioValue()?
-      otherRatios = 0.0
-      for delegation in delegations
-        if delegation?.user?._id is @changingRatioUserId()
-          delegation.ratio = @changingRatioValue()
-        else
-          otherRatios += delegation.ratio
-
-      if otherRatios
-        for delegation in delegations when delegation?.user?._id isnt @changingRatioUserId()
-          delegation.ratio = delegation.ratio * (1.0 - @changingRatioValue()) / otherRatios
-      else
-        for delegation in delegations when delegation?.user?._id isnt @changingRatioUserId()
-          delegation.ratio = (1.0 - @changingRatioValue()) / (delegations.length - 1)
+      delegations = User.setDelegations delegations, @changingRatioUserId(), @changingRatioValue()
 
     delegations
 
@@ -261,6 +249,14 @@ class Settings.DelegationsComponent extends UIComponent
   onRangeSlideStop: (event, ui) ->
     @changingRatioUserId null
     @changingRatioValue null
+
+    Meteor.call 'User.setDelegation', @currentComponent().data('user._id'), parseFloat(@currentComponent().$('.range').slider('value')), (error, result) =>
+      if error
+        console.error "Set delegation error", error
+        alert "Set delegation error: #{error.reason or error}"
+        return
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
 
   onRangeSlide: (event, ui) ->
     @changingRatioUserId @currentComponent().data 'user._id'

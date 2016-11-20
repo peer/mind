@@ -474,6 +474,30 @@ class User extends share.BaseDocument
 
     delegations
 
+  # Modifies delegations argument in-place, but it also returns it.
+  @setDelegations: (delegations, userId, value) ->
+    found = false
+    for delegation in delegations when delegation?.user?._id is userId
+      delegation.ratio = value
+      found = true
+
+    return delegations unless found
+
+    otherRatios = @_delegationsSum _.reject delegations, (delegation) =>
+      delegation?.user?._id is userId
+
+    if otherRatios
+      for delegation in delegations when delegation?.user?._id isnt userId
+        delegation.ratio = delegation.ratio * (1.0 - value) / otherRatios
+    else
+      # Other delegations are currently all 0.0.
+      # We distribute (1.0 - value) equally to them.
+      for delegation in delegations when delegation?.user?._id isnt userId
+        delegation.ratio = (1.0 - value) / (delegations.length - 1)
+
+    # Just to make sure.
+    @normalizeDelegations delegations
+
   getReference: ->
     _.pick @, _.keys @constructor.REFERENCE_FIELDS()
 

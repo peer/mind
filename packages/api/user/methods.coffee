@@ -85,3 +85,42 @@ Meteor.methods
     ,
       $set:
         delegations: newDelegations
+
+  'User.setDelegation': (userId, value) ->
+    check userId, Match.DocumentId
+    check value, Number
+
+    value = Math.min(Math.max(value or 0.0, 0.0), 1.0)
+
+    # We are manually fetching the user document so that we can disable transform.
+    user = User.documents.findOne
+      _id: Meteor.userId()
+    ,
+      fields:
+        delegations: 1
+      # We use no transform because we want delegations array exactly as it is.
+      # We change it and store it back.
+      transform:
+        null
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
+
+    return 0 unless user.delegations
+
+    # Deep clone so that we can modify it at will.
+    newDelegations = EJSON.clone user.delegations
+
+    # Just to make sure.
+    newDelegations = User.normalizeDelegations newDelegations
+
+    newDelegations = User.setDelegations newDelegations, userId, value
+
+    # Nothing changed.
+    return 0 if EJSON.equals user.delegations, newDelegations
+
+    User.documents.update
+      _id: user._id
+      # Only if nothing changed during execution of this method.
+      delegations: user.delegations
+    ,
+      $set:
+        delegations: newDelegations
