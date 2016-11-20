@@ -70,11 +70,15 @@ new PublishEndpoint 'User.list', ->
   @autorun (computation) =>
     limit = @data('limit') or 10
     filter = @data('filter') or ''
+    exceptIds = @data('exceptIds') or []
     check limit, Match.PositiveNumber
     check filter, String
+    check exceptIds, [Match.DocumentId]
 
     query =
       roles: 'member'
+      _id:
+        $nin: exceptIds
 
     if filter
       filter = Meteor._escapeRegExp filter

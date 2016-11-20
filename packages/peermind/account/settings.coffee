@@ -212,6 +212,16 @@ class Settings.DelegationsComponent extends UIComponent
 
     @usersHandle = @subscribe 'User.list'
 
+    @exceptIds = new ComputedField =>
+      currentDelegationsIds = (delegation.user._id for delegation in @currentDelegations() when delegation?.user?._id)
+
+      [@currentUserId()].concat(currentDelegationsIds).sort()
+    ,
+      EJSON.equals
+
+    @autorun (computation) =>
+      @usersHandle.setData 'exceptIds', @exceptIds()
+
   onRendered: ->
     super
 
@@ -265,12 +275,7 @@ class Settings.DelegationsComponent extends UIComponent
     @changingRatioValue parseFloat(ui.value)
 
   users: ->
-    currentDelegationsIds = (delegation.user._id for delegation in @currentDelegations() when delegation?.user?._id)
-
-    User.documents.find _.extend(@usersHandle.scopeQuery(),
-      _id:
-        $nin: [@currentUserId()].concat currentDelegationsIds
-    ),
+    User.documents.find @usersHandle.scopeQuery(),
       sort:
         # TODO: Sort by filter quality.
         username: 1
