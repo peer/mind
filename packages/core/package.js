@@ -130,3 +130,27 @@ Package.onUse(function (api) {
     'migrations/0035-activity-levels.coffee'
   ], 'server');
 });
+
+Package.onTest(function (api) {
+  api.versionsFrom('1.4.1');
+
+  // Core dependencies.
+  api.use([
+    'coffeescript',
+    'random'
+  ]);
+
+  // Internal dependencies.
+  api.use([
+    'core'
+  ]);
+
+  // 3rd party dependencies.
+  api.use([
+    'peerlibrary:classy-test@0.2.26'
+  ]);
+
+  api.addFiles([
+    'tests.coffee'
+   ]);
+});

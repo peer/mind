@@ -433,6 +433,9 @@ class User extends share.BaseDocument
 
       Roles.getUsersInRole roles[0]
 
+  @_delegationsSum: (delegations) ->
+    _.preciseSum _.pluck delegations, 'ratio'
+
   # Modifies delegations argument in-place, but it also returns it.
   @normalizeDelegations: (delegations) ->
     # We first get all ratios into an expected range.
@@ -440,17 +443,34 @@ class User extends share.BaseDocument
       delegation.ratio = Math.min(Math.max(delegation.ratio or 0.0, 0.0), 1.0)
 
     if delegations.length is 1
-      delegations.ratio = 1.0
-    else
-      allRatios = 0.0
-      for delegation in delegations
-        allRatios += delegation.ratio
-  
-      for delegation in delegations
-        if allRatios is 0.0
-          delegation.ratio = 0.0
-        else
-          delegation.ratio = delegation.ratio / allRatios
+      delegations[0].ratio = 1.0
+    else if delegations.length
+      sum = 0.0
+      i = 0
+      while sum isnt 1.0
+        # We try 100 times. We use a condition before assert so that
+        # we do not compute strings for ratios unnecessary.
+        assert i < 100, (delegation.ratio.toFixed(20) for delegation in delegations).join(', ') unless i < 100
+        i++
+
+        sum = @_delegationsSum delegations
+
+        # If all delegations are 0.0, we set them to equal shares.
+        if sum is 0.0
+          for delegation in delegations
+            delegation.ratio = 1.0
+          continue
+
+        for delegation in delegations
+          delegation.ratio = delegation.ratio / sum
+
+        sum = @_delegationsSum delegations
+
+        if sum isnt 1.0
+          partialSum = @_delegationsSum delegations[1..]
+          delegations[0].ratio = 1.0 - partialSum
+
+          sum = @_delegationsSum delegations
 
     delegations
 

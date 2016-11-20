@@ -20,3 +20,17 @@ _.mixin
       return undefined unless _.isObject(object) and segment of object
       object = object[segment]
     object
+
+  # Kahan summation algorithm.
+  preciseSum: (values...) ->
+    values = _.flatten values
+
+    sum = 0.0
+    compensation = 0.0
+    for value in values
+      valueWithCompensation = value - compensation
+      temp = sum + valueWithCompensation
+      compensation = (temp - sum) - valueWithCompensation
+      sum = temp
+
+    sum
