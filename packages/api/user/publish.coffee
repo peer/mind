@@ -19,7 +19,7 @@ new PublishEndpoint 'User.settings', ->
       'services.twitter.id': 1
       'services.twitter.screenName': 1
       researchData: 1
-      delegates: 1
+      delegations: 1
 
 new PublishEndpoint 'User.profile', (userId) ->
   check userId, Match.DocumentId

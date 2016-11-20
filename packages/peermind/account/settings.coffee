@@ -207,14 +207,14 @@ class Settings.DelegationsComponent extends UIComponent
     @changingRatioUserId = new ReactiveField null
     @changingRatioValue = new ReactiveField null
 
-    @currentDelegatesLength = new ComputedField =>
-      @currentDelegates().length
+    @currentDelegationsLength = new ComputedField =>
+      @currentDelegations().length
 
   onRendered: ->
     super
 
     @autorun (computation) =>
-      @currentDelegatesLength()
+      @currentDelegationsLength()
 
       # When length changes, delegationsEquation changes, so we should update balance text.
       $.fn.balanceTextUpdate()
@@ -224,49 +224,49 @@ class Settings.DelegationsComponent extends UIComponent
       'slide .range': @onRangeSlide
       'slidestop .range, click .range': @onRangeSlideStop
 
-  currentDelegates: ->
-    delegates = @currentUser(delegates: 1)?.delegates or []
+  currentDelegations: ->
+    delegations = @currentUser(delegations: 1)?.delegations or []
 
     # We first get all ratios into an expected range.
-    for delegate in delegates
-      delegate.ratio = Math.min(Math.max(delegate.ratio or 0.0, 0.0), 1.0)
+    for delegation in delegations
+      delegation.ratio = Math.min(Math.max(delegation.ratio or 0.0, 0.0), 1.0)
 
     allRatios = 0.0
-    for delegate in delegates
-      allRatios += delegate.ratio
+    for delegation in delegations
+      allRatios += delegation.ratio
 
     # Then we normalize all ratios so that the sum is 1.0. We normalize because this is what is done when delegated
     # votes are computed. It can happen that an user who was a delegate and was deleted and removed from the list of
-    # delegates. As a consequence, the list of delegates does not contain correctly normalized ratios anymore.
+    # delegations. As a consequence, the list of delegations does not contain correctly normalized ratios anymore.
     # TODO: Should we inform user that one of their delegates were deleted?
     # TODO: Should we recompute ratios in the database when one of users who are delegates are deleted?
-    for delegate in delegates
+    for delegation in delegations
       if allRatios is 0.0
-        delegate.ratio = 0.0
+        delegation.ratio = 0.0
       else
-        delegate.ratio = delegate.ratio / allRatios
+        delegation.ratio = delegation.ratio / allRatios
 
     # Now we apply any temporary override we might have while a user is changing a ratio.
     if @changingRatioUserId() and @changingRatioValue()?
       otherRatios = 0.0
-      for delegate in delegates
-        if delegate?.user?._id is @changingRatioUserId()
-          delegate.ratio = @changingRatioValue()
+      for delegation in delegations
+        if delegation?.user?._id is @changingRatioUserId()
+          delegation.ratio = @changingRatioValue()
         else
-          otherRatios += delegate.ratio
+          otherRatios += delegation.ratio
 
       if otherRatios
-        for delegate in delegates when delegate?.user?._id isnt @changingRatioUserId()
-          delegate.ratio = delegate.ratio * (1.0 - @changingRatioValue()) / otherRatios
+        for delegation in delegations when delegation?.user?._id isnt @changingRatioUserId()
+          delegation.ratio = delegation.ratio * (1.0 - @changingRatioValue()) / otherRatios
       else
-        for delegate in delegates when delegate?.user?._id isnt @changingRatioUserId()
-          delegate.ratio = (1.0 - @changingRatioValue()) / (delegates.length - 1)
+        for delegation in delegations when delegation?.user?._id isnt @changingRatioUserId()
+          delegation.ratio = (1.0 - @changingRatioValue()) / (delegations.length - 1)
 
-    delegates
+    delegations
 
   delegationsEquation: ->
     # \u00A0 is a non-breaking space.
-    parts = ("#{delegate.ratio.toFixed 2}\u00A0×\u00A0vote\u00A0by\u00A0#{delegate.user.username}"for delegate in @currentDelegates())
+    parts = ("#{delegation.ratio.toFixed 2}\u00A0×\u00A0vote\u00A0by\u00A0#{delegation.user.username}"for delegation in @currentDelegations())
 
     parts.join " + "
 
@@ -281,8 +281,8 @@ class Settings.DelegationsComponent extends UIComponent
 class Settings.DelegationsItemComponent extends UIComponent
   @register 'Settings.DelegationsItemComponent'
 
-  currentDelegatesLength: ->
-    @callAncestorWith 'currentDelegatesLength'
+  currentDelegationsLength: ->
+    @callAncestorWith 'currentDelegationsLength'
 
 class Settings.DelegationsRangeComponent extends UIComponent
   @register 'Settings.DelegationsRangeComponent'

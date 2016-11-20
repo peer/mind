@@ -215,7 +215,7 @@ class User extends share.BaseDocument
   # lastSeenPersonalizedActivity: timestamp of the last seen personalized activity
   # lastSeenDiscussion: timestamp of the last seen discussion
   # lastSeenMeeting: timestamp of the last seen meeting
-  # delegates: list of
+  # delegations: list of
   #   user
   #     _id
   #     username
@@ -238,7 +238,7 @@ class User extends share.BaseDocument
       profileAttachments: [
         @ReferenceField StorageFile
       ]
-      delegates: [
+      delegations: [
         user: @ReferenceField 'self', _.extend User.REFERENCE_FIELDS(),
           name: 1
       ]

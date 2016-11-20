@@ -282,26 +282,26 @@
     that we may evaluate this idea on a theoretical level before finalizing its implementation.</strong>
   </p>
 
-  {{#if currentDelegatesLength}}
+  {{#if currentDelegationsLength}}
     <ul class="collection z-depth-1">
-      {{#each currentDelegates}}
+      {{#each currentDelegations}}
         {{> Settings.DelegationsItemComponent}}
       {{/each}}
     </ul>
     <div class="row">
       <div class="col s12 center-align grey-text">
-        {{#if $eq currentDelegatesLength 1}}
+        {{#if $eq currentDelegationsLength 1}}
           {{!--
             We need this #if statement around because otherwise we get "Error: Failed to execute 'removeChild' on 'Node':
-            The node to be removed is not a child of this node." error when number of delegates changes from 2 to 1.
+            The node to be removed is not a child of this node." error when number of delegations changes from 2 to 1.
             This is connected with the fact that in insertDOMElement we call $.fn.balanceTextUpdate(). It seems
             $.fn.balanceTextUpdate() changes text in a way that Blaze is unable to update it later on, when username
             becomes available. Username might not be available from the very beginning because PeerDB has not yet synced it.
           --}}
-          {{#if currentDelegates.[0].user.username}}
+          {{#if currentDelegations.[0].user.username}}
             <div class="balance-text">
               {{!-- TODO: Once implemented, set to "When you do not vote yourself, your proxy vote will be equal to..." --}}
-              When you do not vote yourself, your proxy vote would be (once implemented) equal to vote by {{currentDelegates.[0].user.username}}.
+              When you do not vote yourself, your proxy vote would be (once implemented) equal to vote by {{currentDelegations.[0].user.username}}.
             </div>
           {{/if}}
         {{else}}
@@ -330,7 +330,7 @@
   <li class="collection-item avatar">
     {{!-- TODO: If the width of the collection item is small, delegation control overlaps over name and other content. --}}
     <div class="delegation-control secondary-content">
-      {{#unless $eq currentDelegatesLength 1}}
+      {{#unless $eq currentDelegationsLength 1}}
         {{> Settings.DelegationsRangeComponent}}
       {{/unless}}
       <button type="button" class="btn waves-effect waves-light" onClick="{{onRemove}}">Remove</button>
