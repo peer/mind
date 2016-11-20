@@ -1,5 +1,5 @@
 class VotingTestCase extends ClassyTestCase
-  @testName: 'Voting'
+  @testName: 'voting'
 
   testIsInteger: ->
     @assertFalse VotingEngine.isInteger ''

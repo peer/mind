@@ -1,5 +1,5 @@
 class SanitizeTestCase extends ClassyTestCase
-  @testName: 'Sanitize'
+  @testName: 'sanitize'
 
   testBasic: ->
     sanitize = new Sanitize
