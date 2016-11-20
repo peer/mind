@@ -11,7 +11,11 @@
           <div id="avatar" class="section scrollspy">
             <h4>Avatar</h4>
             {{#if isSandstorm}}
-              <p class="justify" lang="en">Avatar is manged through Sandstorm. Consult Sandstorm account settings to select an avatar.</p>
+              <div class="row">
+                <div class="col s12">
+                  <p class="justify" lang="en">Avatar is manged through Sandstorm. Consult Sandstorm account settings to select an avatar.</p>
+                </div>
+              </div>
             {{else}}
               {{> Settings.AvatarComponent}}
             {{/if}}
@@ -44,15 +48,20 @@
           <div id="username" class="section scrollspy">
             <h4>Username</h4>
             {{#if isSandstorm}}
-              <p class="justify" lang="en">
-                Username is based on Sandstorm's preferred handle, but made unique.
-                Consult Sandstorm account settings to change the preferred handle and username will be changed accordingly.
-              </p>
+              <div class="row">
+                <div class="col s12">
+                  <p class="justify" lang="en">
+                    Username is based on Sandstorm's preferred handle, but made unique.
+                    Consult Sandstorm account settings to change the preferred handle and username will be changed accordingly.
+                  </p>
+                </div>
+              </div>
             {{else}}
               {{> Settings.UsernameComponent}}
             {{/if}}
           </div>
         </div>
+
         <div class="col hide-on-small-only m3 l3">
           <ul class="section table-of-contents">
             <li><a href="#name">Name</a></li>
@@ -76,10 +85,14 @@
 </template>
 
 <template name="Settings.NameComponent">
-  <p class="justify" lang="en">
-    Name helps others find and identify you across PeerMind. It allows easier @mentions and delegation.
-    It is shown on <a href="{{pathFor 'User.display' params=currentUser}}">your profile</a>. It is optional.
-  </p>
+  <div class="row">
+    <div class="col s12">
+      <p class="justify" lang="en">
+        Name helps others find and identify you across PeerMind. It allows easier @mentions and delegation.
+        It is shown on <a href="{{pathFor 'User.display' params=currentUser}}">your profile</a>. It is optional.
+      </p>
+    </div>
+  </div>
 
   <div class="row">
     <form class="col s12" onSubmit>
@@ -99,7 +112,11 @@
 </template>
 
 <template name="Settings.UsernameComponent">
-  <p>Your current username: <strong>{{currentUser.username}}</strong></p>
+  <div class="row">
+    <div class="col s12">
+      <p>Your current username: <strong>{{currentUser.username}}</strong></p>
+    </div>
+  </div>
 
   <div class="row">
     <form class="col s12" onSubmit>
@@ -143,117 +160,134 @@
 </template>
 
 <template name="Settings.AccountsComponent">
-  {{#if isSandstorm}}
-    {{!-- TODO: It is unclear if linking of accounts can work inside Sandstorm. See: https://github.com/sandstorm-io/sandstorm/issues/2433 --}}
-    <p class="justify" lang="en">
-      By linking your accounts on other sites PeerMind might be able to better suggest potential delegates to you.
-    </p>
-  {{else}}
-    <p class="justify" lang="en">
-      By linking your accounts on other sites you will be able to use them to sign in and use their avatar.
-      Moreover, PeerMind might be able to better suggest potential delegates to you.
-    </p>
-  {{/if}}
+  <div class="row">
+    <div class="col s12">
+      {{#if isSandstorm}}
+        {{!-- TODO: It is unclear if linking of accounts can work inside Sandstorm. See: https://github.com/sandstorm-io/sandstorm/issues/2433 --}}
+        <p class="justify" lang="en">
+          By linking your accounts on other sites PeerMind might be able to better suggest potential delegates to you.
+        </p>
+      {{else}}
+        <p class="justify" lang="en">
+          By linking your accounts on other sites you will be able to use them to sign in and use their avatar.
+          Moreover, PeerMind might be able to better suggest potential delegates to you.
+        </p>
+      {{/if}}
+    </div>
+  </div>
 
-  <ul class="collection z-depth-1">
-    {{#if currentUser.services.facebook.id}}
-      <li class="collection-item avatar">
-        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'facebook'}}">Unlink</button>
-        <a href="{{currentUser.services.facebook.link}}"><img src="{{currentUser.avatarUrl 'facebook'}}" alt="" class="circle"></a>
-        <span class="title"><a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></span>
-        {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
-        <p>Facebook</p>
-      </li>
-    {{else}}
-      <li class="collection-item center-align input-field">
-        <button type="button" class="btn waves-effect waves-light facebook-button" onClick="{{onLink 'facebook'}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
-      </li>
-    {{/if}}
-    {{#if currentUser.services.google.id}}
-      <li class="collection-item avatar">
-        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'google'}}">Unlink</button>
-        <a href="https://plus.google.com/{{currentUser.services.google.id}}"><img src="{{currentUser.avatarUrl 'google'}}" alt="" class="circle"></a>
-        <span class="title"><a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></span>
-        {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
-        <p>Google</p>
-      </li>
-    {{else}}
-      <li class="collection-item center-align input-field">
-        <button type="button" class="btn waves-effect waves-light google-button" onClick="{{onLink 'google'}}"><i class="fa fa-google left"></i> Link your Google account</button>
-      </li>
-    {{/if}}
-    {{#if currentUser.services.twitter.id}}
-      <li class="collection-item avatar">
-        <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'twitter'}}">Unlink</button>
-        <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}"><img src="{{currentUser.avatarUrl 'twitter'}}" alt="" class="circle"></a>
-        <span class="title"><a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></span>
-        {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
-        <p>Twitter</p>
-      </li>
-    {{else}}
-      <li class="collection-item center-align input-field">
-        <button type="button" class="btn waves-effect waves-light twitter-button" onClick="{{onLink 'twitter'}}"><i class="fa fa-twitter left"></i> Link your Twitter account</button>
-      </li>
-    {{/if}}
-  </ul>
+  <div class="row">
+    <div class="col s12">
+      <ul class="collection z-depth-1">
+        {{#if currentUser.services.facebook.id}}
+          <li class="collection-item avatar">
+            <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'facebook'}}">Unlink</button>
+            <a href="{{currentUser.services.facebook.link}}"><img src="{{currentUser.avatarUrl 'facebook'}}" alt="" class="circle"></a>
+            <span class="title"><a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></span>
+            {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
+            <p>Facebook</p>
+          </li>
+        {{else}}
+          <li class="collection-item center-align input-field">
+            <button type="button" class="btn waves-effect waves-light facebook-button" onClick="{{onLink 'facebook'}}"><i class="fa fa-facebook left"></i> Link your Facebook account</button>
+          </li>
+        {{/if}}
+        {{#if currentUser.services.google.id}}
+          <li class="collection-item avatar">
+            <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'google'}}">Unlink</button>
+            <a href="https://plus.google.com/{{currentUser.services.google.id}}"><img src="{{currentUser.avatarUrl 'google'}}" alt="" class="circle"></a>
+            <span class="title"><a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></span>
+            {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
+            <p>Google</p>
+          </li>
+        {{else}}
+          <li class="collection-item center-align input-field">
+            <button type="button" class="btn waves-effect waves-light google-button" onClick="{{onLink 'google'}}"><i class="fa fa-google left"></i> Link your Google account</button>
+          </li>
+        {{/if}}
+        {{#if currentUser.services.twitter.id}}
+          <li class="collection-item avatar">
+            <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onUnlink 'twitter'}}">Unlink</button>
+            <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}"><img src="{{currentUser.avatarUrl 'twitter'}}" alt="" class="circle"></a>
+            <span class="title"><a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></span>
+            {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
+            <p>Twitter</p>
+          </li>
+        {{else}}
+          <li class="collection-item center-align input-field">
+            <button type="button" class="btn waves-effect waves-light twitter-button" onClick="{{onLink 'twitter'}}"><i class="fa fa-twitter left"></i> Link your Twitter account</button>
+          </li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
 </template>
 
 <template name="Settings.AvatarComponent">
-  <ul class="collection z-depth-1">
-    {{#each avatar in currentUser.avatars}}
-      <li class="collection-item avatar">
-        <img src="{{currentUser.avatarUrl avatar.name avatar.argument}}" alt="" class="circle">
-        {{#if avatar.selected}}
-          <button type="button" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
-        {{else}}
-          <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
-        {{/if}}
-        {{#if $eq avatar.name 'default'}}
-          <span class="title">Default</span>
-          <p>For username {{currentUser.username}}</p>
-        {{/if}}
-        {{#if $eq avatar.name 'gravatar'}}
-          <span class="title">Gravatar</span>
-          <p>For e-mail address {{avatar.argument}}</p>
-        {{/if}}
-        {{#if $eq avatar.name 'facebook'}}
-          {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
-          <span class="title">Facebook</span>
-          <p>For <a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></p>
-        {{/if}}
-        {{#if $eq avatar.name 'google'}}
-          {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
-          <span class="title">Google</span>
-          <p>For <a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></p>
-        {{/if}}
-        {{#if $eq avatar.name 'twitter'}}
-          {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
-          <span class="title">Twitter</span>
-          <p>For <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></p>
-        {{/if}}
-      </li>
-    {{/each}}
-  </ul>
+  <div class="row">
+    <div class="col s12">
+      <ul class="collection z-depth-1">
+        {{#each avatar in currentUser.avatars}}
+          <li class="collection-item avatar">
+            <img src="{{currentUser.avatarUrl avatar.name avatar.argument}}" alt="" class="circle">
+            {{#if avatar.selected}}
+              <button type="button" class="btn waves-effect waves-light secondary-content selected" disabled>Selected</button>
+            {{else}}
+              <button type="button" class="btn waves-effect waves-light secondary-content" onClick="{{onSelect avatar.name avatar.argument}}">Select</button>
+            {{/if}}
+            {{#if $eq avatar.name 'default'}}
+              <span class="title">Default</span>
+              <p>For username {{currentUser.username}}</p>
+            {{/if}}
+            {{#if $eq avatar.name 'gravatar'}}
+              <span class="title">Gravatar</span>
+              <p>For e-mail address {{avatar.argument}}</p>
+            {{/if}}
+            {{#if $eq avatar.name 'facebook'}}
+              {{!-- TODO: Add Facebook icon here. Or style it like Facebook name/colors. --}}
+              <span class="title">Facebook</span>
+              <p>For <a href="{{currentUser.services.facebook.link}}">{{currentUser.services.facebook.name}}</a></p>
+            {{/if}}
+            {{#if $eq avatar.name 'google'}}
+              {{!-- TODO: Add Google icon here. Or style it like Google name/colors. --}}
+              <span class="title">Google</span>
+              <p>For <a href="https://plus.google.com/{{currentUser.services.google.id}}">{{currentUser.services.google.name}}</a></p>
+            {{/if}}
+            {{#if $eq avatar.name 'twitter'}}
+              {{!-- TODO: Add Twitter icon here. Or style it like Twitter name/colors. --}}
+              <span class="title">Twitter</span>
+              <p>For <a href="https://twitter.com/{{currentUser.services.twitter.screenName}}">@{{currentUser.services.twitter.screenName}}</a></p>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
 </template>
 
 <template name="Settings.ResearchDataComponent">
-  <p class="justify" lang="en">
-    The experiment of using this online system for councils in Cloyne is potentially valuable for research into
-    collective decision making and improvements to democracy. We are considering creating
-    a public dataset with <strong>completely anonymized and abstracted data</strong> of users interacting with the
-    system, including their anonymized votes. All information about what was voted on and who voted would be removed,
-    replaced with abstract identifiers. Only metadata about interactions with the system would be used, without any
-    written content (e.g., text of comments, motions). Such dataset will help researchers, including us, to be
-    able to analyze and design better ways to make democracy work. It would be the first "made in Cloyne" research dataset.
-  </p>
-  <p class="justify" lang="en">
-    Your decision will not influence functionality of this system for you in any way. You can change your decision
-    at any time in the future{{#unless isSettings}} through settings{{/unless}}.
-  </p>
-  <p class="justify" lang="en">
-    <strong>Do you consent to contributing data of your anonymized interactions with this system, including your
-    anonymized votes, to a public dataset?</strong>
-  </p>
+  <div class="row">
+    <div class="col s12">
+      <p class="justify" lang="en">
+        The experiment of using this online system for councils in Cloyne is potentially valuable for research into
+        collective decision making and improvements to democracy. We are considering creating
+        a public dataset with <strong>completely anonymized and abstracted data</strong> of users interacting with the
+        system, including their anonymized votes. All information about what was voted on and who voted would be removed,
+        replaced with abstract identifiers. Only metadata about interactions with the system would be used, without any
+        written content (e.g., text of comments, motions). Such dataset will help researchers, including us, to be
+        able to analyze and design better ways to make democracy work. It would be the first "made in Cloyne" research dataset.
+      </p>
+      <p class="justify" lang="en">
+        Your decision will not influence functionality of this system for you in any way. You can change your decision
+        at any time in the future{{#unless isSettings}} through settings{{/unless}}.
+      </p>
+      <p class="justify" lang="en">
+        <strong>Do you consent to contributing data of your anonymized interactions with this system, including your
+        anonymized votes, to a public dataset?</strong>
+      </p>
+    </div>
+  </div>
+
   <div class="row">
     <div class="input-field col s4 offset-s2 center-align">
       {{! TODO: We cannot use required here with Materialize. See https://github.com/Dogfalo/materialize/issues/2187 }}
@@ -269,25 +303,34 @@
 </template>
 
 <template name="Settings.DelegationsComponent">
-  <p class="justify" lang="en">
-    By defining delegations to people you know and trust, who you believe share similar values with you, you can
-    improve quality of decisions. In the scenario where you do not vote on a motion, your delegates' votes
-    can act as a proxy for yours. In this way your vote does not go unused and your values are still represented
-    in the result thanks to your delegates. If you do vote yourself on any motion at any point, your vote will
-    solely be used instead. Your delegations are private and visible only to you.
-  </p>
-  {{!-- TODO: Once implemented, remove this paragraph. --}}
-  <p class="justify" lang="en">
-    <strong>Currently, delegations are not used at all when tallying results, but do please still define them so
-    that we may evaluate this idea on a theoretical level before finalizing its implementation.</strong>
-  </p>
+  <div class="row">
+    <div class="col s12">
+      <p class="justify" lang="en">
+        By defining delegations to people you know and trust, who you believe share similar values with you, you can
+        improve quality of decisions. In the scenario where you do not vote on a motion, your delegates' votes
+        can act as a proxy for yours. In this way your vote does not go unused and your values are still represented
+        in the result thanks to your delegates. If you do vote yourself on any motion at any point, your vote will
+        solely be used instead. Your delegations are private and visible only to you.
+      </p>
+      {{!-- TODO: Once implemented, remove this paragraph. --}}
+      <p class="justify" lang="en">
+        <strong>Currently, delegations are not used at all when tallying results, but do please still define them so
+        that we may evaluate this idea on a theoretical level before finalizing its implementation.</strong>
+      </p>
+    </div>
+  </div>
 
   {{#if currentDelegationsLength}}
-    <ul class="collection z-depth-1">
-      {{#each currentDelegations}}
-        {{> Settings.DelegationsItemComponent}}
-      {{/each}}
-    </ul>
+    <div class="row">
+      <div class="col s12">
+        <ul class="collection z-depth-1">
+          {{#each currentDelegations}}
+            {{> Settings.DelegationsItemComponent}}
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col s12 center-align grey-text">
         {{#if $eq currentDelegationsLength 1}}
