@@ -279,6 +279,13 @@ class User extends share.BaseDocument
       updatedAt: share.UpdatedAtTrigger ['username', 'emails']
       lastActivity: share.LastActivityTrigger ['services']
 
+  @PUBLISH_FIELDS: ->
+    _.extend super,
+      _id: 1
+      username: 1
+      avatar: 1
+      name: 1
+
   @EXTRA_PUBLISH_FIELDS: ->
     if __meteor_runtime_config__.SANDSTORM
       _id: 1

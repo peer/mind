@@ -210,6 +210,8 @@ class Settings.DelegationsComponent extends UIComponent
     @currentDelegationsLength = new ComputedField =>
       @currentDelegations().length
 
+    @usersHandle = @subscribe 'User.list'
+
   onRendered: ->
     super
 
@@ -262,6 +264,17 @@ class Settings.DelegationsComponent extends UIComponent
     @changingRatioUserId @currentComponent().data 'user._id'
     @changingRatioValue parseFloat(ui.value)
 
+  users: ->
+    currentDelegationsIds = (delegation.user._id for delegation in @currentDelegations() when delegation?.user?._id)
+
+    User.documents.find _.extend(@usersHandle.scopeQuery(),
+      _id:
+        $nin: [@currentUserId()].concat currentDelegationsIds
+    ),
+      sort:
+        # TODO: Sort by filter quality.
+        username: 1
+
 class Settings.DelegationsItemComponent extends UIComponent
   @register 'Settings.DelegationsItemComponent'
 
@@ -302,6 +315,20 @@ class Settings.DelegationsRangeComponent extends UIComponent
       value = @data('ratio') ? 0.0
 
       @$('.range').slider('value', value)
+
+class Settings.DelegationsUserComponent extends UIComponent
+  @register 'Settings.DelegationsUserComponent'
+
+  onSelect: (event) ->
+    event.preventDefault()
+
+    Meteor.call 'User.addDelegation', @data('_id'), (error, result) =>
+      if error
+        console.error "Add delegation error", error
+        alert "Add delegation error: #{error.reason or error}"
+        return
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
 
 FlowRouter.route '/account/settings',
   name: 'Settings.display'

@@ -62,3 +62,33 @@ new PublishEndpoint 'User.autocomplete', (username, prefixSearch) ->
         name: 1
         username: 1
         avatar: 1
+
+# TODO: Currently limited only to members. Generalize.
+new PublishEndpoint 'User.list', ->
+  @enableScope()
+
+  @autorun (computation) =>
+    limit = @data('limit') or 10
+    filter = @data('filter') or ''
+    check limit, Match.PositiveNumber
+    check filter, String
+
+    query =
+      roles: 'member'
+
+    if filter
+      filter = Meteor._escapeRegExp filter
+
+      _.extend query,
+        $or: [
+          username: new RegExp(filter, 'i')
+        ,
+          name: new RegExp(filter, 'i')
+        ]
+
+    User.documents.find query,
+      fields: User.PUBLISH_FIELDS()
+      limit: limit
+      sort:
+        # TODO: Sort by filter quality.
+        username: 1
