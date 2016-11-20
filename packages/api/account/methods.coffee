@@ -1,3 +1,5 @@
+# TODO: These methods should probably be renamed to User.* methods.
+
 Meteor.methods
   'Account.changeName': (newName) ->
     check newName, String
