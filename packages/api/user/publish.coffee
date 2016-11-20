@@ -75,6 +75,9 @@ new PublishEndpoint 'User.list', ->
     check filter, String
     check exceptIds, [Match.DocumentId]
 
+    # TODO: We should use proper full-text search and use filter as a string of keywords.
+    filter = filter.trim()
+
     query =
       roles: 'member'
       _id:

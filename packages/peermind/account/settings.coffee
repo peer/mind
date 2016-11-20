@@ -219,8 +219,13 @@ class Settings.DelegationsComponent extends UIComponent
     ,
       EJSON.equals
 
+    @usersFilter = new ReactiveField ''
+
     @autorun (computation) =>
       @usersHandle.setData 'exceptIds', @exceptIds()
+
+    @autorun (computation) =>
+      @usersHandle.setData 'filter', @usersFilter()
 
   onRendered: ->
     super
@@ -279,6 +284,9 @@ class Settings.DelegationsComponent extends UIComponent
       sort:
         # TODO: Sort by filter quality.
         username: 1
+
+  onFilterChange: (event) ->
+    @usersFilter @$('#filter-users').val()
 
 class Settings.DelegationsItemComponent extends UIComponent
   @register 'Settings.DelegationsItemComponent'
