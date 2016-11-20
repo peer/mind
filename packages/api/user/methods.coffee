@@ -80,7 +80,7 @@ Meteor.methods
 
     User.documents.update
       _id: user._id
-      # Only if nothing changed in between.
+      # Only if nothing changed during execution of this method.
       delegations: user.delegations
     ,
       $set:
