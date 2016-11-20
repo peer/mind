@@ -63,7 +63,7 @@ new PublishEndpoint 'User.autocomplete', (username, prefixSearch) ->
         username: 1
         avatar: 1
 
-# TODO: Currently limited only to members. Generalize.
+# TODO: Currently limited only to members. Generalize. Or should it be just users who can vote?
 new PublishEndpoint 'User.list', ->
   @enableScope()
 
