@@ -66,6 +66,8 @@ Meteor.methods
         null
     throw new Meteor.Error 'unauthorized', "Unauthorized." unless user
 
+    throw new Meteor.Error 'invalid-request', "You cannot delegate to yourself." if user._id is userId
+
     delegations = user.delegations or []
 
     # Is user already present among delegates?
