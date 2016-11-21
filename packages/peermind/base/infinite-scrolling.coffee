@@ -1,5 +1,4 @@
-# dataSubscription method has to be defined on the component for this mixin.
-# dataQuery is exposed by this mixin.
+# subscriptionHandle has to be defined on the component for this mixin.
 class share.InfiniteScrollingMixin extends UIMixin
   constructor: (@subscriptionDocument, @subscriptionComponent, @subscriptionPageSize, @slideInsteadFade=false) ->
 
@@ -13,10 +12,10 @@ class share.InfiniteScrollingMixin extends UIMixin
     @showFinished = new ReactiveField 0
     @distanceToScrollParentBottom = new ReactiveField null, true
 
-    @subscriptionHandle = @callFirstWith null, 'dataSubscription'
+    @_subscriptionHandle = @callFirstWith null, 'subscriptionHandle'
 
     @autorun (computation) =>
-      @subscriptionHandle.setData 'limit', @subscriptionLimit()
+      @_subscriptionHandle.setData 'limit', @subscriptionLimit()
 
       Tracker.nonreactive =>
         @showLoading @showLoading() + 1
@@ -26,19 +25,19 @@ class share.InfiniteScrollingMixin extends UIMixin
 
       return unless showLoading
 
-      return unless @subscriptionHandle.ready()
+      return unless @_subscriptionHandle.ready()
 
-      allCount = @subscriptionHandle.data('count') or 0
-      documentCount = @subscriptionDocument.documents.find(@subscriptionHandle.scopeQuery()).count()
+      allCount = @_subscriptionHandle.data('count') or 0
+      documentCount = @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
 
       if documentCount is allCount or documentCount is @subscriptionLimit()
         @showLoading showLoading - 1
 
     @autorun (computation) =>
-      return unless @subscriptionHandle.ready()
+      return unless @_subscriptionHandle.ready()
 
-      allCount = @subscriptionHandle.data('count') or 0
-      documentCount = @subscriptionDocument.documents.find(@subscriptionHandle.scopeQuery()).count()
+      allCount = @_subscriptionHandle.data('count') or 0
+      documentCount = @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
 
       # Only when scrolling down and we reach scroll parent bottom we display finished loading feedback.
       if documentCount is allCount and @distanceToScrollParentBottom() <= 0 and @distanceToScrollParentBottom() < @distanceToScrollParentBottom.previous()
@@ -75,7 +74,7 @@ class share.InfiniteScrollingMixin extends UIMixin
       return if distanceToScrollParentBottom > 2 * scrollParentHeight
 
       # We use the number of rendered documents instead of current count of
-      # @subscriptionDocument.documents.find(@subscriptionHandle.scopeQuery()).count()
+      # @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
       # because we care what is really displayed.
       renderedDocumentCount = 0
       for child in @descendantComponents @subscriptionComponent
@@ -100,11 +99,11 @@ class share.InfiniteScrollingMixin extends UIMixin
     @$scrollParent.on("scroll.peermind.#{@_eventHandlerId}", @handleScrolling)
 
     @autorun (computation) =>
-      return unless @subscriptionHandle.ready()
+      return unless @_subscriptionHandle.ready()
 
       # Every time the number of documents change, check if we should load even more.
       # This handles also loading all necessary documents to fill the scroll parent.
-      @subscriptionDocument.documents.find(@subscriptionHandle.scopeQuery()).count()
+      @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
 
       # We want to wait for documents to render.
       Tracker.afterFlush =>
@@ -204,6 +203,3 @@ class share.InfiniteScrollingMixin extends UIMixin
 
     # We are handling it.
     true
-
-  dataQuery: ->
-    @subscriptionHandle.scopeQuery()

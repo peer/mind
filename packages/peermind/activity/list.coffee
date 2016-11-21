@@ -30,12 +30,14 @@ class Activity.ListContentComponent extends UIComponent
 
     @pageSize ||= 50
 
-  # Used by InfiniteScrollingMixin.
-  dataSubscription: ->
-    @subscribe 'Activity.list', @personalized, @pageSize
+  onCreated: ->
+    super
+
+    # Used by InfiniteScrollingMixin.
+    @subscriptionHandle = @subscribe 'Activity.list', @personalized, @pageSize
 
   activities: ->
-    Activity.combineActivities Activity.documents.find(@callFirstWith(null, 'dataQuery'),
+    Activity.combineActivities Activity.documents.find(@subscriptionHandle.scopeQuery(),
       sort:
         # The newest first.
         timestamp: -1
