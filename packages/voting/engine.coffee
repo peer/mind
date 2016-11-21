@@ -68,7 +68,12 @@ class VotingEngine extends VotingEngine
       probability = 1 / 2
       threshold = effectivePopulationSize * probability
     else if majority is @MAJORITY.SUPER
-      probability = 2 / 3
+      # Majority result is in favor.
+      if majorityResult is result
+        probability = 2 / 3
+      # Majority result is opposing.
+      else
+        probability = 1 / 3
       threshold = effectivePopulationSize * probability
     else
       assert false, majority
