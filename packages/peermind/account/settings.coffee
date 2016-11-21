@@ -228,13 +228,10 @@ class Settings.DelegationsComponent extends UIComponent
     ,
       EJSON.equals
 
-    @usersFilter = new ReactiveField ''
-
     @autorun (computation) =>
       @subscriptionHandle.setData 'exceptIds', @exceptIds()
 
-    @autorun (computation) =>
-      @subscriptionHandle.setData 'filter', @usersFilter()
+    @subscriptionHandle.setData 'filter', ''
 
   onRendered: ->
     super
@@ -297,7 +294,7 @@ class Settings.DelegationsComponent extends UIComponent
         username: 1
 
   onFilterChange: _.debounce (event) ->
-    @usersFilter @$('#filter-users').val()
+    @subscriptionHandle.setData 'filter', @$('#filter-users').val()
   ,
     100 # ms
 
