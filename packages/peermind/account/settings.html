@@ -374,23 +374,43 @@
     </div>
   </div>
 
-  {{#if users.count}}
-    <div class="row">
-      <div class="col s12">
+  <div class="delegations-users">
+    <div class="list-wrapper">
+      {{#if users.count}}
         <ul class="collection z-depth-1">
           {{#each users}}
             {{> Settings.DelegationsUserComponent}}
           {{/each}}
         </ul>
-      </div>
+      {{else}}
+        <div class="row">
+          <div class="col s12 center-align grey-text balance-text">
+            No matching users.
+          </div>
+        </div>
+      {{/if}}
     </div>
-  {{else}}
-    <div class="row">
-      <div class="col s12 center-align grey-text balance-text">
-        No matching users.
+  </div>
+
+  <div class="loading-wrapper">
+    {{#if showLoading}}
+      <div class="row loading">
+        <div class="col s12">
+          <div class="progress">
+            <div class="indeterminate"></div>
+          </div>
+        </div>
       </div>
-    </div>
-  {{/if}}
+    {{else}}
+      {{#if showFinished}}
+        <div class="row finished-loading">
+          <div class="col s12">
+            You reached the end of the list of users.
+          </div>
+        </div>
+      {{/if}}
+    {{/if}}
+  </div>
 
   {{!-- TODO: We could also provide a way for users to invite other users to the system if they are not yet registered. --}}
 </template>

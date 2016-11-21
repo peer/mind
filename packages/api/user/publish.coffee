@@ -64,14 +64,14 @@ new PublishEndpoint 'User.autocomplete', (username, prefixSearch) ->
         avatar: 1
 
 # TODO: Currently limited only to members. Generalize. Or should it be just users who can vote?
-new PublishEndpoint 'User.list', ->
+new PublishEndpoint 'User.list', (initialLimit) ->
+  check initialLimit, Match.PositiveNumber
+
   @enableScope()
 
-  @autorun (computation) =>
-    limit = @data('limit') or 10
+  getQuery = =>
     filter = @data('filter') or ''
     exceptIds = @data('exceptIds') or []
-    check limit, Match.PositiveNumber
     check filter, String
     check exceptIds, [Match.DocumentId]
 
@@ -93,7 +93,16 @@ new PublishEndpoint 'User.list', ->
           name: new RegExp(filter, 'i')
         ]
 
-    User.documents.find query,
+    query
+
+  @autorun (computation) =>
+    @setData 'count', User.documents.find(getQuery()).count()
+
+  @autorun (computation) =>
+    limit = @data('limit') or initialLimit
+    check limit, Match.PositiveNumber
+
+    User.documents.find getQuery(),
       fields: User.PUBLISH_FIELDS()
       limit: limit
       sort:

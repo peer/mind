@@ -20,40 +20,6 @@ class share.InfiniteScrollingMixin extends UIMixin
       Tracker.nonreactive =>
         @showLoading @showLoading() + 1
 
-    @autorun (computation) =>
-      showLoading = @showLoading()
-
-      return unless showLoading
-
-      return unless @_subscriptionHandle.ready()
-
-      allCount = @_subscriptionHandle.data('count') or 0
-      documentCount = @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
-
-      if documentCount is allCount or documentCount is @subscriptionLimit()
-        @showLoading showLoading - 1
-
-    @autorun (computation) =>
-      return unless @_subscriptionHandle.ready()
-
-      allCount = @_subscriptionHandle.data('count') or 0
-      documentCount = @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
-
-      # Only when scrolling down and we reach scroll parent bottom we display finished loading feedback.
-      if documentCount is allCount and @distanceToScrollParentBottom() <= 0 and @distanceToScrollParentBottom() < @distanceToScrollParentBottom.previous()
-        Tracker.nonreactive =>
-          @showFinished @showFinished() + 1
-
-          Meteor.setTimeout =>
-            @showFinished @showFinished() - 1
-          ,
-            3000 # ms
-
-          # We want to immediately show finished loading feedback. So we flush manually.
-          # We cannot call Tracker.flush directly from inside the autorun.
-          # TODO: There are still occasionally delays (> 1 second) between scrolling to the bottom and finished loading feedback appearing.
-          Meteor.defer Tracker.flush if @showFinished() is 1
-
   onRendered: ->
     super
 
@@ -110,10 +76,71 @@ class share.InfiniteScrollingMixin extends UIMixin
         # We cannot call it directly from inside the autorun because inside handleScrolling we call Tracker.flush.
         Meteor.defer @handleScrolling
 
+    @autorun (computation) =>
+      showLoading = @showLoading()
+
+      return unless showLoading
+
+      return unless @_subscriptionHandle.ready()
+
+      allCount = @_subscriptionHandle.data('count') or 0
+      documentCount = @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
+
+      if documentCount is allCount or documentCount is @subscriptionLimit()
+        @showLoading showLoading - 1
+
+    @autorun (computation) =>
+      return unless @_subscriptionHandle.ready()
+
+      allCount = @_subscriptionHandle.data('count') or 0
+
+      # If there are no documents, do not display finished loading feedback.
+      return unless allCount
+
+      # We register a dependency on the number of documents now.
+      documentCount = @subscriptionDocument.documents.find(@_subscriptionHandle.scopeQuery()).count()
+
+      # And a dependency on scrolling as well. So that we can recover
+      # if we exited from this run because scrollbar was not yet visible.
+      @distanceToScrollParentBottom()
+
+      scrollParentHeight = @_scrollParentHeight()
+
+      # If there is no scrollbar (content is shown in full),
+      # do not display finished loading feedback.
+      if @$scrollParent.get(0) is window
+        return unless $(document).height() > scrollParentHeight
+      else
+        return unless @$scrollParent.prop('scrollHeight') > scrollParentHeight
+
+      # Only when scrolling down and we reach scroll parent bottom we display finished loading feedback.
+      if documentCount is allCount and @distanceToScrollParentBottom() <= 0 and @distanceToScrollParentBottom() < @distanceToScrollParentBottom.previous()
+        Tracker.nonreactive =>
+          @showFinished @showFinished() + 1
+
+          Meteor.setTimeout =>
+            @showFinished @showFinished() - 1
+          ,
+            3000 # ms
+
+          # We want to immediately show finished loading feedback. So we flush manually.
+          # We cannot call Tracker.flush directly from inside the autorun.
+          # TODO: There are still occasionally delays (> 1 second) between scrolling to the bottom and finished loading feedback appearing.
+          Meteor.defer Tracker.flush if @showFinished() is 1
+
   onDestroyed: ->
     super
 
     @$scrollParent?.off("scroll.peermind.#{@_eventHandlerId}")
+
+  _scrollParentHeight: ->
+    scrollParentHeight = @$scrollParent.height()
+    # If max-height is set on a scroll parent element, we want to expand the content all
+    # the way until scroll parent element is full of content, if it is not already.
+    # Window cannot have CSS and jQuery css method fails on it.
+    scrollParentHeight = Math.max(scrollParentHeight, parseInt(@$scrollParent.css('max-height')) or 0) if @$scrollParent.get(0) isnt window
+
+    scrollParentHeight
 
   _distanceToScrollParentBottom: ->
     $listWrapper = @$('.list-wrapper')
@@ -126,11 +153,7 @@ class share.InfiniteScrollingMixin extends UIMixin
     else
       listWrapperTopInsideScrollParent = ($listWrapper.offset().top + @$scrollParent.scrollTop()) - @$scrollParent.offset().top
 
-    scrollParentHeight = @$scrollParent.height()
-    # If max-height is set on a scroll parent element, we want to expand the content all
-    # the way until scroll parent element is full of content, if it is not already.
-    # Window cannot have CSS and jQuery css method fails on it.
-    scrollParentHeight = Math.max(scrollParentHeight, parseInt(@$scrollParent.css('max-height')) or 0) if @$scrollParent.get(0) isnt window
+    scrollParentHeight = @_scrollParentHeight()
     bottom = @$scrollParent.scrollTop() + scrollParentHeight
 
     contentHeight = $listWrapper.prop('scrollHeight')

@@ -41,3 +41,16 @@ button.twitter-button
   .range
     width 150px
     margin-right 30px
+
+.delegations-users
+  overflow-y auto
+  max-height 300px
+  // To show the shadow from collection-items.
+  // As a consequence also scrollbar does not overlap the content.
+  margin 0 -10px
+  padding 0 10px
+
+  .collection
+    // If margin is to tall computation if we reached the end of scrolling
+    // does not work anymore. But we need a bit of margin to show the shadow.
+    margin 0.25rem 0

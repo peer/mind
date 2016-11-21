@@ -201,6 +201,14 @@ class Settings.ResearchDataComponent extends UIComponent
 class Settings.DelegationsComponent extends UIComponent
   @register 'Settings.DelegationsComponent'
 
+  mixins: ->
+    super.concat new share.InfiniteScrollingMixin User, Settings.DelegationsUserComponent, @pageSize
+
+  constructor: ->
+    super
+
+    @pageSize = 10
+
   onCreated: ->
     super
 
@@ -210,7 +218,8 @@ class Settings.DelegationsComponent extends UIComponent
     @currentDelegationsLength = new ComputedField =>
       @currentDelegations().length
 
-    @usersHandle = @subscribe 'User.list'
+    # Used by InfiniteScrollingMixin.
+    @subscriptionHandle = @subscribe 'User.list', @pageSize
 
     @exceptIds = new ComputedField =>
       currentDelegationsIds = (delegation.user._id for delegation in @currentDelegations() when delegation?.user?._id)
@@ -222,13 +231,15 @@ class Settings.DelegationsComponent extends UIComponent
     @usersFilter = new ReactiveField ''
 
     @autorun (computation) =>
-      @usersHandle.setData 'exceptIds', @exceptIds()
+      @subscriptionHandle.setData 'exceptIds', @exceptIds()
 
     @autorun (computation) =>
-      @usersHandle.setData 'filter', @usersFilter()
+      @subscriptionHandle.setData 'filter', @usersFilter()
 
   onRendered: ->
     super
+
+    @$('.delegations-users').scrollLock()
 
     @autorun (computation) =>
       @currentDelegationsLength()
@@ -280,7 +291,7 @@ class Settings.DelegationsComponent extends UIComponent
     @changingRatioValue parseFloat(ui.value)
 
   users: ->
-    User.documents.find @usersHandle.scopeQuery(),
+    User.documents.find @subscriptionHandle.scopeQuery(),
       sort:
         # TODO: Sort by filter quality.
         username: 1
