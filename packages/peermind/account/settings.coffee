@@ -286,7 +286,6 @@ class Settings.DelegationsComponent extends UIComponent
         username: 1
 
   onFilterChange: _.debounce (event) ->
-    console.log @$('#filter-users').val()
     @usersFilter @$('#filter-users').val()
   ,
     100 # ms
