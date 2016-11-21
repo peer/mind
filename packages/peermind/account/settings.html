@@ -352,7 +352,8 @@
             {{!-- TODO: Once implemented, set to "When you do not vote yourself, your proxy vote will be equal to:" --}}
             When you do not vote yourself, your proxy vote would be (once implemented) equal to:
           </div>
-          <div class="balance-text">
+          {{!-- TODO: Temporary class "balance-text" removed until subscription data issue is fixed. --}}
+          <div>
             {{delegationsEquation}}
           </div>
         {{/if}}
@@ -392,7 +393,8 @@
     </div>
   </div>
 
-  <div class="loading-wrapper">
+  {{!-- TODO: Temporary class "remove" added subscription data issue is fixed. --}}
+  <div class="loading-wrapper remove">
     {{#if showLoading}}
       <div class="row loading">
         <div class="col s12">
