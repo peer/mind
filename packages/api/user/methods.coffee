@@ -75,7 +75,7 @@ Meteor.methods
       return 0
 
     # Deep clone so that we can modify it at will.
-    newDelegations = EJSON.clone user.delegations
+    newDelegations = EJSON.clone delegations
 
     newDelegations.push
       user:
