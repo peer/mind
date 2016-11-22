@@ -238,12 +238,6 @@ class Settings.DelegationsComponent extends UIComponent
 
     @$('.delegations-users').scrollLock()
 
-    @autorun (computation) =>
-      @currentDelegationsLength()
-
-      # When length changes, delegationsEquation changes, so we should update balance text.
-      $.fn.balanceTextUpdate()
-
   events: ->
     super.concat
       'slide .range': @onRangeSlide

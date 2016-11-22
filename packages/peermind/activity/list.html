@@ -31,13 +31,13 @@
       </div>
     {{else}}
       <div class="row">
-        <div class="col s12 center-align grey-text balance-text">
+        {{#BalanceText args 'col' 's12' 'center-align' 'grey-text'}}
           {{#if notifications}}
             No notifications.
           {{else}}
             No activities.
           {{/if}}
-        </div>
+        {{/BalanceText}}
       </div>
     {{/if}}
   </div>

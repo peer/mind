@@ -9,13 +9,13 @@
         </ul>
       {{else}}
         <div class="row">
-          <div class="col s12 center-align grey-text balance-text">
+          {{#BalanceText args 'col' 's12' 'center-align' 'grey-text'}}
             {{#if discussionIsClosed}}
               No comment has been made.
             {{else}}
               No comment has been made yet.
             {{/if}}
-          </div>
+          {{/BalanceText}}
         </div>
       {{/if}}
     </div>

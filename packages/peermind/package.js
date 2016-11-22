@@ -100,6 +100,8 @@ Package.onUse(function (api) {
     'base/editor.coffee',
     'base/editor.styl',
     'base/isseen.coffee',
+    'base/balance-text.html',
+    'base/balance-text.coffee',
     'base/infinite-scrolling.coffee',
     'account/settings.html',
     'account/settings.coffee',

@@ -3,13 +3,13 @@
     <div class="section">
       {{#unless motions.exists}}
         <div class="row">
-          <div class="col s12 center-align grey-text balance-text">
+          {{#BalanceText args 'col' 's12' 'center-align' 'grey-text'}}
             {{#if discussionIsClosed}}
               No motion has been proposed.
             {{else}}
               No motion has been proposed yet.
             {{/if}}
-          </div>
+          {{/BalanceText}}
         </div>
       {{else}}
         {{#if discussionIsClosed}}
@@ -102,30 +102,32 @@
         </div>
       {{else}}
         {{#unless $or isOpen isClosed isWithdrawn}}
-          <div class="card-action center-align grey-text balance-text">
+          {{#BalanceText args 'card-action' 'center-align' 'grey-text'}}
             Voting is not yet open.
-          </div>
+          {{/BalanceText}}
         {{/unless}}
         {{#if $and isOpen ($not canVote)}}
-          <div class="card-action center-align grey-text sign-in-action balance-text">
+          {{#BalanceText args 'card-action' 'center-align' 'grey-text' 'sign-in-action'}}
             {{#if currentUserId}}
               Voting is open, but you cannot vote.
             {{else}}
               Voting is open. <a href="{{pathFor 'Account.signIn'}}">Sign in</a> to vote.
             {{/if}}
-          </div>
+          {{/BalanceText}}
         {{/if}}
       {{/if}}
       {{#if isClosed}}
         <div class="card-action">
-          <div class="center-align balance-text">Motion {{#if motionPassed}}<span class="result passed">passed</span>{{else}}<span class="result failed">failed</span>{{/if}}.</div>
+          {{#BalanceText args 'center-align'}}
+            Motion {{#if motionPassed}}<span class="result passed">passed</span>{{else}}<span class="result failed">failed</span>{{/if}}.
+          {{/BalanceText}}
           {{> Motion.TallyComponent}}
         </div>
       {{/if}}
       {{#if isWithdrawn}}
-        <div class="card-action center-align grey-text balance-text">
+        {{#BalanceText args 'card-action' 'center-align' 'grey-text'}}
           Motion has been withdrawn.
-        </div>
+        {{/BalanceText}}
       {{/if}}
     {{/if}}
   </div>
@@ -179,13 +181,13 @@
       <small class="stats-item">Result: {{round tally.result}}</small>
     </div>
   {{else}}
-    <div class="center-align grey-text tally-message balance-text">
+    {{#BalanceText args 'center-align' 'grey-text' 'tally-message'}}
       {{#if isClosed}}
         No votes were cast.
       {{else}}
         Pending first vote.
       {{/if}}
-    </div>
+    {{/BalanceText}}
   {{/if}}
   {{#if $or isOpen isClosed}}
     <div class="tally-stats grey-text">

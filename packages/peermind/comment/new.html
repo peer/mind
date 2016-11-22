@@ -9,13 +9,13 @@
             </div>
           </div>
           {{#if discussionIsClosed}}
-            <div class="center-align success card-panel balance-text">
+            {{#BalanceText args 'center-align' 'success' 'card-panel'}}
               {{#if canNewDiscussion}}
                 This discussion is closed. Consider opening a <a href="{{pathFor 'Discussion.new'}}">new discussion</a> instead of commenting here.
               {{else}}
                 Before commenting consider that this discussion is closed.
               {{/if}}
-            </div>
+            {{/BalanceText}}
           {{/if}}
           <div class="row">
             <div class="input-field col s12 center-align">
