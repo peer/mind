@@ -68,7 +68,8 @@ Package.onUse(function (api) {
   ], 'server');
 
   api.addFiles([
-    'sandstorm-client.coffee'
+    'sandstorm-client.coffee',
+    'meteor-bugfix.coffee'
   ], 'client');
 
   api.addFiles([
