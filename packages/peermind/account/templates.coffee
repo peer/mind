@@ -1,7 +1,7 @@
 Accounts.emailTemplates ?= {}
 
 # TODO: Make it configurable.
-Accounts.emailTemplates.from = 'clonm@bsc.coop'
+Accounts.emailTemplates.from = 'admin@peermind.org'
 Accounts.emailTemplates.siteName = 'PeerMind'
 
 Accounts.emailTemplates.resetPassword ?= {}
@@ -18,8 +18,8 @@ _.extend Accounts.emailTemplates.enrollAccount,
     """
     Hi!
 
-    An account for Cloyne online council app has been created for
-    you. You can set your password and sign in for the first time
+    An account for online council app has been created for you.
+    You can set your password and sign in for the first time
     by clicking the link:
 
     #{url}
