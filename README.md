@@ -50,6 +50,7 @@ Furthermore, currently the app has hard-coded four user roles with hard-coded pe
 * `moderator`s can make points, and edit content of others
 * `manager`s can add discussion items, comment, and propose motions
 * `admin`s can manage user accounts
+* `guest`s can comment
 
 After you have created an admin account, you can invite new users into the app. They will get an
 e-mail with instructions how to setup their password. To invite a user, run the following function
