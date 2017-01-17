@@ -4,5 +4,7 @@ if [[ -n "${METEOR_STORAGE_CHOWN}" && -d /storage && ! -f /dev/shm/meteor_storag
   # after runit restarts the service because of some issues with the service.
   touch /dev/shm/meteor_storage_chown_ran
   # We run it in a background because it can potentially take a long time.
-  chown -Rh meteor:meteor /storage &
+  # We run it in a subshell to disown it so that current process does not have
+  # to wait for it. This prevents zombies.
+  (chown -Rh meteor:meteor /storage &)
 fi
