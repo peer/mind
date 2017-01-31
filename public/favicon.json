@@ -1,5 +1,5 @@
 {
-	"masterPicture": "../packages/council/layout/logo.svg",
+	"masterPicture": "../packages/peermind/layout/logo.svg",
 	"iconsPath": "/",
 	"design": {
 		"ios": {
