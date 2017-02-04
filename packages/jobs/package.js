@@ -15,7 +15,8 @@ Package.onUse(function (api) {
     'coffeescript',
     'http',
     'random',
-    'accounts-password'
+    'accounts-password',
+    'stylus'
   ]);
 
   // 3rd party dependencies.
@@ -46,4 +47,9 @@ Package.onUse(function (api) {
     'email.html',
     'email.coffee'
   ], 'server');
+
+  // Stylesheets can be compiled only for the client.
+  api.addFiles([
+    'email.styl'
+  ], 'client');
 });

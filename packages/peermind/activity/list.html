@@ -83,7 +83,7 @@
     {{#if notifications}}
       <img src="{{avatarUrl}}" alt="{{byUser.username}}" class="circle" />
     {{else}}
-      <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{avatarUrl}}" alt="{{byUser.username}}" class="circle" /></a>
+      <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{avatarUrl}}" {{avatarAlt}} class="circle" /></a>
     {{/if}}
     {{> renderActivity}}
     <p class="activity-timestamp">

@@ -1,0 +1,43 @@
+@import '{peermind}/base/base'
+
+html.email
+  .row
+    .col
+      float none
+
+  nav .nav-wrapper
+    h1
+      // A smaller header than default 2.1rem.
+      font-size 1.8rem
+
+    .logo
+      // A smaller logo is used in e-mail notifications.
+      img
+        // Not sure why this is needed, but it looks more vertically centered this way.
+        // We cannot use margin-top: -3px in Gmail, so we instead use padding and increase
+        // height for 3px as well.
+        padding-bottom 3px
+        width ($navbar-height-mobile - 6px)
+        height ($navbar-height-mobile - 6px + 3px)
+
+  .list-wrapper
+    .collection
+      .collection-item
+        line-height 1.3rem
+
+        /* Gmail does not support position, so we use floating to put an avatar in place. */
+        position static
+        padding-left 15px
+
+        img.circle
+          position static
+          left 0
+          margin-right 15px
+          float left
+
+  footer
+    padding-top 10px
+    padding-bottom 10px
+
+    .row
+      margin-bottom 0

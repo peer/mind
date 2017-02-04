@@ -12,15 +12,10 @@ nav .nav-wrapper
     &:hover
       background-color rgba(0, 0, 0, 0.1)
 
-    // Smaller logo is used in e-mail notifications.
     img
-      width $navbar-height-mobile
-      height $navbar-height-mobile
-
-    @media $medium-and-up
-      img
-        width $navbar-height
-        height $navbar-height
+      width ($navbar-height - 6px)
+      height ($navbar-height - 6px)
+      vertical-align middle
 
   .not-large-screen .notifications-menu-button
   .button-collapse

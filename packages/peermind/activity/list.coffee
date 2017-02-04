@@ -162,6 +162,12 @@ class Activity.ListItemComponent extends UIComponent
     avatarUrl = avatarUrl.replace /avatar\/(\w+)-i\.svg\?/, 'avatar/$1-i.png?' if @isEmail()
     avatarUrl
 
+  # In e-mails we do not set alt value to avatar images. Otherwise an extra line is added
+  # for every notification in Thunderbird's simple HTML view, with user's username. But
+  # that information is repeated then at the beginning of the notification itself.
+  avatarAlt: ->
+    alt: @data 'byUser.username' unless @isEmail()
+
 class Activity.ListItemContainerComponent extends UIComponent
   @register 'Activity.ListItemContainerComponent'
 

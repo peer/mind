@@ -95,13 +95,6 @@ class ActivityEmailsJob extends Job
     css = fs.readFileSync [__meteor_bootstrap__.serverDir, '..', 'web.browser', 'merged-stylesheets.css'].join(pathModule.sep),
       encoding: 'utf8'
 
-    # TODO: Remove once this is fixed: https://github.com/Automattic/juice/issues/244
-    css += """
-      html {
-        font-size: 14px;
-      }
-    """
-
     User.documents.find(
       # TODO: We should query relevant and active users for activities in a better way, especially once we have groups.
       roles:
@@ -168,7 +161,7 @@ class ActivityEmailsJob extends Job
       $element.removeAttr('class')
 
     # Tag "nav" is not supported in Gmail, so we replace it with "div".
-    # Because we already inlined all CSS, this not make CSS not match.
+    # Because we already inlined all CSS, this does not make CSS not match.
     $.root().find('nav').each (index, element) =>
       element.tagName = 'div'
 

@@ -1,5 +1,5 @@
 <template name="ActivityEmailsComponent">
-  <html>
+  <html class="email">
     <body>
       <header>
         <nav>
@@ -26,6 +26,15 @@
           </div>
         </div>
       </div>
+      <footer class="page-footer clearfix">
+        <div class="container">
+          <div class="row">
+            <div class="col s12 center">
+              <a class="grey-text text-lighten-4" href="{{pathFor 'Settings.display'}}">Notification preferences</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </body>
   </html>
 </template>
