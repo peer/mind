@@ -16,7 +16,7 @@ class ActivityEmailsComponent extends UIComponent
 class ActivityEmailsJob extends Job
   @register()
 
-  @DELAY = 0 #60 * 1000 # ms
+  @DELAY = 60 * 1000 # ms
 
   enqueueOptions: (options) ->
     _.defaults super,
@@ -102,7 +102,7 @@ class ActivityEmailsJob extends Job
         $ne: []
       'emails.verified': true
     ,
-      fields:
+      fields: _.extend User.REFERENCE_FIELDS(),
         _id: 1
         emails:
           $elemMatch:
@@ -112,7 +112,8 @@ class ActivityEmailsJob extends Job
       address = user.emails?[0]?.address
       return unless address
 
-      userActivities = Activity.combineActivities LocalActivity.documents.find(Activity.personalizedActivityQuery(user._id)).fetch()
+      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery(user._id)).fetch()
+      userActivities = Activity.combineActivities uncombinedUserActivities
 
       return unless userActivities.length
 
@@ -126,8 +127,8 @@ class ActivityEmailsJob extends Job
 
       html = @_convertHTML html
 
-      Email.send
-        _id: emailId
+      # Email is our document class and not Package.email.Email.
+      Email.send emailId,
         from: Accounts.emailTemplates.from
         to: address
         subject: "[#{Accounts.emailTemplates.siteName}] Recent notifications"
@@ -136,6 +137,9 @@ class ActivityEmailsJob extends Job
         html: html
         headers:
           Precedence: 'bulk'
+      ,
+        user, 'activities',
+          activities: (_id: activity._id for activity in uncombinedUserActivities)
 
   _convertHTML: (html) ->
     $ = cheerio.load html,
