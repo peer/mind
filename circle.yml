@@ -9,7 +9,7 @@ machine:
     - curl https://install.meteor.com | /bin/sh
 dependencies:
   override:
-    - sudo apt-get update -q -q; sudo apt-get install --yes --force-yes build-essential python zlib1g-dev zlib1g libgif-dev pkg-config
+    - sudo apt-get update -q -q; sudo apt-get install --yes --force-yes build-essential python zlib1g-dev zlib1g libgif-dev pkg-config libcairo2 libcairo2-dev
     - npm install selenium-webdriver@2.47.0 mkdirp
     - npm install -g cli-real-favicon
     - meteor list
