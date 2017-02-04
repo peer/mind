@@ -1,6 +1,3 @@
-if Meteor.isServer
-  EmailModule = require 'meteor/email'
-
 class Email extends share.BaseDocument
   # createdAt: time of document creation
   # sentAt: time when e-mail was send
@@ -27,7 +24,8 @@ class Email extends share.BaseDocument
 
     @documents.insert options
 
-    EmailModule.Email.send options
+    # We depend weakly, so that we can use Email symbol for our document class.
+    Package.email.Email.send options
 
     @documents.update options._id,
       $set:

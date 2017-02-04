@@ -21,6 +21,11 @@ Package.onUse(function (api) {
     'spacebars'
   ]);
 
+  api.use([
+    // We depend weakly, so that we can use Email symbol for our document class.
+    'email'
+  ], 'server', {weak: true});
+
   // 3rd party dependencies.
   api.use([
     'peerlibrary:peerdb@0.23.0',
