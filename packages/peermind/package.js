@@ -65,20 +65,6 @@ Package.onUse(function (api) {
   ]);
 
   api.addFiles([
-    'account/config.coffee',
-    'account/form.html',
-    'account/form.coffee',
-    'account/form.styl',
-    'account/templates.coffee',
-    'activity/list.html',
-    'activity/list.coffee',
-    'activity/list.styl',
-    'meeting/display-route.coffee',
-    'user/display-route.coffee',
-    'discussion/display-route.coffee'
-  ], ['client', 'server'], options);
-
-  api.addFiles([
     'account/services.coffee'
   ], 'server');
 
@@ -181,4 +167,18 @@ Package.onUse(function (api) {
     'layout/logo.svg',
     'layout/logo.png'
   ], 'client');
+
+  api.addFiles([
+    'account/config.coffee',
+    'account/form.html',
+    'account/form.coffee',
+    'account/form.styl',
+    'account/templates.coffee',
+    'activity/list.html',
+    'activity/list.coffee',
+    'activity/list.styl',
+    'meeting/display-route.coffee',
+    'user/display-route.coffee',
+    'discussion/display-route.coffee'
+  ], ['client', 'server'], options);
 });
