@@ -67,13 +67,7 @@ class Activity extends share.BaseDocument
       $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
     'byUser._id':
       $ne: userId
-    $or: [
-      'forUsers._id': userId
-    ,
-      # A special case, we want all users to get notifications for new discussions and meetings.
-      type:
-        $in: ['discussionCreated', 'meetingCreated']
-    ]
+    'forUsers._id': userId
 
   # Combine documents so that consecutive activities of the same type are combined into one document.
   @combineActivities: (documents) ->

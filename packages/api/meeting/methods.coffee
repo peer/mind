@@ -62,6 +62,9 @@ Meteor.methods
         timestamp: createdAt
         connection: @connection.id
         byUser: user.getReference()
+        # We inform all users in this group.
+        # TODO: Pass group argument to the function, once we really have groups.
+        forUsers: User.inGroup(null, transform: null, fields: User.REFERENCE_FIELDS()).fetch()
         type: 'meetingCreated'
         level: Activity.LEVEL.GENERAL
         data:

@@ -456,13 +456,15 @@ class User extends share.BaseDocument
 
       Roles.userIsInRole userId, roles
 
-  @withPermission: (permissions) ->
+  @withPermission: (permissions, options) ->
     if __meteor_runtime_config__.SANDSTORM
       permissions = @_checkPermissions permissions
 
       @documents.find
         'services.sandstorm.permissions':
           $in: permissions
+      ,
+        options
 
     else
       roles = @_convertToRoles permissions
@@ -470,7 +472,17 @@ class User extends share.BaseDocument
       # TODO: In roles 2.0 package getUsersInRole accepts an array as well.
       throw new Error "Currently only one role is supported." if roles.length isnt 1
 
-      Roles.getUsersInRole roles[0]
+      Roles.getUsersInRole roles[0], null, options
+
+  # TODO: Improve query once we really have groups. And pass group argument to the function.
+  @inGroup: (group, options) ->
+    @documents.find
+      roles:
+        $exists: true
+        $ne: []
+      'emails.verified': true
+    ,
+      options
 
   @_delegationsSum: (delegations) ->
     _.preciseSum _.pluck delegations, 'ratio'

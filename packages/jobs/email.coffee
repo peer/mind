@@ -65,6 +65,7 @@ class ActivityEmailsJob extends Job
       level:
         $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
     ,
+      # Because we insert them into a local collection to be able to query them.
       transform: null
     ).fetch()
 
@@ -84,6 +85,7 @@ class ActivityEmailsJob extends Job
     Email = Package.core.Email unless Email
     User = Package.core.User unless User
 
+    # We insert activities into a local collection to be able to query them.
     class LocalActivity extends Activity
       @Meta
         name: 'LocalActivity'
@@ -92,15 +94,19 @@ class ActivityEmailsJob extends Job
     for activity in activities
       LocalActivity.documents.insert activity
 
+    allUserIdsInActivities = []
+    LocalActivity.documents.find().forEach (activity, index, cursor) =>
+      for user in activity.forUsers when user?._id
+        allUserIdsInActivities.push user._id
+
+    allUserIdsInActivities = _.uniq allUserIdsInActivities
+
     css = fs.readFileSync [__meteor_bootstrap__.serverDir, '..', 'web.browser', 'merged-stylesheets.css'].join(pathModule.sep),
       encoding: 'utf8'
 
     User.documents.find(
-      # TODO: We should query relevant and active users for activities in a better way, especially once we have groups.
-      roles:
-        $exists: true
-        $ne: []
-      'emails.verified': true
+      _id:
+        $in: allUserIdsInActivities
     ,
       fields: _.extend User.REFERENCE_FIELDS(),
         _id: 1
