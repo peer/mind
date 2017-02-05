@@ -142,7 +142,8 @@ Package.onUse(function (api) {
     'migrations/0034-user-name.coffee',
     'migrations/0035-activity-levels.coffee',
     'migrations/0036-user-delegations.coffee',
-    'migrations/0037-user-avatars.coffee'
+    'migrations/0037-user-avatars.coffee',
+    'migrations/0038-activity-discussionsmeetings.coffee'
   ], 'server');
 });
 
