@@ -5,6 +5,12 @@ _.mixin
   startsWith: (string, start) ->
     string?.lastIndexOf(start, 0) is 0
 
+  endsWith: (string, end) ->
+    return false unless string
+
+    lastIndex = string.length - 1
+    string.indexOf(end, lastIndex) is lastIndex
+
   isPlainObject: (obj) ->
     if not _.isObject(obj) or _.isArray(obj) or _.isFunction(obj)
       return false

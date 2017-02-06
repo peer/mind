@@ -16,7 +16,10 @@ Package.onUse(function (api) {
     'http',
     'random',
     'accounts-password',
-    'stylus'
+    'stylus',
+    'htmljs',
+    'html-tools',
+    'underscore'
   ]);
 
   // 3rd party dependencies.
@@ -29,7 +32,8 @@ Package.onUse(function (api) {
 
   // Internal dependencies.
   api.use([
-    'ui-components'
+    'ui-components',
+    'underscore-extra'
   ]);
 
   // Dependencies for jobs themselves, can be unordered.
@@ -52,4 +56,30 @@ Package.onUse(function (api) {
   api.addFiles([
     'email.styl'
   ], 'client');
+});
+
+Package.onTest(function (api) {
+  api.versionsFrom('1.4.1');
+
+  // Core dependencies.
+  api.use([
+    'coffeescript',
+    'random'
+  ]);
+
+  // Internal dependencies.
+  api.use([
+    'core',
+    'jobs',
+    'ui-components'
+  ]);
+
+  // 3rd party dependencies.
+  api.use([
+    'peerlibrary:classy-test@0.2.26'
+  ]);
+
+  api.addFiles([
+    'tests.coffee'
+   ]);
 });
