@@ -9,8 +9,11 @@ class JobsTestCase extends ClassyTestCase
         name: 'LocalActivity'
         collection: null
 
+    timestamp1 = new Date 'Mon Feb 06 2017 00:30:15 GMT-0800 (PST)'
+    timestamp2 = new Date 'Mon Feb 06 2017 00:38:45 GMT-0800 (PST)'
+
     LocalActivity.documents.insert
-      timestamp: new Date 'Mon Feb 06 2017 00:30:15 GMT-0800 (PST)'
+      timestamp: timestamp1
       connection: null
       byUser:
         _id: 'H9TBeRafiSbNLEWQP'
@@ -24,7 +27,7 @@ class JobsTestCase extends ClassyTestCase
           _id: 'Y42FmLkdvkdwmS7FM'
           title: 'A discussion with a very very very long title which should wrap multiple lines, but we have to make sure this really happens'
     LocalActivity.documents.insert
-      timestamp: new Date 'Mon Feb 06 2017 00:38:45 GMT-0800 (PST)'
+      timestamp: timestamp2
       connection: null
       byUser:
         _id: 'H9TBeRafiSbNLEWQP'
@@ -43,21 +46,22 @@ class JobsTestCase extends ClassyTestCase
     userActivities = LocalActivity.documents.find().fetch()
 
     ActivityEmailsComponent = UIComponent.getComponent 'ActivityEmailsComponent'
+    component = new ActivityEmailsComponent userActivities, emailId
 
     urlRoot = Meteor.absoluteUrl()
 
-    @assertEqual new ActivityEmailsComponent(userActivities, emailId).renderComponentToPlainText(), """
+    @assertEqual component.renderComponentToPlainText(), """
       Recent notifications
 
       UserName started a discussion A discussion with a very very very
       long title which should wrap multiple lines, but we have to make
       sure this really happens.
-      Mon, Feb 6, 2017 12:30 AM
+      #{component.formatDate timestamp1, component.DEFAULT_DATETIME_FORMAT}
       #{urlRoot}discussion/Y42FmLkdvkdwmS7FM
 
       UserName commented on
       TestDiscussionWithoutAnySpaceSoThatItCannotBeWrappedButItIsTooLongForALine.
-      Mon, Feb 6, 2017 12:38 AM
+      #{component.formatDate timestamp2, component.DEFAULT_DATETIME_FORMAT}
       #{urlRoot}discussion/Z8eaovjaFpR3pxtQc
 
 
