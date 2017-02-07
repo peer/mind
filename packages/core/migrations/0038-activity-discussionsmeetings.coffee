@@ -6,7 +6,6 @@ class Migration extends Document.MinorMigration
       roles:
         $exists: true
         $ne: []
-      'emails.verified': true
     ,
       transform: null
       fields:

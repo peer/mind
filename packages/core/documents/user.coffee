@@ -480,7 +480,6 @@ class User extends share.BaseDocument
       roles:
         $exists: true
         $ne: []
-      'emails.verified': true
     ,
       options
 
