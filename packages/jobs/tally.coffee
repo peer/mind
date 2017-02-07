@@ -2,13 +2,6 @@ class ComputeTallyJob extends Job
   @register()
 
   run: ->
-    # We are loading packages in unordered mode, so we are fixing imports here, if needed.
-    User = Package.core.User unless User
-    Vote = Package.core.Vote unless Vote
-    Tally = Package.core.Tally unless Tally
-    Motion = Package.core.Motion unless Motion
-    VotingEngine = Package.voting.VotingEngine unless VotingEngine
-
     motion = Motion.documents.findOne @data.motion._id
 
     throw new Error ("Motion '#{@data.motion._id}' does not exist.") unless motion

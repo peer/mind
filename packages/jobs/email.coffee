@@ -178,11 +178,6 @@ class ActivityEmailsJob extends Job
       transform: null
 
   run: ->
-    # We are loading packages in unordered mode, so we are fixing imports here, if needed.
-    Activity = Package.core.Activity unless Activity
-    Email = Package.core.Email unless Email
-    User = Package.core.User unless User
-
     fromTimestamp = @data.fromTimestamp
     toTimestamp = new Date()
 
@@ -212,11 +207,6 @@ class ActivityEmailsJob extends Job
       new ActivityEmailsJob(fromTimestamp: toTimestamp).enqueue()
 
   processActivities: (activities) ->
-    # We are loading packages in unordered mode, so we are fixing imports here, if needed.
-    Activity = Package.core.Activity unless Activity
-    Email = Package.core.Email unless Email
-    User = Package.core.User unless User
-
     # We insert activities into a local collection to be able to query them.
     class LocalActivity extends Activity
       @Meta

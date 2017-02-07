@@ -33,15 +33,11 @@ Package.onUse(function (api) {
   // Internal dependencies.
   api.use([
     'ui-components',
-    'underscore-extra'
-  ]);
-
-  // Dependencies for jobs themselves, can be unordered.
-  api.use([
+    'underscore-extra',
     'voting',
     'core',
     'peermind'
-  ], {unordered: true});
+  ]);
 
   api.export('ComputeTallyJob');
   api.export('ActivityEmailsJob');

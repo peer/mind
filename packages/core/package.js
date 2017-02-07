@@ -50,10 +50,14 @@ Package.onUse(function (api) {
   api.use([
     'underscore-extra',
     'voting',
-    'jobs',
     'storage',
     'sanitize'
   ]);
+
+  // To break a dependency cycle.
+  api.use([
+    'jobs'
+  ], {unordered: true});
 
   api.export('User');
   api.export('Discussion');

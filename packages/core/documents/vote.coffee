@@ -37,7 +37,9 @@ class Vote extends share.BaseDocument
         # we do not want to do anything for that document. Anyway, this should be rerun mostly only if changes changed,
         # so if a vote was created or changed.
         for motionId in _.uniq([document?.motion?._id, oldDocument?.motion?._id]) when motionId and Motion.documents.exists motionId
-          new ComputeTallyJob(motion: _id: motionId).enqueue
+          # We depend on jobs package in an unordered mode to break a dependency cycle,
+          # so we have to use the full package path to access a job.
+          new Package.jobs.ComputeTallyJob(motion: _id: motionId).enqueue
             skipIfExisting: true
 
   # Vote should be published only to its author.
