@@ -1,3 +1,6 @@
+CAMELIZE_RE = /-(\w)/g
+HYPHENATE_RE = /([^-])([A-Z])/g
+
 _.mixin
   capitalize: (string) ->
     string.charAt(0).toUpperCase() + string.substring(1).toLowerCase()
@@ -40,3 +43,17 @@ _.mixin
       sum = temp
 
     sum
+
+  # Camelize a hyphen-delimited string.
+  # Based on vue.js' camelize.
+  camelize: (value) ->
+    value.replace CAMELIZE_RE, (match, capture) ->
+      if capture
+        capture.toUpperCase()
+      else
+        ''
+
+  # Hyphenate a camelCase string.
+  # Based on vue.js' hyphenate.
+  hyphenate: (value) ->
+    value.replace(HYPHENATE_RE, '$1-$2').replace(HYPHENATE_RE, '$1-$2').toLowerCase()

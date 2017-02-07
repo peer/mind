@@ -253,6 +253,15 @@ class User extends share.BaseDocument
   #     username
   #     avatar
   #   ratio: a value between 0 and 1
+  # emailNotifications:
+  #   userImmediately: true or false
+  #   generalImmediately: true or false
+  #   user4hours: true or false
+  #   general4hours: true or false
+  #   userDaily: true or false
+  #   generalDaily: true or false
+  #   userWeekly: true or false
+  #   generalWeekly: true or false
 
   # We have it before @Meta because we are referencing it inside @Meta.
   @REFERENCE_FIELDS: ->

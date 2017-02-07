@@ -33,6 +33,11 @@
             {{> Settings.DelegationsComponent}}
           </div>
 
+          <div id="notifications" class="section scrollspy">
+            <h4>E-mail notifications</h4>
+            {{> Settings.NotificationsComponent}}
+          </div>
+
           <div id="research" class="section scrollspy">
             <h4>Research data</h4>
             {{> Settings.ResearchDataComponent args isSettings=true}}
@@ -70,6 +75,7 @@
               <li><a href="#accounts">Linked accounts</a></li>
             {{/if}}
             <li><a href="#delegations">Delegations</a></li>
+            <li><a href="#notifications">E-mail notifications</a></li>
             <li><a href="#research">Research data</a></li>
             {{#unless isSandstorm}}
               <li><a href="#password">Password</a></li>
@@ -404,6 +410,44 @@
   </div>
 
   {{!-- TODO: We could also provide a way for users to invite other users to the system if they are not yet registered. --}}
+</template>
+
+<template name="Settings.NotificationsComponent">
+  <div class="row">
+    <div class="col s12">
+      <table class="notifications">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="center">Personal</th>
+            <th class="center">General</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="type">Immediately</div><div class="hint">Send e-mail notification immediately after an activity occurs.</div></td>
+            <td class="center"><input type="checkbox" id="user-immediately" onChange {{checked 'user-immediately'}} /><label for="user-immediately"></label></td>
+            <td class="center"><input type="checkbox" id="general-immediately" onChange {{checked 'general-immediately'}} /><label for="general-immediately"></label></td>
+          </tr>
+          <tr>
+            <td><div class="type">4-hour digest</div><div class="hint">Send e-mail notification for all occurred activity every 4 hours.</div></td>
+            <td class="center"><input type="checkbox" id="user-4hours" onChange {{checked 'user-4hours'}} /><label for="user-4hours"></label></td>
+            <td class="center"><input type="checkbox" id="general-4hours" onChange {{checked 'general-4hours'}} /><label for="general-4hours"></label></td>
+          </tr>
+          <tr>
+            <td><div class="type">Daily digest</div><div class="hint">Send e-mail notification for all occurred activity in a day.</div></td>
+            <td class="center"><input type="checkbox" id="user-daily" onChange {{checked 'user-daily'}} /><label for="user-daily"></label></td>
+            <td class="center"><input type="checkbox" id="general-daily" onChange {{checked 'general-daily'}} /><label for="general-daily"></label></td>
+          </tr>
+          <tr>
+            <td><div class="type">Weekly digest</div><div class="hint">Send e-mail notification for all occurred activity in a week.</div></td>
+            <td class="center"><input type="checkbox" id="user-weekly" onChange {{checked 'user-weekly'}} /><label for="user-weekly"></label></td>
+            <td class="center"><input type="checkbox" id="general-weekly" onChange {{checked 'general-weekly'}} /><label for="general-weekly"></label></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
 
 <template name="Settings.DelegationsItemComponent">

@@ -165,3 +165,16 @@ Meteor.methods
     ,
       $set:
         delegations: newDelegations
+
+  'User.setEmailNotificationSetting': (type, enabled) ->
+    check type, Match.OneOf 'userImmediately', 'generalImmediately', 'user4hours', 'general4hours', 'userDaily', 'generalDaily', 'userWeekly', 'generalWeekly'
+    check enabled, Boolean
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    User.documents.update
+      _id: userId
+    ,
+      $set:
+        "emailNotifications.#{type}": enabled

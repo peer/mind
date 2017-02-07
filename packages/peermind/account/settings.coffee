@@ -354,6 +354,38 @@ class Settings.DelegationsUserComponent extends UIComponent
 
       # TODO: Should we check the result and if it is not expected show an error instead?
 
+class Settings.NotificationsComponent extends UIComponent
+  @register 'Settings.NotificationsComponent'
+
+  checked: (value) ->
+    switch value
+      when 'user-immediately' then checked: true if @currentUser()?.emailNotifications?.userImmediately
+      when 'general-immediately' then checked: true if @currentUser()?.emailNotifications?.generalImmediately
+      when 'user-4hours' then checked: true if @currentUser()?.emailNotifications?.user4hours
+      when 'general-4hours' then checked: true if @currentUser()?.emailNotifications?.general4hours
+      when 'user-daily' then checked: true if @currentUser()?.emailNotifications?.userDaily
+      when 'general-daily' then checked: true if @currentUser()?.emailNotifications?.generalDaily
+      when 'user-weekly' then checked: true if @currentUser()?.emailNotifications?.userWeekly
+      when 'general-weekly' then checked: true if @currentUser()?.emailNotifications?.generalWeekly
+
+  onChange: (event) ->
+    event.preventDefault()
+
+    checkbox = $(event.target)
+    checkboxId = checkbox.attr('id')
+    checkboxChecked = checkbox.is(':checked')
+
+    Meteor.call 'User.setEmailNotificationSetting', _.camelize(checkboxId), checkboxChecked, (error, result) =>
+      if error
+        console.error "Setting email notification setting error", error
+        alert "Setting email notification setting error: #{error.reason or error}"
+
+        # Return back to the previous value. Because this is a change event we know
+        # the previous value is a changed current value, so we can just negate it.
+        checkbox.prop('checked', not checkboxChecked)
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
+
 FlowRouter.route '/account/settings',
   name: 'Settings.display'
   action: (params, queryParams) ->
