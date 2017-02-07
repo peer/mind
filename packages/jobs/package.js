@@ -39,6 +39,11 @@ Package.onUse(function (api) {
     'peermind'
   ]);
 
+  // We want to depend only if instrumentation is enabled, but not force it.
+  api.use([
+    'instrument'
+  ], {weak: true});
+
   api.export('ComputeTallyJob');
   api.export('ActivityEmailsJob');
 

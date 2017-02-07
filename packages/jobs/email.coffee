@@ -114,11 +114,13 @@ ToPlainTextVisitor.def
 class ActivityEmailsComponent extends UIComponent
   @register 'ActivityEmailsComponent'
 
-  constructor: (@activities) ->
+  constructor: (@activities, @emailId) ->
     super
 
   instrument: ->
-    # TODO
+    return unless Package.instrument
+
+    "?#{@emailId}"
 
   # Based on django.utils.text.wrap.
   _wrapPlainText: (content, width) ->

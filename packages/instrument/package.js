@@ -3,6 +3,10 @@ Package.describe({
   version: '0.1.0'
 });
 
+Npm.depends({
+  'parseurl': '1.3.1'
+});
+
 Package.onUse(function (api) {
   api.versionsFrom('1.4.1');
 
@@ -12,7 +16,8 @@ Package.onUse(function (api) {
     'accounts-base',
     'jquery',
     'promise',
-    'modules'
+    'modules',
+    'webapp'
   ]);
 
   // 3rd party dependencies.
@@ -44,6 +49,7 @@ Package.onUse(function (api) {
     'upvoting.coffee',
     'discussion.coffee',
     'activity.coffee',
-    'meeting.coffee'
+    'meeting.coffee',
+    'email.coffee'
   ], 'server');
 });
