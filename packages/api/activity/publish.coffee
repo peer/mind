@@ -7,7 +7,7 @@ new PublishEndpoint 'Activity.list', (personalized, initialLimit) ->
   userId = Meteor.userId()
   if personalized
     if userId
-      query = Activity.personalizedActivityQuery userId
+      query = Activity.personalizedActivityQuery userId, true, true
     else
       return []
   else
@@ -45,7 +45,7 @@ new PublishEndpoint 'Activity.unseenPersonalizedCount', ->
     lastSeenPersonalizedActivity.stop()
 
   @autorun (computation) =>
-    query = Activity.personalizedActivityQuery userId
+    query = Activity.personalizedActivityQuery userId, true, true
     if lastSeenPersonalizedActivity()
       _.extend query,
         timestamp:

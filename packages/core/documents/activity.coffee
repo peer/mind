@@ -65,9 +65,14 @@ class Activity extends share.BaseDocument
       level: 1
       data: 1
 
-  @personalizedActivityQuery: (userId) ->
+  @personalizedActivityQuery: (userId, userLevel, generalLevel) ->
+    levels = []
+
+    levels.push Activity.LEVEL.USER if userLevel
+    levels.push Activity.LEVEL.GENERAL if generalLevel
+
     level:
-      $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
+      $in: levels
     'byUser._id':
       $ne: userId
     'forUsers._id': userId

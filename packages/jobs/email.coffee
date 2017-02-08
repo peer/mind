@@ -231,9 +231,18 @@ class ActivityEmailsJob extends Job
     User.documents.find(
       _id:
         $in: allUserIdsInActivities
+      # A slight optimization. Do not process at all users
+      # who do not have at least one set to true.
+      $or: [
+        'emailNotifications.userImmediately': true
+      ,
+        'emailNotifications.generalImmediately': true
+      ]
     ,
       fields: _.extend User.REFERENCE_FIELDS(),
         _id: 1
+        'emailNotifications.userImmediately': 1
+        'emailNotifications.generalImmediately': 1
         emails:
           $elemMatch:
             verified: true
@@ -242,7 +251,7 @@ class ActivityEmailsJob extends Job
       address = user.emails?[0]?.address
       return unless address
 
-      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery(user._id)).fetch()
+      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery user._id, user.emailNotifications?.userImmediately, user.emailNotifications?.generalImmediately).fetch()
       userActivities = Activity.combineActivities uncombinedUserActivities
 
       return unless userActivities.length
