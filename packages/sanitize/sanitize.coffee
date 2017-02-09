@@ -20,7 +20,23 @@ class Sanitize
 
     $root = $('<div/>')
 
-    $root.append $.parseHTML(body)
+    # If jQuery 3 and newer, $.parseHTML already uses a new document when parsing.
+    if parseInt($.fn.jquery) >= 3
+      context = null
+    else if $.support.createHTMLDocument
+      context = document.implementation.createHTMLDocument('')
+
+      # Set the base href for the created document so any parsed
+      # elements with URLs are based on the document's URL.
+      base = context.createElement('base')
+      base.href = document.location.href
+      context.head.appendChild(base)
+    else
+      context = document
+
+    # We want script tags to be parsed because we do want to allow one
+    # to not sanitize them, if they decide so.
+    $root.append $.parseHTML(body, context, true)
 
     @_sanitizeHTMLRoot $, $root
 
