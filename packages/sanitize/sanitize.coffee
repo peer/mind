@@ -1,3 +1,18 @@
+if Meteor.isClient
+  # In Safari 8 documents created via document.implementation.createHTMLDocument
+  # collapse sibling forms: the second one becomes a child of the first one.
+  # Because of that, this security measure has to be disabled in Safari 8.
+  # See: https://bugs.webkit.org/show_bug.cgi?id=137337
+  # Taken from jQuery (backporting).
+  createHTMLDocumentSupported = do ->
+    return jQuery.support.createHTMLDocument if 'createHTMLDocument' of jQuery.support
+
+    return false unless document.implementation?.createHTMLDocument
+
+    body = document.implementation.createHTMLDocument('').body
+    body.innerHTML = '<form></form><form></form>'
+    body.childNodes.length is 2
+
 class Sanitize
   constructor: (@allowedTags) ->
 
@@ -16,23 +31,31 @@ class Sanitize
     @_sanitizeHTMLRoot $, $.root()
 
   _sanitizeHTMLClient: (body) ->
-    $ = jQuery
-
-    $root = $('<div/>')
-
-    # If jQuery 3 and newer, $.parseHTML already uses a new document when parsing.
-    if parseInt($.fn.jquery) >= 3
-      context = null
-    else if $.support.createHTMLDocument
-      context = document.implementation.createHTMLDocument('')
+    if createHTMLDocumentSupported
+      context = document.implementation.createHTMLDocument ''
 
       # Set the base href for the created document so any parsed
       # elements with URLs are based on the document's URL.
-      base = context.createElement('base')
+      # See: https://github.com/jquery/jquery/issues/2965
+      base = context.createElement 'base'
       base.href = document.location.href
-      context.head.appendChild(base)
+      context.head.appendChild base
     else
       context = document
+
+    # Create a version of jQuery which uses our context by default.
+    # This makes it safer later on if we call $(unsafeTag) to not
+    # trigger any side-effects by attaching it to main document.
+    $ = (selector, innerContext) ->
+      jQuery selector, innerContext or context
+
+    for own key, value of jQuery
+      $[key] = value
+
+    $.prototype = $.fn
+
+    # This tag is created inside context.
+    $root = $('<div/>')
 
     # We want script tags to be parsed because we do want to allow one
     # to not sanitize them, if they decide so.
