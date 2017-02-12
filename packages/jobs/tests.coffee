@@ -46,7 +46,7 @@ class JobsTestCase extends ClassyTestCase
     userActivities = LocalActivity.documents.find().fetch()
 
     ActivityEmailsComponent = UIComponent.getComponent 'ActivityEmailsComponent'
-    component = new ActivityEmailsComponent userActivities, emailId
+    component = new ActivityEmailsComponent "Recent notifications", userActivities, emailId
 
     urlRoot = Meteor.absoluteUrl()
 

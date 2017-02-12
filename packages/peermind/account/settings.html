@@ -33,6 +33,11 @@
             {{> Settings.DelegationsComponent}}
           </div>
 
+          <div id="following" class="section scrollspy">
+            <h4>Discussions following</h4>
+            {{> Settings.FollowingComponent}}
+          </div>
+
           <div id="notifications" class="section scrollspy">
             <h4>E-mail notifications</h4>
             {{> Settings.NotificationsComponent}}
@@ -75,6 +80,7 @@
               <li><a href="#accounts">Linked accounts</a></li>
             {{/if}}
             <li><a href="#delegations">Delegations</a></li>
+            <li><a href="#following">Discussions following</a></li>
             <li><a href="#notifications">E-mail notifications</a></li>
             <li><a href="#research">Research data</a></li>
             {{#unless isSandstorm}}
@@ -410,6 +416,14 @@
   </div>
 
   {{!-- TODO: We could also provide a way for users to invite other users to the system if they are not yet registered. --}}
+</template>
+
+<template name="Settings.FollowingComponent">
+  <div class="row">
+    <div class="col s12">
+
+    </div>
+  </div>
 </template>
 
 <template name="Settings.NotificationsComponent">
