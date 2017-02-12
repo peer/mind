@@ -114,7 +114,7 @@ ToPlainTextVisitor.def
 class ActivityEmailsComponent extends UIComponent
   @register 'ActivityEmailsComponent'
 
-  constructor: (@activities, @emailId) ->
+  constructor: (@title, @activities, @emailId) ->
     super
 
   instrument: ->
@@ -148,9 +148,129 @@ class ActivityEmailsComponent extends UIComponent
     @_wrapPlainText @_renderComponentTo(new ToPlainTextVisitor()), 68
 
 class ActivityEmailsJob extends Job
+  _convertHTML: (html) ->
+    $ = cheerio.load html,
+      # Normalize whitespace.
+      # TODO: Probably not necessary once: https://github.com/meteor/blaze/issues/88
+      normalizeWhitespace: true
+      xmlMode: false
+      decodeEntities: true
+
+    # Make links absolute URLs.
+    $.root().find('a[href]').each (index, element) =>
+      $element = $(element)
+      $element.attr('href', url.resolve Meteor.absoluteUrl(), $element.attr('href'))
+
+    # Make image sources absolute URLs.
+    $.root().find('img[src]').each (index, element) =>
+      $element = $(element)
+      $element.attr('src', url.resolve Meteor.absoluteUrl(), $element.attr('src'))
+
+    # Because we inlined all CSS, we can remove all classes.
+    $.root().find('[class]').each (index, element) =>
+      $element = $(element)
+      $element.removeAttr('class')
+
+    # Tag "nav" is not supported in Gmail, so we replace it with "div".
+    # Because we already inlined all CSS, this does not make CSS not match.
+    $.root().find('nav').each (index, element) =>
+      element.tagName = 'div'
+
+    $.html()
+
+  processActivities: (fromTimestamp, toTimestamp) ->
+    activities = Activity.documents.find(
+      timestamp:
+        $gte: fromTimestamp
+        $lt: toTimestamp
+      level:
+        $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
+    ,
+      # Because we insert them into a local collection to be able to query them.
+      transform: null
+    ).fetch()
+
+    # We insert activities into a local collection to be
+    # able to query them multiple times, cached, frozen.
+    class LocalActivity extends Activity
+      @Meta
+        name: 'LocalActivity'
+        collection: null
+
+    for activity in activities
+      LocalActivity.documents.insert activity
+
+    allUserIdsInActivities = []
+    LocalActivity.documents.find().forEach (activity, index, cursor) =>
+      for user in activity.forUsers when user?._id
+        allUserIdsInActivities.push user._id
+
+    allUserIdsInActivities = _.uniq allUserIdsInActivities
+
+    css = fs.readFileSync [__meteor_bootstrap__.serverDir, '..', 'web.browser', 'merged-stylesheets.css'].join(pathModule.sep),
+      encoding: 'utf8'
+
+    User.documents.find(
+      _id:
+        $in: allUserIdsInActivities
+      # A slight optimization. Do not process at all users
+      # who do not have at least one set to true.
+      $or: [
+        "emailNotifications.user#{@constructor.SETTINGS_FIELD_SUFFIX}": true
+      ,
+        "emailNotifications.general#{@constructor.SETTINGS_FIELD_SUFFIX}": true
+      ]
+    ,
+      fields: _.extend User.REFERENCE_FIELDS(),
+        _id: 1
+        "emailNotifications.user#{@constructor.SETTINGS_FIELD_SUFFIX}": 1
+        "emailNotifications.general#{@constructor.SETTINGS_FIELD_SUFFIX}": 1
+        emails:
+          $elemMatch:
+            verified: true
+    ).forEach (user, index, cursor) =>
+      # TODO: Allow configuring which e-mail address is used for notifications.
+      address = user.emails?[0]?.address
+      return unless address
+
+      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery user._id, user.emailNotifications?["user#{@constructor.SETTINGS_FIELD_SUFFIX}"], user.emailNotifications?["general#{@constructor.SETTINGS_FIELD_SUFFIX}"]).fetch()
+      userActivities = Activity.combineActivities uncombinedUserActivities
+
+      return unless userActivities.length
+
+      emailId = Random.id()
+
+      emailComponent = new ActivityEmailsComponent(@constructor.TITLE, userActivities, emailId)
+
+      # DOCTYPE cannot be a part of the template.
+      html = '<!DOCTYPE html>' + emailComponent.renderComponentToHTML()
+
+      # Inline all CSS.
+      html = juice.inlineContent html, css
+
+      html = @_convertHTML html
+
+      # Email is our document class and not Package.email.Email.
+      Email.send emailId,
+        from: Accounts.emailTemplates.from
+        to: address
+        subject: "[#{Accounts.emailTemplates.siteName}] #{@constructor.TITLE}"
+        text: emailComponent.renderComponentToPlainText()
+        html: html
+        headers:
+          Precedence: 'bulk'
+      ,
+        user, 'activities',
+          activities: (_id: activity._id for activity in uncombinedUserActivities)
+
+    return
+
+class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
   @register()
 
+  @TITLE = "Recent notifications"
   @DELAY = 60 * 1000 # ms
+  @SETTINGS_FIELD_SUFFIX = 'Immediately'
 
   enqueueOptions: (options) ->
     _.defaults super,
@@ -187,16 +307,7 @@ class ActivityEmailsJob extends Job
       $set:
         'data.toTimestamp': toTimestamp
 
-    @processActivities Activity.documents.find(
-      timestamp:
-        $gte: fromTimestamp
-        $lt: toTimestamp
-      level:
-        $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
-    ,
-      # Because we insert them into a local collection to be able to query them.
-      transform: null
-    ).fetch()
+    @processActivities fromTimestamp, toTimestamp
 
     futureActivitiesExist = Activity.documents.exists
       timestamp:
@@ -205,108 +316,75 @@ class ActivityEmailsJob extends Job
         $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
 
     if futureActivitiesExist
-      # ActivityEmailsJob is enqueued only if there is no existing job which would cover this timestamp.
-      new ActivityEmailsJob(fromTimestamp: toTimestamp).enqueue()
+      # ActivityEmailsImmediatelyJob is enqueued only if there is no existing job which would cover this timestamp.
+      new ActivityEmailsImmediatelyJob(fromTimestamp: toTimestamp).enqueue()
 
-  processActivities: (activities) ->
-    # We insert activities into a local collection to be able to query them.
-    class LocalActivity extends Activity
-      @Meta
-        name: 'LocalActivity'
-        collection: null
+    return
 
-    for activity in activities
-      LocalActivity.documents.insert activity
+class ActivityEmailsDigestJob extends ActivityEmailsJob
+  enqueueOptions: (options) ->
+    _.defaults super,
+      repeat:
+        # TODO: Support other timezones.
+        #       See: https://github.com/vsivsi/meteor-job-collection/issues/104
+        #       This is in system's local timezone. later.js is configured to
+        #       use local timezone in core/documents/jobqueue.coffee.
+        schedule: JobsWorker.collection.later.parse.text @constructor.SCHEDULE
+      save:
+        # This makes it so that job of each class can exist only once, and every time
+        # a job is enqueued, all previous (potentially with obsolete configuration) jobs
+        # of the same class are canceled.
+        cancelRepeats: true
 
-    allUserIdsInActivities = []
-    LocalActivity.documents.find().forEach (activity, index, cursor) =>
-      for user in activity.forUsers when user?._id
-        allUserIdsInActivities.push user._id
-
-    allUserIdsInActivities = _.uniq allUserIdsInActivities
-
-    css = fs.readFileSync [__meteor_bootstrap__.serverDir, '..', 'web.browser', 'merged-stylesheets.css'].join(pathModule.sep),
-      encoding: 'utf8'
-
-    User.documents.find(
-      _id:
-        $in: allUserIdsInActivities
-      # A slight optimization. Do not process at all users
-      # who do not have at least one set to true.
-      $or: [
-        'emailNotifications.userImmediately': true
-      ,
-        'emailNotifications.generalImmediately': true
-      ]
+  run: ->
+    latestJob = JobsWorker.collection.findOne
+      type: @type()
+      status: 'completed'
     ,
-      fields: _.extend User.REFERENCE_FIELDS(),
-        _id: 1
-        'emailNotifications.userImmediately': 1
-        'emailNotifications.generalImmediately': 1
-        emails:
-          $elemMatch:
-            verified: true
-    ).forEach (user, index, cursor) =>
-      # TODO: Allow configuring which e-mail address is used for notifications.
-      address = user.emails?[0]?.address
-      return unless address
+      sort:
+        'data.toTimestamp': -1
+      fields:
+        'data.toTimestamp': 1
 
-      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery user._id, user.emailNotifications?.userImmediately, user.emailNotifications?.generalImmediately).fetch()
-      userActivities = Activity.combineActivities uncombinedUserActivities
+    fromTimestamp = latestJob?.data?.toTimestamp or new Date(0)
+    toTimestamp = new Date()
 
-      return unless userActivities.length
+    if (toTimestamp.valueOf() - fromTimestamp.valueOf()) > @constructor.MAX_TIME_SPAN
+      fromTimestamp = new Date toTimestamp.valueOf() - @constructor.MAX_TIME_SPAN
 
-      emailId = Random.id()
+    JobsWorker.collection.update @_id,
+      $set:
+        'data.toTimestamp': toTimestamp
 
-      emailComponent = new ActivityEmailsComponent(userActivities, emailId)
+    @processActivities fromTimestamp, toTimestamp
 
-      # DOCTYPE cannot be a part of the template.
-      html = '<!DOCTYPE html>' + emailComponent.renderComponentToHTML()
+    return
 
-      # Inline all CSS.
-      html = juice.inlineContent html, css
+class ActivityEmails4hoursDigestJob extends ActivityEmailsDigestJob
+  @register()
 
-      html = @_convertHTML html
+  @TITLE = "4-hour digest"
+  @MAX_TIME_SPAN = 4.5 * 60 * 60 * 1000 # ms
+  @SCHEDULE = 'every 4 hours'
+  @SETTINGS_FIELD_SUFFIX = '4hours'
 
-      # Email is our document class and not Package.email.Email.
-      Email.send emailId,
-        from: Accounts.emailTemplates.from
-        to: address
-        subject: "[#{Accounts.emailTemplates.siteName}] Recent notifications"
-        text: emailComponent.renderComponentToPlainText()
-        html: html
-        headers:
-          Precedence: 'bulk'
-      ,
-        user, 'activities',
-          activities: (_id: activity._id for activity in uncombinedUserActivities)
+class ActivityEmailsDailyDigestJob extends ActivityEmailsDigestJob
+  @register()
 
-  _convertHTML: (html) ->
-    $ = cheerio.load html,
-      # Normalize whitespace.
-      # TODO: Probably not necessary once: https://github.com/meteor/blaze/issues/88
-      normalizeWhitespace: true
-      xmlMode: false
-      decodeEntities: true
+  @TITLE = "Daily digest"
+  @MAX_TIME_SPAN = 24.5 * 60 * 60 * 1000 # ms
+  @SCHEDULE = 'at 7:40 AM'
+  @SETTINGS_FIELD_SUFFIX = 'Daily'
 
-    # Make links absolute URLs.
-    $.root().find('a[href]').each (index, element) =>
-      $element = $(element)
-      $element.attr('href', url.resolve Meteor.absoluteUrl(), $element.attr('href'))
+class ActivityEmailsWeeklyDigestJob extends ActivityEmailsDigestJob
+  @register()
 
-    # Make image sources absolute URLs.
-    $.root().find('img[src]').each (index, element) =>
-      $element = $(element)
-      $element.attr('src', url.resolve Meteor.absoluteUrl(), $element.attr('src'))
+  @TITLE = "Weekly digest"
+  @MAX_TIME_SPAN = 7.5 * 24 * 60 * 60 * 1000 # ms
+  @SCHEDULE = 'on Monday at 7:20 AM'
+  @SETTINGS_FIELD_SUFFIX = 'Weekly'
 
-    # Because we inlined all CSS, we can remove all classes.
-    $.root().find('[class]').each (index, element) =>
-      $element = $(element)
-      $element.removeAttr('class')
-
-    # Tag "nav" is not supported in Gmail, so we replace it with "div".
-    # Because we already inlined all CSS, this does not make CSS not match.
-    $.root().find('nav').each (index, element) =>
-      element.tagName = 'div'
-
-    $.html()
+Meteor.startup ->
+  new ActivityEmails4hoursDigestJob().enqueue()
+  new ActivityEmailsDailyDigestJob().enqueue()
+  new ActivityEmailsWeeklyDigestJob().enqueue()

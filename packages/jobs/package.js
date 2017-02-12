@@ -45,7 +45,7 @@ Package.onUse(function (api) {
   ], {weak: true});
 
   api.export('ComputeTallyJob');
-  api.export('ActivityEmailsJob');
+  api.export('ActivityEmailsImmediatelyJob');
 
   api.addFiles([
     'tally.coffee',

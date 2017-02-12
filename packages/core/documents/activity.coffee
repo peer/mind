@@ -37,10 +37,10 @@ class Activity extends share.BaseDocument
         # Small optimization, because we send e-mails only for those levels.
         return unless newDocument.level in [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
 
-        # ActivityEmailsJob is enqueued only if there is no existing job which would cover this timestamp.
-        # We depend on jobs package in an unordered mode to break a dependency cycle,
+        # ActivityEmailsImmediatelyJob is enqueued only if there is no existing job which would cover
+        # this timestamp. We depend on jobs package in an unordered mode to break a dependency cycle,
         # so we have to use the full package path to access a job.
-        new Package.jobs.ActivityEmailsJob(fromTimestamp: newDocument.timestamp).enqueue()
+        new Package.jobs.ActivityEmailsImmediatelyJob(fromTimestamp: newDocument.timestamp).enqueue()
 
   @LEVEL:
     DEBUG: 'debug'
