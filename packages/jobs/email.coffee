@@ -263,7 +263,7 @@ class ActivityEmailsJob extends Job
         user, 'activities',
           activities: (_id: activity._id for activity in uncombinedUserActivities)
 
-    return
+    activitiesInRange: activities.length
 
 class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
   @register()
@@ -307,7 +307,7 @@ class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
       $set:
         'data.toTimestamp': toTimestamp
 
-    @processActivities fromTimestamp, toTimestamp
+    result = @processActivities fromTimestamp, toTimestamp
 
     futureActivitiesExist = Activity.documents.exists
       timestamp:
@@ -319,7 +319,7 @@ class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
       # ActivityEmailsImmediatelyJob is enqueued only if there is no existing job which would cover this timestamp.
       new ActivityEmailsImmediatelyJob(fromTimestamp: toTimestamp).enqueue()
 
-    return
+    result
 
 class ActivityEmailsDigestJob extends ActivityEmailsJob
   enqueueOptions: (options) ->
@@ -357,8 +357,6 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
         'data.toTimestamp': toTimestamp
 
     @processActivities fromTimestamp, toTimestamp
-
-    return
 
 class ActivityEmails4hoursDigestJob extends ActivityEmailsDigestJob
   @register()
