@@ -71,6 +71,6 @@ if Meteor.isServer
 
   JobQueue.Meta.collection._ensureIndex
     # Digests are sorting in decreasing order.
-    'data.toTimestamp': -1
+    'result.toTimestamp': -1
   ,
     sparse: true

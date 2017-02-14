@@ -148,6 +148,9 @@ class ActivityEmailsComponent extends UIComponent
     @_wrapPlainText @_renderComponentTo(new ToPlainTextVisitor()), 68
 
 class ActivityEmailsJob extends Job
+  # Every how many users do we log progress.
+  @LOG_PROGRESS_EVERY_USERS = 50
+
   _convertHTML: (html) ->
     $ = cheerio.load html,
       # Normalize whitespace.
@@ -210,7 +213,7 @@ class ActivityEmailsJob extends Job
     css = fs.readFileSync [__meteor_bootstrap__.serverDir, '..', 'web.browser', 'merged-stylesheets.css'].join(pathModule.sep),
       encoding: 'utf8'
 
-    User.documents.find(
+    users = User.documents.find(
       _id:
         $in: allUserIdsInActivities
       # A slight optimization. Do not process at all users
@@ -228,15 +231,26 @@ class ActivityEmailsJob extends Job
         emails:
           $elemMatch:
             verified: true
-    ).forEach (user, index, cursor) =>
+    )
+
+    usersCount = users.count()
+    users.forEach (user, index, cursor) =>
       # TODO: Allow configuring which e-mail address is used for notifications.
       address = user.emails?[0]?.address
-      return unless address
+      unless address
+        @usersProgress index, usersCount
+        return
 
-      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery user._id, user.emailNotifications?["user#{@constructor.SETTINGS_FIELD_SUFFIX}"], user.emailNotifications?["general#{@constructor.SETTINGS_FIELD_SUFFIX}"]).fetch()
+      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery(user._id, user.emailNotifications?["user#{@constructor.SETTINGS_FIELD_SUFFIX}"], user.emailNotifications?["general#{@constructor.SETTINGS_FIELD_SUFFIX}"]),
+        sort:
+          # The newest first.
+          timestamp: -1
+      ).fetch()
       userActivities = Activity.combineActivities uncombinedUserActivities
 
-      return unless userActivities.length
+      unless userActivities.length
+        @usersProgress index, usersCount
+        return
 
       emailId = Random.id()
 
@@ -262,8 +276,23 @@ class ActivityEmailsJob extends Job
       ,
         user, 'activities',
           activities: (_id: activity._id for activity in uncombinedUserActivities)
+          type: @type()
+
+      @usersProgress index, usersCount
 
     activitiesInRange: activities.length
+    fromTimestamp: fromTimestamp
+    toTimestamp: toTimestamp
+
+  usersProgress: (index, usersCount) ->
+    # Set progress on every LOG_PROGRESS_EVERY_USERS user.
+    # We use index and not index + 1 so that we set the number of
+    # total users with initial call to this method.
+    return if index % @constructor.LOG_PROGRESS_EVERY_USERS isnt 0
+
+    # A false return value from @progress means job has been probably canceled.
+    # We throw an error to terminate the execution of this job.
+    throw new Error "Unable to log progress." unless @progress index + 1, usersCount
 
 class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
   @register()
@@ -277,22 +306,37 @@ class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
       delay: @constructor.DELAY
 
   shouldSkip: (options) ->
-    # Does a job which can run or is running exist which will handle activities for this job's timestamp as well?
+    # Does a job which could handle activities for this job's timestamp exists already?
+    # It could be that it is already running, but that will not process all activities
+    # which exists at this moment since fromTimestamp. This is OK, because at the end of
+    # its run it will schedule a new job to handle any remaining activities.
+    # It could be that it ran, but it failed, sending none or partial amount of e-mails
+    # already. In this case we do not want to resend e-mails again to those who might
+    # already received them, so we see a failed job as a succeeded job for that time span.
+    # TODO: Because we store with each e-mail for which user it is and for which activity, we could recover from partially done job (and failed).
+    #       For job retries (but not for the first try, to optimize) we could check if any e-mail
+    #       we are about to send has already been sent and skip it. But let us first see how many
+    #       failures will there be during these jobs at all.
     !!JobsWorker.collection.findOne
+      type: @type()
       'data.fromTimestamp':
         $lte: @data.fromTimestamp
       $or: [
-        # If a job processing this timestamp range runs on a worker with imprecise clock, then it might
-        # happen that toTimestamp gets assigned a timestamp before @data.fromTimestamp. In this case
-        # skipping this job was wrong. But this is (among other reasons) why we have that enqueue of an
-        # extra job at the end of run method, which should handle such a case.
-        'data.toTimestamp': null
+        'result.toTimestamp': null
+        status:
+          # We do not want any job which fails before it sets result.toTimestamp
+          # to prevent all future jobs to be enqueued.
+          $in: JobsWorker.collection.jobStatusCancellable
       ,
-        'data.toTimestamp':
+        'result.toTimestamp':
+          # We use $gt and not $gte here, because in the query for activities, we do "$lt: toTimestamp",
+          # so for @data.fromTimestamp to be included, result.toTimestamp has to be strictly greater.
+          # If a job processing this timestamp range runs on a worker with imprecise clock, then it might
+          # happen that toTimestamp gets assigned a timestamp before @data.fromTimestamp. In this case
+          # skipping this job was wrong. But this is (among other reasons) why we have that enqueue of an
+          # extra job at the end of run method, which should handle such a case.
           $gt: @data.fromTimestamp
       ]
-      status:
-        $in: JobsWorker.collection.jobStatusCancellable
     ,
       # Making findOne similar to exists.
       fields:
@@ -303,23 +347,57 @@ class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
     fromTimestamp = @data.fromTimestamp
     toTimestamp = new Date()
 
+    # We store toTimestamp before running the rest, so that even if the job fails, we know
+    # which time span this job processed (or had to process). We see that time span as
+    # successfully processed in any case. See comment in shouldSkip for reasoning.
     JobsWorker.collection.update @_id,
       $set:
-        'data.toTimestamp': toTimestamp
+        'result.fromTimestamp': fromTimestamp
+        'result.toTimestamp': toTimestamp
 
-    result = @processActivities fromTimestamp, toTimestamp
+    # Based on shouldSkip, it is not really possible to have two jobs overlapping.
+    # Or this job had result.toTimestamp set to null, so no later job got scheduled,
+    # or we just set result.toTimestamp, which also prevents an overlapping job to get scheduled.
+    impossibleJobs = JobsWorker.collection.find(
+      # We do not want to match this job.
+      _id:
+        $ne: @_id
+      type: @type()
+      'data.fromTimestamp':
+        $lt: toTimestamp
+      $or: [
+        'result.toTimestamp': null
+        status:
+          # There might be some old failed job without result.toTimestamp.
+          # We do not care about it overlapping with this job.
+          $in: JobsWorker.collection.jobStatusCancellable
+      ,
+        'result.toTimestamp':
+          $gt: fromTimestamp
+      ]
+    ).fetch()
 
-    futureActivitiesExist = Activity.documents.exists
-      timestamp:
-        $gte: toTimestamp
-      level:
-        $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
+    assert not impossibleJobs.length, "Overlapping job(s): #{_.pluck(impossibleJobs, '_id').join ', '}"
 
-    if futureActivitiesExist
-      # ActivityEmailsImmediatelyJob is enqueued only if there is no existing job which would cover this timestamp.
-      new ActivityEmailsImmediatelyJob(fromTimestamp: toTimestamp).enqueue()
+    try
+      @processActivities fromTimestamp, toTimestamp
+    finally
+      # Even if this job failed, we continue with the next time span. We see this time span
+      # as successfully processed. See comment in shouldSkip for reasoning.
 
-    result
+      # To handle any edge cases where shouldSkip could prevent a job to be enqueued
+      # for the next time span, we check here if there is any activity for which a job
+      # is needed and try to enqueued it. If a suitable job already exists (which covers
+      # this next time span), a new job will not be enqueued.
+      futureActivitiesExist = Activity.documents.exists
+        timestamp:
+          $gte: toTimestamp
+        level:
+          $in: [Activity.LEVEL.USER, Activity.LEVEL.GENERAL]
+
+      if futureActivitiesExist
+        # ActivityEmailsImmediatelyJob is enqueued only if there is no existing job which would cover this timestamp.
+        new ActivityEmailsImmediatelyJob(fromTimestamp: toTimestamp).enqueue()
 
 class ActivityEmailsDigestJob extends ActivityEmailsJob
   enqueueOptions: (options) ->
@@ -333,20 +411,30 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
       save:
         # This makes it so that job of each class can exist only once, and every time
         # a job is enqueued, all previous (potentially with obsolete configuration) jobs
-        # of the same class are canceled.
+        # of the same class/type are canceled.
         cancelRepeats: true
 
   run: ->
+    # We are assuming that there is only one job running at a time.
+    # Once a job sets its result.toTimestamp we do not really care if it succeeded or failed.
+    # We do not process that time span anymore, because job could send partial amount of e-mails
+    # already. In this case we do not want to resend e-mails again to those who might
+    # already received them, so we see a failed job as a succeeded job for that time span.
+    # TODO: Because we store with each e-mail for which user it is and for which activity, we could recover from partially done job (and failed).
+    #       For job retries (but not for the first try, to optimize) we could check if any e-mail
+    #       we are about to send has already been sent and skip it. But let us first see how many
+    #       failures will there be during these jobs at all.
     latestJob = JobsWorker.collection.findOne
       type: @type()
-      status: 'completed'
+      'result.toTimestamp':
+        $ne: null
     ,
       sort:
-        'data.toTimestamp': -1
+        'result.toTimestamp': -1
       fields:
-        'data.toTimestamp': 1
+        'result.toTimestamp': 1
 
-    fromTimestamp = latestJob?.data?.toTimestamp or new Date(0)
+    fromTimestamp = latestJob?.result?.toTimestamp or new Date(0)
     toTimestamp = new Date()
 
     if (toTimestamp.valueOf() - fromTimestamp.valueOf()) > @constructor.MAX_TIME_SPAN
@@ -354,7 +442,8 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
 
     JobsWorker.collection.update @_id,
       $set:
-        'data.toTimestamp': toTimestamp
+        'result.fromTimestamp': fromTimestamp
+        'result.toTimestamp': toTimestamp
 
     @processActivities fromTimestamp, toTimestamp
 
