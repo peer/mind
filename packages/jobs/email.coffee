@@ -493,9 +493,9 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
     subjectText = "#{@TITLE} #{@subjectTime}"
 
     if activities.length is 1
-      subjectText = "#{subjectText} (#{activities.length} activity)"
+      subjectText = "#{subjectText} (#{activities.length} notification)"
     else
-      subjectText = "#{subjectText} (#{activities.length} activities)"
+      subjectText = "#{subjectText} (#{activities.length} notifications)"
 
     subjectText
 
