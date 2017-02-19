@@ -36,7 +36,7 @@ Package.onUse(function (api) {
     // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
     'alanning:roles@1.2.15',
-    'peerlibrary:classy-job@0.6.1',
+    'peerlibrary:classy-job@0.6.2',
     'peerlibrary:user-extra@0.1.0',
     'kenton:accounts-sandstorm@0.5.1',
     'peerlibrary:blocking@0.5.2'
