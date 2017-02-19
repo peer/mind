@@ -482,6 +482,9 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
     if (toTimestamp.valueOf() - fromTimestamp.valueOf()) > @MAX_TIME_SPAN
       fromTimestamp = new Date toTimestamp.valueOf() - @MAX_TIME_SPAN
 
+    # In theory there could be a large delay between findOne query above and until this update
+    # query finishes. This could lead to a race condition. But because we run digest e-mails
+    # with at least hours between them, we should be good here.
     JobsWorker.collection.update @_id,
       $set:
         'result.fromTimestamp': fromTimestamp
