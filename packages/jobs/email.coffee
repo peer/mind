@@ -490,7 +490,7 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
     @processActivities fromTimestamp, toTimestamp
 
   subject: (activities) ->
-    subjectText = "#{@TITLE} #{@subjectTime}"
+    subjectText = "#{@TITLE} #{@subjectTime()}"
 
     if activities.length is 1
       subjectText = "#{subjectText} (#{activities.length} notification)"
