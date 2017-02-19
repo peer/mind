@@ -97,18 +97,24 @@ share.UpdatedAtTrigger = (args...) ->
 class MentionsTriggerClass extends share.BaseDocument._Trigger
   constructor: (mentionsField, discussionField, userField) ->
     super [mentionsField, discussionField, userField], (newDocument, oldDocument) ->
-      # Don't do anything when document is removed.
-      return unless newDocument?._id
+      if newDocument
+        dataDocument = newDocument
 
-      discussionId = _.path newDocument, discussionField
+        discussionId = _.path newDocument, discussionField
 
-      # Change of a discussion should not really happen, but let's handle it.
-      if oldDocument and discussionId isnt _.path(oldDocument, discussionField)
-        # We just pretend it is a new document.
-        oldDocument = null
+        # Change of a discussion should not really happen, but let's handle it.
+        if oldDocument and discussionId isnt _.path(oldDocument, discussionField)
+          # We just pretend it is a new document.
+          oldDocument = null
+      else
+        assert oldDocument
 
-      newMentions = _.pluck _.path(newDocument, mentionsField), '_id'
-      oldMentions = _.pluck _.path(oldDocument, mentionsField), '_id'
+        dataDocument = oldDocument
+
+        discussionId = _.path oldDocument, discussionField
+
+      newMentions = _.uniq _.pluck _.path(newDocument, mentionsField), '_id'
+      oldMentions = _.uniq _.pluck _.path(oldDocument, mentionsField), '_id'
 
       addedMentions = _.difference newMentions, oldMentions
 
@@ -144,17 +150,37 @@ class MentionsTriggerClass extends share.BaseDocument._Trigger
         documentName = @document.Meta._name.toLowerCase()
         if documentName isnt 'discussion'
           data[documentName] =
-            _id: newDocument._id
+            _id: dataDocument._id
 
         Activity.documents.insert
           timestamp: new Date()
-          byUser: _.path newDocument, userField
+          byUser: _.path dataDocument, userField
           forUsers: [
             _id: addedMention
           ]
           type: 'mention'
           level: Activity.LEVEL.USER
           data: data
+
+      removedMentions = _.difference oldMentions, newMentions
+
+      # We do not change the following status when mention is removed, but we remove the notification.
+      for removedMention in removedMentions
+        query =
+          'byUser._id': _.path dataDocument, "#{userField}._id"
+          'forUsers._id': removedMention
+          type: 'mention'
+          level: Activity.LEVEL.USER
+          'data.discussion._id': discussionId
+
+        # This could override "discussion" when mentions are inside discussion directly.
+        documentName = @document.Meta._name.toLowerCase()
+        if documentName isnt 'discussion'
+          query["data.#{documentName}._id"] = dataDocument._id
+
+        console.log "query", query
+
+        Activity.documents.remove query
 
 share.MentionsTrigger = (args...) ->
   new MentionsTriggerClass args...
