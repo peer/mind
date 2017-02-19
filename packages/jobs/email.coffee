@@ -517,7 +517,7 @@ class ActivityEmails4hoursDigestJob extends ActivityEmailsDigestJob
     # We require the job object to exist.
     timestamp = JobsWorker.collection.findOne(@_id, fields: after: 1).after
 
-    moment(timestamp).format 'LT'
+    moment(timestamp).format 'l LT'
 
 class ActivityEmailsDailyDigestJob extends ActivityEmailsDigestJob
   @register()
