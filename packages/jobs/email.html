@@ -40,3 +40,9 @@
     </body>
   </html>
 </template>
+
+<template name="ActivityEmailsComponent.Subject">
+  {{#with activities.[0]}}
+    {{> Activity.ListItemComponent args isSubject=true}}
+  {{/with}}
+</template>

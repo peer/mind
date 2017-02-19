@@ -80,20 +80,24 @@
 
 <template name="Activity.ListItemComponent">
   {{#Activity.ListItemContainerComponent args notifications=notifications}}
-    {{#if notifications}}
-      <img src="{{avatarUrl}}" alt="{{byUser.username}}" class="circle" />
-    {{else}}
-      <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{avatarUrl}}" {{avatarAlt}} class="circle" /></a>
-    {{/if}}
-    {{> renderActivity}}
-    <p class="activity-timestamp">
-      {{#if icon}}<i class="material-icons tiny vertical-middle">{{icon}}</i>{{/if}}
-      {{#if isEmail}}
-        <span class="timestamp">{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}</span>
+    {{#unless isSubject}}
+      {{#if notifications}}
+        <img src="{{avatarUrl}}" alt="{{byUser.username}}" class="circle" />
       {{else}}
-        <span class="timestamp" title="{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}">{{fromNow timestamp}}</span>
+        <a href="{{pathFor 'User.display' params=byUser}}"><img src="{{avatarUrl}}" {{avatarAlt}} class="circle" /></a>
       {{/if}}
-    </p>
+    {{/unless}}
+    {{> renderActivity}}
+    {{#unless isSubject}}
+      <p class="activity-timestamp">
+        {{#if icon}}<i class="material-icons tiny vertical-middle">{{icon}}</i>{{/if}}
+        {{#if isEmail}}
+          <span class="timestamp">{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}</span>
+        {{else}}
+          <span class="timestamp" title="{{formatDate timestamp DEFAULT_DATETIME_FORMAT}}">{{fromNow timestamp}} ({{formatDate timestamp DEFAULT_DATETIME_FORMAT}})</span>
+        {{/if}}
+      </p>
+    {{/unless}}
   {{/Activity.ListItemContainerComponent}}
 </template>
 

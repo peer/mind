@@ -65,7 +65,7 @@ class Activity.ListItemComponent extends UIComponent
   constructor: (kwargs) ->
     super
 
-    _.extend @, _.pick (kwargs?.hash or {}), 'notifications'
+    _.extend @, _.pick (kwargs?.hash or {}), 'notifications', 'isSubject'
 
   onRendered: ->
     super

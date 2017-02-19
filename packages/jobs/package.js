@@ -27,7 +27,8 @@ Package.onUse(function (api) {
     'peerlibrary:assert@0.2.5',
     'alanning:roles@1.2.15',
     'peerlibrary:classy-job@0.6.1',
-    'fermuch:cheerio@0.19.0'
+    'fermuch:cheerio@0.19.0',
+    'momentjs:moment@2.15.0'
   ]);
 
   // Internal dependencies.

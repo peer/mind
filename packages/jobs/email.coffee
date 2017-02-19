@@ -9,6 +9,8 @@ ENDS_WITH_SPACE = /\s$/
 ENDS_WITH_NEWLINE = /\n$/
 # We capture newline to include it in the split.
 NEWLINE_SPLIT = /(\n)/
+WHITESPACE = /\s+/g
+ENDS_WITH_PUNCTUATION = /[.!?]$/
 
 ToPlainTextVisitor = HTML.Visitor.extend()
 ToPlainTextVisitor.def
@@ -111,6 +113,16 @@ ToPlainTextVisitor.def
   toText: (node, textMode) ->
     HTML.toText node, textMode
 
+ToSubjectVisitor = ToPlainTextVisitor.extend()
+ToSubjectVisitor.def
+  # We do not include links in subjects.
+  _joinLinks: ->
+    ''
+
+  # No extra newlines.
+  _optionalNewline: (content) ->
+    content
+
 class ActivityEmailsComponent extends UIComponent
   @register 'ActivityEmailsComponent'
 
@@ -147,9 +159,24 @@ class ActivityEmailsComponent extends UIComponent
   renderComponentToPlainText: ->
     @_wrapPlainText @_renderComponentTo(new ToPlainTextVisitor()), 68
 
+class ActivityEmailsComponent.Subject extends UIComponent
+  @register 'ActivityEmailsComponent.Subject'
+
+  constructor: (@activities) ->
+    super
+
+  renderSubject: ->
+    subjectText = @_renderComponentTo new ToSubjectVisitor()
+
+    subjectText = subjectText.replace WHITESPACE, ' '
+
+    subjectText = subjectText.trim()
+
+    subjectText.replace ENDS_WITH_PUNCTUATION, ''
+
 class ActivityEmailsJob extends Job
   # Every how many users do we log progress.
-  @LOG_PROGRESS_EVERY_USERS = 50
+  LOG_PROGRESS_EVERY_USERS: 50
 
   _convertHTML: (html) ->
     $ = cheerio.load html,
@@ -219,15 +246,15 @@ class ActivityEmailsJob extends Job
       # A slight optimization. Do not process at all users
       # who do not have at least one set to true.
       $or: [
-        "emailNotifications.user#{@constructor.SETTINGS_FIELD_SUFFIX}": true
+        "emailNotifications.user#{@SETTINGS_FIELD_SUFFIX}": true
       ,
-        "emailNotifications.general#{@constructor.SETTINGS_FIELD_SUFFIX}": true
+        "emailNotifications.general#{@SETTINGS_FIELD_SUFFIX}": true
       ]
     ,
       fields: _.extend User.REFERENCE_FIELDS(),
         _id: 1
-        "emailNotifications.user#{@constructor.SETTINGS_FIELD_SUFFIX}": 1
-        "emailNotifications.general#{@constructor.SETTINGS_FIELD_SUFFIX}": 1
+        "emailNotifications.user#{@SETTINGS_FIELD_SUFFIX}": 1
+        "emailNotifications.general#{@SETTINGS_FIELD_SUFFIX}": 1
         emails:
           $elemMatch:
             verified: true
@@ -241,7 +268,7 @@ class ActivityEmailsJob extends Job
         @usersProgress index, usersCount
         return
 
-      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery(user._id, user.emailNotifications?["user#{@constructor.SETTINGS_FIELD_SUFFIX}"], user.emailNotifications?["general#{@constructor.SETTINGS_FIELD_SUFFIX}"]),
+      uncombinedUserActivities = LocalActivity.documents.find(Activity.personalizedActivityQuery(user._id, user.emailNotifications?["user#{@SETTINGS_FIELD_SUFFIX}"], user.emailNotifications?["general#{@SETTINGS_FIELD_SUFFIX}"]),
         sort:
           # The newest first.
           timestamp: -1
@@ -254,7 +281,7 @@ class ActivityEmailsJob extends Job
 
       emailId = Random.id()
 
-      emailComponent = new ActivityEmailsComponent(@constructor.TITLE, userActivities, emailId)
+      emailComponent = new ActivityEmailsComponent(@TITLE, userActivities, emailId)
 
       # DOCTYPE cannot be a part of the template.
       html = '<!DOCTYPE html>' + emailComponent.renderComponentToHTML()
@@ -268,7 +295,7 @@ class ActivityEmailsJob extends Job
       Email.send emailId,
         from: Accounts.emailTemplates.from
         to: address
-        subject: "[#{Accounts.emailTemplates.siteName}] #{@constructor.TITLE}"
+        subject: "[#{Accounts.emailTemplates.siteName}] #{@subject userActivities}"
         text: emailComponent.renderComponentToPlainText()
         html: html
         headers:
@@ -288,22 +315,27 @@ class ActivityEmailsJob extends Job
     # Set progress on every LOG_PROGRESS_EVERY_USERS user.
     # We use index and not index + 1 so that we set the number of
     # total users with initial call to this method.
-    return if index % @constructor.LOG_PROGRESS_EVERY_USERS isnt 0
+    return if index % @LOG_PROGRESS_EVERY_USERS isnt 0
 
     # A false return value from @progress means job has been probably canceled.
     # We throw an error to terminate the execution of this job.
     throw new Error "Unable to log progress." unless @progress index + 1, usersCount
 
+  # We have to try to make each subject for each e-mail different,
+  # so that Gmail does combine them all in one thread.
+  subject: (activities) ->
+    throw new Error "Not implemented."
+
 class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
   @register()
 
-  @TITLE = "Recent notifications"
-  @DELAY = 60 * 1000 # ms
-  @SETTINGS_FIELD_SUFFIX = 'Immediately'
+  TITLE: "Recent notifications"
+  DELAY: 60 * 1000 # ms
+  SETTINGS_FIELD_SUFFIX: 'Immediately'
 
   enqueueOptions: (options) ->
     _.defaults super,
-      delay: @constructor.DELAY
+      delay: @DELAY
 
   shouldSkip: (options) ->
     # Does a job which could handle activities for this job's timestamp exists already?
@@ -399,6 +431,16 @@ class ActivityEmailsImmediatelyJob extends ActivityEmailsJob
         # ActivityEmailsImmediatelyJob is enqueued only if there is no existing job which would cover this timestamp.
         new ActivityEmailsImmediatelyJob(fromTimestamp: toTimestamp).enqueue()
 
+  subject: (activities) ->
+    subjectText = new ActivityEmailsComponent.Subject(activities).renderSubject()
+
+    if activities.length is 2
+      subjectText = "#{subjectText} (and one other notification)"
+    else if activities.length > 2
+      subjectText = "#{subjectText} (and #{activities.length - 1} other notifications)"
+
+    subjectText
+
 class ActivityEmailsDigestJob extends ActivityEmailsJob
   enqueueOptions: (options) ->
     _.defaults super,
@@ -407,7 +449,7 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
         #       See: https://github.com/vsivsi/meteor-job-collection/issues/104
         #       This is in system's local timezone. later.js is configured to
         #       use local timezone in core/documents/jobqueue.coffee.
-        schedule: JobsWorker.collection.later.parse.text @constructor.SCHEDULE
+        schedule: JobsWorker.collection.later.parse.text @SCHEDULE
       save:
         # This makes it so that job of each class can exist only once, and every time
         # a job is enqueued, all previous (potentially with obsolete configuration) jobs
@@ -437,8 +479,8 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
     fromTimestamp = latestJob?.result?.toTimestamp or new Date(0)
     toTimestamp = new Date()
 
-    if (toTimestamp.valueOf() - fromTimestamp.valueOf()) > @constructor.MAX_TIME_SPAN
-      fromTimestamp = new Date toTimestamp.valueOf() - @constructor.MAX_TIME_SPAN
+    if (toTimestamp.valueOf() - fromTimestamp.valueOf()) > @MAX_TIME_SPAN
+      fromTimestamp = new Date toTimestamp.valueOf() - @MAX_TIME_SPAN
 
     JobsWorker.collection.update @_id,
       $set:
@@ -447,29 +489,60 @@ class ActivityEmailsDigestJob extends ActivityEmailsJob
 
     @processActivities fromTimestamp, toTimestamp
 
+  subject: (activities) ->
+    subjectText = "#{@TITLE} #{@subjectTime}"
+
+    if activities.length is 1
+      subjectText = "#{subjectText} (#{activities.length} activity)"
+    else
+      subjectText = "#{subjectText} (#{activities.length} activities)"
+
+    subjectText
+
+  subjectTime: ->
+    throw new Error "Not implemented."
+
 class ActivityEmails4hoursDigestJob extends ActivityEmailsDigestJob
   @register()
 
-  @TITLE = "4-hour digest"
-  @MAX_TIME_SPAN = 4.5 * 60 * 60 * 1000 # ms
-  @SCHEDULE = 'every 4 hours'
-  @SETTINGS_FIELD_SUFFIX = '4hours'
+  TITLE: "4-hour digest"
+  MAX_TIME_SPAN: 4.5 * 60 * 60 * 1000 # ms
+  SCHEDULE: 'every 4 hours'
+  SETTINGS_FIELD_SUFFIX: '4hours'
+
+  subjectTime: ->
+    # We require the job object to exist.
+    timestamp = JobsWorker.collection.findOne(@_id, fields: after: 1).after
+
+    moment(timestamp).format 'LT'
 
 class ActivityEmailsDailyDigestJob extends ActivityEmailsDigestJob
   @register()
 
-  @TITLE = "Daily digest"
-  @MAX_TIME_SPAN = 24.5 * 60 * 60 * 1000 # ms
-  @SCHEDULE = 'at 7:40 AM'
-  @SETTINGS_FIELD_SUFFIX = 'Daily'
+  TITLE: "Daily digest"
+  MAX_TIME_SPAN: 24.5 * 60 * 60 * 1000 # ms
+  SCHEDULE: 'at 7:40 AM'
+  SETTINGS_FIELD_SUFFIX: 'Daily'
+
+  subjectTime: ->
+    # We require the job object to exist.
+    timestamp = JobsWorker.collection.findOne(@_id, fields: after: 1).after
+
+    moment(timestamp).format 'l'
 
 class ActivityEmailsWeeklyDigestJob extends ActivityEmailsDigestJob
   @register()
 
-  @TITLE = "Weekly digest"
-  @MAX_TIME_SPAN = 7.5 * 24 * 60 * 60 * 1000 # ms
-  @SCHEDULE = 'on Monday at 7:20 AM'
-  @SETTINGS_FIELD_SUFFIX = 'Weekly'
+  TITLE: "Weekly digest"
+  MAX_TIME_SPAN: 7.5 * 24 * 60 * 60 * 1000 # ms
+  SCHEDULE: 'on Monday at 7:20 AM'
+  SETTINGS_FIELD_SUFFIX: 'Weekly'
+
+  subjectTime: ->
+    # We require the job object to exist.
+    timestamp = JobsWorker.collection.findOne(@_id, fields: after: 1).after
+
+    moment(timestamp).format 'l'
 
 Meteor.startup ->
   new ActivityEmails4hoursDigestJob().enqueue()
