@@ -86,7 +86,7 @@ class Discussion.FollowingDropdown extends UIComponent
   icon: ->
     follower = @discussion()?.followerDocument Meteor.userId()
 
-    if Discussion.isFollower follower
+    if Discussion.isFollowerOrOnlyMentions follower
       'bookmark'
     else
       'bookmark_border'

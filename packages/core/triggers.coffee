@@ -119,6 +119,8 @@ class MentionsTriggerClass extends share.BaseDocument._Trigger
       addedMentions = _.difference newMentions, oldMentions
 
       for addedMention in addedMentions
+        # This adds only if a user is not already on the list of followers,
+        # which means the user has a setting "not following" until being mentioned.
         Discussion.documents.update
           _id: discussionId
           'followers.user._id':
@@ -139,7 +141,8 @@ class MentionsTriggerClass extends share.BaseDocument._Trigger
               $elemMatch:
                 'user._id': addedMention
 
-        continue unless Discussion.isFollower discussion?.followerDocument addedMention
+        # Is user OK with being notified for being mentioned?
+        continue unless Discussion.isFollowingMentions discussion?.followerDocument addedMention
 
         data =
           discussion:

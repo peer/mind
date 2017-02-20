@@ -146,7 +146,7 @@ class Discussion extends share.BaseDocument
         else
           return [fields._id, Discussion.STATUS.DRAFT]
       followersCount: @GeneratedField 'self', ['followers'], (fields) =>
-        followers = (follower for follower in (fields.followers or []) when @isFollower follower)
+        followers = (follower for follower in (fields.followers or []) when @isFollowerOrOnlyMentions follower)
         [fields._id, followers.length]
     triggers: =>
       updatedAt: share.UpdatedAtTrigger ['changes']
@@ -211,8 +211,18 @@ class Discussion extends share.BaseDocument
     # Ignoring, but notify for mentions.
     MENTIONS: 'mentions'
 
-  @isFollower: (follower) ->
-    follower?.reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.SETTING, @REASON.MENTIONS]
+  # Can we send a notification about being mentioned to a user?
+  # (Some users might be on a list of followers because they are ignoring notifications.)
+  @isFollowingMentions: (follower) ->
+    reason = follower?.reason
+
+    @isFollowing(reason) or @isOnlyMentions(reason)
+
+  # Those are users which we count as following in some active way.
+  @isFollowerOrOnlyMentions: (follower) ->
+    reason = follower?.reason
+
+    @isFollowing(reason) or @isOnlyMentions(reason)
 
   @isFollowing: (reason) ->
     reason and reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.SETTING]
