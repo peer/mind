@@ -123,12 +123,11 @@ class Discussion.FollowingDropdown extends UIComponent
   reason: ->
     follower = @discussion()?.followerDocument Meteor.userId()
 
-    if follower?.reason is Discussion.REASON.AUTHOR
-      "you are its author"
-    else if follower?.reason is Discussion.REASON.MENTIONED
-      "you were mentioned in it"
-    else if follower?.reason is Discussion.REASON.PARTICIPATED
-      "you participated in it"
+    switch follower?.reason
+      when Discussion.REASON.AUTHOR then "you are its author"
+      when Discussion.REASON.MENTIONED then "you were mentioned in it"
+      when Discussion.REASON.PARTICIPATED then "you participated in it"
+      when Discussion.REASON.SETTING then "of your setting to follow discussions by default"
 
   onButtonClick: (event) ->
     event.preventDefault()

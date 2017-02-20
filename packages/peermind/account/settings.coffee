@@ -354,6 +354,35 @@ class Settings.DelegationsUserComponent extends UIComponent
 
       # TODO: Should we check the result and if it is not expected show an error instead?
 
+class Settings.FollowingComponent extends UIComponent
+  @register 'Settings.FollowingComponent'
+
+  DISCUSSION_FOLLOWING: ->
+    User.DISCUSSION_FOLLOWING
+
+  onSubmit: (event) ->
+    event.preventDefault()
+
+  checked: (value) ->
+    discussionFollowing = @currentUser()?.discussionFollowing or User.DISCUSSION_FOLLOWING.NOT_FOLLOWING
+
+    checked: true if value is discussionFollowing
+
+  onChange: (event, value) ->
+    event.preventDefault()
+
+    oldValue = @currentUser()?.discussionFollowing or User.DISCUSSION_FOLLOWING.NOT_FOLLOWING
+
+    Meteor.call 'User.setDiscussionFollowingSetting', value, (error, result) =>
+      if error
+        console.error "Setting discussion following setting error", error
+        alert "Setting discussion following setting error: #{error.reason or error}"
+
+        # Return back to the previous value.
+        @$("#following-#{oldValue}").prop('checked', true)
+
+      # TODO: Should we check the result and if it is not expected show an error instead?
+
 class Settings.NotificationsComponent extends UIComponent
   @register 'Settings.NotificationsComponent'
 

@@ -178,3 +178,15 @@ Meteor.methods
     ,
       $set:
         "emailNotifications.#{type}": enabled
+
+  'User.setDiscussionFollowingSetting': (value) ->
+    check value, Match.Enumeration Match.NonEmptyString, User.DISCUSSION_FOLLOWING
+
+    userId = Meteor.userId()
+    throw new Meteor.Error 'unauthorized', "Unauthorized." unless userId
+
+    User.documents.update
+      _id: userId
+    ,
+      $set:
+        discussionFollowing: value

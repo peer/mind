@@ -262,8 +262,11 @@ class User extends share.BaseDocument
   #   generalDaily: true or false
   #   userWeekly: true or false
   #   generalWeekly: true or false
+  # discussionFollowing: one of User.DISCUSSION_FOLLOWING values
 
   # We have it before @Meta because we are referencing it inside @Meta.
+  # This should stay a positive (using 1) fields projection or code for generating
+  # forUsers field at insertion of discussionCreated activity should be changed.
   @REFERENCE_FIELDS: ->
     _id: 1
     username: 1
@@ -337,6 +340,12 @@ class User extends share.BaseDocument
       _id: 1
       avatar: 1
       lastSeenPersonalizedActivity: 1
+
+  @DISCUSSION_FOLLOWING:
+    NOT_FOLLOWING: 'not-following'
+    FOLLOWING: 'following'
+    MENTIONS: 'mentions'
+    IGNORING: 'ignoring'
 
   @PERMISSIONS:
     # We use upper case even for strings because we are using upper case for permissions and lower case for roles.

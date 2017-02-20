@@ -135,17 +135,17 @@
               <span class="title">Not following</span>
               <span class="description">Not following until you participate or are @mentioned.</span>
             {{else}}
-              <span class="title">Not follow</span>
+              <span class="title">Do not follow</span>
               <span class="description">Do not follow until you participate or are @mentioned.</span>
             {{/if}}
           </li>
           <li {{class (active 'following')}} onClick="{{onOptionClick 'following'}}">
             {{#if active 'following'}}
               <span class="title">Following</span>
-              <span class="description">You are notified about this discussion{{#if reason}} because {{reason}}{{/if}}.</span>
+              <span class="description">You are notified about activity in this discussion{{#if reason}} because {{reason}}{{/if}}.</span>
             {{else}}
               <span class="title">Follow</span>
-              <span class="description">Be notified about this discussion.</span>
+              <span class="description">Be notified about activity in this discussion.</span>
             {{/if}}
           </li>
           <li {{class (active 'mentions')}} onClick="{{onOptionClick 'mentions'}}">
@@ -160,10 +160,10 @@
           <li {{class (active 'ignoring')}} onClick="{{onOptionClick 'ignoring'}}">
             {{#if active 'ignoring'}}
               <span class="title">Ignoring</span>
-              <span class="description">You are not notified about this discussion.</span>
+              <span class="description">You are not notified about activity in this discussion.</span>
             {{else}}
               <span class="title">Ignore</span>
-              <span class="description">Do not be notified about this discussion.</span>
+              <span class="description">Do not be notified about activity in this discussion.</span>
             {{/if}}
           </li>
         </ul>

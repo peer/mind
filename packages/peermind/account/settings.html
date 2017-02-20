@@ -421,8 +421,39 @@
 <template name="Settings.FollowingComponent">
   <div class="row">
     <div class="col s12">
-
+      <p class="justify" lang="en">
+        When a new discussion is created, what should be your initial setting for following it?
+      </p>
     </div>
+  </div>
+
+  <div class="row">
+    <form class="col s12 following" onSubmit>
+      <div class="row">
+        <div class="input-field col s12">
+          <input name="following" type="radio" id="following-{{DISCUSSION_FOLLOWING.NOT_FOLLOWING}}" onChange="{{onChange DISCUSSION_FOLLOWING.NOT_FOLLOWING}}" {{checked DISCUSSION_FOLLOWING.NOT_FOLLOWING}} />
+          <label for="following-{{DISCUSSION_FOLLOWING.NOT_FOLLOWING}}"><span class="type">Do not follow</span><div class="hint">Do not follow a new discussion until you participate or are @mentioned.</div></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input name="following" type="radio" id="following-{{DISCUSSION_FOLLOWING.FOLLOWING}}" onChange="{{onChange DISCUSSION_FOLLOWING.FOLLOWING}}" {{checked DISCUSSION_FOLLOWING.FOLLOWING}} />
+          <label for="following-{{DISCUSSION_FOLLOWING.FOLLOWING}}"><span class="type">Follow</span><div class="hint">Start following every new discussion and be notified about activity in the discussion.</div></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input name="following" type="radio" id="following-{{DISCUSSION_FOLLOWING.MENTIONS}}" onChange="{{onChange DISCUSSION_FOLLOWING.MENTIONS}}" {{checked DISCUSSION_FOLLOWING.MENTIONS}} />
+          <label for="following-{{DISCUSSION_FOLLOWING.MENTIONS}}"><span class="type">Only mentions</span><div class="hint">Be notified only when @mentioned.</div></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input name="following" type="radio" id="following-{{DISCUSSION_FOLLOWING.IGNORING}}" onChange="{{onChange DISCUSSION_FOLLOWING.IGNORING}}" {{checked DISCUSSION_FOLLOWING.IGNORING}} />
+          <label for="following-{{DISCUSSION_FOLLOWING.IGNORING}}"><span class="type">Ignore</span><div class="hint">Do not be notified about activity in a discussion.</div></label>
+        </div>
+      </div>
+    </form>
   </div>
 </template>
 

@@ -204,15 +204,18 @@ class Discussion extends share.BaseDocument
     # But not if only voted on a motion, or upvoted content.
     # Modifying a comment, point, or a motion also does not count.
     PARTICIPATED: 'participated'
+    # Following because users has/had a setting set to automatically
+    # follow new discussions.
+    SETTING: 'setting'
     IGNORING: 'ignoring'
     # Ignoring, but notify for mentions.
     MENTIONS: 'mentions'
 
   @isFollower: (follower) ->
-    follower?.reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.MENTIONS]
+    follower?.reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.SETTING, @REASON.MENTIONS]
 
   @isFollowing: (reason) ->
-    reason and reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED]
+    reason and reason in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.SETTING]
 
   @isOnlyMentions: (reason) ->
     reason and reason in [@REASON.MENTIONS]
@@ -221,7 +224,7 @@ class Discussion extends share.BaseDocument
     reason and reason in [@REASON.IGNORING]
 
   @isNotFollowing: (reason) ->
-    not reason or reason not in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.MENTIONS, @REASON.IGNORING]
+    not reason or reason not in [@REASON.AUTHOR, @REASON.MENTIONED, @REASON.FOLLOWED, @REASON.PARTICIPATED, @REASON.SETTING, @REASON.MENTIONS, @REASON.IGNORING]
 
   @closedDiscussionsQuery: (closed) ->
     if closed
@@ -243,6 +246,17 @@ class Discussion extends share.BaseDocument
       return follower
 
     null
+
+  getFollowers: (mentions=[]) ->
+    followers = []
+
+    for follower in (@followers or []) when @constructor.isFollowing follower.reason
+      followers.push follower.user
+
+    for follower in (@followers or []) when @constructor.isOnlyMentions follower.reason
+      followers.push follower.user if follower.user._id in mentions
+
+    _.uniq followers, (u) -> u._id
 
 if Meteor.isServer
   Discussion.Meta.collection._ensureIndex

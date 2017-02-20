@@ -14,6 +14,41 @@ Meteor.methods
     attachments = Discussion.extractAttachments document.description
     mentions = Discussion.extractMentions document.description
 
+    # TODO: Pass group argument to the function, once we really have groups.
+    # TODO: This can potentially be a huge array (all users in a group).
+    #       A subset of users with non-default setting is probably much smaller, and we could also do a forEach on
+    #      the query limiting only to those users. Moreover, there is a document limit (16 MB) in MongoDB, so there
+    #      is also a limit on size of the forUsers field in activity document. So currently we cannot create an
+    #      activity for a discussion in a group which has a list of users so large that it hits the document size limit.
+    #      It is somewhere around 100k users.
+    allUsers = User.inGroup(null, transform: null, fields: _.extend User.REFERENCE_FIELDS(), discussionFollowing: 1).fetch()
+
+    followers = [
+      user:
+        _id: user._id
+      reason: Discussion.REASON.AUTHOR
+    ]
+
+    for allUser in allUsers when allUser._id isnt user._id
+      # NOT_FOLLOWING is a default, so we skip that setting.
+      if not allUser.discussionFollowing or allUser.discussionFollowing is User.DISCUSSION_FOLLOWING.NOT_FOLLOWING
+        continue
+
+      switch allUser.discussionFollowing
+        when User.DISCUSSION_FOLLOWING.FOLLOWING
+          reason = Discussion.REASON.SETTING
+        when User.DISCUSSION_FOLLOWING.MENTIONS
+          reason = Discussion.REASON.MENTIONS
+        when User.DISCUSSION_FOLLOWING.IGNORING
+          reason = Discussion.REASON.IGNORING
+        else
+          assert false, allUser.discussionFollowing
+
+      followers.push
+        user:
+          _id: allUser._id
+        reason: reason
+
     createdAt = new Date()
     documentId = Discussion.documents.insert
       createdAt: createdAt
@@ -46,11 +81,7 @@ Meteor.methods
       # TODO: For now we are always starting a discussion already in an open state.
       #       Then also add a user who opened the discussion to followers as "participated".
       status: Discussion.STATUS.OPEN
-      followers: [
-        user:
-          _id: user._id
-        reason: Discussion.REASON.AUTHOR
-      ]
+      followers: followers
 
     assert documentId
 
@@ -69,8 +100,7 @@ Meteor.methods
         connection: @connection.id
         byUser: user.getReference()
         # We inform all users in this group.
-        # TODO: Pass group argument to the function, once we really have groups.
-        forUsers: User.inGroup(null, transform: null, fields: User.REFERENCE_FIELDS()).fetch()
+        forUsers: (_.pick(user, _.keys User.REFERENCE_FIELDS()) for user in allUsers)
         type: 'discussionCreated'
         level: Activity.LEVEL.GENERAL
         data:
@@ -357,7 +387,7 @@ Meteor.methods
             timestamp: closedAt
             connection: @connection.id
             byUser: user.getReference()
-            forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+            forUsers: discussion.getFollowers mentions
             type: 'discussionClosed'
             level: Activity.LEVEL.GENERAL
             data:

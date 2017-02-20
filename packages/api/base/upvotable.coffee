@@ -73,7 +73,7 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
       timestamp: createdAt
       connection: connection.id
       byUser: user.getReference()
-      forUsers: _.uniq _.pluck(discussion.followers, 'user'), (u) -> u._id
+      forUsers: discussion.getFollowers mentions
       type: "#{documentClass.Meta._name.toLowerCase()}Created"
       level: Activity.LEVEL.GENERAL
       data: data

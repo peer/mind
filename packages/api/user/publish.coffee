@@ -21,6 +21,7 @@ new PublishEndpoint 'User.settings', ->
       researchData: 1
       delegations: 1
       emailNotifications: 1
+      discussionFollowing: 1
 
 new PublishEndpoint 'User.profile', (userId) ->
   check userId, Match.DocumentId
