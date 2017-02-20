@@ -257,14 +257,11 @@ class Discussion extends share.BaseDocument
 
     null
 
-  getFollowers: (mentions=[]) ->
+  getFollowers: ->
     followers = []
 
     for follower in (@followers or []) when @constructor.isFollowing follower.reason
       followers.push follower.user
-
-    for follower in (@followers or []) when @constructor.isOnlyMentions follower.reason
-      followers.push follower.user if follower.user._id in mentions
 
     _.uniq followers, (u) -> u._id
 

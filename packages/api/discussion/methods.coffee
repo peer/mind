@@ -387,7 +387,7 @@ Meteor.methods
             timestamp: closedAt
             connection: @connection.id
             byUser: user.getReference()
-            forUsers: discussion.getFollowers mentions
+            forUsers: discussion.getFollowers()
             type: 'discussionClosed'
             level: Activity.LEVEL.GENERAL
             data:

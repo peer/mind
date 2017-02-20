@@ -73,7 +73,10 @@ share.newUpvotable = ({connection, documentClass, document, match, extend, extra
       timestamp: createdAt
       connection: connection.id
       byUser: user.getReference()
-      forUsers: discussion.getFollowers mentions
+      # We notify only users who are following the discussion.
+      # We do not notify those who are interested only in mentions,
+      # because they will get notified through a trigger.
+      forUsers: discussion.getFollowers()
       type: "#{documentClass.Meta._name.toLowerCase()}Created"
       level: Activity.LEVEL.GENERAL
       data: data
