@@ -226,6 +226,7 @@ class ActivityEmailsJob extends Job
       @Meta
         name: 'LocalActivity'
         collection: null
+        local: true
 
     for activity in activities
       LocalActivity.documents.insert activity

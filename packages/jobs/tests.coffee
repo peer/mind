@@ -8,6 +8,7 @@ class JobsTestCase extends ClassyTestCase
       @Meta
         name: 'LocalActivity'
         collection: null
+        local: true
 
     timestamp1 = new Date 'Mon Feb 06 2017 00:30:15 GMT-0800 (PST)'
     timestamp2 = new Date 'Mon Feb 06 2017 00:38:45 GMT-0800 (PST)'
