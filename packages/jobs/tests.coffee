@@ -11,6 +11,7 @@ class JobsTestCase extends ClassyTestCase
 
     timestamp1 = new Date 'Mon Feb 06 2017 00:30:15 GMT-0800 (PST)'
     timestamp2 = new Date 'Mon Feb 06 2017 00:38:45 GMT-0800 (PST)'
+    timestamp3 = new Date 'Mon Feb 06 2017 00:44:11 GMT-0800 (PST)'
 
     LocalActivity.documents.insert
       timestamp: timestamp1
@@ -18,7 +19,7 @@ class JobsTestCase extends ClassyTestCase
       byUser:
         _id: 'H9TBeRafiSbNLEWQP'
         username: 'UserName'
-        avatars: 'avatar/H9TBeRafiSbNLEWQP-i.svg?91ebc92a04473ded'
+        avatar: 'avatar/H9TBeRafiSbNLEWQP-i.svg?91ebc92a04473ded'
       forUsers: []
       type: 'discussionCreated'
       level: Activity.LEVEL.GENERAL
@@ -32,7 +33,7 @@ class JobsTestCase extends ClassyTestCase
       byUser:
         _id: 'H9TBeRafiSbNLEWQP'
         username: 'UserName'
-        avatars: 'avatar/H9TBeRafiSbNLEWQP-i.svg?91ebc92a04473ded'
+        avatar: 'avatar/H9TBeRafiSbNLEWQP-i.svg?91ebc92a04473ded'
       forUsers: []
       type: 'commentCreated'
       level: Activity.LEVEL.GENERAL
@@ -42,6 +43,26 @@ class JobsTestCase extends ClassyTestCase
           title: 'TestDiscussionWithoutAnySpaceSoThatItCannotBeWrappedButItIsTooLongForALine'
         comment:
           _id: 'uhzmWNXuhzux2EaHK'
+    LocalActivity.documents.insert
+      timestamp: timestamp3
+      connection: null
+      byUser:
+        _id: 'kMJropJ93cJK6Pmos'
+        username: 'UserName2'
+        avatar: 'avatar/kMJropJ93cJK6Pmos-i.svg?75c16b5824cf06f0'
+      forUsers: [
+        _id: 'H9TBeRafiSbNLEWQP'
+        username: 'UserName'
+        avatar: 'avatar/H9TBeRafiSbNLEWQP-i.svg?91ebc92a04473ded'
+      ]
+      type: 'mention'
+      level: Activity.LEVEL.USER
+      data:
+        discussion:
+          _id: 'kMJropJ93cJK6Pmos'
+          title: 'Let\'s build a submarine'
+        comment:
+          _id: 'YEetNMd2BP9iEZEfb'
 
     userActivities = LocalActivity.documents.find().fetch()
 
@@ -63,6 +84,10 @@ class JobsTestCase extends ClassyTestCase
       TestDiscussionWithoutAnySpaceSoThatItCannotBeWrappedButItIsTooLongForALine.
       #{component.formatDate timestamp2, component.DEFAULT_DATETIME_FORMAT}
       #{urlRoot}discussion/Z8eaovjaFpR3pxtQc
+
+      UserName2 mentioned you in a comment on Let's build a submarine.
+      #{component.formatDate timestamp3, component.DEFAULT_DATETIME_FORMAT}
+      #{urlRoot}discussion/kMJropJ93cJK6Pmos
 
 
       Notification preferences

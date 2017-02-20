@@ -4,7 +4,7 @@ juice = Npm.require 'juice'
 pathModule = Npm.require 'path'
 url = Npm.require 'url'
 
-STARTS_WITH_SPACE = /^\s/
+STARTS_WITH_SPACE_OR_PUNCTUATION = /^(\s|[.!?])/
 ENDS_WITH_SPACE = /\s$/
 ENDS_WITH_NEWLINE = /\n$/
 # We capture newline to include it in the split.
@@ -26,9 +26,9 @@ ToPlainTextVisitor.def
     joinedParts = ''
 
     for part, i in parts
-      if i is 0 or i is parts.length - 1
+      if i is 0
         joinedParts += part
-      else if ENDS_WITH_SPACE.test parts[i - 1] or STARTS_WITH_SPACE.test parts[i + 1]
+      else if ENDS_WITH_SPACE.test(parts[i - 1]) or STARTS_WITH_SPACE_OR_PUNCTUATION.test(part)
         joinedParts += part
       else
         joinedParts += ' ' + part
