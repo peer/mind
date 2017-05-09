@@ -92,3 +92,4 @@ You can see [`run.sh`](https://github.com/peer/mind/blob/master/run.sh) file for
 * http://democracy.earth/
 * https://airesis.eu/
 * https://www.vilfredo.org/
+* https://consider.it/
