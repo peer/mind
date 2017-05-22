@@ -21,7 +21,8 @@ unless __meteor_runtime_config__.SANDSTORM
       # Inverse of Settings.USERNAME_REGEX.
       username = email.split('@')[0]?.replace /^[^A-Za-z]+|[^A-Za-z0-9]+$|[^A-Za-z0-9_]+/g, ''
 
-      throw new Meteor.Error 'invalid-request', "Invalid username generated: '#{username}'" unless username and _.isString username
+      unless username and _.isString username
+        username = Random.id()
 
       while username.length < 4
         username = username + '1'
