@@ -1,0 +1,9 @@
+.dockerignore
+Dockerfile
+docker-compose.yml
+.meteor/local
+.meteor/storage
+node_modules
+**/.gitignore
+**/*.swp
+**/*.sublime-*
