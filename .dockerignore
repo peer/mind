@@ -3,6 +3,7 @@ Dockerfile
 docker-compose.yml
 .meteor/local
 .meteor/storage
+packages/*/.build*
 node_modules
 **/.gitignore
 **/*.swp
