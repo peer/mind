@@ -173,19 +173,6 @@ class Motion.ListItemComponent extends UIComponent
   hasBody: ->
     _.every(component.hasContent() for component in @descendantComponents 'EditorComponent')
 
-  motionPassed: ->
-    tally = Tally.documents.findOne
-      'motion._id': @data()._id
-    ,
-      sort:
-        # The latest tally document.
-        createdAt: -1
-      fields:
-        result: 1
-        confidence: 1
-
-    tally?.result > 0 && tally?.confidence >= 0.90
-
   expandableEventData: ->
     document = @data()
 

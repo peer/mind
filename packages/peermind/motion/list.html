@@ -118,8 +118,8 @@
       {{/if}}
       {{#if isClosed}}
         <div class="card-action">
-          {{#BalanceText args 'center-align'}}
-            Motion {{#if motionPassed}}<span class="result passed">passed</span>{{else}}<span class="result failed">failed</span>{{/if}}.
+          {{#BalanceText args 'center-align' 'grey-text'}}
+            Motion is closed.
           {{/BalanceText}}
           {{> Motion.TallyComponent}}
         </div>
