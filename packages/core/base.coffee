@@ -159,7 +159,7 @@ class share.BaseDocument extends Document
     @constructor.verboseNamePlural()
 
   verboseNameWithCount: (quantity) ->
-    @constructor.verboseNameWithCount()
+    @constructor.verboseNameWithCount(quantity)
 
   @methodPrefix: ->
     @Meta._name
