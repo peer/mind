@@ -1,4 +1,4 @@
-FROM tozd/meteor
+FROM tozd/meteor:ubuntu-xenial
 
 ENV METEOR_STORAGE_CHOWN=
 
