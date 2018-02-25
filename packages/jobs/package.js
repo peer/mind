@@ -4,7 +4,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
@@ -15,7 +15,7 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:assert@0.2.5',
     'alanning:roles@1.2.15',
-    'peerlibrary:classy-job@0.5.0'
+    'peerlibrary:classy-job@0.6.1'
   ]);
 
   // Internal dependencies.

@@ -4,7 +4,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
@@ -33,7 +33,7 @@ Package.onUse(function (api) {
 });
 
 Package.onTest(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([

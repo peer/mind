@@ -10,7 +10,7 @@ var options = {
 };
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
@@ -32,7 +32,7 @@ Package.onUse(function (api) {
   api.use([
     'peerlibrary:flow-router@2.12.1_1',
     'kadira:blaze-layout@2.3.0',
-    'peerlibrary:computed-field@0.6.0',
+    'peerlibrary:computed-field@0.7.0',
     'peerlibrary:reactive-field@0.3.0',
     'peerlibrary:assert@0.2.5',
     'materialize:materialize@0.97.7',
@@ -47,8 +47,8 @@ Package.onUse(function (api) {
     'fourseven:scss@3.9.0',
     'softwarerero:accounts-t9n@1.3.3',
     'doctorpangloss:method-hooks@2.0.2',
-    'peerlibrary:subscription-scope@0.1.0',
-    'peerlibrary:subscription-data@0.4.0'
+    'peerlibrary:subscription-scope@0.3.0',
+    'peerlibrary:subscription-data@0.6.0'
   ]);
 
   // Internal dependencies.

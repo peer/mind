@@ -4,7 +4,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
@@ -18,7 +18,7 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:flow-router@2.12.1_1',
-    'peerlibrary:check-extension@0.2.0',
+    'peerlibrary:check-extension@0.3.0',
     'doctorpangloss:method-hooks@2.0.2',
     'peerlibrary:stacktrace@1.3.1_2'
   ]);

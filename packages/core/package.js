@@ -4,7 +4,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
@@ -19,7 +19,7 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:peerdb@0.23.0',
+    'peerlibrary:peerdb@0.24.0',
     'peerlibrary:peerdb-migrations@0.3.0',
     'peerlibrary:meteor-file@0.2.1',
     'peerlibrary:reactive-field@0.3.0',
@@ -27,9 +27,9 @@ Package.onUse(function (api) {
     // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
     'alanning:roles@1.2.15',
-    'peerlibrary:classy-job@0.5.0',
-    'peerlibrary:user-extra@0.1.0',
-    'kenton:accounts-sandstorm@0.5.1'
+    'peerlibrary:classy-job@0.6.1',
+    'peerlibrary:user-extra@0.3.0',
+    'kenton:accounts-sandstorm@0.7.0'
   ]);
 
   api.use([
@@ -134,7 +134,7 @@ Package.onUse(function (api) {
 });
 
 Package.onTest(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
