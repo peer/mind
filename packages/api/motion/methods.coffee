@@ -410,7 +410,7 @@ Meteor.methods
 
     throw new Meteor.Error 'not-found', "Motion '#{document.motion._id}' cannot be found." unless motion
 
-    throw new Meteor.Error 'bad-request', "Motion '#{document.motion._id}' is not open." unless motion.isOpen()
+    throw new Meteor.Error 'invalid-request', "Motion '#{document.motion._id}' is not open." unless motion.isOpen()
 
     createdAt = new Date()
 
