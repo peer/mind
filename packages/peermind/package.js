@@ -48,7 +48,7 @@ Package.onUse(function (api) {
     'softwarerero:accounts-t9n@1.3.3',
     'doctorpangloss:method-hooks@2.0.2',
     'peerlibrary:subscription-scope@0.3.0',
-    'peerlibrary:subscription-data@0.6.0'
+    'peerlibrary:subscription-data@0.6.1'
   ]);
 
   // Internal dependencies.
