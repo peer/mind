@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: tozd/meteor-testing:ubuntu-xenial
+    steps:
+      - checkout
+      - run: git submodule update --init --recursive
+      - run: tests/authors/check-authors.sh
+      - run:
+          command: |
+            # No merge marks in commits.
+            ! git log --oneline "-G^(<<<<<<<|=======|>>>>>>>)" | grep '^'
+      - run: meteor npm install selenium-webdriver@2.47.0 mkdirp
+      - run: meteor npm install -g cli-real-favicon
+      - run: meteor npm install
+      - run: tests/test-runner/test-all.sh
+      - run: real-favicon check-for-update --fail-on-update public/version.json
+      - store_test_results:
+          path: test-reports/
