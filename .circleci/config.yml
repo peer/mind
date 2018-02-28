@@ -3,6 +3,8 @@ jobs:
   build:
     docker:
       - image: tozd/meteor-testing:ubuntu-xenial
+    environment:
+      - METEOR_ALLOW_SUPERUSER: true
     steps:
       - checkout
       - run: git submodule update --init --recursive
@@ -11,9 +13,9 @@ jobs:
           command: |
             # No merge marks in commits.
             ! git log --oneline "-G^(<<<<<<<|=======|>>>>>>>)" | grep '^'
-      - run: meteor npm install selenium-webdriver@2.47.0 mkdirp
-      - run: meteor npm install -g cli-real-favicon
-      - run: meteor npm install
+      - run: meteor npm install --unsafe-perm selenium-webdriver@2.47.0 mkdirp
+      - run: meteor npm install --unsafe-perm -g cli-real-favicon
+      - run: meteor npm install --unsafe-perm
       - run: tests/test-runner/test-all.sh
       - run: real-favicon check-for-update --fail-on-update public/version.json
       - store_test_results:
