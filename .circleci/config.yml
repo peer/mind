@@ -13,7 +13,6 @@ jobs:
           command: |
             # No merge marks in commits.
             ! git log --oneline "-G^(<<<<<<<|=======|>>>>>>>)" | grep '^'
-      - run: meteor npm install --unsafe-perm selenium-webdriver@2.47.0 mkdirp
       - run: meteor npm install --unsafe-perm -g cli-real-favicon
       - run: meteor npm install --unsafe-perm
       - run: tests/test-runner/test-all.sh
