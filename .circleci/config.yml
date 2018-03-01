@@ -17,5 +17,3 @@ jobs:
       - run: meteor npm install --unsafe-perm
       - run: xvfb-run -s "-screen 0 1280x1024x24" tests/test-runner/test-all.sh
       - run: real-favicon check-for-update --fail-on-update public/version.json
-      - store_test_results:
-          path: test-reports/
