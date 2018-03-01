@@ -8,7 +8,7 @@ Npm.depends({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
@@ -23,16 +23,16 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:middleware@0.1.1',
-    'peerlibrary:reactive-publish@0.3.0',
-    'peerlibrary:check-extension@0.2.0',
+    'peerlibrary:reactive-publish@0.5.0',
+    'peerlibrary:check-extension@0.3.0',
     'peerlibrary:assert@0.2.5',
     // TODO: There is a newer version of cheerio, but not Meteor package. Upgrade.
     'fermuch:cheerio@0.19.0',
     'peerlibrary:meteor-file@0.2.1',
     'doctorpangloss:method-hooks@2.0.2',
-    'peerlibrary:subscription-scope@0.1.0',
-    'peerlibrary:subscription-data@0.4.0',
-    'peerlibrary:computed-field@0.6.0'
+    'peerlibrary:subscription-scope@0.3.0',
+    'peerlibrary:subscription-data@0.6.1',
+    'peerlibrary:computed-field@0.7.0'
   ]);
 
   // Internal dependencies.

@@ -4,7 +4,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom('1.4.1');
+  api.versionsFrom('1.6.0.1');
 
   // Core dependencies.
   api.use([
@@ -15,8 +15,8 @@ Package.onUse(function (api) {
 
   // 3rd party dependencies.
   api.use([
-    'peerlibrary:blaze-components@0.20.0',
-    'peerlibrary:blaze-common-component@0.4.1',
+    'peerlibrary:blaze-components@0.22.0',
+    'peerlibrary:blaze-common-component@0.4.3',
     'momentjs:moment@2.15.0'
   ]);
 
