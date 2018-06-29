@@ -5,8 +5,10 @@ Accounts.ui._options ?=
   requestOfflineToken: {}
   forceApprovalPrompt: {}
 
-Accounts.ui._options.requestPermissions.facebook = ['public_profile', 'email', 'user_friends']
-Accounts.ui._options.requestPermissions.google = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/contacts.readonly', 'https://www.googleapis.com/auth/plus.circles.members.read']
+# TODO: Add "user_friends" in the future to help with suggesting user delegations.
+Accounts.ui._options.requestPermissions.facebook = ['public_profile', 'email']
+# TODO: Add "https://www.googleapis.com/auth/contacts.readonly" and "https://www.googleapis.com/auth/plus.circles.members.read" in the future to help with suggesting user delegations.
+Accounts.ui._options.requestPermissions.google = ['https://www.googleapis.com/auth/userinfo.email']
 Accounts.ui._options.requestPermissions.twitter = null
 
 Accounts.config
