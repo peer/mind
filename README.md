@@ -86,6 +86,9 @@ it creates necessary Meteor MongoDB database configuration automatically.
 You can see [`run.sh`](https://github.com/peer/mind/blob/master/run.sh) file for an example how to run it.
 **You have to adapt the script for your installation.** It contains hard-coded values for another installation.
 
+The application is a regular Meteor application, so you can
+[consider also other ways to deploy and run Meteor applications](https://guide.meteor.com/deployment.html).
+
 ## Related projects ##
 
 * https://www.loomio.org/
