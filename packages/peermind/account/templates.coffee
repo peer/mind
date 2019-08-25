@@ -18,11 +18,15 @@ _.extend Accounts.emailTemplates.enrollAccount,
     """
     Hi!
 
-    An account for online council app has been created for you.
-    You can set your password and sign in for the first time
-    by clicking the link:
+    An account for online council app (PeerMind) has been created
+    for you. You can set your password and sign in for the first
+    time by clicking the link:
 
     #{url}
+
+    For more information how to use the app, see:
+
+    https://cloyne.org/2019/02/how-to-use-peermind/
 
     If you have any issues signing in or if you have any feedback
     about the app, feel free to write back.
