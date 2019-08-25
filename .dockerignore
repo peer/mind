@@ -1,5 +1,6 @@
 .dockerignore
 Dockerfile
+*.dockerfile
 docker-compose.yml
 .meteor/local
 .meteor/storage
