@@ -9,7 +9,7 @@
 	url = https://github.com/mitar/meteor-accounts-admin-materializecss.git
 [submodule "packages/alanning:roles"]
 	path = packages/alanning:roles
-	url = https://github.com/mitar/meteor-roles.git
+	url = https://github.com/Meteor-Community-Packages/meteor-roles.git
 [submodule "packages/materialize:materialize"]
 	path = packages/materialize:materialize
 	url = https://github.com/mitar/materialize.git
