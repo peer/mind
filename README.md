@@ -96,3 +96,4 @@ The application is a regular Meteor application, so you can
 * https://airesis.eu/
 * https://www.vilfredo.org/
 * https://consider.it/
+* https://decidim.org/
