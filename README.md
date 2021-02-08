@@ -45,7 +45,7 @@ var userId = Package['accounts-base'].Accounts.createUser({username: 'admin', pa
 Package['alanning:roles'].Roles.addUsersToRoles(userId, ['admin', 'moderator', 'manager', 'member']);
 ```
 
-Furthermore, currently the app has hard-coded four user roles with hard-coded permissions for them:
+Furthermore, currently the app has hard-coded five user roles with hard-coded permissions for them:
 * `member`s can add discussion items, add comments to them, propose motions, upvote content, and vote on motions
 * `moderator`s can make points, and edit content of others
 * `manager`s can add discussion items, comment, and propose motions
